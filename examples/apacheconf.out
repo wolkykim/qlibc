@@ -1,0 +1,26 @@
+Listen [1:53]
+Protocols [1:UDP] [2:TCP]
+IPSEC [1:1]
+<Domain> [1:qdecoder.org]
+    TTL ::Domain(qdecoder.org) [1:86400]
+    MX ::Domain(qdecoder.org) [1:10] [2:mail.qdecoder.org]
+    <Host> ::Domain(qdecoder.org) [1:mail]
+        IPv4 ::Host(mail) ::Domain(qdecoder.org) [1:192.168.10.1]
+        TXT ::Host(mail) ::Domain(qdecoder.org) [1:US Rack-13D-18 "San Jose's"]
+    </Host> ::Domain(qdecoder.org) [1:mail]
+    <Host> ::Domain(qdecoder.org) [1:www]
+        IPv4 ::Host(www) ::Domain(qdecoder.org) [1:192.168.10.2]
+        TXT ::Host(www) ::Domain(qdecoder.org) [1:KR Rack-48H-31 "Seoul's"]
+        TTL ::Host(www) ::Domain(qdecoder.org) [1:3600]
+    </Host> ::Domain(qdecoder.org) [1:www]
+</Domain> [1:qdecoder.org]
+<Domain> [1:ringfs.org]
+    <Host> ::Domain(ringfs.org) [1:www]
+        CNAME ::Host(www) ::Domain(ringfs.org) [1:www.qdecoder.org]
+    </Host> ::Domain(ringfs.org) [1:www]
+</Domain> [1:ringfs.org]
+Successfully loaded.
+
+[Sample MyConf structure]
+MyConf.listen=53
+MyConf.num_hosts=3

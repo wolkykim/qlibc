@@ -1,0 +1,9 @@
+popint(): 1
+popint(): 2
+popint(): 3
+popstr(): A string
+popstr(): B string
+popstr(): C string
+pop(): A object
+pop(): B object
+pop(): C object

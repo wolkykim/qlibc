@@ -1,0 +1,32 @@
+--[Test 1 : adding elements]--
+0=e5? (3)
+1=e4? (3)
+2=e1? (3)
+3=e2? (3)
+4=e3? (3)
+
+--[Test 2 : get methods]--
+getFirst() : e5
+getLast() : e3
+getAt(0) : e5
+getAt(5) : e3
+getAt(-1) : e3
+getAt(-2) : e2
+
+--[Test 3 : pop(get and remove) methods]--
+popFirst() : e5
+popLast() : e3
+0=e4? (3)
+1=e1? (3)
+2=e2? (3)
+
+--[Test 4 : travesal list]--
+list size : 3 elements
+DATA=e4, SIZE=3
+DATA=e1, SIZE=3
+DATA=e2, SIZE=3
+
+--[Test 5 : reverse]--
+0=e2? (3)
+1=e1? (3)
+2=e4? (3)

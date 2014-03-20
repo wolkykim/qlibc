@@ -1,0 +1,185 @@
+################################################################################
+## qLibc - http://www.qdecoder.org
+##
+## Copyright (c) 2010-2012 Seungyoung Kim.
+## All rights reserved.
+##
+## Redistribution and use in source and binary forms, with or without
+## modification, are permitted provided that the following conditions are met:
+##
+## 1. Redistributions of source code must retain the above copyright notice,
+##    this list of conditions and the following disclaimer.
+## 2. Redistributions in binary form must reproduce the above copyright notice,
+##    this list of conditions and the following disclaimer in the documentation
+##    and/or other materials provided with the distribution.
+##
+## THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+## AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+## IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+## ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+## LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+## CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+## SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+## INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+## CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+## ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+## POSSIBILITY OF SUCH DAMAGE.
+################################################################################
+## $Id: Makefile.in 119 2012-05-30 22:41:49Z seungyoung.kim $
+################################################################################
+
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+
+## Utilities
+AR		= @AR@
+ARFLAGS		= -rc
+CHMOD		= @CHMOD@
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+LN_S		= @LN_S@
+MKDIR_P		= @MKDIR_P@
+RMDIR		= rmdir
+RANLIB		= @RANLIB@
+RM		= @RM@
+
+## Install directories
+INST_INCDIR	= @includedir@
+INST_LIBDIR	= @libdir@
+
+## Custom definitions
+BUILD_TARGETS	= @BUILD_TARGETS@
+INSTALL_TARGETS	= @INSTALL_TARGETS@
+
+## qlibc definitions
+QLIBC_INCDIR		= ../include
+QLIBC_LIBDIR		= ../lib
+QLIBC_LIBNAME		= libqlibc.a
+QLIBC_SLIBNAME		= libqlibc.so
+QLIBC_SLIBVERSION	= 2
+QLIBC_SLIBREALNAME	= ${QLIBC_SLIBNAME}.${QLIBC_SLIBVERSION}
+
+## qlibcext definitions
+QLIBCEXT_LIBNAME	= libqlibcext.a
+QLIBCEXT_SLIBNAME	= libqlibcext.so
+QLIBCEXT_SLIBVERSION	= 2
+QLIBCEXT_SLIBREALNAME	= ${QLIBCEXT_SLIBNAME}.${QLIBCEXT_SLIBVERSION}
+
+## Objects List
+QLIBC_OBJS	= \
+		containers/qlist.o		\
+		containers/qlisttbl.o		\
+		containers/qhashtbl.o		\
+		containers/qhasharr.o		\
+		containers/qvector.o		\
+		containers/qqueue.o		\
+		containers/qstack.o		\
+						\
+		utilities/qcount.o		\
+		utilities/qencode.o		\
+		utilities/qfile.o		\
+		utilities/qhash.o		\
+		utilities/qio.o			\
+		utilities/qlibc.o		\
+		utilities/qsocket.o		\
+		utilities/qstring.o		\
+		utilities/qsystem.o		\
+		utilities/qtime.o		\
+						\
+		ipc/qsem.o			\
+		ipc/qshm.o			\
+						\
+		internal/qinternal.o		\
+		internal/md5/md5c.o
+
+QLIBCEXT_OBJS	= \
+		extensions/qconfig.o		\
+		extensions/qaconf.o		\
+		extensions/qlog.o		\
+		extensions/qhttpclient.o	\
+		extensions/qdatabase.o
+
+## Which compiler & options for release
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+CPPFLAGS	= @CPPFLAGS@ -I${QLIBC_INCDIR} -I./internal
+
+## Make Library
+all: ${BUILD_TARGETS}
+
+qlibc: ${QLIBC_OBJS}
+	${AR} ${ARFLAGS} ${QLIBC_LIBDIR}/${QLIBC_LIBNAME} ${QLIBC_OBJS}
+	${RANLIB} ${QLIBC_LIBDIR}/${QLIBC_LIBNAME}
+	${CC} -shared -Wl,-soname,${QLIBC_SLIBREALNAME} -o ${QLIBC_LIBDIR}/${QLIBC_SLIBREALNAME} ${QLIBC_OBJS}
+	( cd ${QLIBC_LIBDIR}; ${LN_S} -f ${QLIBC_SLIBREALNAME} ${QLIBC_SLIBNAME} )
+
+qlibcext: ${QLIBCEXT_OBJS}
+	${AR} ${ARFLAGS} ${QLIBC_LIBDIR}/${QLIBCEXT_LIBNAME} ${QLIBCEXT_OBJS}
+	${RANLIB} ${QLIBC_LIBDIR}/${QLIBCEXT_LIBNAME}
+	${CC} -shared -Wl,-soname,${QLIBCEXT_SLIBREALNAME} -o ${QLIBC_LIBDIR}/${QLIBCEXT_SLIBREALNAME} ${QLIBCEXT_OBJS}
+	( cd ${QLIBC_LIBDIR}; ${LN_S} -f ${QLIBCEXT_SLIBREALNAME} ${QLIBCEXT_SLIBNAME} )
+
+install: ${INSTALL_TARGETS}
+
+install-qlibc: qlibc
+	${MKDIR_P} ${INST_INCDIR}/qlibc
+	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibc.h ${INST_INCDIR}/qlibc/qlibc.h
+	${MKDIR_P} ${INST_LIBDIR}
+	${INSTALL_DATA} ${QLIBC_LIBDIR}/${QLIBC_LIBNAME} ${INST_LIBDIR}/${QLIBC_LIBNAME}
+	${INSTALL_DATA} ${QLIBC_LIBDIR}/${QLIBC_SLIBREALNAME} ${INST_LIBDIR}/${QLIBC_SLIBREALNAME}
+	( cd ${INST_LIBDIR}; ${LN_S} -f ${QLIBC_SLIBREALNAME} ${QLIBC_SLIBNAME} )
+
+uninstall-qlibc:
+	${RM} -f ${INST_INCDIR}/qlibc/qlibc.h
+	${RM} -f ${INST_LIBDIR}/${QLIBC_LIBNAME}
+	${RM} -f ${INST_LIBDIR}/${QLIBC_SLIBREALNAME}
+	${RM} -f ${INST_LIBDIR}/${QLIBC_SLIBNAME}
+
+install-qlibcext: qlibcext
+	${MKDIR_P} ${INST_INCDIR}/qlibc
+	${MKDIR_P} ${INST_INCDIR}/qlibc/extensions/
+	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext.h ${INST_INCDIR}/qlibc/qlibcext.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qconfig.h ${INST_INCDIR}/qlibc/extensions/qconfig.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qaconf.h ${INST_INCDIR}/qlibc/extensions/qaconf.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qlog.h ${INST_INCDIR}/qlibc/extensions/qlog.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qhttpclient.h ${INST_INCDIR}/qlibc/extensions/qhttpclient.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qdatabase.h ${INST_INCDIR}/qlibc/extensions/qdatabase.h
+	${MKDIR_P} ${INST_LIBDIR}
+	${INSTALL_DATA} ${QLIBC_LIBDIR}/${QLIBCEXT_LIBNAME} ${INST_LIBDIR}/${QLIBCEXT_LIBNAME}
+	${INSTALL_DATA} ${QLIBC_LIBDIR}/${QLIBCEXT_SLIBREALNAME} ${INST_LIBDIR}/${QLIBCEXT_SLIBREALNAME}
+	( cd ${INST_LIBDIR}; ${LN_S} -f ${QLIBCEXT_SLIBREALNAME} ${QLIBCEXT_SLIBNAME} )
+
+uninstall-qlibcext:
+	${RM} -f ${INST_INCDIR}/qlibc/qlibcext.h
+	${RM} -f ${INST_INCDIR}/qlibc/extensions/qconfig.h
+	${RM} -f ${INST_INCDIR}/qlibc/extensions/qaconf.h
+	${RM} -f ${INST_INCDIR}/qlibc/extensions/qlog.h
+	${RM} -f ${INST_INCDIR}/qlibc/extensions/qhttpclient.h
+	${RM} -f ${INST_INCDIR}/qlibc/extensions/qdatabase.h
+	${RM} -f ${INST_LIBDIR}/${QLIBCEXT_LIBNAME}
+	${RM} -f ${INST_LIBDIR}/${QLIBCEXT_SLIBREALNAME}
+	${RM} -f ${INST_LIBDIR}/${QLIBCEXT_SLIBNAME}
+
+deinstall: uninstall
+uninstall: uninstall-qlibc uninstall-qlibcext
+	${RMDIR} ${INST_INCDIR}/qlibc/extensions
+	${RMDIR} ${INST_INCDIR}/qlibc
+
+clean:
+	${RM} -f ${QLIBC_OBJS}
+	( cd ${QLIBC_LIBDIR}; ${RM} -f ${QLIBC_LIBNAME} ${QLIBC_SLIBREALNAME} ${QLIBC_SLIBNAME} )
+	${RM} -f ${QLIBCEXT_OBJS}
+	( cd ${QLIBC_LIBDIR}; ${RM} -f ${QLIBCEXT_LIBNAME} ${QLIBCEXT_SLIBREALNAME} ${QLIBCEXT_SLIBNAME} )
+
+doc:
+	doxygen doxygen-qlibc.conf
+	doxygen doxygen-qlibcext.conf
+
+cleandoc:
+	${RM} -rf ../doc/qlibc
+	${RM} -rf ../doc/qlibcext
+
+## Compile
+.c.o:
+	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
+

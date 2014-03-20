@@ -1,0 +1,19 @@
+--[Test 1 : adding elements]--
+e5(2)=f? (2)
+1234567890123456...(20)=1234567890123456789012345678901234567890? (41)
+e1(2)=a? (2)
+e4(2)=e? (2)
+e3(2)=d? (2)
+e2(2)=c? (2)
+
+--[Test 2 : many ways to find key]--
+getstr('e2') : c
+
+--[Test 3 : travesal table]--
+table size : 6 elements
+NAME=e5, DATA=f, SIZE=2
+NAME=1234567890123456, DATA=1234567890123456789012345678901234567890, SIZE=41
+NAME=e1, DATA=a, SIZE=2
+NAME=e4, DATA=e, SIZE=2
+NAME=e3, DATA=d, SIZE=2
+NAME=e2, DATA=c, SIZE=2

@@ -1,0 +1,101 @@
+--[Test 1 : adding elements]--
+e1=object1? (8,a85a90d9)
+e2=object2? (8,e74ed4dd)
+e3=object3? (8,3d22c1aa)
+e4=object4? (8,feafd639)
+e5=5? (2,427302b3)
+
+--[Test 2 : many ways to find key]--
+get('e2') : object2
+getstr('e2') : object2
+getstr('e2', newmem) : object2
+
+--[Test 3 : getmulti() - fetch all duplicated 'e2' keys]--
+getmulti('e2') : 1 objects found.
+getmulti('e2')[0]=object2 (8)
+
+--[Test 4 : travesal a particular key 'e2']--
+NAME=e2, DATA=object2, SIZE=8
+
+--[Test 5 : travesal a list]--
+list size : 5 elements
+NAME=e1, DATA=object1, SIZE=8
+NAME=e2, DATA=object2, SIZE=8
+NAME=e3, DATA=object3, SIZE=8
+NAME=e4, DATA=object4, SIZE=8
+NAME=e5, DATA=5, SIZE=2
+
+--[Test 6 : changed adding direction then add 'e3' and 'e4' element]--
+e4=object7? (8,feafd639)
+e3=object6? (8,3d22c1aa)
+e1=object1? (8,a85a90d9)
+e2=object2? (8,e74ed4dd)
+e3=object3? (8,3d22c1aa)
+e4=object4? (8,feafd639)
+e5=5? (2,427302b3)
+
+--[Test 7 : add element 'e2' with replace option]--
+e2=object8? (8,e74ed4dd)
+e4=object7? (8,feafd639)
+e3=object6? (8,3d22c1aa)
+e1=object1? (8,a85a90d9)
+e3=object3? (8,3d22c1aa)
+e4=object4? (8,feafd639)
+e5=5? (2,427302b3)
+
+--[Test 8 : reverse]--
+e5=5? (2,427302b3)
+e4=object4? (8,feafd639)
+e3=object3? (8,3d22c1aa)
+e1=object1? (8,a85a90d9)
+e3=object6? (8,3d22c1aa)
+e4=object7? (8,feafd639)
+e2=object8? (8,e74ed4dd)
+
+--[Test 9 : revert put direction then add some more elements.]--
+e5=5? (2,427302b3)
+e4=object4? (8,feafd639)
+e3=object3? (8,3d22c1aa)
+e1=object1? (8,a85a90d9)
+e3=object6? (8,3d22c1aa)
+e4=object7? (8,feafd639)
+e2=object8? (8,e74ed4dd)
+e4=object9? (8,feafd639)
+e5=object10? (9,427302b3)
+e6=object11? (9,9cf5914f)
+e7=object12? (9,7f986220)
+e4=object13? (9,feafd639)
+e6=object14? (9,9cf5914f)
+
+--[Test 10 : turn on setsort() option.
+e1=object1? (8,a85a90d9)
+e2=object8? (8,e74ed4dd)
+e3=object3? (8,3d22c1aa)
+e3=object6? (8,3d22c1aa)
+e4=object4? (8,feafd639)
+e4=object7? (8,feafd639)
+e4=object9? (8,feafd639)
+e4=object13? (9,feafd639)
+e5=5? (2,427302b3)
+e5=object10? (9,427302b3)
+e6=object11? (9,9cf5914f)
+e6=object14? (9,9cf5914f)
+e7=object12? (9,7f986220)
+
+--[Test 11 : add new elements 'e1', 'e5' and 'e8'
+e1=object1? (8,a85a90d9)
+e1=object15? (9,a85a90d9)
+e2=object8? (8,e74ed4dd)
+e3=object3? (8,3d22c1aa)
+e3=object6? (8,3d22c1aa)
+e4=object4? (8,feafd639)
+e4=object7? (8,feafd639)
+e4=object9? (8,feafd639)
+e4=object13? (9,feafd639)
+e5=5? (2,427302b3)
+e5=object10? (9,427302b3)
+e5=16? (3,427302b3)
+e6=object11? (9,9cf5914f)
+e6=object14? (9,9cf5914f)
+e7=object12? (9,7f986220)
+e8=object17? (9,b2e90356)

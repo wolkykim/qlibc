@@ -1,0 +1,19 @@
+--[Test 1 : adding elements]--
+e4=e? (2, hash=4272936505)
+e2=c? (2, hash=3880703197)
+e1=a? (2, hash=2824507609)
+e5=f? (2, hash=1114833587)
+e3=d? (2, hash=1025687978)
+
+--[Test 2 : many ways to find a key]--
+get('e2') : c
+getstr('e2') : c
+getstr('e2') with newmem parameter: c
+
+--[Test 3 : travesal a table]--
+list size : 5 elements
+NAME=e4, DATA=e, SIZE=2
+NAME=e2, DATA=c, SIZE=2
+NAME=e1, DATA=a, SIZE=2
+NAME=e5, DATA=f, SIZE=2
+NAME=e3, DATA=d, SIZE=2

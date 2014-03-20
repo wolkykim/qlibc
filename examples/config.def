@@ -1,0 +1,6 @@
+# This is "config.def" file.
+prefix = /usr/local
+bin = ${prefix}/bin
+log = ${prefix}/log
+user = unknown
+host = unknown
