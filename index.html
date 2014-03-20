@@ -1,1 +1,155 @@
-qLibc Project
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>qLibc Project by wolkykim</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>qLibc Project</h1>
+          <h2>The goal of qLibc project is to provide a simple but powerful general purpose C/C++ library.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/wolkykim/qlibc/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/wolkykim/qlibc/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/wolkykim/qlibc" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="qlibc-project" class="anchor" href="#qlibc-project"><span class="octicon octicon-link"></span></a>qLibc Project</h1>
+
+<h2>
+<a name="whats-qlibc" class="anchor" href="#whats-qlibc"><span class="octicon octicon-link"></span></a>What's qLibc?</h2>
+
+<p>The goal of qLibc project is to provide a <strong>simple but powerful general purpose C/C++ library</strong> which includes all kinds of containers and general library routines. It provides ready-made set of common container APIs with constant look that can be used with any built-in types and with any user-defined types.</p>
+
+<h2>
+<a name="qlibc-copyright" class="anchor" href="#qlibc-copyright"><span class="octicon octicon-link"></span></a>qLibc Copyright</h2>
+
+<p>All of the deliverable code in qLibc has been dedicated to the public domain by the authors. Anyone is free to copy, modify, publish, use, compile, sell, or distribute the original qLibc code, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means. </p>
+
+<p>All of the deliverable code in qLibc has been written from scratch (except of MD5 code published by RSA Data Security, Inc). No code has been taken from other projects or from the open internet. Every line of code can be traced back to its original author. So the qLibc code base is clean and is not contaminated with licensed code from other projects. </p>
+
+<h2>
+<a name="api-reference" class="anchor" href="#api-reference"><span class="octicon octicon-link"></span></a>API Reference</h2>
+
+<ul>
+<li>
+<p><a href="http://www.qdecoder.org/qlibc/reference/qlibc/files.html">qlibc Core API Reference</a></p>
+
+<ul>
+<li>Containers
+
+<ul>
+<li>List --- Doubly Linked List.</li>
+<li>List Table --- KEY/VALUE paired table implemented on linked-list.</li>
+<li>Hash Table --- Hash based KEY/VALUE paired table.</li>
+<li>Static Hash Table --- Static(array/mmapped/shared) memory based KEY/VALUE paired table.</li>
+<li>Vector --- implements a growable array of elements.</li>
+<li>Queue --- FIFO(First In First Out) implementation.</li>
+<li>Stack --- LIFO(Last In First Out) implementation.</li>
+</ul>
+</li>
+<li>General utilities.
+
+<ul>
+<li>String</li>
+<li>I/O</li>
+<li>File</li>
+<li>IPC, Semaphore Shared-memory</li>
+<li>En/decoders</li>
+<li>Hashes</li>
+<li>System</li>
+<li>Time</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="http://www.qdecoder.org/qlibc/reference/qlibcext/files.html">qLibc Extension API Reference</a></p>
+
+<ul>
+<li>INI-style Configuration File Parser.</li>
+<li>Apache-style Configuration File Parser.</li>
+<li>Rotating File Logger.</li>
+<li>HTTP client.</li>
+<li>Database(MySQL) interface.</li>
+</ul>
+</li>
+</ul><h2>
+<a name="constant-look" class="anchor" href="#constant-look"><span class="octicon octicon-link"></span></a>Constant Look</h2>
+
+<p>All container APIs have constant look, basically it provides a creator function which usually returns a pointer of a container structure. And <strong>every functions related to the container can be accessed through function pointers inside of the container</strong>.</p>
+
+<p>So regardless of what container you use, you can simple put elements into list like pContainer-&gt;put(pContainer, ...). It looks like C++ class but it's pure C implementation. Of course it works with both of your C and C++ codes**.</p>
+
+<p>We used this concept as much as possible because it simplifies the thinking way and helps to improve readability. Consequently it helps people to write bugless codes more easily.</p>
+
+<p>See the example below to see how it works.</p>
+
+<pre><code>// create a hash-table with hash range 100.
+// Hash range does NOT mean maximum number of elements. Refer API doc.
+qhashtbl_t *tbl = qhashtbl(100);
+
+// add an element which key name is "score".
+int x = 12345;
+tbl-&gt;put(tbl, "score", &amp;x, sizeof(int));
+
+// get the value of the element.
+int *px = tbl-&gt;get(tbl, "score", NULL, true);
+if(px != NULL) {
+  printf("%d\n", *px);             
+  free(px);
+}
+
+// release table
+tbl-&gt;free(tbl);
+</code></pre>
+
+<p>Here is a same implementation of above code but using Linked-List-Table container.</p>
+
+<pre><code>// create a linked-list-table.
+qlisttbl_t *tbl = qlisttbl();
+
+// add an element which key name is "score".
+int x = 12345;
+tbl-&gt;put(tbl, "score", &amp;x, sizeof(int), true);
+
+// get the value of the element.
+int *px = tbl-&gt;get(tbl, "score", NULL, true);
+if(px != NULL) {
+  printf("%d\n", *px);             
+  free(px);
+}
+
+// release table
+tbl-&gt;free(tbl);
+</code></pre>
+        </section>
+
+        <footer>
+          qLibc Project is maintained by <a href="https://github.com/wolkykim">wolkykim</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
