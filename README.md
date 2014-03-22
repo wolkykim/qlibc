@@ -3,13 +3,11 @@ What's qLibc?
 
 The goal of qLibc project is to provide a **simple but powerful general purpose C/C++ library** which includes all kinds of containers and general library routines. It provides ready-made set of common container APIs with constant look that can be used with any built-in types and with any user-defined types.
 
-qLibc Copyright
-===============
+## qLibc Copyright
 
 All of the deliverable code in qLibc has been dedicated to the public domain by the authors. Anyone is free to copy, modify, publish, use, compile, sell, or distribute the original qLibc code, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means. 
 
-API Reference
-=============
+## API Reference
 
 * [qlibc Core API Reference](http://wolkykim.github.io/qlibc/doc/qlibc/files.html)
   * Containers
@@ -37,8 +35,7 @@ API Reference
   * HTTP client.
   * Database(MySQL) interface.
 
-Constant Look
-=============
+## Constant Look
 
 All container APIs have constant look, basically it provides a creator function which usually returns a pointer of a container structure. And **every functions related to the container can be accessed through function pointers inside of the container**.
 
