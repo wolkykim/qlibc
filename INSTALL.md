@@ -1,8 +1,8 @@
 Installing qLibc
 ================
 
-Configure
-=========
+## Configure
+
 
 Configure compile option by executing included "configure" script.
 
@@ -40,8 +40,7 @@ To see detailed configure options, use --help option.
 $ ./configure --help
 ```
 
-Compile
-=======
+## Compile
 
 Type make to compile the source codes.
 
@@ -49,8 +48,7 @@ Type make to compile the source codes.
 $ make
 ```
 
-Install
-=======
+## Install
 
 This command will install qLibc on your system. By default, the directory prefix is "/usr/local" so it will be install on /usr/local/include and /usr/local/lib.
 
@@ -61,8 +59,7 @@ $ make install
 This will only install header files and library(archive; static and dynamic) files.
 The documentations in "doc" directory will not be installed, so make a copy of it by yourself if you want to keep it.
 
-Uninstall
-=========
+## Uninstall
 
 qLibc can be completely removed from the system.
 
@@ -70,8 +67,7 @@ qLibc can be completely removed from the system.
 $ make uninstall
 ```
 
-Test
-====
+## Test
 
 Sample sources and API document are provided with the package in the "examples" and "doc" directories.
 
