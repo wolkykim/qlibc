@@ -2,9 +2,7 @@
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-------------------------------------------------------------->
 <!-- qLibc Project                                            -->
-<!--                                                          -->
-<!--            Copyright (c) The qDecoder Project            -->
-<!--                 http://www.qdecoder.org                  -->
+<!--                Copyright (c) Seungyoung Kim              -->
 <!-------------------------------------------------------------->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -61,7 +59,7 @@
 <div class="line">  }</div>
 <div class="line"></div>
 <div class="line">  <span class="comment">// container for storing response headers for debugging purpose</span></div>
-<div class="line">  qlisttbl_t *resheaders = qlisttbl();</div>
+<div class="line">  qlisttbl_t *resheaders = qlisttbl(0);</div>
 <div class="line"></div>
 <div class="line">  <span class="comment">// download</span></div>
 <div class="line">  off_t nSavesize = 0;</div>
@@ -559,8 +557,8 @@ Functions</h2></td></tr>
 <div class="line">  <span class="keywordflow">if</span>(httpclient == NULL) <span class="keywordflow">return</span>;</div>
 <div class="line"></div>
 <div class="line">  <span class="comment">// set additional custom headers</span></div>
-<div class="line">  qlisttbl_t *reqheaders = qlisttbl();</div>
-<div class="line">  qlisttbl_t *resheaders = qlisttbl();</div>
+<div class="line">  qlisttbl_t *reqheaders = qlisttbl(0);</div>
+<div class="line">  qlisttbl_t *resheaders = qlisttbl(0);</div>
 <div class="line"></div>
 <div class="line">  <span class="comment">// send HEAD request</span></div>
 <div class="line">  <span class="keywordtype">int</span> nRescode = 0;</div>
@@ -696,8 +694,8 @@ Functions</h2></td></tr>
 <div class="line">  <span class="keywordtype">int</span> nFd = open(<span class="stringliteral">&quot;/tmp/test.data&quot;</span>, O_WRONLY | O_CREAT, 0644);</div>
 <div class="line"></div>
 <div class="line">  <span class="comment">// set additional custom headers</span></div>
-<div class="line">  qlisttbl_t *reqheaders = qlisttbl();</div>
-<div class="line">  qlisttbl_t *resheaders = qlisttbl();</div>
+<div class="line">  qlisttbl_t *reqheaders = qlisttbl(0);</div>
+<div class="line">  qlisttbl_t *resheaders = qlisttbl(0);</div>
 <div class="line"></div>
 <div class="line">  <span class="comment">// set userdata</span></div>
 <div class="line">  <span class="keyword">struct </span>userdata mydata;</div>
@@ -847,7 +845,7 @@ The "rescode" will be set if it received any response code from a remote server 
 <div class="line">  time_t nFileDate = ...;</div>
 <div class="line"></div>
 <div class="line">  <span class="comment">// set additional custom headers</span></div>
-<div class="line">  qlisttbl_t *reqheaders = qlisttbl();</div>
+<div class="line">  qlisttbl_t *reqheaders = qlisttbl(0);</div>
 <div class="line">  reqheaders-&gt;putstr(reqheaders, <span class="stringliteral">&quot;X-FILE-MD5SUM&quot;</span>, pFileMd5sum, <span class="keyword">true</span>);</div>
 <div class="line">  reqheaders-&gt;putInt(reqheaders, <span class="stringliteral">&quot;X-FILE-DATE&quot;</span>, nFileDate, <span class="keyword">true</span>);</div>
 <div class="line"></div>
@@ -857,7 +855,7 @@ The "rescode" will be set if it received any response code from a remote server 
 <div class="line"></div>
 <div class="line">  <span class="comment">// send file</span></div>
 <div class="line">  <span class="keywordtype">int</span> nRescode = 0;</div>
-<div class="line">  qlisttbl_t *resheaders = qlisttbl();</div>
+<div class="line">  qlisttbl_t *resheaders = qlisttbl(0);</div>
 <div class="line">  <span class="keywordtype">bool</span> bRet = httpclient-&gt;put(httpclient,</div>
 <div class="line">                              <span class="stringliteral">&quot;/img/qdecoder.png&quot;</span>, nFd, nFileSize,</div>
 <div class="line">                              &amp;nRescode,</div>
@@ -1048,7 +1046,7 @@ The "rescode" will be set if it received any response code from a remote server 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Default headers(Host, User-Agent, Connection) will be used if reqheaders does not have those headers in it.</dd></dl>
-<div class="fragment"><div class="line">qlisttbl_t *reqheaders = qlisttbl();</div>
+<div class="fragment"><div class="line">qlisttbl_t *reqheaders = qlisttbl(0);</div>
 <div class="line">reqheaders-&gt;putstr(reqheaders,  <span class="stringliteral">&quot;Date&quot;</span>, qTimeGetGmtStaticStr(0), <span class="keyword">true</span>);</div>
 <div class="line"></div>
 <div class="line">httpclient-&gt;sendrequest(client,</div>
@@ -1108,7 +1106,7 @@ The "rescode" will be set if it received any response code from a remote server 
 <div class="line">httpclient-&gt;sendrequest(client, <span class="stringliteral">&quot;DELETE&quot;</span>, <span class="stringliteral">&quot;/img/qdecoder.png&quot;</span>, NULL);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// read response</span></div>
-<div class="line">qlisttbl_t *resheaders = qlisttbl();</div>
+<div class="line">qlisttbl_t *resheaders = qlisttbl(0);</div>
 <div class="line">off_t clength;</div>
 <div class="line"><span class="keywordtype">int</span> rescode = httpclient-&gt;readresponse(client, resheaders, &amp;clength);</div>
 <div class="line"><span class="keywordflow">if</span>(clength &gt; 0) {</div>
@@ -1452,7 +1450,7 @@ The "rescode" will be set if it received any response code from a remote server 
 </div><!-- contents -->
 <hr class="footer"/><address class="footer"><small>
 <a href="http://www.qdecoder.org/">The qDecoder Project</a>.
-Thu Mar 20 2014 07:11:26
+Mon Mar 24 2014 08:08:46
 </small></address>
 </body>
 </html>

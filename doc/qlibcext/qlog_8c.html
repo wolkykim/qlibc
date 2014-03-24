@@ -2,9 +2,7 @@
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-------------------------------------------------------------->
 <!-- qLibc Project                                            -->
-<!--                                                          -->
-<!--            Copyright (c) The qDecoder Project            -->
-<!--                 http://www.qdecoder.org                  -->
+<!--                Copyright (c) Seungyoung Kim              -->
 <!-------------------------------------------------------------->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -44,7 +42,7 @@
 <div class="textblock"><p>Rotating file logger object. </p>
 <p>qlog implements a auto-rotating file logger.</p>
 <div class="fragment"><div class="line"><span class="comment">// create a daily-rotating log file.</span></div>
-<div class="line">qlog_t *log = <a class="code" href="qlog_8c.html#a2a82affc6321438612b5097a3e2cca98" title="Open ratating-log file.">qlog</a>(<span class="stringliteral">&quot;/tmp/dailylog-%Y%m%d.err&quot;</span>, 0644, 86400, <span class="keyword">false</span>);</div>
+<div class="line">qlog_t *log = <a class="code" href="qlog_8c.html#acfc1a51cddb0a4e8555ea66f42276874" title="Open ratating-log file.">qlog</a>(<span class="stringliteral">&quot;/tmp/dailylog-%Y%m%d.err&quot;</span>, 0644, 86400, <span class="keyword">false</span>);</div>
 <div class="line"><span class="keywordflow">if</span>(log == NULL) <span class="keywordflow">return</span>;</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// screen out.</span></div>
@@ -59,9 +57,9 @@
 </div><!-- fragment --> </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2a82affc6321438612b5097a3e2cca98"><td class="memItemLeft" align="right" valign="top">qlog_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlog_8c.html#a2a82affc6321438612b5097a3e2cca98">qlog</a> (const char *filepathfmt, mode_t mode, int rotateinterval, bool flush)</td></tr>
-<tr class="memdesc:a2a82affc6321438612b5097a3e2cca98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open ratating-log file.  <a href="#a2a82affc6321438612b5097a3e2cca98"></a><br/></td></tr>
-<tr class="separator:a2a82affc6321438612b5097a3e2cca98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfc1a51cddb0a4e8555ea66f42276874"><td class="memItemLeft" align="right" valign="top">qlog_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlog_8c.html#acfc1a51cddb0a4e8555ea66f42276874">qlog</a> (const char *filepathfmt, mode_t mode, int rotateinterval, int options)</td></tr>
+<tr class="memdesc:acfc1a51cddb0a4e8555ea66f42276874"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open ratating-log file.  <a href="#acfc1a51cddb0a4e8555ea66f42276874"></a><br/></td></tr>
+<tr class="separator:acfc1a51cddb0a4e8555ea66f42276874"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d9678a766dbbe0cf4863296588a70ce"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlog_8c.html#a1d9678a766dbbe0cf4863296588a70ce">write_</a> (qlog_t *log, const char *str)</td></tr>
 <tr class="memdesc:a1d9678a766dbbe0cf4863296588a70ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlog-&gt;write(): Log messages  <a href="#a1d9678a766dbbe0cf4863296588a70ce"></a><br/></td></tr>
 <tr class="separator:a1d9678a766dbbe0cf4863296588a70ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -79,7 +77,7 @@ Functions</h2></td></tr>
 <tr class="separator:a58ed43ff476576586b46c4f6744f1fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a2a82affc6321438612b5097a3e2cca98"></a>
+<a class="anchor" id="acfc1a51cddb0a4e8555ea66f42276874"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -104,8 +102,8 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>flush</em>&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>options</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -121,16 +119,21 @@ Functions</h2></td></tr>
     <tr><td class="paramname">filepathfmt</td><td>filename format. formatting argument is same as strftime() </td></tr>
     <tr><td class="paramname">mode</td><td>new file mode. 0 for system default </td></tr>
     <tr><td class="paramname">rotateinterval</td><td>rotating interval seconds, set 0 to disable rotation </td></tr>
-    <tr><td class="paramname">flush</td><td>set to true if you want to flush everytime logging. false for buffered logging</td></tr>
+    <tr><td class="paramname">options</td><td>combination of options.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a pointer of qlog_t structure</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>rotateinterval is not relative time. If you set it to 3600, log file will be rotated at every hour. And filenameformat is same as strftime(). So If you want to log with hourly rotating, filenameformat must be defined including hour format like "/somepath/xxx-%Y%m%d%H.log". You can set it to "/somepath/xxx-%H.log" for daily overrided log file.</dd></dl>
-<div class="fragment"><div class="line">qlog_t *log = <a class="code" href="qlog_8c.html#a2a82affc6321438612b5097a3e2cca98" title="Open ratating-log file.">qlog</a>(<span class="stringliteral">&quot;/tmp/qdecoder-%Y%m%d.err&quot;</span>, 0644, 86400, <span class="keyword">false</span>);</div>
+<dl class="section note"><dt>Note</dt><dd>rotateinterval is not relative time. If you set it to 3600, log file will be rotated at every hour. And filenameformat is same as strftime(). So If you want to log with hourly rotating, filenameformat must be defined including hour format like "/somepath/xxx-%Y%m%d%H.log". You can set it to "/somepath/xxx-%H.log" for daily overrided log file.</dd>
+<dd>
+Available options:<ul>
+<li>QLOG_OPT_THREADSAFE - make it thread-safe.</li>
+<li>QLOG_OPT_FLUSH - flush out buffer everytime.</li>
+</ul>
+</dd></dl>
+<div class="fragment"><div class="line">qlog_t *log = <a class="code" href="qlog_8c.html#acfc1a51cddb0a4e8555ea66f42276874" title="Open ratating-log file.">qlog</a>(<span class="stringliteral">&quot;/tmp/qdecoder-%Y%m%d.err&quot;</span>, 0644, 86400, QLOG_OPT_THREADSAFE);</div>
 <div class="line">log-&gt;free(log);</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Use "&amp;ndash;enable-threadsafe" configure script option to use under multi-threaded environments. </dd></dl>
-
+</div><!-- fragment --> 
 </div>
 </div>
 <a class="anchor" id="a1d9678a766dbbe0cf4863296588a70ce"></a>
@@ -349,7 +352,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer"/><address class="footer"><small>
 <a href="http://www.qdecoder.org/">The qDecoder Project</a>.
-Thu Mar 20 2014 07:11:26
+Mon Mar 24 2014 08:08:46
 </small></address>
 </body>
 </html>
