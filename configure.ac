@@ -1,7 +1,7 @@
 ################################################################################
-## qLibc - http://www.qdecoder.org
+## qLibc
 ##
-## Copyright (c) 2010-2012 Seungyoung Kim.
+## Copyright (c) 2010-2014 Seungyoung Kim.
 ## All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
 ## CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ## ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 ## POSSIBILITY OF SUCH DAMAGE.
-################################################################################
-## $Id: configure.ac 125 2012-06-11 22:14:29Z seungyoung.kim $
 ################################################################################
 
 AC_COPYRIGHT([
@@ -76,7 +74,7 @@ AC_DEFUN([Q_ARG_DISABLE], [
 ])
 
 ## Initialize
-AC_INIT([qLibc], [2 RELEASE], [http://www.qdecoder.org/])
+AC_INIT([qLibc], [2 RELEASE], [https://github.com/wolkykim/qlibc])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile])
@@ -100,7 +98,7 @@ AC_PREFIX_DEFAULT([/usr/local])
 ## Checks for programs.
 AC_PROG_CC
 if test $ac_compiler_gnu = yes; then
-	CFLAGS="-Wall -fPIC"
+	CFLAGS="-Wall -Wstrict-prototypes -fPIC"
 #else
 #	AC_MSG_FAILURE([GCC is required.])
 fi
@@ -142,7 +140,8 @@ AC_TYPE_OFF_T
 ## Checks for libraries.
 
 ## Checks for library functions.
-#AC_CHECK_FUNCS([socket sendfile])
+AC_CHECK_LIB([pthread], [main], [], AC_MSG_ERROR([Cannot find pthread library.]))
+AC_SUBST(DEPLIBS, ["-lpthread"])
 
 ##
 ## --enable section
@@ -150,22 +149,13 @@ AC_TYPE_OFF_T
 
 Q_ARG_ENABLE([debug], [Enable debugging output. This will print out internal debugging messages to stdout.], [-DBUILD_DEBUG])
 
-Q_ARG_ENABLE([threadsafe], [Enable thread-safe feature. When it's enabled, user applications need to link pthread library. (ex: -lpthread)], [-DENABLE_THREADSAFE])
-if test "$enableval" = yes; then
-	AC_CHECK_LIB([pthread], [main], [], AC_MSG_ERROR([Cannot find pthread library.]))
-	AC_SUBST(DEPLIBS, ["-lpthread"])
-fi
-
 Q_ARG_DISABLE([ipc], [Disable IPC APIs(src/ipc/) in qlibc library.], [-DDISABLE_IPC])
-#Q_ARG_ENABLE([lfs], [Enable large file supports.], [-DENABLE_LFS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64])
-#Q_ARG_DISABLE([ext], [Disable all extension APIs in src/extensions directory.], [-DDISABLE_QCONFIG -DDISABLE_QLOG -DDISABLE_QHTTPCLIENT -DDISABLE_QDATABASE])
 Q_ARG_DISABLE([ext], [Disable building qlibext extension library.], [])
 if test "$enableval" = no; then
 	AC_SUBST(BUILD_TARGETS, ["qlibc"])
 	AC_SUBST(INSTALL_TARGETS, ["install-qlibc"])
 	AC_SUBST(EXAMPLES_TARGETS, ["TARGETS2"])
 fi
-#Q_ARG_DISABLE([ext-all], [Disable all extension APIs in src/extensions directory.], [-DDISABLE_QCONFIG -DDISABLE_QLOG -DDISABLE_QHTTPCLIENT -DDISABLE_QDATABASE])
 Q_ARG_DISABLE([ext-qconfig], [Disable qconfig extension in qlibext library.], [-DDISABLE_QCONFIG])
 Q_ARG_DISABLE([ext-qaconf], [Disable qaconf extension in qlibext library.], [-DDISABLE_QACONF])
 Q_ARG_DISABLE([ext-qlog], [Disable qlog extension in qlibext library.], [-DDISABLE_QLOG])
@@ -182,7 +172,7 @@ fi
 ## --with section
 ##
 
-AC_ARG_WITH([openssl],[AS_HELP_STRING([--with-openssl], [This will enable HTTPS support in qhttpclient extension API. When it's enabled, user applications are needed to be linked with the openssl library. (ex: -lssl)])],[withval=yes],[withval=no])
+AC_ARG_WITH([openssl],[AS_HELP_STRING([--with-openssl], [This will enable HTTPS support in qhttpclient extension API. When it's enabled, user applications will need to link openssl library with -lssl option.])],[withval=yes],[withval=no])
 if test "$withval" = yes; then
 	if test "$with_openssl" = yes; then
 		with_openssl="/usr/include"
@@ -197,7 +187,7 @@ if test "$withval" = yes; then
 	fi
 fi
 
-AC_ARG_WITH([mysql],[AS_HELP_STRING([--with-mysql], [This will enable MySQL database support in qdb extension API. When it's enabled, user applications need to link mysql client library. (ex: -lmysqlclient)])],[withval=yes],[withval=no])
+AC_ARG_WITH([mysql],[AS_HELP_STRING([--with-mysql], [This will enable MySQL database support in qdatabase extension API. When it's enabled, user applications need to link mysql client library. (ex: -lmysqlclient)])],[withval=yes],[withval=no])
 if test "$withval" = yes; then
 	if test "$with_mysql" = yes; then
 		with_mysql="/usr/include/mysql"

@@ -48,12 +48,15 @@ extern "C" {
 #include <stdbool.h>
 #include "qlibc.h"
 
+/* constants */
+#define QLOG_OPT_THREADSAFE  (0x01)
+#define QLOG_OPT_FLUSH       (0x01 << 1)
+
 /* types */
 typedef struct qlog_s qlog_t;
 
 /* public functions */
-extern qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval,
-                    bool flush);
+extern qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval, int options);
 
 /**
  * qlog structure
@@ -67,7 +70,7 @@ struct qlog_s {
     void (*free) (qlog_t *log);
 
     /* private variables - do not access directly */
-    qmutex_t  qmutex;  /*!< activated if compiled with --enable-threadsafe */
+    qmutex_t *qmutex;  /*!< activated if compiled with --enable-threadsafe */
 
     char filepathfmt[PATH_MAX]; /*!< file file naming format like
                                      /somepath/daily-%Y%m%d.log */

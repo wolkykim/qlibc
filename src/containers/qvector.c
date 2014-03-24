@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qvector.c 81 2012-04-12 01:01:34Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 /**
  * @file qvector.c Vector implementation.
@@ -37,7 +35,7 @@
  *
  * @code
  *  [Code sample - Object]
- *  qvector_t *vector = qvector();
+ *  qvector_t *vector = qvector(QVECTOR_OPT_THREADSAFE);
  *
  *  // add elements
  *  vector->addstr(vector, "AB");      // no need to supply size
@@ -103,10 +101,6 @@
  *  Object2 1, hello1
  *  Object3 2, hello2
  * @endcode
- *
- * @note
- *  Use "--enable-threadsafe" configure script option to use under
- *  multi-threaded environments.
  */
 
 #include <stdio.h>
@@ -137,26 +131,31 @@ static void free_(qvector_t *vector);
 /**
  * Initialize vector.
  *
+ * @param options   combination of initialization options.
+ *
  * @return qvector_t container pointer.
  * @retval errno will be set in error condition.
  *  - ENOMEM    : Memory allocation failure.
  *
  * @code
  *  // allocate memory
- *  qvector_t *vector = qvector();
+ *  qvector_t *vector = qvector(QVECTOR_OPT_THREADSAFE);
  *  vector->free(vector);
  * @endcode
+ *
+ * @note
+ *   Available options:
+ *   - QVECTOR_OPT_THREADSAFE - make it thread-safe.
  */
-qvector_t *qvector(void)
+qvector_t *qvector(int options)
 {
-    qvector_t *vector = (qvector_t *)malloc(sizeof(qvector_t));
+    qvector_t *vector = (qvector_t *)calloc(1, sizeof(qvector_t));
     if (vector == NULL) {
         errno = ENOMEM;
         return NULL;
     }
 
-    memset((void *)vector, 0, sizeof(qvector_t));
-    vector->list = qlist();
+    vector->list = qlist(options);
     if (vector->list == NULL) {
         free(vector);
         errno = ENOMEM;

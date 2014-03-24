@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qlisttbl.c 100 2012-05-04 23:50:21Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 /**
  * @file qlisttbl.c Linked-list-table implementation.
@@ -63,7 +61,7 @@
  *
  * @code
  *  // create a list table.
- *  qlisttbl_t *tbl = qlisttbl();
+ *  qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
  *  tbl->setsort(tbl, true, false);  // set table to be kept sorted
  *
  *  // insert elements (key duplication allowed)
@@ -98,10 +96,6 @@
  *  // free object
  *  tbl->free(tbl);
  * @endcode
- *
- * @note
- *  Use "--enable-threadsafe" configure script option to use under
- *  multi-threaded environments.
  */
 
 #include <stdio.h>
@@ -113,6 +107,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <assert.h>
 #include <errno.h>
 #include "qlibc.h"
 #include "qinternal.h"
@@ -184,25 +179,39 @@ static bool _namecasematch(qdlnobj_t *obj, const char *name, uint32_t hash);
 /**
  * Create a new Q_LIST linked-list container
  *
+ * @param options   combination of initialization options.
+ *
  * @return a pointer of malloced qlisttbl_t structure in case of successful,
  *  otherwise returns NULL.
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *
  * @code
- *  qlisttbl_t *tbl = qlisttbl();
+ *  qlisttbl_t *tbl = qlisttbl(0);
+ *  qlisttbl_t *threadsafe_tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
  * @endcode
+ *
+ * @note
+ *   Available options:
+ *   - QLISTTBL_OPT_THREADSAFE - make it thread-safe.
  */
-qlisttbl_t *qlisttbl(void)
+qlisttbl_t *qlisttbl(int options)
 {
-    qlisttbl_t *tbl = (qlisttbl_t *)malloc(sizeof(qlisttbl_t));
+    qlisttbl_t *tbl = (qlisttbl_t *)calloc(1, sizeof(qlisttbl_t));
     if (tbl == NULL) {
         errno = ENOMEM;
         return NULL;
     }
 
-    // initialize container
-    memset((void *)tbl, 0, sizeof(qlisttbl_t));
+    // handle options.
+    if (options & QLISTTBL_OPT_THREADSAFE) {
+        Q_MUTEX_NEW(tbl->qmutex, true);
+        if (tbl->qmutex == NULL) {
+            errno = ENOMEM;
+            free(tbl);
+            return NULL;
+        }
+    }
 
     // member methods
     tbl->setcase    = setcase;
@@ -247,10 +256,7 @@ qlisttbl_t *qlisttbl(void)
     tbl->namematch  = _namematch;
     tbl->namecmp    = strcmp;
 
-    // initialize recrusive mutex
-    Q_MUTEX_INIT(tbl->qmutex, true);
-
-    // these are defaults - don't need to call them
+    // these are the defaults - we don't need to call them but just to be clear.
     //setcase(tbl, false);     // case sensitive
     //setsort(tbl, false);     // no sort
     //setputdir(tbl, false);   // append at bottom of list
@@ -1230,7 +1236,6 @@ static void free_(qlisttbl_t *tbl)
 {
     clear(tbl);
     Q_MUTEX_DESTROY(tbl->qmutex);
-
     free(tbl);
 }
 

@@ -48,18 +48,3 @@ const char *qlibc_version(void)
 {
     return _Q_VERSION;
 }
-
-/**
- * Returns this library is compiled with thread-safe option. --enable-threadsafe
- *
- * @return true if it's thread-safe, otherwise returns false.
- */
-bool qlibc_is_threadsafe(void)
-{
-#ifdef ENABLE_THREADSAFE
-    return true;
-#else
-    return false;
-#endif
-}
-

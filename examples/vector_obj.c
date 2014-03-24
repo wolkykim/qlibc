@@ -43,7 +43,7 @@ int main(void)
     };
 
     // get new vector
-    qvector_t *vector = qvector();
+    qvector_t *vector = qvector(QVECTOR_OPT_THREADSAFE);
 
     // add objects
     int i;

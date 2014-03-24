@@ -37,7 +37,7 @@
 int main(void)
 {
     // create a list-table.
-    qlisttbl_t *tbl = qlisttbl();
+    qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
     qdlnobj_t obj;
     int i;
 

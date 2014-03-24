@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qstring.c 113 2012-05-26 07:09:18Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 /**
  * @file qstring.c String APIs.
@@ -587,7 +585,7 @@ char *qstrtok(char *str, const char *delimiters, char *retstop, int *offset)
  */
 qlist_t *qstrtokenizer(const char *str, const char *delimiters)
 {
-    qlist_t *list = qlist();
+    qlist_t *list = qlist(0);
     if (list == NULL) return NULL;
 
     int i;

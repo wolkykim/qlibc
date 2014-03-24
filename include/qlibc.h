@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qlibc.h 131 2013-05-15 08:44:14Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 /**
  * qlibc header file
@@ -38,7 +36,7 @@
 #define _QLIBC_H
 
 #define _Q_PRGNAME "qlibc"  /*!< qlibc human readable name */
-#define _Q_VERSION "2.1.0"  /*!< qlibc version number string */
+#define _Q_VERSION "2.1.5"  /*!< qlibc version number string */
 
 #ifdef __cplusplus
 extern "C" {
@@ -130,11 +128,14 @@ struct qhnobj_s {
  * qlist.c
  ******************************************************************************/
 
+/* constants */
+#define QLIST_OPT_THREADSAFE (0x01)
+
 /* types */
 typedef struct qlist_s qlist_t;
 
 /* public functions */
-extern qlist_t *qlist(void);  /*!< qlist constructor */
+extern qlist_t *qlist(int options);  /*!< qlist constructor */
 
 /**
  * qlist container
@@ -176,7 +177,7 @@ struct qlist_s {
     void (*free) (qlist_t *list);
 
     /* private variables - do not access directly */
-    qmutex_t qmutex;  /*!< activated if compiled with --enable-threadsafe */
+    qmutex_t *qmutex; /*!< initialized when QLIST_OPT_THREADSAFE is given */
     size_t num;       /*!< number of elements */
     size_t max;       /*!< maximum number of elements. 0 means no limit */
     size_t datasum;   /*!< total sum of data size, does not include name size */
@@ -190,11 +191,14 @@ struct qlist_s {
  * qlisttbl.c
  ******************************************************************************/
 
+/* constants */
+#define QLISTTBL_OPT_THREADSAFE (0x01)
+
 /* types */
 typedef struct qlisttbl_s qlisttbl_t;
 
 /* public functions */
-extern qlisttbl_t *qlisttbl(void);  /*!< qlisttbl constructor */
+extern qlisttbl_t *qlisttbl(int options);  /*!< qlisttbl constructor */
 
 /**
  * qlisttbl container
@@ -257,7 +261,7 @@ struct qlisttbl_s {
     bool getdir;  /*!< object lookup direction for get(). false:from bottom */
     bool nextdir; /*!< object traversal direction for next(). false:from top */
 
-    qmutex_t qmutex;    /*!< activated if compiled with --enable-threadsafe */
+    qmutex_t *qmutex;   /*!< initialized when QLISTTBL_OPT_THREADSAFE is given */
     size_t num;         /*!< number of elements */
     qdlnobj_t *first;   /*!< first object pointer */
     qdlnobj_t *last;    /*!< last object pointer */
@@ -268,23 +272,24 @@ struct qlisttbl_s {
  * qhashtbl.c
  ******************************************************************************/
 
+/* constants */
+#define QHASHTBL_OPT_THREADSAFE (0x01)
+
 /* types */
 typedef struct qhashtbl_s qhashtbl_t;
 
 /* public functions */
-extern qhashtbl_t *qhashtbl(size_t range);  /*!< qhashtbl constructor */
+extern qhashtbl_t *qhashtbl(size_t range, int options);  /*!< qhashtbl constructor */
 
 /**
  * qhashtbl container
  */
 struct qhashtbl_s {
-    /* capsulated member functions */
-    bool (*put) (qhashtbl_t *tbl, const char *name, const void *data,
-                 size_t size);
+    /* encapsulated member functions */
+    bool (*put) (qhashtbl_t *tbl, const char *name, const void *data, size_t size);
     bool (*putstr) (qhashtbl_t *tbl, const char *name, const char *str);
-    bool (*putstrf) (qhashtbl_t *tbl, const char *name, const char *format,
-                     ...);
-    bool (*putint) (qhashtbl_t *tbl, const char *name, int64_t num);
+    bool (*putstrf) (qhashtbl_t *tbl, const char *name, const char *format, ...);
+    bool (*putint) (qhashtbl_t *tbl, const char *name, const int64_t num);
 
     void *(*get) (qhashtbl_t *tbl, const char *name, size_t *size, bool newmem);
     char *(*getstr) (qhashtbl_t *tbl, const char *name, bool newmem);
@@ -304,7 +309,7 @@ struct qhashtbl_s {
     void (*free) (qhashtbl_t *tbl);
 
     /* private variables - do not access directly */
-    qmutex_t qmutex;    /*!< activated if compiled with --enable-threadsafe */
+    qmutex_t *qmutex;   /*!< initialized when QHASHTBL_OPT_THREADSAFE is given */
     size_t num;         /*!< number of objects in this table */
     size_t range;       /*!< hash range, vertical number of slots */
     qhnobj_t **slots;   /*!< slot pointer container */
@@ -400,11 +405,14 @@ struct qhasharr_s {
  * qvector.c
  ******************************************************************************/
 
+/* constants */
+#define QVECTOR_OPT_THREADSAFE (QLIST_OPT_THREADSAFE)
+
 /* types */
 typedef struct qvector_s qvector_t;
 
 /* public functions */
-extern qvector_t *qvector(void);
+extern qvector_t *qvector(int options);
 
 /**
  * qvector container.
@@ -434,11 +442,14 @@ struct qvector_s {
  * qqueue.c
  ******************************************************************************/
 
+/* constants */
+#define QQUEUE_OPT_THREADSAFE (QLIST_OPT_THREADSAFE)
+
 /* types */
 typedef struct qqueue_s qqueue_t;
 
 /* public functions */
-extern qqueue_t *qqueue();
+extern qqueue_t *qqueue(int options);
 
 /**
  * qqueue container
@@ -475,11 +486,14 @@ struct qqueue_s {
  * qstack.c
  ******************************************************************************/
 
+/* constants */
+#define QSTACK_OPT_THREADSAFE (QLIST_OPT_THREADSAFE)
+
 /* types */
 typedef struct qstack_s qstack_t;
 
 /* public functions */
-extern qstack_t *qstack();
+extern qstack_t *qstack(int options);
 
 /**
  * qstack container
@@ -543,7 +557,7 @@ extern bool qfile_mkdir(const char *dirpath, mode_t mode, bool recursive);
 extern char *qfile_get_name(const char *filepath);
 extern char *qfile_get_dir(const char *filepath);
 extern char *qfile_get_ext(const char *filepath);
-extern off_t qfile_get_szie(const char *filepath);
+extern off_t qfile_get_size(const char *filepath);
 
 extern bool qfile_check_path(const char *path);
 extern char *qfile_correct_path(char *path);
@@ -571,7 +585,6 @@ extern ssize_t qio_printf(int fd, int timeoutms, const char *format, ...);
 
 /* qlibc.c */
 extern const char *qlibc_version(void);
-extern bool qlibc_is_threadsafe(void);
 
 /* qsocket.c */
 extern int qsocket_open(const char *hostname, int port, int timeoutms);

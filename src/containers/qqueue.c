@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qqueue.c 81 2012-04-12 01:01:34Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 /**
  * @file qqueue.c Queue implementation.
@@ -101,10 +99,6 @@
  *  pop(): B object
  *  pop(): A object
  * @endcode
- *
- * @note
- *  Use "--enable-threadsafe" configure script option to use under
- *  multi-threaded environments.
  */
 
 #include <stdio.h>
@@ -146,15 +140,21 @@ static void free_(qqueue_t *queue);
 /**
  * Create new queue container
  *
+ * @param options   combination of initialization options.
+ *
  * @return a pointer of malloced qqueue container, otherwise returns NULL.
  * @retval errno will be set in error condition.
  *  - ENOMEM    : Memory allocation failure.
  *
  * @code
- *   qqueue_t *queue = qQueue();
+ *   qqueue_t *queue = qQueue(QQUEUE_OPT_THREADSAFE);
  * @endcode
+ *
+ * @note
+ *   Available options:
+ *   - QQUEUE_OPT_THREADSAFE - make it thread-safe.
  */
-qqueue_t *qqueue(void)
+qqueue_t *qqueue(int options)
 {
     qqueue_t *queue = (qqueue_t *)malloc(sizeof(qqueue_t));
     if (queue == NULL) {
@@ -163,7 +163,7 @@ qqueue_t *qqueue(void)
     }
 
     memset((void *)queue, 0, sizeof(qqueue_t));
-    queue->list = qlist();
+    queue->list = qlist(options);
     if (queue->list == NULL) {
         free(queue);
         return NULL;

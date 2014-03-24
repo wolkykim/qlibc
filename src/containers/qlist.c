@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qlist.c 109 2012-05-25 17:38:18Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 /**
  * @file qlist.c Doubly Linked-list implementation.
@@ -55,7 +53,7 @@
  *
  * @code
  *  // create a list.
- *  qlist_t *list = qlist();
+ *  qlist_t *list = qlist(QLIST_OPT_THREADSAFE);
  *
  *  // insert elements
  *  list->addlast(list, "e1", sizeof("e1"));
@@ -76,7 +74,7 @@
  *  // debug output
  *  list->debug(list, stdout, true);
  *
- *  // travesal
+ *  // traversal
  *  qdlobj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  list->lock(list);
@@ -88,10 +86,6 @@
  *  // free object
  *  list->free(list);
  * @endcode
- *
- * @note
- *  Use "--enable-threadsafe" configure script option to use under
- *  multi-threaded environments.
  */
 
 #include <stdio.h>
@@ -149,24 +143,37 @@ static bool _remove_obj(qlist_t *list, qdlobj_t *obj);
 /**
  * Create new qlist_t linked-list container
  *
+ * @param options   combination of initialization options.
+ *
  * @return a pointer of malloced qlist_t container, otherwise returns NULL.
  * @retval errno will be set in error condition.
  *  -ENOMEM : Memory allocation failure.
  *
  * @code
- *  qlist_t *list = qlist();
+ *  qlist_t *list = qlist(0);
  * @endcode
+ *
+ * @note
+ *   Available options:
+ *   - QLIST_OPT_THREADSAFE - make it thread-safe.
  */
-qlist_t *qlist(void)
+qlist_t *qlist(int options)
 {
-    qlist_t *list = (qlist_t *)malloc(sizeof(qlist_t));
+    qlist_t *list = (qlist_t *)calloc(1, sizeof(qlist_t));
     if (list == NULL) {
         errno = ENOMEM;
         return NULL;
     }
 
-    // initialize container
-    memset((void *)list, 0, sizeof(qlist_t));
+    // handle options.
+    if (options & QLIST_OPT_THREADSAFE) {
+        Q_MUTEX_NEW(list->qmutex, true);
+        if (list->qmutex == NULL) {
+            errno = ENOMEM;
+            free(list);
+            return NULL;
+        }
+    }
 
     // member methods
     list->setsize       = setsize;
@@ -202,9 +209,6 @@ qlist_t *qlist(void)
     list->unlock        = unlock;
 
     list->free          = free_;
-
-    // initialize recrusive mutex
-    Q_MUTEX_INIT(list->qmutex, true);
 
     return list;
 }

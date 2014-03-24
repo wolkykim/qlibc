@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qhashtbl.c 86 2012-04-14 07:05:28Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 /**
  * @file qhashtbl.c Hash-table container implementation.
@@ -60,9 +58,11 @@
  *
  * @code
  *  // create a hash-table with 10 hash-index range.
- *  // Please beaware, the hash-index range 10 does not mean the number of
- *  // objects which can be stored. You can put as many as you want.
- *  qhashtbl_t *tbl = qHashtbl(10);
+ *  // Please be aware, the hash-index range 10 does not mean the number of
+ *  // objects which can be stored. You can put as many as you want but if
+ *  // this range is too small, hash conflict will happen and fetch time will
+ *  // slightly increase.
+ *  qhashtbl_t *tbl = qHashtbl(0, QHASHTBL_OPT_THREADSAFE);
  *
  *  // put objects into table.
  *  tbl->put(tbl, "sample1", "binary", 6);
@@ -83,10 +83,6 @@
  *  // release table
  *  tbl->free(tbl);
  * @endcode
- *
- * @note
- *  Use "--enable-threadsafe" configure script option to use under
- *  multi-threaded environments.
  */
 
 #include <stdio.h>
@@ -96,9 +92,12 @@
 #include <inttypes.h>
 #include <stdarg.h>
 #include <string.h>
+#include <assert.h>
 #include <errno.h>
 #include "qlibc.h"
 #include "qinternal.h"
+
+#define DEFAULT_INDEX_RANGE (1000)  /*!< default value of hash-index range */
 
 #ifndef _DOXYGEN_SKIP
 
@@ -132,41 +131,45 @@ static void free_(qhashtbl_t *tbl);
 /**
  * Initialize hash table.
  *
- * @param range     hash range.
+ * @param range     initial size of index range. Value of 0 will use default value, DEFAULT_INDEX_RANGE;
+ * @param options   combination of initialization options.
  *
  * @return a pointer of malloced qhashtbl_t, otherwise returns false
  * @retval errno will be set in error condition.
- *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  *
  * @code
- *  // create a hash-table with hash-index range 1000 (does not mean maximum
- *  // number of objects).
- *  qhashtbl_t *tbl = qHashtbl(1000);
+ *  // create a hash-table.
+ *  qhashtbl_t *basic_hashtbl = qHashtbl(0, 0);
+ *
+ *  // create a large hash-table for millions of keys with thread-safe option.
+ *  qhashtbl_t *small_hashtbl = qHashtbl(1000000, QHASHTBL_OPT_THREADSAFE);
  * @endcode
+ *
+ * @note
+ *   Setting the right range is a magic.
+ *   In practice, pick a value between (total keys / 3) ~ (total keys * 2).
+ *   Available options:
+ *   - QHASHTBL_OPT_THREADSAFE - make it thread-safe.
  */
-qhashtbl_t *qhashtbl(size_t range)
+qhashtbl_t *qhashtbl(size_t range, int options)
 {
     if (range == 0) {
-        errno = EINVAL;
-        return NULL;
+        range = DEFAULT_INDEX_RANGE;
     }
 
-    qhashtbl_t *tbl = (qhashtbl_t *)malloc(sizeof(qhashtbl_t));
-    if (tbl == NULL) {
-        errno = ENOMEM;
-        return NULL;
-    }
-    memset((void *)tbl, 0, sizeof(qhashtbl_t));
+    qhashtbl_t *tbl = (qhashtbl_t *)calloc(1, sizeof(qhashtbl_t));
+    if (tbl == NULL) goto malloc_failure;
 
     // allocate table space
-    tbl->slots = (qhnobj_t **)malloc(sizeof(qhnobj_t *) * range);
-    if (tbl->slots == NULL) {
-        errno = ENOMEM;
-        free_(tbl);
-        return NULL;
+    tbl->slots = (qhnobj_t **)calloc(range, sizeof(qhnobj_t *));
+    if (tbl->slots == NULL) goto malloc_failure;
+
+    // handle options.
+    if (options & QHASHTBL_OPT_THREADSAFE) {
+        Q_MUTEX_NEW(tbl->qmutex, true);
+        if (tbl->qmutex == NULL) goto malloc_failure;
     }
-    memset((void *)tbl->slots, 0, sizeof(qhnobj_t *) * range);
 
     // assign methods
     tbl->put        = put;
@@ -191,13 +194,19 @@ qhashtbl_t *qhashtbl(size_t range)
 
     tbl->free       = free_;
 
-    // initialize recrusive mutex
-    Q_MUTEX_INIT(tbl->qmutex, true);
-
-    // now table can be used
+    // set table range.
     tbl->range = range;
 
     return tbl;
+
+  malloc_failure:
+    errno = ENOMEM;
+    if (tbl) {
+        if (tbl->slots) free(tbl->slots);
+        assert(tbl->qmutex == NULL);
+    	free_(tbl);
+    }
+    return NULL;
 }
 
 /**
@@ -250,7 +259,7 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
     // put into table
     if (obj == NULL) {
         // insert
-        obj = (qhnobj_t *)malloc(sizeof(qhnobj_t));
+        obj = (qhnobj_t *)calloc(1, sizeof(qhnobj_t));
         if (obj == NULL) {
             free(dupname);
             free(dupdata);
@@ -258,7 +267,6 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
             errno = ENOMEM;
             return false;
         }
-        memset((void *)obj, 0, sizeof(qhnobj_t));
 
         if (tbl->slots[idx] != NULL) {
             // insert at the beginning
@@ -343,7 +351,7 @@ static bool putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...)
  * @note
  * The integer will be converted to a string object and stored as string object.
  */
-static bool putint(qhashtbl_t *tbl, const char *name, int64_t num)
+static bool putint(qhashtbl_t *tbl, const char *name, const int64_t num)
 {
     char str[20+1];
     snprintf(str, sizeof(str), "%"PRId64, num);
@@ -382,7 +390,7 @@ static bool putint(qhashtbl_t *tbl, const char *name, int64_t num)
  *  If newmem flag is set, returned data will be malloced and should be
  *  deallocated by user. Otherwise returned pointer will point internal buffer
  *  directly and should not be de-allocated by user. In thread-safe mode,
- *  newmem flag always should be true.
+ *  newmem flag should be true always.
  */
 static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem)
 {
@@ -443,7 +451,7 @@ static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem)
  *  If newmem flag is set, returned data will be malloced and should be
  *  deallocated by user.
  */
-static char *getstr(qhashtbl_t *tbl, const char *name, bool newmem)
+static char *getstr(qhashtbl_t *tbl, const char *name, const bool newmem)
 {
     return get(tbl, name, NULL, newmem);
 }
@@ -518,7 +526,7 @@ static int64_t getint(qhashtbl_t *tbl, const char *name)
  *  If newmem flag is true, user should de-allocate obj.name and obj.data
  *  resources.
  */
-static bool getnext(qhashtbl_t *tbl, qhnobj_t *obj, bool newmem)
+static bool getnext(qhashtbl_t *tbl, qhnobj_t *obj, const bool newmem)
 {
     if (obj == NULL) {
         errno = EINVAL;
@@ -710,14 +718,11 @@ bool debug(qhashtbl_t *tbl, FILE *out)
  *
  * @note
  *  From user side, normally locking operation is only needed when traverse
- *  all elements using qhashtbl->getnext(). Most of other operations do
- *  necessary locking internally when it's compiled with --enable-threadsafe
- *  option.
+ *  all elements using qhashtbl->getnext().
  *
  * @note
- *  This operation will be activated only when --enable-threadsafe option is
- *  given at compile time. To find out whether it's compiled with threadsafe
- *  option, call qLibcThreadsafe().
+ *  This operation will do nothing if QHASHTBL_OPT_THREADSAFE option was not
+ *  given at the initialization time.
  */
 static void lock(qhashtbl_t *tbl)
 {
@@ -730,13 +735,12 @@ static void lock(qhashtbl_t *tbl)
  * @param tbl   qhashtbl_t container pointer.
  *
  * @note
- *  This operation will be activated only when --enable-threadsafe option is
- *  given at compile time. To find out whether it's compiled with threadsafe
- *  option, call qLibcThreadsafe().
+ *  This operation will do nothing if QHASHTBL_OPT_THREADSAFE option was not
+ *  given at the initialization time.
  */
 static void unlock(qhashtbl_t *tbl)
 {
-    Q_MUTEX_LEAVE(tbl->qmutex);
+	Q_MUTEX_LEAVE(tbl->qmutex);
 }
 
 /**
@@ -751,6 +755,5 @@ void free_(qhashtbl_t *tbl)
     if (tbl->slots != NULL) free(tbl->slots);
     unlock(tbl);
     Q_MUTEX_DESTROY(tbl->qmutex);
-
     free(tbl);
 }

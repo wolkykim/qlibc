@@ -60,6 +60,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include "qlibc.h"
 #include "qlibcext.h"
 #include "qinternal.h"
@@ -82,8 +83,7 @@ static bool _real_open(qlog_t *log);
  *                        strftime()
  * @param mode            new file mode. 0 for system default
  * @param rotateinterval  rotating interval seconds, set 0 to disable rotation
- * @param flush           set to true if you want to flush everytime logging.
- *                        false for buffered logging
+ * @param options         combination of options.
  *
  * @return a pointer of qlog_t structure
  *
@@ -94,32 +94,49 @@ static bool _real_open(qlog_t *log);
  *  hour format like "/somepath/xxx-%Y%m%d%H.log". You can set it to
  *  "/somepath/xxx-%H.log" for daily overrided log file.
  *
+ * @note
+ *   Available options:
+ *   - QLOG_OPT_THREADSAFE - make it thread-safe.
+ *   - QLOG_OPT_FLUSH -  flush out buffer everytime.
+ *
  * @code
- *   qlog_t *log = qlog("/tmp/qdecoder-%Y%m%d.err", 0644, 86400, false);
+ *   qlog_t *log = qlog("/tmp/qdecoder-%Y%m%d.err", 0644, 86400, QLOG_OPT_THREADSAFE);
  *   log->free(log);
  * @endcode
- *
- * @note
- *  Use "--enable-threadsafe" configure script option to use under
- *  multi-threaded environments.
  */
-qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval,
-             bool flush)
+qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval, int options)
 {
     qlog_t *log;
 
-    /* malloc qlog_t structure */
-    if ((log = (qlog_t *)malloc(sizeof(qlog_t))) == NULL) return NULL;
+    // malloc qlog_t structure
+    log = (qlog_t *)calloc(1, sizeof(qlog_t));
+    if (log == NULL) {
+        errno = ENOMEM;
+        return NULL;
+    }
 
-    /* fill structure */
-    memset((void *)(log), 0, sizeof(qlog_t));
+    // set up the structure.
     qstrcpy(log->filepathfmt, sizeof(log->filepathfmt), filepathfmt);
     log->mode = mode;
     if (rotateinterval > 0) log->rotateinterval = rotateinterval;
-    log->logflush = flush;
 
+    // handle options
+    if (options & QLOG_OPT_THREADSAFE) {
+        Q_MUTEX_NEW(log->qmutex, true);
+        if (log->qmutex == NULL) {
+            errno = ENOMEM;
+            free(log);
+            return NULL;
+        }
+    }
+    if (options & QLOG_OPT_FLUSH) {
+        log->logflush = true;
+    }
+
+    // try to open the log file.
     if (_real_open(log) == false) {
         free(log);
+        Q_MUTEX_DESTROY(log->qmutex);
         return NULL;
     }
 
@@ -129,9 +146,6 @@ qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval,
     log->duplicate  = duplicate;
     log->flush  = flush_;
     log->free   = free_;
-
-    // initialize recursive lock
-    Q_MUTEX_INIT(log->qmutex, true);
 
     return log;
 }
@@ -156,7 +170,7 @@ static bool write_(qlog_t *log, const char *str)
         if (log->outflush == true) fflush(log->outfp);
     }
 
-    /* check log rotate is needed*/
+    /* check if log rotation is needed */
     if (log->nextrotate > 0 && time(NULL) >= log->nextrotate) {
         _real_open(log);
     }

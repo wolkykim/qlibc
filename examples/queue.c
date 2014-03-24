@@ -39,7 +39,7 @@
 int main(void)
 {
     // create queue
-    qqueue_t *queue = qqueue();
+    qqueue_t *queue = qqueue(QQUEUE_OPT_THREADSAFE);
 
     // example: integer queue
     queue->pushint(queue, 1);

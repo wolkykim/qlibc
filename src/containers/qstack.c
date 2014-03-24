@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qstack.c 81 2012-04-12 01:01:34Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 /**
  * @file qstack.c Stack implementation.
@@ -46,7 +44,7 @@
  *
  * @code
  *  // create stack
- *  qstack_t *stack = qstack();
+ *  qstack_t *stack = qstack(QSTACK_OPT_THREADSAFE);
  *
  *  // example: integer stack
  *  stack->pushint(stack, 1);
@@ -101,10 +99,6 @@
  *  pop(): B object
  *  pop(): A object
  * @endcode
- *
- * @note
- *  Use "--enable-threadsafe" configure script option to use under
- *  multi-threaded environments.
  */
 
 #include <stdio.h>
@@ -146,15 +140,21 @@ static void free_(qstack_t *stack);
 /**
  * Create a new stack container
  *
+ * @param options   combination of initialization options.
+ *
  * @return a pointer of malloced qstack_t container, otherwise returns NULL.
  * @retval errno will be set in error condition.
  *  - ENOMEM    : Memory allocation failure.
  *
  * @code
- *   qstack_t *stack = qstack();
+ *   qstack_t *stack = qstack(QSTACK_OPT_THREADSAFE);
  * @endcode
+ *
+ * @note
+ *   Available options:
+ *   - QSTACK_OPT_THREADSAFE - make it thread-safe.
  */
-qstack_t *qstack(void)
+qstack_t *qstack(int options)
 {
     qstack_t *stack = (qstack_t *)malloc(sizeof(qstack_t));
     if (stack == NULL) {
@@ -163,7 +163,7 @@ qstack_t *qstack(void)
     }
 
     memset((void *)stack, 0, sizeof(qstack_t));
-    stack->list = qlist();
+    stack->list = qlist(options);
     if (stack->list == NULL) {
         free(stack);
         return NULL;

@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qinternal.h 114 2012-05-26 13:27:36Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 #ifndef _QINTERNAL_H
 #define _QINTERNAL_H
@@ -67,8 +65,6 @@
 /*
  * Q_MUTEX Macros
  */
-#ifdef ENABLE_THREADSAFE
-
 #ifndef _MULTI_THREADED
 #define _MULTI_THREADED
 #endif
@@ -76,42 +72,44 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define Q_MUTEX_INIT(x,r) do {                                          \
-        memset((void*)&x, 0, sizeof(qmutex_t));                         \
+#define Q_MUTEX_NEW(x,r) do {                                           \
+        x = (qmutex_t *)calloc(1, sizeof(qmutex_t));                    \
+        if(x == NULL) break;                                            \
+        memset((void*)x, 0, sizeof(qmutex_t));                          \
         pthread_mutexattr_t _mutexattr;                                 \
         pthread_mutexattr_init(&_mutexattr);                            \
         if(r == true) {                                                 \
             pthread_mutexattr_settype(&_mutexattr, PTHREAD_MUTEX_RECURSIVE); \
         }                                                               \
-        int _ret = pthread_mutex_init(&x.mutex, &_mutexattr);           \
+        int _ret = pthread_mutex_init(&(x->mutex), &_mutexattr);        \
         pthread_mutexattr_destroy(&_mutexattr);                         \
         if(_ret != 0) {                                                 \
             char _errmsg[64];                                           \
             strerror_r(_ret, _errmsg, sizeof(_errmsg));                 \
             DEBUG("Q_MUTEX: can't initialize mutex. [%d:%s]", _ret, _errmsg); \
-            exit(EXIT_FAILURE);                                         \
+            free(x);                                                    \
+            x = NULL;                                                   \
         }                                                               \
-        DEBUG("Q_MUTEX: initialized.");                                 \
     } while(0)
-//pthread_mutexattr_setprotocol(&_mutexattr, PTHREAD_PRIO_INHERIT);
 
 #define Q_MUTEX_LEAVE(x) do {                                           \
-        if(!pthread_equal(x.owner, pthread_self())) {                   \
+        if(x == NULL) break;                                            \
+        if(!pthread_equal(x->owner, pthread_self())) {                  \
             DEBUG("Q_MUTEX: unlock - owner mismatch.");                 \
         }                                                               \
-        if((x.count--) < 0) x.count = 0;                                \
-        pthread_mutex_unlock(&x.mutex);                                 \
+        if((x->count--) < 0) x->count = 0;                              \
+        pthread_mutex_unlock(&(x->mutex));                              \
     } while(0)
-//  DEBUG("Q_MUTEX: unlock, cnt=%d", x.count);
 
 #define MAX_MUTEX_LOCK_WAIT (5000)
 #define Q_MUTEX_ENTER(x) do {                                           \
+        if(x == NULL) break;                                            \
         while(true) {                                                   \
             int _ret, i;                                                \
-            for(i = 0; (_ret = pthread_mutex_trylock(&x.mutex)) != 0    \
+            for(i = 0; (_ret = pthread_mutex_trylock(&(x->mutex))) != 0 \
                         && i < MAX_MUTEX_LOCK_WAIT; i++) {              \
                 if(i == 0) {                                            \
-                    DEBUG("Q_MUTEX: mutex is already locked - try again"); \
+                    DEBUG("Q_MUTEX: mutex is already locked - retrying"); \
                 }                                                       \
                 usleep(1);                                              \
             }                                                           \
@@ -122,31 +120,22 @@
                   _ret, _errmsg);                                       \
             Q_MUTEX_LEAVE(x);                                           \
         }                                                               \
-        x.count++;                                                      \
-        x.owner = pthread_self();                                       \
+        x->count++;                                                     \
+        x->owner = pthread_self();                                      \
     } while(0)
-//  DEBUG("Q_MUTEX: locked, cnt=%d", x.count);
 
 #define Q_MUTEX_DESTROY(x) do {                                         \
-        if(x.count != 0) DEBUG("Q_MUTEX: mutex counter is not 0.");     \
+        if(x == NULL) break;                                            \
+        if(x->count != 0) DEBUG("Q_MUTEX: mutex counter is not 0.");    \
         int _ret;                                                       \
-        while((_ret = pthread_mutex_destroy(&x.mutex)) != 0) {          \
+        while((_ret = pthread_mutex_destroy(&(x->mutex))) != 0) {       \
             char _errmsg[64];                                           \
             strerror_r(_ret, _errmsg, sizeof(_errmsg));                 \
             DEBUG("Q_MUTEX: force to unlock mutex. [%d:%s]", _ret, _errmsg); \
             Q_MUTEX_LEAVE(x);                                           \
         }                                                               \
-        DEBUG("Q_MUTEX: destroyed.");                                   \
+        free(x);                                                        \
     } while(0)
-
-#else
-
-#define Q_MUTEX_INIT(x,y)
-#define Q_MUTEX_LEAVE(x)
-#define Q_MUTEX_ENTER(x)
-#define Q_MUTEX_DESTROY(x)
-
-#endif  /* ENABLE_THREADSAFE */
 
 /*
  * Debug Macros

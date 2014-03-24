@@ -37,7 +37,7 @@
 
 int main(void)
 {
-    qvector_t *vector = qvector();
+    qvector_t *vector = qvector(QVECTOR_OPT_THREADSAFE);
 
     // add elements
     vector->addstr(vector, "AB");       // no need to supply size

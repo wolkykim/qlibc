@@ -52,7 +52,7 @@
  *    }
  *
  *    // container for storing response headers for debugging purpose
- *    qlisttbl_t *resheaders = qlisttbl();
+ *    qlisttbl_t *resheaders = qlisttbl(0);
  *
  *    // download
  *    off_t nSavesize = 0;
@@ -526,8 +526,8 @@ static bool open_(qhttpclient_t *client)
  *     if(httpclient == NULL) return;
  *
  *     // set additional custom headers
- *     qlisttbl_t *reqheaders = qlisttbl();
- *     qlisttbl_t *resheaders = qlisttbl();
+ *     qlisttbl_t *reqheaders = qlisttbl(0);
+ *     qlisttbl_t *resheaders = qlisttbl(0);
  *
  *     // send HEAD request
  *     int nRescode = 0;
@@ -562,7 +562,7 @@ static bool head(qhttpclient_t *client, const char *uri, int *rescode,
     // generate request headers if necessary
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl();
+        reqheaders = qlisttbl(0);
         freeReqHeaders = true;
     }
 
@@ -640,8 +640,8 @@ static bool head(qhttpclient_t *client, const char *uri, int *rescode,
  *     int nFd = open("/tmp/test.data", O_WRONLY | O_CREAT, 0644);
  *
  *     // set additional custom headers
- *     qlisttbl_t *reqheaders = qlisttbl();
- *     qlisttbl_t *resheaders = qlisttbl();
+ *     qlisttbl_t *reqheaders = qlisttbl(0);
+ *     qlisttbl_t *resheaders = qlisttbl(0);
  *
  *     // set userdata
  *     struct userdata mydata;
@@ -698,7 +698,7 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
     // generate request headers if necessary
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl();
+        reqheaders = qlisttbl(0);
         freeReqHeaders = true;
     }
 
@@ -864,7 +864,7 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
  *     time_t nFileDate = ...;
  *
  *     // set additional custom headers
- *     qlisttbl_t *reqheaders = qlisttbl();
+ *     qlisttbl_t *reqheaders = qlisttbl(0);
  *     reqheaders->putstr(reqheaders, "X-FILE-MD5SUM", pFileMd5sum, true);
  *     reqheaders->putInt(reqheaders, "X-FILE-DATE", nFileDate, true);
  *
@@ -874,7 +874,7 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
  *
  *     // send file
  *     int nRescode = 0;
- *     qlisttbl_t *resheaders = qlisttbl();
+ *     qlisttbl_t *resheaders = qlisttbl(0);
  *     bool bRet = httpclient->put(httpclient,
  *                                 "/img/qdecoder.png", nFd, nFileSize,
  *                                 &nRescode,
@@ -920,7 +920,7 @@ static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
     // generate request headers
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl();
+        reqheaders = qlisttbl(0);
         freeReqHeaders = true;
     }
 
@@ -1087,7 +1087,7 @@ static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
     // send request
     bool freeReqHeaders = false;
     if (reqheaders == NULL && data != NULL && size > 0) {
-        reqheaders = qlisttbl();
+        reqheaders = qlisttbl(0);
         reqheaders->putstrf(reqheaders, true, "Content-Length", "%jd", size);
         freeReqHeaders = true;
     }
@@ -1159,7 +1159,7 @@ static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
  *  does not have those headers in it.
  *
  * @code
- *   qlisttbl_t *reqheaders = qlisttbl();
+ *   qlisttbl_t *reqheaders = qlisttbl(0);
  *   reqheaders->putstr(reqheaders,  "Date", qTimeGetGmtStaticStr(0), true);
  *
  *   httpclient->sendrequest(client,
@@ -1176,7 +1176,7 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
     // generate request headers if necessary
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl();
+        reqheaders = qlisttbl(0);
         if (reqheaders == NULL) return false;
         freeReqHeaders = true;
     }
@@ -1196,7 +1196,7 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
     }
 
     // create stream buffer
-    qvector_t *outBuf = qvector();
+    qvector_t *outBuf = qvector(0);
     if (outBuf == NULL) return false;
 
     // buffer out command
@@ -1250,7 +1250,7 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
  *   httpclient->sendrequest(client, "DELETE", "/img/qdecoder.png", NULL);
  *
  *   // read response
- *   qlisttbl_t *resheaders = qlisttbl();
+ *   qlisttbl_t *resheaders = qlisttbl(0);
  *   off_t clength;
  *   int rescode = httpclient->readresponse(client, resheaders, &clength);
  *   if(clength > 0) {

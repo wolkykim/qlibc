@@ -46,9 +46,8 @@ We used this concept as much as possible because it simplifies the thinking way 
 See the example below to see how it works.
 
 ```
-  // create a hash-table with hash range 100.
-  // Hash range does NOT mean maximum number of elements. Refer API doc.
-  qhashtbl_t *tbl = qhashtbl(100);
+  // create a hash-table.
+  qhashtbl_t *tbl = qhashtbl(0, QHASHTBL_OPT_THREADSAFE);
   
   // add an element which key name is "score".
   int x = 12345;
@@ -69,7 +68,7 @@ Here is an identical implementation with Linked-List-Table container. You might 
 
 ```
   // create a linked-list-table.
-  qlisttbl_t *tbl = qlisttbl();
+  qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
   
   // add an element which key name is "score".
   int x = 12345;
