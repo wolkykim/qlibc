@@ -1198,14 +1198,7 @@ static bool debug(qlisttbl_t *tbl, FILE *out)
  *
  * @note
  *  From user side, normally locking operation is only needed when traverse all
- *  elements using qlisttbl->getnext(). Most of other operations do
- *  necessary locking internally when it's compiled with --enable-threadsafe
- *  option.
- *
- * @note
- *  This operation will be activated only when --enable-threadsafe option is
- *  given at compile time. To find out whether it's compiled with threadsafe
- *  option, call qlibc_is_threadsafe().
+ *  elements using qlisttbl->getnext().
  */
 static void lock(qlisttbl_t *tbl)
 {
@@ -1216,11 +1209,6 @@ static void lock(qlisttbl_t *tbl)
  * qlisttbl->unlock(): Leave critical section.
  *
  * @param tbl qlisttbl container pointer.
- *
- * @note
- *  This operation will be activated only when --enable-threadsafe option is
- *  given at compile time. To find out whether it's compiled with threadsafe
- *  option, call qlibc_is_threadsafe().
  */
 static void unlock(qlisttbl_t *tbl)
 {

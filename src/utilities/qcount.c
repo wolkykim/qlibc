@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qcount.c 88 2012-04-17 00:23:20Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 /**
  * @file qcount.c Counter file handling APIs.

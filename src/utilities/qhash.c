@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qhash.c 133 2013-11-02 05:01:23Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 /**
  * @file qhash.c Hash APIs.
@@ -246,12 +244,10 @@ uint64_t qhashfnv1_64(const void *data, size_t nbytes)
  * @endcode
  *
  * @code
- *  MurmurHash3 was created by Austin Appleby  in 2008. The cannonical
- *  implementations are in C++ and placed in the public.
- *
+ *  MurmurHash3 was created by Austin Appleby  in 2008. The initial
+ *  implementation was published in C++ and placed in the public.
  *    https://sites.google.com/site/murmurhash/
- *
- *  Seungyoung Kim has ported it's cannonical implementation to C language
+ *  Seungyoung Kim has ported its implementation into C language
  *  in 2012 and published it as a part of qLibc component.
  * @endcode
  */

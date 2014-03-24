@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,9 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qdatabase.c 109 2012-05-25 17:38:18Z seungyoung.kim $
- ******************************************************************************/
+ *****************************************************************************/
 
 /**
  * @file qdatabase.c Database wrapper.
@@ -75,10 +73,6 @@
  *   // free db object
  *   db->free(db);
  * @endcode
- *
- * @note
- *  Use "--enable-threadsafe" configure script option to use under
- *  multi-threaded environments.
  */
 
 #ifndef DISABLE_QDATABASE
@@ -224,7 +218,7 @@ qdb_t *qdb(const char *dbtype, const char *addr, int port, const char *username,
     db->free            = free_;
 
     // initialize recrusive mutex
-    Q_MUTEX_INIT(db->qmutex, true);
+    Q_MUTEX_NEW(db->qmutex, true);
 
     return db;
 }
@@ -487,11 +481,6 @@ static qdbresult_t *execute_queryf(qdb_t *db, const char *format, ...)
  *   (... insert/update/delete ...)
  *   db->commit(db);
  * @endcode
- *
- * @note
- *  This operation will raise lock if you compile "--enable-threadsafe" option
- *  to protect thread-safe operation. In this case, before calling
- *  qdb->commit() or qdb->rollback(), another threads will be hold.
  */
 static bool begin_tran(qdb_t *db)
 {

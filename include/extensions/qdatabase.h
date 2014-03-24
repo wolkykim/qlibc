@@ -1,7 +1,7 @@
 /******************************************************************************
- * qLibc - http://www.qdecoder.org
+ * qLibc
  *
- * Copyright (c) 2010-2012 Seungyoung Kim.
+ * Copyright (c) 2010-2014 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************
- * $Id: qlibc.h 55 2012-04-03 03:15:00Z seungyoung.kim $
  ******************************************************************************/
 
 /**
@@ -88,7 +86,7 @@ struct qdb_s {
     void (*free) (qdb_t *db);
 
     /* private variables - do not access directly */
-    qmutex_t  qmutex;  /*!< activated if compiled with --enable-threadsafe */
+    qmutex_t *qmutex;
 
     bool connected;   /*!< if opened true, if closed false */
 

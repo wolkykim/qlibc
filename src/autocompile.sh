@@ -1,7 +1,7 @@
 #!/bin/bash
-#
-# $Id: autocompile.sh 120 2012-05-31 00:51:52Z seungyoung.kim $
-#
+
+# Copyright (c) 2010-2014 Seungyoung Kim.
+# All rights reserved.
 
 ARGC=$#
 ARGV=$*
