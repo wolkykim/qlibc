@@ -2,9 +2,7 @@
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-------------------------------------------------------------->
 <!-- qLibc Project                                            -->
-<!--                                                          -->
-<!--            Copyright (c) The qDecoder Project            -->
-<!--                 http://www.qdecoder.org                  -->
+<!--                Copyright (c) Seungyoung Kim              -->
 <!-------------------------------------------------------------->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -60,7 +58,7 @@
 <div class="line">                            | KEY B | | VALUE B |</div>
 <div class="line">                            +-------+ +---------+</div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="comment">// create a list table.</span></div>
-<div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#a538d83c961e31b1b7809c71d6f82f9c3" title="Create a new Q_LIST linked-list container.">qlisttbl</a>();</div>
+<div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>(QLISTTBL_OPT_THREADSAFE);</div>
 <div class="line">tbl-&gt;setsort(tbl, <span class="keyword">true</span>, <span class="keyword">false</span>);  <span class="comment">// set table to be kept sorted</span></div>
 <div class="line"></div>
 <div class="line"><span class="comment">// insert elements (key duplication allowed)</span></div>
@@ -94,13 +92,12 @@
 <div class="line"></div>
 <div class="line"><span class="comment">// free object</span></div>
 <div class="line">tbl-&gt;free(tbl);</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Use "&amp;ndash;enable-threadsafe" configure script option to use under multi-threaded environments. </dd></dl>
-</div><table class="memberdecls">
+</div><!-- fragment --> </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a538d83c961e31b1b7809c71d6f82f9c3"><td class="memItemLeft" align="right" valign="top">qlisttbl_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#a538d83c961e31b1b7809c71d6f82f9c3">qlisttbl</a> (void)</td></tr>
-<tr class="memdesc:a538d83c961e31b1b7809c71d6f82f9c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new Q_LIST linked-list container.  <a href="#a538d83c961e31b1b7809c71d6f82f9c3"></a><br/></td></tr>
-<tr class="separator:a538d83c961e31b1b7809c71d6f82f9c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace8778acce088344531b5249d580aca7"><td class="memItemLeft" align="right" valign="top">qlisttbl_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7">qlisttbl</a> (int options)</td></tr>
+<tr class="memdesc:ace8778acce088344531b5249d580aca7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new Q_LIST linked-list container.  <a href="#ace8778acce088344531b5249d580aca7"></a><br/></td></tr>
+<tr class="separator:ace8778acce088344531b5249d580aca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3aa4b3ae6286ac42070cc7d5b1cdd5e"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#ab3aa4b3ae6286ac42070cc7d5b1cdd5e">setcase</a> (qlisttbl_t *tbl, bool insensitive)</td></tr>
 <tr class="memdesc:ab3aa4b3ae6286ac42070cc7d5b1cdd5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ab3aa4b3ae6286ac42070cc7d5b1cdd5e" title="qlisttbl-&gt;setcase(): Sets case sensitivity for key lookup.">setcase()</a>: Sets case sensitivity for key lookup.  <a href="#ab3aa4b3ae6286ac42070cc7d5b1cdd5e"></a><br/></td></tr>
 <tr class="separator:ab3aa4b3ae6286ac42070cc7d5b1cdd5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,21 +181,27 @@ Functions</h2></td></tr>
 <tr class="separator:afd652510115cdd569708e51e0d2f060d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a538d83c961e31b1b7809c71d6f82f9c3"></a>
+<a class="anchor" id="ace8778acce088344531b5249d580aca7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">qlisttbl_t* qlisttbl </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>options</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Create a new Q_LIST linked-list container. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">options</td><td>combination of initialization options.</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>a pointer of malloced qlisttbl_t structure in case of successful, otherwise returns NULL. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
@@ -209,8 +212,13 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<div class="fragment"><div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#a538d83c961e31b1b7809c71d6f82f9c3" title="Create a new Q_LIST linked-list container.">qlisttbl</a>();</div>
-</div><!-- fragment --> 
+<div class="fragment"><div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>(0);</div>
+<div class="line">qlisttbl_t *threadsafe_tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>(QLISTTBL_OPT_THREADSAFE);</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Available options:<ul>
+<li>QLISTTBL_OPT_THREADSAFE - make it thread-safe. </li>
+</ul>
+</dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="ab3aa4b3ae6286ac42070cc7d5b1cdd5e"></a>
@@ -526,7 +534,7 @@ Functions</h2></td></tr>
 <div class="line"><span class="keyword">struct </span>my_obj obj;</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// create a table and add a sample object.</span></div>
-<div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#a538d83c961e31b1b7809c71d6f82f9c3" title="Create a new Q_LIST linked-list container.">qlisttbl</a>();</div>
+<div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>();</div>
 <div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;obj1&quot;</span>, &amp;obj, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> my_obj), <span class="keyword">false</span>);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The default behavior is adding an object at the end of this table unless it's changed by <a class="el" href="qlisttbl_8c.html#a1f534c0bd5a35fb5da28cdd42ad97875" title="qlisttbl-&gt;setputdir(): Sets adding direction(at last of first).">setputdir()</a>. </dd></dl>
 
@@ -812,7 +820,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<div class="fragment"><div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#a538d83c961e31b1b7809c71d6f82f9c3" title="Create a new Q_LIST linked-list container.">qlisttbl</a>();</div>
+<div class="fragment"><div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>();</div>
 <div class="line">(...codes...)</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// with newmem flag unset</span></div>
@@ -1128,7 +1136,7 @@ The returned array of qobj_t should be released by <a class="el" href="qlisttbl_
   </dd>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>The obj should be initialized with 0 by using memset() before first call. If newmem flag is true, user should de-allocate obj.name and obj.data resources.</dd></dl>
-<div class="fragment"><div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#a538d83c961e31b1b7809c71d6f82f9c3" title="Create a new Q_LIST linked-list container.">qlisttbl</a>();</div>
+<div class="fragment"><div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>();</div>
 <div class="line">(...add data into table...)</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// non-thread usages</span></div>
@@ -1609,9 +1617,7 @@ The returned array of qobj_t should be released by <a class="el" href="qlisttbl_
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>From user side, normally locking operation is only needed when traverse all elements using qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ac16016e661f135f63b1a0398ffeea189" title="qlisttbl-&gt;getnext(): Get next element.">getnext()</a>. Most of other operations do necessary locking internally when it's compiled with &ndash;enable-threadsafe option.</dd>
-<dd>
-This operation will be activated only when &ndash;enable-threadsafe option is given at compile time. To find out whether it's compiled with threadsafe option, call <a class="el" href="qlibc_8c.html#a38f5e0410d2e758f449cbdeb35bccab1" title="Returns this library is compiled with thread-safe option.">qlibc_is_threadsafe()</a>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>From user side, normally locking operation is only needed when traverse all elements using qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ac16016e661f135f63b1a0398ffeea189" title="qlisttbl-&gt;getnext(): Get next element.">getnext()</a>. </dd></dl>
 
 </div>
 </div>
@@ -1640,11 +1646,10 @@ This operation will be activated only when &ndash;enable-threadsafe option is gi
 <p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a35cb588548d3a3e5b8b3ad27f389d36d" title="qlisttbl-&gt;unlock(): Leave critical section.">unlock()</a>: Leave critical section. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tbl</td><td>qlisttbl container pointer.</td></tr>
+    <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>This operation will be activated only when &ndash;enable-threadsafe option is given at compile time. To find out whether it's compiled with threadsafe option, call <a class="el" href="qlibc_8c.html#a38f5e0410d2e758f449cbdeb35bccab1" title="Returns this library is compiled with thread-safe option.">qlibc_is_threadsafe()</a>. </dd></dl>
 
 </div>
 </div>
@@ -1683,7 +1688,7 @@ This operation will be activated only when &ndash;enable-threadsafe option is gi
 </div><!-- contents -->
 <hr class="footer"/><address class="footer"><small>
 <a href="http://www.qdecoder.org/">The qDecoder Project</a>.
-Thu Mar 20 2014 07:11:25
+Mon Mar 24 2014 08:08:46
 </small></address>
 </body>
 </html>

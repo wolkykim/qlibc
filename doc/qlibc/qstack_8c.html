@@ -2,9 +2,7 @@
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-------------------------------------------------------------->
 <!-- qLibc Project                                            -->
-<!--                                                          -->
-<!--            Copyright (c) The qDecoder Project            -->
-<!--                 http://www.qdecoder.org                  -->
+<!--                Copyright (c) Seungyoung Kim              -->
 <!-------------------------------------------------------------->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -50,7 +48,7 @@
 <div class="line">(positive index)     0    1    2</div>
 <div class="line">(negative index)    -3   -2   -1</div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="comment">// create stack</span></div>
-<div class="line">qstack_t *stack = <a class="code" href="qstack_8c.html#a24506aba7354e93e1f4399a3a383c686" title="Create a new stack container.">qstack</a>();</div>
+<div class="line">qstack_t *stack = <a class="code" href="qstack_8c.html#ad59200fd9723a575e042365b916e150b" title="Create a new stack container.">qstack</a>(QSTACK_OPT_THREADSAFE);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// example: integer stack</span></div>
 <div class="line">stack-&gt;pushint(stack, 1);</div>
@@ -104,13 +102,12 @@
 <div class="line"><a class="code" href="qqueue_8c.html#ac00f0479ff71094c115bd302b700793d" title="qqueue-&gt;pop(): Removes a element at the top of this queue and returns that element.">pop</a>(): C object</div>
 <div class="line"><a class="code" href="qqueue_8c.html#ac00f0479ff71094c115bd302b700793d" title="qqueue-&gt;pop(): Removes a element at the top of this queue and returns that element.">pop</a>(): B object</div>
 <div class="line"><a class="code" href="qqueue_8c.html#ac00f0479ff71094c115bd302b700793d" title="qqueue-&gt;pop(): Removes a element at the top of this queue and returns that element.">pop</a>(): A object</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Use "&amp;ndash;enable-threadsafe" configure script option to use under multi-threaded environments. </dd></dl>
-</div><table class="memberdecls">
+</div><!-- fragment --> </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a24506aba7354e93e1f4399a3a383c686"><td class="memItemLeft" align="right" valign="top">qstack_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qstack_8c.html#a24506aba7354e93e1f4399a3a383c686">qstack</a> (void)</td></tr>
-<tr class="memdesc:a24506aba7354e93e1f4399a3a383c686"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new stack container.  <a href="#a24506aba7354e93e1f4399a3a383c686"></a><br/></td></tr>
-<tr class="separator:a24506aba7354e93e1f4399a3a383c686"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad59200fd9723a575e042365b916e150b"><td class="memItemLeft" align="right" valign="top">qstack_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qstack_8c.html#ad59200fd9723a575e042365b916e150b">qstack</a> (int options)</td></tr>
+<tr class="memdesc:ad59200fd9723a575e042365b916e150b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new stack container.  <a href="#ad59200fd9723a575e042365b916e150b"></a><br/></td></tr>
+<tr class="separator:ad59200fd9723a575e042365b916e150b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad20394721071363bd28969791a09a832"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qstack_8c.html#ad20394721071363bd28969791a09a832">setsize</a> (qstack_t *stack, size_t max)</td></tr>
 <tr class="memdesc:ad20394721071363bd28969791a09a832"><td class="mdescLeft">&#160;</td><td class="mdescRight">qstack-&gt;<a class="el" href="qstack_8c.html#ad20394721071363bd28969791a09a832" title="qstack-&gt;setsize(): Sets maximum number of elements allowed in this stack.">setsize()</a>: Sets maximum number of elements allowed in this stack.  <a href="#ad20394721071363bd28969791a09a832"></a><br/></td></tr>
 <tr class="separator:ad20394721071363bd28969791a09a832"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -161,21 +158,27 @@ Functions</h2></td></tr>
 <tr class="separator:a7f09a81615cb778f43e74017750a775d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a24506aba7354e93e1f4399a3a383c686"></a>
+<a class="anchor" id="ad59200fd9723a575e042365b916e150b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">qstack_t* qstack </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>options</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Create a new stack container. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">options</td><td>combination of initialization options.</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>a pointer of malloced qstack_t container, otherwise returns NULL. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
@@ -186,8 +189,12 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<div class="fragment"><div class="line">qstack_t *stack = <a class="code" href="qstack_8c.html#a24506aba7354e93e1f4399a3a383c686" title="Create a new stack container.">qstack</a>();</div>
-</div><!-- fragment --> 
+<div class="fragment"><div class="line">qstack_t *stack = <a class="code" href="qstack_8c.html#ad59200fd9723a575e042365b916e150b" title="Create a new stack container.">qstack</a>(QSTACK_OPT_THREADSAFE);</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Available options:<ul>
+<li>QSTACK_OPT_THREADSAFE - make it thread-safe. </li>
+</ul>
+</dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="ad20394721071363bd28969791a09a832"></a>
@@ -973,7 +980,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer"/><address class="footer"><small>
 <a href="http://www.qdecoder.org/">The qDecoder Project</a>.
-Thu Mar 20 2014 07:11:25
+Mon Mar 24 2014 08:08:46
 </small></address>
 </body>
 </html>
