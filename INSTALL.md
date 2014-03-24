@@ -16,12 +16,6 @@ By default qLibc will be install on /usr/local/{include,lib}, so use --prefix op
 $ ./configure --prefix=/usr/local/qlibc
 ```
 
-For those who use qLibc in multi-threaded programming model and want qLibc handle thread-safe operation internally by itself.
-
-```
-$ ./configure --enable-threadsafe
-```
-
 For those who don't want to build the extension library, libqlibcext.
 
 ```
