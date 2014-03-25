@@ -41,7 +41,7 @@ int main(void)
     printf("qconfig extension is disabled at compile time.\n");
     return 1;
 #else
-    qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_LOOKUPBACKWARD);
+    qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_UNIQUEKEY);
     if (qconfig_parse_file(tbl, CONF_PATH, '=') == NULL) {
         printf("Failed to open '" CONF_PATH "'.\n");
         return -1;

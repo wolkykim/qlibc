@@ -212,7 +212,7 @@ qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar)
     if (str == NULL) return NULL;
 
     if (tbl == NULL) {
-        tbl = qlisttbl(QLISTTBL_OPT_LOOKUPBACKWARD);
+        tbl = qlisttbl(0);
         if (tbl == NULL) return NULL;
     }
 

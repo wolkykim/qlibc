@@ -169,8 +169,8 @@ static bool _namecasematch(qdlnobj_t *obj, const char *name, uint32_t hash);
  *   - QLISTTBL_OPT_THREADSAFE - make it thread-safe.
  *   - QLISTTBL_OPT_UNIQUEKEY  - keys are all unique. replace same key
  *   - QLISTTBL_OPT_CASEINSENSITIVE  - key is case insensitive
- *   - QLISTTBL_OPT_INSERTTOP       - insert new key at the top
- *   - QLISTTBL_OPT_LOOKUPBACKWARD  - find key from the bottom
+ *   - QLISTTBL_OPT_INSERTTOP        - insert new key at the top
+ *   - QLISTTBL_OPT_LOOKUPFORWARD    - find key from the top
  */
 qlisttbl_t *qlisttbl(int options)
 {
@@ -235,8 +235,8 @@ qlisttbl_t *qlisttbl(int options)
     if (options & QLISTTBL_OPT_INSERTTOP) {
       tbl->inserttop = true;
     }
-    if (options & QLISTTBL_OPT_LOOKUPBACKWARD) {
-      tbl->lookupbackward = true;
+    if (options & QLISTTBL_OPT_LOOKUPFORWARD) {
+      tbl->lookupforward = true;
     }
 
     return tbl;
@@ -244,8 +244,6 @@ qlisttbl_t *qlisttbl(int options)
 
 /**
  * qlisttbl->put(): Put an element to this table.
- * Default behavior is adding an element at the end of this table unless changed
- * by setputdir().
  *
  * @param tbl       qlisttbl container pointer.
  * @param name      element name.
@@ -272,7 +270,7 @@ qlisttbl_t *qlisttbl(int options)
  *
  * @note
  *  The default behavior is adding an object at the end of this table unless
- *  it's changed by setputdir().
+ *  QLISTTBL_OPT_INSERTTOP option was given.
  */
 static bool put(qlisttbl_t *tbl, const char *name, const void *data, size_t size)
 {
@@ -320,10 +318,6 @@ static bool put(qlisttbl_t *tbl, const char *name, const void *data, size_t size
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *  - EINVAL : Invalid argument.
- *
- * @note
- *  The default behavior is adding object at the end of this table unless it's
- *  changed by calling setputdir().
  */
 static bool putstr(qlisttbl_t *tbl, const char *name, const char *str)
 {
@@ -342,10 +336,6 @@ static bool putstr(qlisttbl_t *tbl, const char *name, const char *str)
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *  - EINVAL : Invalid argument.
- *
- * @note
- *  The default behavior is adding object at the end of this table unless it's
- *  changed by calling setputdir().
  */
 static bool putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...)
 {
@@ -376,8 +366,7 @@ static bool putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...)
  *
  * @note
  *  The integer will be converted to a string object and stored as a string
- *  object. The default behavior is adding object at the end of this table
- *  unless it's changed by calling setputdir().
+ *  object.
  */
 static bool putint(qlisttbl_t *tbl, const char *name, int64_t num)
 {
@@ -389,10 +378,8 @@ static bool putint(qlisttbl_t *tbl, const char *name, int64_t num)
 /**
  * qlisttbl->get(): Finds an object with given name.
  * If there are duplicate keys in the table, this will return the first matched
- * one from the top or bottom depending on setgetdir() setting. By default,
- * it'll return the first matched one from the bottom of table. So in case,
- * there are duplicated keys, it'll return the newly inserted one unless
- * setputdir() is set in the other way.
+ * one from the bottom (or the top if QLISTTBL_OPT_LOOKUPFORWARD option was given).
+ * So if there are duplicated keys, it'll return recently inserted one.
  *
  * @param tbl       qlisttbl container pointer.
  * @param name      element name.
@@ -620,8 +607,8 @@ static void freemulti(qobj_t *objs)
 
 /**
  * qlisttbl->getnext(): Get next element.
- * Default searching direction is forward, from the top to to bottom,
- * unless it's changed by setnextdir().
+ * Default searching direction is backward, from the bottom to top
+ * unless QLISTTBL_OPT_LOOKUPFORWARD option was specified.
  *
  * @param tbl       qlisttbl container pointer.
  * @param obj       found data will be stored in this object
@@ -674,12 +661,12 @@ static bool getnext(qlisttbl_t *tbl, qdlnobj_t *obj, const char *name,
     qdlnobj_t *cont = NULL;
     if (obj->size == 0) {  // first time call
         if (name == NULL) {  // full scan
-            cont = (tbl->lookupbackward) ? tbl->last : tbl->first;
+            cont = (tbl->lookupforward) ? tbl->first : tbl->last;
         } else {  // name search
             cont = _findobj(tbl, name, NULL);
         }
     } else {  // next call
-        cont = (tbl->lookupbackward) ? obj->prev : obj->next;
+        cont = (tbl->lookupforward) ? obj->next : obj->prev;
     }
 
     if (cont == NULL) {
@@ -718,7 +705,7 @@ static bool getnext(qlisttbl_t *tbl, qdlnobj_t *obj, const char *name,
             break;
         }
 
-        cont = (tbl->lookupbackward) ? cont->prev : cont->next;
+        cont = (tbl->lookupforward) ? cont->next : cont->prev;
     }
     unlock(tbl);
 
@@ -757,6 +744,7 @@ static size_t remove_(qlisttbl_t *tbl, const char *name)
 
 /**
  * qlisttbl->removeobj(): Remove objects with given object pointer.
+ *
  * This call is useful when you want to remove an element while traversing a
  * table using getnext(). So the address pointed by obj maybe different than
  * the actual object in a table, but it's ok because we'll recalculate the
@@ -842,7 +830,7 @@ static size_t size(qlisttbl_t *tbl)
  *
  * @note
  *  It will sort the table in ascending manner, if you need descending order somehow,
- *  lookup-backword option will do the job without changing the sorting order.
+ *  lookup-backword option will do the job without changing the order in the table.
  *
  * @code
  *  The appearence order of duplicated keys will be preserved in a sored table.
@@ -1050,8 +1038,8 @@ static bool debug(qlisttbl_t *tbl, FILE *out)
  * @param tbl qlisttbl container pointer.
  *
  * @note
- *  From user side, normally locking operation is only needed when traverse all
- *  elements using qlisttbl->getnext().
+ *  Normally explicit locking is only needed when traverse all the
+ *  elements with qlisttbl->getnext().
  */
 static void lock(qlisttbl_t *tbl)
 {
@@ -1146,7 +1134,7 @@ static qdlnobj_t *_findobj(qlisttbl_t *tbl, const char *name, qdlnobj_t *retobj)
     }
 
     uint32_t hash = qhashmurmur3_32(name, strlen(name));
-    qdlnobj_t *obj = (tbl->lookupbackward) ? tbl->last : tbl->first;
+    qdlnobj_t *obj = (tbl->lookupforward) ? tbl->first : tbl->last;
     while (obj != NULL) {
         // name string will be compared only if the hash matches.
         if (tbl->namematch(obj, name, hash) == true) {
@@ -1155,7 +1143,7 @@ static qdlnobj_t *_findobj(qlisttbl_t *tbl, const char *name, qdlnobj_t *retobj)
             }
             return obj;
         }
-        obj = (tbl->lookupbackward)? obj->prev : obj->next;
+        obj = (tbl->lookupforward)? obj->next : obj->prev;
     }
 
     // not found, set prev and next chain.

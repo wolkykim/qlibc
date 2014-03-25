@@ -36,7 +36,7 @@
 #define _QLIBC_H
 
 #define _Q_PRGNAME "qlibc"  /*!< qlibc human readable name */
-#define _Q_VERSION "2.1.5"  /*!< qlibc version number string */
+#define _Q_VERSION "2.1.6"  /*!< qlibc version number string */
 
 #ifdef __cplusplus
 extern "C" {
@@ -198,7 +198,7 @@ struct qlist_s {
 When this option is turned on, hash comparison will be disabled and each key will
 be compared. So the lookup performance will be slightly slower. */
 #define QLISTTBL_OPT_INSERTTOP        (0x01 << 3) /*!< insert new key at the top */
-#define QLISTTBL_OPT_LOOKUPBACKWARD   (0x01 << 4) /*!< find key from the bottom */
+#define QLISTTBL_OPT_LOOKUPFORWARD    (0x01 << 4) /*!< find key from the top (default: backward) */
 
 /* types */
 typedef struct qlisttbl_s qlisttbl_t;
@@ -252,7 +252,7 @@ struct qlisttbl_s {
     bool caseinsensitive;  /*!< case insensitive key comparison */
     bool keepsorted;       /*!< keep table in sorted (default: insertion order) */
     bool inserttop;        /*!< add new key at the top. (default: bottom) */
-    bool lookupbackward;   /*!< find keys from the bottom */
+    bool lookupforward;    /*!< find keys from the top. (default: backward) */
 
     qmutex_t *qmutex;   /*!< initialized when QLISTTBL_OPT_THREADSAFE is given */
     size_t num;         /*!< number of elements */

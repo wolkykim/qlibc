@@ -123,18 +123,18 @@ int main(void)
     tbl->debug(tbl, stdout);
 
     //
-    // TEST 7 :  QLISTTBL_OPT_LOOKUPBACKWARD option
+    // TEST 7 :  QLISTTBL_OPT_LOOKUPFORWARD option
     //
     tbl->free(tbl);
-    tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE | QLISTTBL_OPT_LOOKUPBACKWARD);
+    tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE | QLISTTBL_OPT_LOOKUPFORWARD);
     tbl->putstr(tbl, "e1", "object1");
     tbl->putstr(tbl, "e2", "object2");
     tbl->putstr(tbl, "e1", "object11");
     tbl->putstr(tbl, "e2", "object22");
 
     // print out
-    printf("\n--[Test 7 : QLISTTBL_OPT_LOOKUPBACKWARD]--\n");
-    assert(!strcmp("object11", tbl->getstr(tbl, "e1", false)));
+    printf("\n--[Test 7 : QLISTTBL_OPT_LOOKUPFORWARD]--\n");
+    assert(!strcmp("object1", tbl->getstr(tbl, "e1", false)));
     tbl->debug(tbl, stdout);
 
     //
