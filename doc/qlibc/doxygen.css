@@ -1,7 +1,7 @@
 /* The standard CSS for doxygen */
 
 body, table, div, p, dl {
-	font-family: monospace, fixed;
+	font-family: monospace;
 	font-size: 12px;
 }
 
@@ -132,7 +132,7 @@ dl.el {
 }
 
 .fragment {
-	font-family: monospace, fixed;
+	font-family: monospace;
 	font-size: 105%;
 }
 
@@ -471,7 +471,7 @@ table.memberdecls {
 /* for the tree view */
 
 .ftvtree {
-	font-family: monospace, fixed;
+	font-family: monospace;
 	margin: 0px;
 }
 
