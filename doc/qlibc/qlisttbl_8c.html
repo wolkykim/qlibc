@@ -199,7 +199,7 @@ Functions</h2></td></tr>
 <li>QLISTTBL_OPT_UNIQUEKEY - keys are all unique. replace same key</li>
 <li>QLISTTBL_OPT_CASEINSENSITIVE - key is case insensitive</li>
 <li>QLISTTBL_OPT_INSERTTOP - insert new key at the top</li>
-<li>QLISTTBL_OPT_LOOKUPBACKWARD - find key from the bottom </li>
+<li>QLISTTBL_OPT_LOOKUPFORWARD - find key from the top </li>
 </ul>
 </dd></dl>
 
@@ -250,7 +250,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ab2aa5bcb1a5b28d5cc1cfa6627fdf178" title="qlisttbl-&gt;put(): Put an element to this table.">put()</a>: Put an element to this table. </p>
-<p>Default behavior is adding an element at the end of this table unless changed by setputdir().</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
@@ -281,7 +280,7 @@ Functions</h2></td></tr>
 <div class="line"><span class="comment">// create a table and add a sample object.</span></div>
 <div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>();</div>
 <div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;obj1&quot;</span>, &amp;obj, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> my_obj));</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The default behavior is adding an object at the end of this table unless it's changed by setputdir(). </dd></dl>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The default behavior is adding an object at the end of this table unless QLISTTBL_OPT_INSERTTOP option was given. </dd></dl>
 
 </div>
 </div>
@@ -337,13 +336,12 @@ Functions</h2></td></tr>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
 <li>ENOMEM : Memory allocation failure.</li>
-<li>EINVAL : Invalid argument.</li>
+<li>EINVAL : Invalid argument. </li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>The default behavior is adding object at the end of this table unless it's changed by calling setputdir(). </dd></dl>
 
 </div>
 </div>
@@ -405,13 +403,12 @@ Functions</h2></td></tr>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
 <li>ENOMEM : Memory allocation failure.</li>
-<li>EINVAL : Invalid argument.</li>
+<li>EINVAL : Invalid argument. </li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>The default behavior is adding object at the end of this table unless it's changed by calling setputdir(). </dd></dl>
 
 </div>
 </div>
@@ -473,7 +470,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>The integer will be converted to a string object and stored as a string object. The default behavior is adding object at the end of this table unless it's changed by calling setputdir(). </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The integer will be converted to a string object and stored as a string object. </dd></dl>
 
 </div>
 </div>
@@ -522,7 +519,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a9c577ce23ac27fff2cf8f239b3e607dd" title="qlisttbl-&gt;get(): Finds an object with given name.">get()</a>: Finds an object with given name. </p>
-<p>If there are duplicate keys in the table, this will return the first matched one from the top or bottom depending on setgetdir() setting. By default, it'll return the first matched one from the bottom of table. So in case, there are duplicated keys, it'll return the newly inserted one unless setputdir() is set in the other way.</p>
+<p>If there are duplicate keys in the table, this will return the first matched one from the bottom (or the top if QLISTTBL_OPT_LOOKUPFORWARD option was given). So if there are duplicated keys, it'll return recently inserted one.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
@@ -836,7 +833,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ac16016e661f135f63b1a0398ffeea189" title="qlisttbl-&gt;getnext(): Get next element.">getnext()</a>: Get next element. </p>
-<p>Default searching direction is forward, from the top to to bottom, unless it's changed by setnextdir().</p>
+<p>Default searching direction is backward, from the bottom to top unless QLISTTBL_OPT_LOOKUPFORWARD option was specified.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
@@ -1050,7 +1047,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>It will sort the table in ascending manner, if you need descending order somehow, lookup-backword option will do the job without changing the sorting order.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>It will sort the table in ascending manner, if you need descending order somehow, lookup-backword option will do the job without changing the order in the table.</dd></dl>
 <div class="fragment"><div class="line">The appearence order of duplicated keys will be preserved in a sored table.</div>
 <div class="line">See how duplicated key <span class="charliteral">&#39;b&#39;</span> is ordered in below example</div>
 <div class="line"></div>
@@ -1294,7 +1291,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>From user side, normally locking operation is only needed when traverse all elements using qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ac16016e661f135f63b1a0398ffeea189" title="qlisttbl-&gt;getnext(): Get next element.">getnext()</a>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Normally explicit locking is only needed when traverse all the elements with qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ac16016e661f135f63b1a0398ffeea189" title="qlisttbl-&gt;getnext(): Get next element.">getnext()</a>. </dd></dl>
 
 </div>
 </div>
@@ -1365,7 +1362,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <hr class="footer"/><address class="footer"><small>
 <a href="http://www.qdecoder.org/">The qDecoder Project</a>.
-Tue Mar 25 2014 10:44:20
+Tue Mar 25 2014 11:33:26
 </small></address>
 </body>
 </html>
