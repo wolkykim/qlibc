@@ -41,8 +41,7 @@
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Linked-list-table implementation. </p>
 <p>qlisttbl container is a Linked-List-Table implementation. Which maps keys to values. Key is a string and value is any non-null object. These elements are stored sequentially in Doubly-Linked-List data structure.</p>
-<p>Compared to Hash-Table, List-Table is efficient when you need to keep duplicated keys since Hash-Table only keep unique keys. Of course, qlisttbl supports both behavior storing unique key or allowing key duplication.</p>
-<p>qlisttbl also provides sorting feature. It supports a table stays in sorted and also one-time sorting. When a table is set to be sorted, it can speed up it's lookup performance by skipping unnecessary table scans. This option is disabled by default so it should be explictly turned on.</p>
+<p>Compared to Hash-Table, List-Table is efficient when you need to keep duplicated keys since Hash-Table only keep unique keys. Of course, qlisttbl supports both unique keys and key duplication.</p>
 <div class="fragment"><div class="line">[Conceptional Data Structure Diagram]</div>
 <div class="line"></div>
 <div class="line">last~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+</div>
@@ -59,13 +58,12 @@
 <div class="line">                            +-------+ +---------+</div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="comment">// create a list table.</span></div>
 <div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>(QLISTTBL_OPT_THREADSAFE);</div>
-<div class="line">tbl-&gt;setsort(tbl, <span class="keyword">true</span>, <span class="keyword">false</span>);  <span class="comment">// set table to be kept sorted</span></div>
 <div class="line"></div>
 <div class="line"><span class="comment">// insert elements (key duplication allowed)</span></div>
-<div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;e1&quot;</span>, <span class="stringliteral">&quot;a&quot;</span>, strlen(<span class="stringliteral">&quot;e1&quot;</span>)+1, <span class="keyword">false</span>); <span class="comment">// equal to putstr();</span></div>
-<div class="line">tbl-&gt;putstr(tbl, <span class="stringliteral">&quot;e2&quot;</span>, <span class="stringliteral">&quot;b&quot;</span>, <span class="keyword">false</span>);</div>
-<div class="line">tbl-&gt;putstr(tbl, <span class="stringliteral">&quot;e2&quot;</span>, <span class="stringliteral">&quot;c&quot;</span>, <span class="keyword">false</span>);</div>
-<div class="line">tbl-&gt;putstr(tbl, <span class="stringliteral">&quot;e3&quot;</span>, <span class="stringliteral">&quot;d&quot;</span>, <span class="keyword">false</span>);</div>
+<div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;e1&quot;</span>, <span class="stringliteral">&quot;a&quot;</span>, strlen(<span class="stringliteral">&quot;e1&quot;</span>)+1); <span class="comment">// equal to putstr();</span></div>
+<div class="line">tbl-&gt;putstr(tbl, <span class="stringliteral">&quot;e2&quot;</span>, <span class="stringliteral">&quot;b&quot;</span>);</div>
+<div class="line">tbl-&gt;putstr(tbl, <span class="stringliteral">&quot;e2&quot;</span>, <span class="stringliteral">&quot;c&quot;</span>);</div>
+<div class="line">tbl-&gt;putstr(tbl, <span class="stringliteral">&quot;e3&quot;</span>, <span class="stringliteral">&quot;d&quot;</span>);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// debug output</span></div>
 <div class="line">tbl-&gt;debug(tbl, stdout, <span class="keyword">true</span>);</div>
@@ -98,33 +96,18 @@ Functions</h2></td></tr>
 <tr class="memitem:ace8778acce088344531b5249d580aca7"><td class="memItemLeft" align="right" valign="top">qlisttbl_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7">qlisttbl</a> (int options)</td></tr>
 <tr class="memdesc:ace8778acce088344531b5249d580aca7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new Q_LIST linked-list container.  <a href="#ace8778acce088344531b5249d580aca7"></a><br/></td></tr>
 <tr class="separator:ace8778acce088344531b5249d580aca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3aa4b3ae6286ac42070cc7d5b1cdd5e"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#ab3aa4b3ae6286ac42070cc7d5b1cdd5e">setcase</a> (qlisttbl_t *tbl, bool insensitive)</td></tr>
-<tr class="memdesc:ab3aa4b3ae6286ac42070cc7d5b1cdd5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ab3aa4b3ae6286ac42070cc7d5b1cdd5e" title="qlisttbl-&gt;setcase(): Sets case sensitivity for key lookup.">setcase()</a>: Sets case sensitivity for key lookup.  <a href="#ab3aa4b3ae6286ac42070cc7d5b1cdd5e"></a><br/></td></tr>
-<tr class="separator:ab3aa4b3ae6286ac42070cc7d5b1cdd5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43a5ed1fcbdfa580d2fe36d987711de2"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#a43a5ed1fcbdfa580d2fe36d987711de2">setsort</a> (qlisttbl_t *tbl, bool sort, bool descending)</td></tr>
-<tr class="memdesc:a43a5ed1fcbdfa580d2fe36d987711de2"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a43a5ed1fcbdfa580d2fe36d987711de2" title="qlisttbl-&gt;setsort(): Sets sort flag to keep table sorted with it&#39;s keys.">setsort()</a>: Sets sort flag to keep table sorted with it's keys.  <a href="#a43a5ed1fcbdfa580d2fe36d987711de2"></a><br/></td></tr>
-<tr class="separator:a43a5ed1fcbdfa580d2fe36d987711de2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f534c0bd5a35fb5da28cdd42ad97875"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#a1f534c0bd5a35fb5da28cdd42ad97875">setputdir</a> (qlisttbl_t *tbl, bool before)</td></tr>
-<tr class="memdesc:a1f534c0bd5a35fb5da28cdd42ad97875"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a1f534c0bd5a35fb5da28cdd42ad97875" title="qlisttbl-&gt;setputdir(): Sets adding direction(at last of first).">setputdir()</a>: Sets adding direction(at last of first).  <a href="#a1f534c0bd5a35fb5da28cdd42ad97875"></a><br/></td></tr>
-<tr class="separator:a1f534c0bd5a35fb5da28cdd42ad97875"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad66588b90cfe1cc4b0b3b030d1360bb5"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#ad66588b90cfe1cc4b0b3b030d1360bb5">setgetdir</a> (qlisttbl_t *tbl, bool first)</td></tr>
-<tr class="memdesc:ad66588b90cfe1cc4b0b3b030d1360bb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ad66588b90cfe1cc4b0b3b030d1360bb5" title="qlisttbl-&gt;setgetdir(): Sets lookup direction(backward or forward).">setgetdir()</a>: Sets lookup direction(backward or forward).  <a href="#ad66588b90cfe1cc4b0b3b030d1360bb5"></a><br/></td></tr>
-<tr class="separator:ad66588b90cfe1cc4b0b3b030d1360bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a579c4dc13dbcc98e7b1b57a3b0f18a8a"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#a579c4dc13dbcc98e7b1b57a3b0f18a8a">setnextdir</a> (qlisttbl_t *tbl, bool backward)</td></tr>
-<tr class="memdesc:a579c4dc13dbcc98e7b1b57a3b0f18a8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a579c4dc13dbcc98e7b1b57a3b0f18a8a" title="qlisttbl-&gt;setnextdir(): Sets table traversal direction(forward or backward).">setnextdir()</a>: Sets table traversal direction(forward or backward).  <a href="#a579c4dc13dbcc98e7b1b57a3b0f18a8a"></a><br/></td></tr>
-<tr class="separator:a579c4dc13dbcc98e7b1b57a3b0f18a8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61404d251a1743b2bdfb545c808d0a9d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#a61404d251a1743b2bdfb545c808d0a9d">put</a> (qlisttbl_t *tbl, const char *name, const void *data, size_t <a class="el" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361">size</a>, bool unique)</td></tr>
-<tr class="memdesc:a61404d251a1743b2bdfb545c808d0a9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a61404d251a1743b2bdfb545c808d0a9d" title="qlisttbl-&gt;put(): Put an element to this table.">put()</a>: Put an element to this table.  <a href="#a61404d251a1743b2bdfb545c808d0a9d"></a><br/></td></tr>
-<tr class="separator:a61404d251a1743b2bdfb545c808d0a9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab556bb9155522ec2e038900f4a7a5bcf"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#ab556bb9155522ec2e038900f4a7a5bcf">putstr</a> (qlisttbl_t *tbl, const char *name, const char *str, bool unique)</td></tr>
-<tr class="memdesc:ab556bb9155522ec2e038900f4a7a5bcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ab556bb9155522ec2e038900f4a7a5bcf" title="qlisttbl-&gt;putstr(): Put a string into this table.">putstr()</a>: Put a string into this table.  <a href="#ab556bb9155522ec2e038900f4a7a5bcf"></a><br/></td></tr>
-<tr class="separator:ab556bb9155522ec2e038900f4a7a5bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae74c3880c49764c66d313d14cc9ae8d4"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#ae74c3880c49764c66d313d14cc9ae8d4">putstrf</a> (qlisttbl_t *tbl, bool unique, const char *name, const char *format,...)</td></tr>
-<tr class="memdesc:ae74c3880c49764c66d313d14cc9ae8d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ae74c3880c49764c66d313d14cc9ae8d4" title="qlisttbl-&gt;putstrf(): Put a formatted string into this table.">putstrf()</a>: Put a formatted string into this table.  <a href="#ae74c3880c49764c66d313d14cc9ae8d4"></a><br/></td></tr>
-<tr class="separator:ae74c3880c49764c66d313d14cc9ae8d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac01244a44fad8c16777703e271980e4b"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#ac01244a44fad8c16777703e271980e4b">putint</a> (qlisttbl_t *tbl, const char *name, int64_t num, bool unique)</td></tr>
-<tr class="memdesc:ac01244a44fad8c16777703e271980e4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;putInt(): Put an integer into this table as string type.  <a href="#ac01244a44fad8c16777703e271980e4b"></a><br/></td></tr>
-<tr class="separator:ac01244a44fad8c16777703e271980e4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2aa5bcb1a5b28d5cc1cfa6627fdf178"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#ab2aa5bcb1a5b28d5cc1cfa6627fdf178">put</a> (qlisttbl_t *tbl, const char *name, const void *data, size_t <a class="el" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361">size</a>)</td></tr>
+<tr class="memdesc:ab2aa5bcb1a5b28d5cc1cfa6627fdf178"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ab2aa5bcb1a5b28d5cc1cfa6627fdf178" title="qlisttbl-&gt;put(): Put an element to this table.">put()</a>: Put an element to this table.  <a href="#ab2aa5bcb1a5b28d5cc1cfa6627fdf178"></a><br/></td></tr>
+<tr class="separator:ab2aa5bcb1a5b28d5cc1cfa6627fdf178"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a099d9239eaa51b546b4847830107d70d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#a099d9239eaa51b546b4847830107d70d">putstr</a> (qlisttbl_t *tbl, const char *name, const char *str)</td></tr>
+<tr class="memdesc:a099d9239eaa51b546b4847830107d70d"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a099d9239eaa51b546b4847830107d70d" title="qlisttbl-&gt;putstr(): Put a string into this table.">putstr()</a>: Put a string into this table.  <a href="#a099d9239eaa51b546b4847830107d70d"></a><br/></td></tr>
+<tr class="separator:a099d9239eaa51b546b4847830107d70d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a968d0649fefe76499d5488bcacef9611"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#a968d0649fefe76499d5488bcacef9611">putstrf</a> (qlisttbl_t *tbl, const char *name, const char *format,...)</td></tr>
+<tr class="memdesc:a968d0649fefe76499d5488bcacef9611"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a968d0649fefe76499d5488bcacef9611" title="qlisttbl-&gt;putstrf(): Put a formatted string into this table.">putstrf()</a>: Put a formatted string into this table.  <a href="#a968d0649fefe76499d5488bcacef9611"></a><br/></td></tr>
+<tr class="separator:a968d0649fefe76499d5488bcacef9611"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac389cc7b3c63ba9fd54414007ad2a0a"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#aac389cc7b3c63ba9fd54414007ad2a0a">putint</a> (qlisttbl_t *tbl, const char *name, int64_t num)</td></tr>
+<tr class="memdesc:aac389cc7b3c63ba9fd54414007ad2a0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;putInt(): Put an integer into this table as string type.  <a href="#aac389cc7b3c63ba9fd54414007ad2a0a"></a><br/></td></tr>
+<tr class="separator:aac389cc7b3c63ba9fd54414007ad2a0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c577ce23ac27fff2cf8f239b3e607dd"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#a9c577ce23ac27fff2cf8f239b3e607dd">get</a> (qlisttbl_t *tbl, const char *name, size_t *<a class="el" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361">size</a>, bool newmem)</td></tr>
 <tr class="memdesc:a9c577ce23ac27fff2cf8f239b3e607dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a9c577ce23ac27fff2cf8f239b3e607dd" title="qlisttbl-&gt;get(): Finds an object with given name.">get()</a>: Finds an object with given name.  <a href="#a9c577ce23ac27fff2cf8f239b3e607dd"></a><br/></td></tr>
 <tr class="separator:a9c577ce23ac27fff2cf8f239b3e607dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,12 +135,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aef45c70ce56d3610bf1adfbf48b50786"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#aef45c70ce56d3610bf1adfbf48b50786">size</a> (qlisttbl_t *tbl)</td></tr>
 <tr class="memdesc:aef45c70ce56d3610bf1adfbf48b50786"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#aef45c70ce56d3610bf1adfbf48b50786" title="qlisttbl-&gt;size(): Returns the number of elements in this table.">size()</a>: Returns the number of elements in this table.  <a href="#aef45c70ce56d3610bf1adfbf48b50786"></a><br/></td></tr>
 <tr class="separator:aef45c70ce56d3610bf1adfbf48b50786"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c742a658683a5a3fc6eb9f748c3a05f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#a1c742a658683a5a3fc6eb9f748c3a05f">sort_</a> (qlisttbl_t *tbl, bool descending)</td></tr>
-<tr class="memdesc:a1c742a658683a5a3fc6eb9f748c3a05f"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;sort(): Sort keys in this table.  <a href="#a1c742a658683a5a3fc6eb9f748c3a05f"></a><br/></td></tr>
-<tr class="separator:a1c742a658683a5a3fc6eb9f748c3a05f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6eb650a917b55ca46f260486abc43168"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#a6eb650a917b55ca46f260486abc43168">reverse</a> (qlisttbl_t *tbl)</td></tr>
-<tr class="memdesc:a6eb650a917b55ca46f260486abc43168"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a6eb650a917b55ca46f260486abc43168" title="qlisttbl-&gt;reverse(): Reverse the order of elements.">reverse()</a>: Reverse the order of elements.  <a href="#a6eb650a917b55ca46f260486abc43168"></a><br/></td></tr>
-<tr class="separator:a6eb650a917b55ca46f260486abc43168"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee63b742551e061654c28724cd87210e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#aee63b742551e061654c28724cd87210e">sort_</a> (qlisttbl_t *tbl)</td></tr>
+<tr class="memdesc:aee63b742551e061654c28724cd87210e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;sort(): Sort keys in this table.  <a href="#aee63b742551e061654c28724cd87210e"></a><br/></td></tr>
+<tr class="separator:aee63b742551e061654c28724cd87210e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbfeefc06fc7d83ce9a3919943c6cdc5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlisttbl_8c.html#adbfeefc06fc7d83ce9a3919943c6cdc5">clear</a> (qlisttbl_t *tbl)</td></tr>
 <tr class="memdesc:adbfeefc06fc7d83ce9a3919943c6cdc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qlist_8c.html#a0f462d5ea446855501d65f2a8f4d1f9d" title="qlist-&gt;clear(): Removes all of the elements from this list.">clear()</a>: Removes all of the elements from this table.  <a href="#adbfeefc06fc7d83ce9a3919943c6cdc5"></a><br/></td></tr>
 <tr class="separator:adbfeefc06fc7d83ce9a3919943c6cdc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,245 +195,17 @@ Functions</h2></td></tr>
 <div class="fragment"><div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>(0);</div>
 <div class="line">qlisttbl_t *threadsafe_tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>(QLISTTBL_OPT_THREADSAFE);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Available options:<ul>
-<li>QLISTTBL_OPT_THREADSAFE - make it thread-safe. </li>
+<li>QLISTTBL_OPT_THREADSAFE - make it thread-safe.</li>
+<li>QLISTTBL_OPT_UNIQUEKEY - keys are all unique. replace same key</li>
+<li>QLISTTBL_OPT_CASEINSENSITIVE - key is case insensitive</li>
+<li>QLISTTBL_OPT_INSERTTOP - insert new key at the top</li>
+<li>QLISTTBL_OPT_LOOKUPBACKWARD - find key from the bottom </li>
 </ul>
 </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="ab3aa4b3ae6286ac42070cc7d5b1cdd5e"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool setcase </td>
-          <td>(</td>
-          <td class="paramtype">qlisttbl_t *&#160;</td>
-          <td class="paramname"><em>tbl</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>insensitive</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ab3aa4b3ae6286ac42070cc7d5b1cdd5e" title="qlisttbl-&gt;setcase(): Sets case sensitivity for key lookup.">setcase()</a>: Sets case sensitivity for key lookup. </p>
-<p>When this option is turned on, hash comparison will be disabled and each key will be compared. So lookup up speed will be relatively slower. If <a class="el" href="qlisttbl_8c.html#a43a5ed1fcbdfa580d2fe36d987711de2" title="qlisttbl-&gt;setsort(): Sets sort flag to keep table sorted with it&#39;s keys.">setsort()</a> is on, table will be resorted to sort keys in case insensitive order.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
-    <tr><td class="paramname">insensitive</td><td>false for case-sensitive, true for case-insensitive.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>previous setting </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a43a5ed1fcbdfa580d2fe36d987711de2"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static int setsort </td>
-          <td>(</td>
-          <td class="paramtype">qlisttbl_t *&#160;</td>
-          <td class="paramname"><em>tbl</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>sort</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>descending</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a43a5ed1fcbdfa580d2fe36d987711de2" title="qlisttbl-&gt;setsort(): Sets sort flag to keep table sorted with it&#39;s keys.">setsort()</a>: Sets sort flag to keep table sorted with it's keys. </p>
-<p>Table will be maintained in sorted manner by it's keys. New elements will be also inserted at corresponding chain, so the table will be kept in sorted order.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
-    <tr><td class="paramname">sort</td><td>sort flag. false(default) no sort, true keep it sorted. </td></tr>
-    <tr><td class="paramname">descending</td><td>sorting order. false for ascending, true for descending.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>previous setting. 0: disabled, 1: ascending, 2: descending. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a1f534c0bd5a35fb5da28cdd42ad97875"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool setputdir </td>
-          <td>(</td>
-          <td class="paramtype">qlisttbl_t *&#160;</td>
-          <td class="paramname"><em>tbl</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>before</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a1f534c0bd5a35fb5da28cdd42ad97875" title="qlisttbl-&gt;setputdir(): Sets adding direction(at last of first).">setputdir()</a>: Sets adding direction(at last of first). </p>
-<p>The default direction is adding new element at the end of table.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
-    <tr><td class="paramname">before</td><td>direction flag. false(default) for adding at the end of this table, true for adding at the beginning of this table.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>previous direction. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ad66588b90cfe1cc4b0b3b030d1360bb5"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool setgetdir </td>
-          <td>(</td>
-          <td class="paramtype">qlisttbl_t *&#160;</td>
-          <td class="paramname"><em>tbl</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>first</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ad66588b90cfe1cc4b0b3b030d1360bb5" title="qlisttbl-&gt;setgetdir(): Sets lookup direction(backward or forward).">setgetdir()</a>: Sets lookup direction(backward or forward). </p>
-<p>The default direction is backward(from the bottom to the top), so if there are duplicated keys then later added one will be picked up first.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
-    <tr><td class="paramname">first</td><td>direction flag. false(default) for searching from the bottom of this table. true for searching from the top of this table.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>previous direction. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a579c4dc13dbcc98e7b1b57a3b0f18a8a"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool setnextdir </td>
-          <td>(</td>
-          <td class="paramtype">qlisttbl_t *&#160;</td>
-          <td class="paramname"><em>tbl</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>backward</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a579c4dc13dbcc98e7b1b57a3b0f18a8a" title="qlisttbl-&gt;setnextdir(): Sets table traversal direction(forward or backward).">setnextdir()</a>: Sets table traversal direction(forward or backward). </p>
-<p>The default direction is forward(from the top to the bottom).</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
-    <tr><td class="paramname">backward</td><td>direction flag. false(default) for traversal from the top of this table, true for searching from the bottom of this table.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>previous direction. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a61404d251a1743b2bdfb545c808d0a9d"></a>
+<a class="anchor" id="ab2aa5bcb1a5b28d5cc1cfa6627fdf178"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -482,13 +234,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>size</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>unique</em>&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -503,15 +249,14 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a61404d251a1743b2bdfb545c808d0a9d" title="qlisttbl-&gt;put(): Put an element to this table.">put()</a>: Put an element to this table. </p>
-<p>Default behavior is adding an element at the end of this table unless changed by <a class="el" href="qlisttbl_8c.html#a1f534c0bd5a35fb5da28cdd42ad97875" title="qlisttbl-&gt;setputdir(): Sets adding direction(at last of first).">setputdir()</a>.</p>
+<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ab2aa5bcb1a5b28d5cc1cfa6627fdf178" title="qlisttbl-&gt;put(): Put an element to this table.">put()</a>: Put an element to this table. </p>
+<p>Default behavior is adding an element at the end of this table unless changed by setputdir().</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
     <tr><td class="paramname">name</td><td>element name. </td></tr>
     <tr><td class="paramname">data</td><td>a pointer which points data memory. </td></tr>
-    <tr><td class="paramname">size</td><td>size of the data. </td></tr>
-    <tr><td class="paramname">unique</td><td>set true to remove existing elements of same name if exists, false for adding.</td></tr>
+    <tr><td class="paramname">size</td><td>size of the data.</td></tr>
   </table>
   </dd>
 </dl>
@@ -535,12 +280,12 @@ Functions</h2></td></tr>
 <div class="line"></div>
 <div class="line"><span class="comment">// create a table and add a sample object.</span></div>
 <div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>();</div>
-<div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;obj1&quot;</span>, &amp;obj, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> my_obj), <span class="keyword">false</span>);</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The default behavior is adding an object at the end of this table unless it's changed by <a class="el" href="qlisttbl_8c.html#a1f534c0bd5a35fb5da28cdd42ad97875" title="qlisttbl-&gt;setputdir(): Sets adding direction(at last of first).">setputdir()</a>. </dd></dl>
+<div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;obj1&quot;</span>, &amp;obj, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> my_obj));</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The default behavior is adding an object at the end of this table unless it's changed by setputdir(). </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="ab556bb9155522ec2e038900f4a7a5bcf"></a>
+<a class="anchor" id="a099d9239eaa51b546b4847830107d70d"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -563,13 +308,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>str</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>unique</em>&#160;</td>
+          <td class="paramname"><em>str</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -584,13 +323,12 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ab556bb9155522ec2e038900f4a7a5bcf" title="qlisttbl-&gt;putstr(): Put a string into this table.">putstr()</a>: Put a string into this table. </p>
+<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a099d9239eaa51b546b4847830107d70d" title="qlisttbl-&gt;putstr(): Put a string into this table.">putstr()</a>: Put a string into this table. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
     <tr><td class="paramname">name</td><td>element name. </td></tr>
-    <tr><td class="paramname">str</td><td>string data. </td></tr>
-    <tr><td class="paramname">unique</td><td>set true to remove existing elements of same name if exists, false for adding.</td></tr>
+    <tr><td class="paramname">str</td><td>string data.</td></tr>
   </table>
   </dd>
 </dl>
@@ -605,11 +343,11 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>The default behavior is adding object at the end of this table unless it's changed by calling <a class="el" href="qlisttbl_8c.html#a1f534c0bd5a35fb5da28cdd42ad97875" title="qlisttbl-&gt;setputdir(): Sets adding direction(at last of first).">setputdir()</a>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The default behavior is adding object at the end of this table unless it's changed by calling setputdir(). </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="ae74c3880c49764c66d313d14cc9ae8d4"></a>
+<a class="anchor" id="a968d0649fefe76499d5488bcacef9611"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -621,12 +359,6 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">qlisttbl_t *&#160;</td>
           <td class="paramname"><em>tbl</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>unique</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -659,11 +391,10 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ae74c3880c49764c66d313d14cc9ae8d4" title="qlisttbl-&gt;putstrf(): Put a formatted string into this table.">putstrf()</a>: Put a formatted string into this table. </p>
+<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a968d0649fefe76499d5488bcacef9611" title="qlisttbl-&gt;putstrf(): Put a formatted string into this table.">putstrf()</a>: Put a formatted string into this table. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
-    <tr><td class="paramname">unique</td><td>set true to remove existing elements of same name if exists, false for adding. </td></tr>
     <tr><td class="paramname">name</td><td>element name. </td></tr>
     <tr><td class="paramname">format</td><td>formatted value string.</td></tr>
   </table>
@@ -680,11 +411,11 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>The default behavior is adding object at the end of this table unless it's changed by calling <a class="el" href="qlisttbl_8c.html#a1f534c0bd5a35fb5da28cdd42ad97875" title="qlisttbl-&gt;setputdir(): Sets adding direction(at last of first).">setputdir()</a>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The default behavior is adding object at the end of this table unless it's changed by calling setputdir(). </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="ac01244a44fad8c16777703e271980e4b"></a>
+<a class="anchor" id="aac389cc7b3c63ba9fd54414007ad2a0a"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -707,13 +438,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int64_t&#160;</td>
-          <td class="paramname"><em>num</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>unique</em>&#160;</td>
+          <td class="paramname"><em>num</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -733,8 +458,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
     <tr><td class="paramname">name</td><td>element name. </td></tr>
-    <tr><td class="paramname">num</td><td>number data. </td></tr>
-    <tr><td class="paramname">unique</td><td>set true to remove existing elements of same name if exists, false for adding.</td></tr>
+    <tr><td class="paramname">num</td><td>number data.</td></tr>
   </table>
   </dd>
 </dl>
@@ -749,7 +473,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>The integer will be converted to a string object and stored as a string object. The default behavior is adding object at the end of this table unless it's changed by calling <a class="el" href="qlisttbl_8c.html#a1f534c0bd5a35fb5da28cdd42ad97875" title="qlisttbl-&gt;setputdir(): Sets adding direction(at last of first).">setputdir()</a>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The integer will be converted to a string object and stored as a string object. The default behavior is adding object at the end of this table unless it's changed by calling setputdir(). </dd></dl>
 
 </div>
 </div>
@@ -798,7 +522,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a9c577ce23ac27fff2cf8f239b3e607dd" title="qlisttbl-&gt;get(): Finds an object with given name.">get()</a>: Finds an object with given name. </p>
-<p>If there are duplicate keys in the table, this will return the first matched one from the top or bottom depending on <a class="el" href="qlisttbl_8c.html#ad66588b90cfe1cc4b0b3b030d1360bb5" title="qlisttbl-&gt;setgetdir(): Sets lookup direction(backward or forward).">setgetdir()</a> setting. By default, it'll return the first matched one from the bottom of table. So in case, there are duplicated keys, it'll return the newly inserted one unless <a class="el" href="qlisttbl_8c.html#a1f534c0bd5a35fb5da28cdd42ad97875" title="qlisttbl-&gt;setputdir(): Sets adding direction(at last of first).">setputdir()</a> is set in the other way.</p>
+<p>If there are duplicate keys in the table, this will return the first matched one from the top or bottom depending on setgetdir() setting. By default, it'll return the first matched one from the bottom of table. So in case, there are duplicated keys, it'll return the newly inserted one unless setputdir() is set in the other way.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
@@ -998,7 +722,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#aa385d777e069484db52b5272e3ffc423" title="qlisttbl-&gt;getmulti(): Finds all objects with given name and return a array of objects.">getmulti()</a>: Finds all objects with given name and return a array of objects. </p>
-<p>If there are duplicate keys in the table, this will return all the matched ones. The order of objects in return depends on <a class="el" href="qlisttbl_8c.html#a579c4dc13dbcc98e7b1b57a3b0f18a8a" title="qlisttbl-&gt;setnextdir(): Sets table traversal direction(forward or backward).">setnextdir()</a> setting. By default, the order is same(forward) as listed in the table.</p>
+<p>If there are duplicate keys in the table, this will return all the matched ones. The order of objects in return depends on setnextdir() setting. By default, the order is same(forward) as listed in the table.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
@@ -1020,9 +744,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd><a class="el" href="qlisttbl_8c.html#aa385d777e069484db52b5272e3ffc423" title="qlisttbl-&gt;getmulti(): Finds all objects with given name and return a array of objects.">getmulti()</a> returns faster if table is set to be sorted by <a class="el" href="qlisttbl_8c.html#a43a5ed1fcbdfa580d2fe36d987711de2" title="qlisttbl-&gt;setsort(): Sets sort flag to keep table sorted with it&#39;s keys.">setsort()</a> option.</dd>
-<dd>
-The returned array of qobj_t should be released by <a class="el" href="qlisttbl_8c.html#abf93a2e164eca0832e94052cf29db281" title="qlisttbl-&gt;freemulti(): Deallocate object array returned by getmulti().">freemulti()</a> call after use. Even you call <a class="el" href="qlisttbl_8c.html#aa385d777e069484db52b5272e3ffc423" title="qlisttbl-&gt;getmulti(): Finds all objects with given name and return a array of objects.">getmulti()</a> with newmem set false, <a class="el" href="qlisttbl_8c.html#abf93a2e164eca0832e94052cf29db281" title="qlisttbl-&gt;freemulti(): Deallocate object array returned by getmulti().">freemulti()</a> should be called all the times, so the object array itself can be released.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The returned array of qobj_t should be released by <a class="el" href="qlisttbl_8c.html#abf93a2e164eca0832e94052cf29db281" title="qlisttbl-&gt;freemulti(): Deallocate object array returned by getmulti().">freemulti()</a> call after use. Even you call <a class="el" href="qlisttbl_8c.html#aa385d777e069484db52b5272e3ffc423" title="qlisttbl-&gt;getmulti(): Finds all objects with given name and return a array of objects.">getmulti()</a> with newmem set false, <a class="el" href="qlisttbl_8c.html#abf93a2e164eca0832e94052cf29db281" title="qlisttbl-&gt;freemulti(): Deallocate object array returned by getmulti().">freemulti()</a> should be called all the times, so the object array itself can be released.</dd></dl>
 <div class="fragment"><div class="line"><span class="keywordtype">size_t</span> numobjs = 0;</div>
 <div class="line">qobj_t *objs = tbl-&gt;getmulti(tbl, <span class="stringliteral">&quot;e2&quot;</span>, <span class="keyword">true</span>, &amp;numobjs);</div>
 <div class="line"><span class="keywordflow">for</span> (i = 0; objs[i].data != NULL; i++) {</div>
@@ -1114,7 +836,7 @@ The returned array of qobj_t should be released by <a class="el" href="qlisttbl_
 </div><div class="memdoc">
 
 <p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ac16016e661f135f63b1a0398ffeea189" title="qlisttbl-&gt;getnext(): Get next element.">getnext()</a>: Get next element. </p>
-<p>Default searching direction is forward, from the top to to bottom, unless it's changed by <a class="el" href="qlisttbl_8c.html#a579c4dc13dbcc98e7b1b57a3b0f18a8a" title="qlisttbl-&gt;setnextdir(): Sets table traversal direction(forward or backward).">setnextdir()</a>.</p>
+<p>Default searching direction is forward, from the top to to bottom, unless it's changed by setnextdir().</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
@@ -1238,7 +960,7 @@ The returned array of qobj_t should be released by <a class="el" href="qlisttbl_
 </div><div class="memdoc">
 
 <p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a109d8a53552c60d08e19ccd825b585c7" title="qlisttbl-&gt;removeobj(): Remove objects with given object pointer.">removeobj()</a>: Remove objects with given object pointer. </p>
-<p>This call is useful when you want to remove an element while traversing a table using <a class="el" href="qlisttbl_8c.html#ac16016e661f135f63b1a0398ffeea189" title="qlisttbl-&gt;getnext(): Get next element.">getnext()</a>. So the address pointed by obj maybe different than the actual object in a table, but it's ok becuase it'll recalculate actual object address by referring it's links to previous and next objects.</p>
+<p>This call is useful when you want to remove an element while traversing a table using <a class="el" href="qlisttbl_8c.html#ac16016e661f135f63b1a0398ffeea189" title="qlisttbl-&gt;getnext(): Get next element.">getnext()</a>. So the address pointed by obj maybe different than the actual object in a table, but it's ok because we'll recalculate the actual object address by referring it's links.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
@@ -1299,7 +1021,7 @@ The returned array of qobj_t should be released by <a class="el" href="qlisttbl_
 
 </div>
 </div>
-<a class="anchor" id="a1c742a658683a5a3fc6eb9f748c3a05f"></a>
+<a class="anchor" id="aee63b742551e061654c28724cd87210e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1308,60 +1030,6 @@ The returned array of qobj_t should be released by <a class="el" href="qlisttbl_
       <table class="memname">
         <tr>
           <td class="memname">static void sort_ </td>
-          <td>(</td>
-          <td class="paramtype">qlisttbl_t *&#160;</td>
-          <td class="paramname"><em>tbl</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>descending</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>qlisttbl-&gt;sort(): Sort keys in this table. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
-    <tr><td class="paramname">descending</td><td>sorting order. false for ascending, true for descending.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>This is for one time sort, to keep a table sorted, set it on by <a class="el" href="qlisttbl_8c.html#a43a5ed1fcbdfa580d2fe36d987711de2" title="qlisttbl-&gt;setsort(): Sets sort flag to keep table sorted with it&#39;s keys.">setsort()</a>. Sorting algorithm here we use is Bubble-sort algorithm.</dd></dl>
-<div class="fragment"><div class="line">The appearence order of duplicated keys will be preserved in a sored table.</div>
-<div class="line">See how duplicated key <span class="charliteral">&#39;b&#39;</span> is ordered in below example</div>
-<div class="line"></div>
-<div class="line">[Unsorted]   [sorted ASC]    [sorted DES]</div>
-<div class="line">  d = 1          a = 2           d = 1</div>
-<div class="line">  a = 2          b = 3           c = 5</div>
-<div class="line">  b = 3          b = 4           b = 3</div>
-<div class="line">  b = 4          b = 6           b = 4</div>
-<div class="line">  c = 5          c = 5           b = 6</div>
-<div class="line">  b = 6          d = 1           a = 2</div>
-</div><!-- fragment --> 
-</div>
-</div>
-<a class="anchor" id="a6eb650a917b55ca46f260486abc43168"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void reverse </td>
           <td>(</td>
           <td class="paramtype">qlisttbl_t *&#160;</td>
           <td class="paramname"><em>tbl</em></td><td>)</td>
@@ -1375,16 +1043,25 @@ The returned array of qobj_t should be released by <a class="el" href="qlisttbl_
 </table>
 </div><div class="memdoc">
 
-<p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a6eb650a917b55ca46f260486abc43168" title="qlisttbl-&gt;reverse(): Reverse the order of elements.">reverse()</a>: Reverse the order of elements. </p>
+<p>qlisttbl-&gt;sort(): Sort keys in this table. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if successful otherwise returns false.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>If <a class="el" href="qlisttbl_8c.html#a43a5ed1fcbdfa580d2fe36d987711de2" title="qlisttbl-&gt;setsort(): Sets sort flag to keep table sorted with it&#39;s keys.">setsort()</a> option is set, this will also revert the sorting order from ascending to descending or from descending to ascending. </dd></dl>
-
+<dl class="section note"><dt>Note</dt><dd>It will sort the table in ascending manner, if you need descending order somehow, lookup-backword option will do the job without changing the sorting order.</dd></dl>
+<div class="fragment"><div class="line">The appearence order of duplicated keys will be preserved in a sored table.</div>
+<div class="line">See how duplicated key <span class="charliteral">&#39;b&#39;</span> is ordered in below example</div>
+<div class="line"></div>
+<div class="line">[Unsorted]   [sorted ASC]    [sorted DES]</div>
+<div class="line">  d = 1          a = 2           d = 1</div>
+<div class="line">  a = 2          b = 3           c = 5</div>
+<div class="line">  b = 3          b = 4           b = 3</div>
+<div class="line">  b = 4          b = 6           b = 4</div>
+<div class="line">  c = 5          c = 5           b = 6</div>
+<div class="line">  b = 6          d = 1           a = 2</div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a class="anchor" id="adbfeefc06fc7d83ce9a3919943c6cdc5"></a>
@@ -1688,7 +1365,7 @@ The returned array of qobj_t should be released by <a class="el" href="qlisttbl_
 </div><!-- contents -->
 <hr class="footer"/><address class="footer"><small>
 <a href="http://www.qdecoder.org/">The qDecoder Project</a>.
-Mon Mar 24 2014 08:08:46
+Tue Mar 25 2014 10:14:56
 </small></address>
 </body>
 </html>

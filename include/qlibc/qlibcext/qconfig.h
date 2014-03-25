@@ -45,10 +45,8 @@ extern "C" {
 #include "qlibc.h"
 
 /* public functions */
-extern qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
-                                      char sepchar, bool uniquekey);
-extern qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str,
-                                     char sepchar, bool uniquekey);
+extern qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath, char sepchar);
+extern qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar);
 
 #ifdef __cplusplus
 }

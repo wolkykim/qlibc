@@ -192,7 +192,13 @@ struct qlist_s {
  ******************************************************************************/
 
 /* constants */
-#define QLISTTBL_OPT_THREADSAFE (0x01)
+#define QLISTTBL_OPT_THREADSAFE       (0x01)
+#define QLISTTBL_OPT_UNIQUEKEY        (0x01 << 1) /*!< keys are unique */
+#define QLISTTBL_OPT_CASEINSENSITIVE  (0x01 << 2) /*!< key is case insensitive.
+When this option is turned on, hash comparison will be disabled and each key will
+be compared. So the lookup performance will be slightly slower. */
+#define QLISTTBL_OPT_INSERTTOP        (0x01 << 3) /*!< insert new key at the top */
+#define QLISTTBL_OPT_LOOKUPBACKWARD   (0x01 << 4) /*!< find key from the bottom */
 
 /* types */
 typedef struct qlisttbl_s qlisttbl_t;
@@ -205,38 +211,25 @@ extern qlisttbl_t *qlisttbl(int options);  /*!< qlisttbl constructor */
  */
 struct qlisttbl_s {
     /* capsulated member functions */
-    bool (*setcase) (qlisttbl_t *tbl, bool insensitive);
-    int (*setsort) (qlisttbl_t *tbl, bool sort, bool descending);
-    bool (*setputdir) (qlisttbl_t *tbl, bool before);
-    bool (*setgetdir) (qlisttbl_t *tbl, bool forward);
-    bool (*setnextdir) (qlisttbl_t *tbl, bool backward);
-
-    bool (*put) (qlisttbl_t *tbl, const char *name, const void *data,
-                 size_t size, bool replace);
-    bool (*putstr) (qlisttbl_t *tbl, const char *name, const char *str,
-                    bool replace);
-    bool (*putstrf) (qlisttbl_t *tbl, bool replace, const char *name,
-                     const char *format, ...);
-    bool (*putint) (qlisttbl_t *tbl, const char *name, int64_t num,
-                    bool replace);
+    bool (*put) (qlisttbl_t *tbl, const char *name, const void *data, size_t size);
+    bool (*putstr) (qlisttbl_t *tbl, const char *name, const char *str);
+    bool (*putstrf) (qlisttbl_t *tbl, const char *name, const char *format, ...);
+    bool (*putint) (qlisttbl_t *tbl, const char *name, int64_t num);
 
     void *(*get) (qlisttbl_t *tbl, const char *name, size_t *size, bool newmem);
     char *(*getstr) (qlisttbl_t *tbl, const char *name, bool newmem);
     int64_t (*getint) (qlisttbl_t *tbl, const char *name);
 
-    qobj_t *(*getmulti) (qlisttbl_t *tbl, const char *name, bool newmem,
-                         size_t *numobjs);
+    qobj_t *(*getmulti) (qlisttbl_t *tbl, const char *name, bool newmem, size_t *numobjs);
     void (*freemulti) (qobj_t *objs);
 
-    bool (*getnext) (qlisttbl_t *tbl, qdlnobj_t *obj, const char *name,
-                     bool newmem);
+    bool (*getnext) (qlisttbl_t *tbl, qdlnobj_t *obj, const char *name, bool newmem);
 
     size_t (*remove) (qlisttbl_t *tbl, const char *name);
     bool (*removeobj) (qlisttbl_t *tbl, const qdlnobj_t *obj);
 
     size_t (*size) (qlisttbl_t *tbl);
-    void (*sort) (qlisttbl_t *tbl, bool descending);
-    void (*reverse) (qlisttbl_t *tbl);
+    void (*sort) (qlisttbl_t *tbl);
     void (*clear) (qlisttbl_t *tbl);
 
     bool (*save) (qlisttbl_t *tbl, const char *filepath, char sepchar,
@@ -255,11 +248,11 @@ struct qlisttbl_s {
     int (*namecmp) (const char *s1, const char *s2);
 
     /* private variables - do not access directly */
-    bool lookupcase; /*!< key lookup case-sensivity. false: case-sensitive */
-    int  sortflag; /*!< sort flag. 0:disabled, 1:ascending, 2:descending */
-    bool putdir;  /*!< object appending direction for put(). false: to bottom */
-    bool getdir;  /*!< object lookup direction for get(). false:from bottom */
-    bool nextdir; /*!< object traversal direction for next(). false:from top */
+    bool uniquekey;        /*!< keys are unique */
+    bool caseinsensitive;  /*!< case insensitive key comparison */
+    bool keepsorted;       /*!< keep table in sorted (default: insertion order) */
+    bool inserttop;        /*!< add new key at the top. (default: bottom) */
+    bool lookupbackward;   /*!< find keys from the bottom */
 
     qmutex_t *qmutex;   /*!< initialized when QLISTTBL_OPT_THREADSAFE is given */
     size_t num;         /*!< number of elements */

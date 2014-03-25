@@ -54,7 +54,7 @@ See the example below to see how it works.
   tbl->put(tbl, "score", &x, sizeof(int));
   
   // get the value of the element.
-  int *px = tbl->get(tbl, "score", NULL, true);
+  int *px = tbl->get(tbl, "score");
   if(px != NULL) {
     printf("%d\n", *px);
     free(px);
@@ -64,18 +64,20 @@ See the example below to see how it works.
   tbl->free(tbl);
 ```
 
-Here is an identical implementation with Linked-List-Table container. You might noticed that there's not much code change entirely on switching the container type.
+Here is an identical implementation with Linked-List-Table container.
+You might noticed that there's no code change entirely except of 1 line for the table creation.
+This is why qLibc encapsulates corresponding function pointers inside the container object.
 
 ```
-  // create a linked-list-table.
+  // create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.
   qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
   
   // add an element which key name is "score".
   int x = 12345;
-  tbl->put(tbl, "score", &x, sizeof(int), true);
+  tbl->put(tbl, "score", &x, sizeof(int));
   
   // get the value of the element.
-  int *px = tbl->get(tbl, "score", NULL, true);
+  int *px = tbl->get(tbl, "score");
   if(px != NULL) {
     printf("%d\n", *px);             
     free(px);

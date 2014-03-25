@@ -50,7 +50,7 @@
  *    }
  *
  *    // container for storing response headers for debugging purpose
- *    qlisttbl_t *resheaders = qlisttbl(0);
+ *    qlisttbl_t *resheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
  *
  *    // download
  *    off_t nSavesize = 0;
@@ -524,8 +524,8 @@ static bool open_(qhttpclient_t *client)
  *     if(httpclient == NULL) return;
  *
  *     // set additional custom headers
- *     qlisttbl_t *reqheaders = qlisttbl(0);
- *     qlisttbl_t *resheaders = qlisttbl(0);
+ *     qlisttbl_t *reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
+ *     qlisttbl_t *resheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
  *
  *     // send HEAD request
  *     int nRescode = 0;
@@ -560,12 +560,12 @@ static bool head(qhttpclient_t *client, const char *uri, int *rescode,
     // generate request headers if necessary
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl(0);
+        reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
         freeReqHeaders = true;
     }
 
     // add additional headers
-    reqheaders->putstr(reqheaders,  "Accept", "*/*", true);
+    reqheaders->putstr(reqheaders,  "Accept", "*/*");
 
     // send request
     bool sendret = sendrequest(client, "HEAD", uri, reqheaders);
@@ -638,8 +638,8 @@ static bool head(qhttpclient_t *client, const char *uri, int *rescode,
  *     int nFd = open("/tmp/test.data", O_WRONLY | O_CREAT, 0644);
  *
  *     // set additional custom headers
- *     qlisttbl_t *reqheaders = qlisttbl(0);
- *     qlisttbl_t *resheaders = qlisttbl(0);
+ *     qlisttbl_t *reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
+ *     qlisttbl_t *resheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
  *
  *     // set userdata
  *     struct userdata mydata;
@@ -696,12 +696,12 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
     // generate request headers if necessary
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl(0);
+        reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
         freeReqHeaders = true;
     }
 
     // add additional headers
-    reqheaders->putstr(reqheaders,  "Accept", "*/*", true);
+    reqheaders->putstr(reqheaders,  "Accept", "*/*");
 
     // send request
     bool sendret = sendrequest(client, "GET", uri, reqheaders);
@@ -862,9 +862,9 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
  *     time_t nFileDate = ...;
  *
  *     // set additional custom headers
- *     qlisttbl_t *reqheaders = qlisttbl(0);
- *     reqheaders->putstr(reqheaders, "X-FILE-MD5SUM", pFileMd5sum, true);
- *     reqheaders->putInt(reqheaders, "X-FILE-DATE", nFileDate, true);
+ *     qlisttbl_t *reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
+ *     reqheaders->putstr(reqheaders, "X-FILE-MD5SUM", pFileMd5sum);
+ *     reqheaders->putInt(reqheaders, "X-FILE-DATE", nFileDate);
  *
  *     // set userdata
  *     struct userdata mydata;
@@ -872,7 +872,7 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
  *
  *     // send file
  *     int nRescode = 0;
- *     qlisttbl_t *resheaders = qlisttbl(0);
+ *     qlisttbl_t *resheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
  *     bool bRet = httpclient->put(httpclient,
  *                                 "/img/qdecoder.png", nFd, nFileSize,
  *                                 &nRescode,
@@ -918,13 +918,13 @@ static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
     // generate request headers
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl(0);
+        reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
         freeReqHeaders = true;
     }
 
     // add additional headers
-    reqheaders->putstrf(reqheaders, true, "Content-Length", "%jd", length);
-    reqheaders->putstr(reqheaders,  "Expect", "100-continue", true);
+    reqheaders->putstrf(reqheaders, "Content-Length", "%jd", length);
+    reqheaders->putstr(reqheaders,  "Expect", "100-continue");
 
     // send request
     bool sendret =sendrequest(client, "PUT", uri, reqheaders);
@@ -1085,8 +1085,8 @@ static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
     // send request
     bool freeReqHeaders = false;
     if (reqheaders == NULL && data != NULL && size > 0) {
-        reqheaders = qlisttbl(0);
-        reqheaders->putstrf(reqheaders, true, "Content-Length", "%jd", size);
+        reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
+        reqheaders->putstrf(reqheaders, "Content-Length", "%jd", size);
         freeReqHeaders = true;
     }
 
@@ -1157,7 +1157,7 @@ static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
  *  does not have those headers in it.
  *
  * @code
- *   qlisttbl_t *reqheaders = qlisttbl(0);
+ *   qlisttbl_t *reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
  *   reqheaders->putstr(reqheaders,  "Date", qTimeGetGmtStaticStr(0), true);
  *
  *   httpclient->sendrequest(client,
@@ -1174,23 +1174,20 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
     // generate request headers if necessary
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl(0);
+        reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
         if (reqheaders == NULL) return false;
         freeReqHeaders = true;
     }
 
     // append default headers
     if (reqheaders->get(reqheaders, "Host", NULL, false) == NULL) {
-        reqheaders->putstrf(reqheaders, true, "Host", "%s:%d",
-                            client->hostname, client->port);
+        reqheaders->putstrf(reqheaders, "Host", "%s:%d", client->hostname, client->port);
     }
     if (reqheaders->get(reqheaders, "User-Agent", NULL, false) == NULL) {
-        reqheaders->putstr(reqheaders, "User-Agent", client->useragent, true);
+        reqheaders->putstr(reqheaders, "User-Agent", client->useragent);
     }
     if (reqheaders->get(reqheaders, "Connection", NULL, false) == NULL) {
-        reqheaders->putstr(reqheaders, "Connection",
-                           (client->keepalive==true) ? "Keep-Alive" : "close",
-                           true);
+        reqheaders->putstr(reqheaders, "Connection", (client->keepalive==true) ? "Keep-Alive" : "close");
     }
 
     // create stream buffer
@@ -1248,7 +1245,7 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
  *   httpclient->sendrequest(client, "DELETE", "/img/qdecoder.png", NULL);
  *
  *   // read response
- *   qlisttbl_t *resheaders = qlisttbl(0);
+ *   qlisttbl_t *resheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
  *   off_t clength;
  *   int rescode = httpclient->readresponse(client, resheaders, &clength);
  *   if(clength > 0) {
@@ -1296,7 +1293,7 @@ static int readresponse(qhttpclient_t *client, qlisttbl_t *resheaders,
         }
 
         if (resheaders != NULL) {
-            resheaders->putstr(resheaders, name, value, true);
+            resheaders->putstr(resheaders, name, value);
         }
 
         // check Connection header

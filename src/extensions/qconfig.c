@@ -57,11 +57,9 @@ static char *_parsestr(qlisttbl_t *tbl, const char *str);
 /**
  * Load & parse configuration file
  *
- * @param tbl       a pointer of qlisttbl_t. NULL can be used for empty.
+ * @param tbl       a pointer of qlisttbl_t. NULL will generate a new table.
  * @param filepath  configuration file path
  * @param sepchar   separater used in configuration file to divice key and value
- * @param uniquekey false to allow key duplication, true for overwriting lastest
- *                  key if there is a same key set already.
  *
  * @return a pointer of qlisttbl_t in case of successful,
  *  otherwise(file not found) returns NULL
@@ -122,8 +120,7 @@ static char *_parsestr(qlisttbl_t *tbl, const char *str);
  *   rev=822? (4)
  * @endcode
  */
-qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
-                               char sepchar, bool uniquekey)
+qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath, char sepchar)
 {
     char *str = qfile_load(filepath, NULL);
     if (str == NULL) return NULL;
@@ -187,7 +184,7 @@ qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
     }
 
     // parse
-    tbl = qconfig_parse_str(tbl, str, sepchar, uniquekey);
+    tbl = qconfig_parse_str(tbl, str, sepchar);
     free(str);
 
     return tbl;
@@ -196,11 +193,9 @@ qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
 /**
  * Parse string
  *
- * @param tbl       a pointer of qlisttbl_t. NULL can be used for empty.
+ * @param tbl       a pointer of qlisttbl_t. NULL will generate a new table.
  * @param str       key, value pair strings
  * @param sepchar   separater used in configuration file to divice key and value
- * @param uniquekey false to allow key duplication, true for overwriting lastest
- *                  key if there is a same key set already.
  *
  * @return a pointer of qlisttbl_t in case of successful,
  *         otherwise(file not found) returns NULL
@@ -212,13 +207,12 @@ qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
  *  tbl = qconfig_parse_str(NULL, "key = value\nhello = world", '=');
  * @endcode
  */
-qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar,
-                              bool uniquekey)
+qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar)
 {
     if (str == NULL) return NULL;
 
     if (tbl == NULL) {
-        tbl = qlisttbl(0);
+        tbl = qlisttbl(QLISTTBL_OPT_LOOKUPBACKWARD);
         if (tbl == NULL) return NULL;
     }
 
@@ -271,7 +265,7 @@ qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar,
         // get parsed string
         char *newvalue = _parsestr(tbl, value);
         if (newvalue != NULL) {
-            tbl->putstr(tbl, name, newvalue, uniquekey);
+            tbl->putstr(tbl, name, newvalue);
             free(newvalue);
         }
 

@@ -50,15 +50,15 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afff4cbfd1841fbbabb509db69886b673"><td class="memItemLeft" align="right" valign="top">qlisttbl_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qconfig_8c.html#afff4cbfd1841fbbabb509db69886b673">qconfig_parse_file</a> (qlisttbl_t *tbl, const char *filepath, char sepchar, bool uniquekey)</td></tr>
-<tr class="memdesc:afff4cbfd1841fbbabb509db69886b673"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load &amp; parse configuration file.  <a href="#afff4cbfd1841fbbabb509db69886b673"></a><br/></td></tr>
-<tr class="separator:afff4cbfd1841fbbabb509db69886b673"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7dbb2fb3b9a1191c104c4b77a9a781e"><td class="memItemLeft" align="right" valign="top">qlisttbl_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qconfig_8c.html#ad7dbb2fb3b9a1191c104c4b77a9a781e">qconfig_parse_str</a> (qlisttbl_t *tbl, const char *str, char sepchar, bool uniquekey)</td></tr>
-<tr class="memdesc:ad7dbb2fb3b9a1191c104c4b77a9a781e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse string.  <a href="#ad7dbb2fb3b9a1191c104c4b77a9a781e"></a><br/></td></tr>
-<tr class="separator:ad7dbb2fb3b9a1191c104c4b77a9a781e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a935668a20d0b3f5b6b84b46e9262bc0b"><td class="memItemLeft" align="right" valign="top">qlisttbl_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qconfig_8c.html#a935668a20d0b3f5b6b84b46e9262bc0b">qconfig_parse_file</a> (qlisttbl_t *tbl, const char *filepath, char sepchar)</td></tr>
+<tr class="memdesc:a935668a20d0b3f5b6b84b46e9262bc0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load &amp; parse configuration file.  <a href="#a935668a20d0b3f5b6b84b46e9262bc0b"></a><br/></td></tr>
+<tr class="separator:a935668a20d0b3f5b6b84b46e9262bc0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae70b6b473d2fcb3f17bde60297007336"><td class="memItemLeft" align="right" valign="top">qlisttbl_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qconfig_8c.html#ae70b6b473d2fcb3f17bde60297007336">qconfig_parse_str</a> (qlisttbl_t *tbl, const char *str, char sepchar)</td></tr>
+<tr class="memdesc:ae70b6b473d2fcb3f17bde60297007336"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse string.  <a href="#ae70b6b473d2fcb3f17bde60297007336"></a><br/></td></tr>
+<tr class="separator:ae70b6b473d2fcb3f17bde60297007336"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="afff4cbfd1841fbbabb509db69886b673"></a>
+<a class="anchor" id="a935668a20d0b3f5b6b84b46e9262bc0b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -78,13 +78,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">char&#160;</td>
-          <td class="paramname"><em>sepchar</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>uniquekey</em>&#160;</td>
+          <td class="paramname"><em>sepchar</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -97,10 +91,9 @@ Functions</h2></td></tr>
 <p>Load &amp; parse configuration file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tbl</td><td>a pointer of qlisttbl_t. NULL can be used for empty. </td></tr>
+    <tr><td class="paramname">tbl</td><td>a pointer of qlisttbl_t. NULL will generate a new table. </td></tr>
     <tr><td class="paramname">filepath</td><td>configuration file path </td></tr>
-    <tr><td class="paramname">sepchar</td><td>separater used in configuration file to divice key and value </td></tr>
-    <tr><td class="paramname">uniquekey</td><td>false to allow key duplication, true for overwriting lastest key if there is a same key set already.</td></tr>
+    <tr><td class="paramname">sepchar</td><td>separater used in configuration file to divice key and value</td></tr>
   </table>
   </dd>
 </dl>
@@ -135,7 +128,7 @@ Functions</h2></td></tr>
 <div class="line">log = ${prefix}/log</div>
 <div class="line">user = unknown</div>
 <div class="line">host = unknown</div>
-</div><!-- fragment --><div class="fragment"><div class="line">qlisttbl_t *tbl = <a class="code" href="qconfig_8c.html#afff4cbfd1841fbbabb509db69886b673" title="Load &amp; parse configuration file.">qconfig_parse_file</a>(NULL, <span class="stringliteral">&quot;config.conf&quot;</span>, <span class="charliteral">&#39;=&#39;</span>, <span class="keyword">true</span>);</div>
+</div><!-- fragment --><div class="fragment"><div class="line">qlisttbl_t *tbl = <a class="code" href="qconfig_8c.html#a935668a20d0b3f5b6b84b46e9262bc0b" title="Load &amp; parse configuration file.">qconfig_parse_file</a>(NULL, <span class="stringliteral">&quot;config.conf&quot;</span>, <span class="charliteral">&#39;=&#39;</span>, <span class="keyword">true</span>);</div>
 <div class="line">tbl-&gt;debug(tbl, stdout);</div>
 <div class="line"></div>
 <div class="line">[Output]</div>
@@ -155,7 +148,7 @@ Functions</h2></td></tr>
 </div><!-- fragment --> 
 </div>
 </div>
-<a class="anchor" id="ad7dbb2fb3b9a1191c104c4b77a9a781e"></a>
+<a class="anchor" id="ae70b6b473d2fcb3f17bde60297007336"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -175,13 +168,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">char&#160;</td>
-          <td class="paramname"><em>sepchar</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>uniquekey</em>&#160;</td>
+          <td class="paramname"><em>sepchar</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -194,24 +181,23 @@ Functions</h2></td></tr>
 <p>Parse string. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tbl</td><td>a pointer of qlisttbl_t. NULL can be used for empty. </td></tr>
+    <tr><td class="paramname">tbl</td><td>a pointer of qlisttbl_t. NULL will generate a new table. </td></tr>
     <tr><td class="paramname">str</td><td>key, value pair strings </td></tr>
-    <tr><td class="paramname">sepchar</td><td>separater used in configuration file to divice key and value </td></tr>
-    <tr><td class="paramname">uniquekey</td><td>false to allow key duplication, true for overwriting lastest key if there is a same key set already.</td></tr>
+    <tr><td class="paramname">sepchar</td><td>separater used in configuration file to divice key and value</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a pointer of qlisttbl_t in case of successful, otherwise(file not found) returns NULL</dd></dl>
-<dl class="section see"><dt>See Also</dt><dd><a class="el" href="qconfig_8c.html#afff4cbfd1841fbbabb509db69886b673" title="Load &amp; parse configuration file.">qconfig_parse_file</a></dd></dl>
+<dl class="section see"><dt>See Also</dt><dd><a class="el" href="qconfig_8c.html#a935668a20d0b3f5b6b84b46e9262bc0b" title="Load &amp; parse configuration file.">qconfig_parse_file</a></dd></dl>
 <div class="fragment"><div class="line">qlisttbl_t *tbl;</div>
-<div class="line">tbl = <a class="code" href="qconfig_8c.html#ad7dbb2fb3b9a1191c104c4b77a9a781e" title="Parse string.">qconfig_parse_str</a>(NULL, <span class="stringliteral">&quot;key = value\nhello = world&quot;</span>, <span class="charliteral">&#39;=&#39;</span>);</div>
+<div class="line">tbl = <a class="code" href="qconfig_8c.html#ae70b6b473d2fcb3f17bde60297007336" title="Parse string.">qconfig_parse_str</a>(NULL, <span class="stringliteral">&quot;key = value\nhello = world&quot;</span>, <span class="charliteral">&#39;=&#39;</span>);</div>
 </div><!-- fragment --> 
 </div>
 </div>
 </div><!-- contents -->
 <hr class="footer"/><address class="footer"><small>
 <a href="http://www.qdecoder.org/">The qDecoder Project</a>.
-Mon Mar 24 2014 08:08:46
+Tue Mar 25 2014 10:14:56
 </small></address>
 </body>
 </html>

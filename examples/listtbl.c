@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <assert.h>
 #include "qlibc.h"
 
 int main(void)
@@ -44,11 +45,11 @@ int main(void)
     //
 
     // insert elements (key duplication allowed)
-    tbl->put(tbl, "e1", "object1", strlen("object1")+1, false);
-    tbl->putstr(tbl, "e2", "object2", false);
-    tbl->putstr(tbl, "e3", "object3", false);
-    tbl->putstr(tbl, "e4", "object4", false);
-    tbl->putint(tbl, "e5", 5, false);
+    tbl->put(tbl, "e1", "object1", strlen("object1")+1);
+    tbl->putstr(tbl, "e2", "object2");
+    tbl->putstr(tbl, "e3", "object3");
+    tbl->putstr(tbl, "e4", "object4");
+    tbl->putint(tbl, "e5", 5);
 
     // print out
     printf("--[Test 1 : adding elements]--\n");
@@ -81,7 +82,7 @@ int main(void)
     tbl->freemulti(objs);
 
     //
-    // TEST 4 : travesal a particular key 'e2'.
+    // TEST 4 : traversal duplicated keys 'e2'.
     //
 
     printf("\n--[Test 4 : travesal a particular key 'e2']--\n");
@@ -94,7 +95,7 @@ int main(void)
     tbl->unlock(tbl);
 
     //
-    // TEST 5 : travesal a list.
+    // TEST 5 : traversal a list.
     //
 
     printf("\n--[Test 5 : travesal a list]--\n");
@@ -110,69 +111,48 @@ int main(void)
     tbl->unlock(tbl);
 
     //
-    // TEST 6 : changed put direction then add 'e3' and 'e4' element.
+    // TEST 6 : QLISTTBL_OPT_INSERTTOP option.
     //
-    tbl->setputdir(tbl, true);
-    tbl->putstr(tbl, "e3", "object6", false);
-    tbl->putstr(tbl, "e4", "object7", false);
+    tbl->free(tbl);
+    tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE | QLISTTBL_OPT_INSERTTOP);
+    tbl->putstr(tbl, "e1", "object1");
+    tbl->putstr(tbl, "e2", "object2");
 
     // print out
-    printf("\n--[Test 6 : changed adding direction then"
-           " add 'e3' and 'e4' element]--\n");
+    printf("\n--[Test 6 : QLISTTBL_OPT_INSERTTOP option]--\n");
     tbl->debug(tbl, stdout);
 
     //
-    // TEST 7 :  add element 'e2' with replace option.
+    // TEST 7 :  QLISTTBL_OPT_LOOKUPBACKWARD option
     //
-    tbl->putstr(tbl, "e2", "object8", true);
+    tbl->free(tbl);
+    tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE | QLISTTBL_OPT_LOOKUPBACKWARD);
+    tbl->putstr(tbl, "e1", "object1");
+    tbl->putstr(tbl, "e2", "object2");
+    tbl->putstr(tbl, "e1", "object11");
+    tbl->putstr(tbl, "e2", "object22");
 
     // print out
-    printf("\n--[Test 7 : add element 'e2' with replace option]--\n");
+    printf("\n--[Test 7 : QLISTTBL_OPT_LOOKUPBACKWARD]--\n");
+    assert(!strcmp("object11", tbl->getstr(tbl, "e1", false)));
     tbl->debug(tbl, stdout);
 
     //
-    // TEST 8 :  reverse list
+    //  TEST 8 : Sorting test.
     //
-    tbl->reverse(tbl);
+    tbl->free(tbl);
+    tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
+    tbl->putstr(tbl, "e1", "object1");
+    tbl->putstr(tbl, "e8", "object8");
+    tbl->putstr(tbl, "e2", "object2");
+    tbl->putstr(tbl, "e7", "object7");
+    tbl->putstr(tbl, "e3", "object3");
+    tbl->putstr(tbl, "e6", "object6");
+    tbl->putstr(tbl, "e2", "object22");
+    tbl->sort(tbl);
 
     // print out
-    printf("\n--[Test 8 : reverse]--\n");
-    tbl->debug(tbl, stdout);
-
-    //
-    // TEST 9 : revert put direction then add some more elements.
-    //
-    tbl->setputdir(tbl, false);
-    tbl->putstr(tbl, "e4", "object9", false);
-    tbl->putstr(tbl, "e5", "object10", false);
-    tbl->putstr(tbl, "e6", "object11", false);
-    tbl->putstr(tbl, "e7", "object12", false);
-    tbl->putstr(tbl, "e4", "object13", false);
-    tbl->putstr(tbl, "e6", "object14", false);
-
-    // print out
-    printf("\n--[Test 9 : revert put direction then add some more"
-           " elements.]--\n");
-    tbl->debug(tbl, stdout);
-
-    //
-    // TEST 10 : turn on setsort() option.
-    //
-    tbl->setsort(tbl, true, false);
-
-    // print out
-    printf("\n--[Test 10 : turn on setsort() option.\n");
-    tbl->debug(tbl, stdout);
-
-    //
-    // TEST 11 : add new elements 'e1', 'e5' and 'e8'.
-    //
-    tbl->putstr(tbl, "e1", "object15", false);
-    tbl->putint(tbl, "e5", 16, false);
-    tbl->putstr(tbl, "e8", "object17", false);
-
-    // print out
-    printf("\n--[Test 11 : add new elements 'e1', 'e5' and 'e8'\n");
+    printf("\n--[Test 8 : Sorting test.\n");
     tbl->debug(tbl, stdout);
 
     // free object
