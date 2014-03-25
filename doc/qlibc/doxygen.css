@@ -1,7 +1,7 @@
 /* The standard CSS for doxygen */
 
 body, table, div, p, dl {
-	font-family: Lucida Grande, Verdana, Geneva, Arial, sans-serif;
+	font-family: monospace, fixed;
 	font-size: 12px;
 }
 
@@ -471,7 +471,7 @@ table.memberdecls {
 /* for the tree view */
 
 .ftvtree {
-	font-family: sans-serif;
+	font-family: monospace, fixed;
 	margin: 0px;
 }
 
