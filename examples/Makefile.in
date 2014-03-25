@@ -30,7 +30,7 @@ prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 
 ## qlibc definitions
-QLIBC_INCDIR		= ../include
+QLIBC_INCDIR		= ../include/qlibc
 QLIBC_LIBDIR		= ../lib
 
 ## Compiler options

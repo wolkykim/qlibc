@@ -50,7 +50,7 @@ BUILD_TARGETS	= @BUILD_TARGETS@
 INSTALL_TARGETS	= @INSTALL_TARGETS@
 
 ## qlibc definitions
-QLIBC_INCDIR		= ../include
+QLIBC_INCDIR		= ../include/qlibc
 QLIBC_LIBDIR		= ../lib
 QLIBC_LIBNAME		= libqlibc.a
 QLIBC_SLIBNAME		= libqlibc.so
@@ -135,13 +135,13 @@ uninstall-qlibc:
 
 install-qlibcext: qlibcext
 	${MKDIR_P} ${INST_INCDIR}/qlibc
-	${MKDIR_P} ${INST_INCDIR}/qlibc/extensions/
+	${MKDIR_P} ${INST_INCDIR}/qlibc/qlibcext/
 	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext.h ${INST_INCDIR}/qlibc/qlibcext.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qconfig.h ${INST_INCDIR}/qlibc/extensions/qconfig.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qaconf.h ${INST_INCDIR}/qlibc/extensions/qaconf.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qlog.h ${INST_INCDIR}/qlibc/extensions/qlog.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qhttpclient.h ${INST_INCDIR}/qlibc/extensions/qhttpclient.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qdatabase.h ${INST_INCDIR}/qlibc/extensions/qdatabase.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext/qconfig.h ${INST_INCDIR}/qlibc/qlibcext/qconfig.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext/qaconf.h ${INST_INCDIR}/qlibc/qlibcext/qaconf.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext/qlog.h ${INST_INCDIR}/qlibc/qlibcext/qlog.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext/qhttpclient.h ${INST_INCDIR}/qlibc/qlibcext/qhttpclient.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext/qdatabase.h ${INST_INCDIR}/qlibc/qlibcext/qdatabase.h
 	${MKDIR_P} ${INST_LIBDIR}
 	${INSTALL_DATA} ${QLIBC_LIBDIR}/${QLIBCEXT_LIBNAME} ${INST_LIBDIR}/${QLIBCEXT_LIBNAME}
 	${INSTALL_DATA} ${QLIBC_LIBDIR}/${QLIBCEXT_SLIBREALNAME} ${INST_LIBDIR}/${QLIBCEXT_SLIBREALNAME}
@@ -149,18 +149,18 @@ install-qlibcext: qlibcext
 
 uninstall-qlibcext:
 	${RM} -f ${INST_INCDIR}/qlibc/qlibcext.h
-	${RM} -f ${INST_INCDIR}/qlibc/extensions/qconfig.h
-	${RM} -f ${INST_INCDIR}/qlibc/extensions/qaconf.h
-	${RM} -f ${INST_INCDIR}/qlibc/extensions/qlog.h
-	${RM} -f ${INST_INCDIR}/qlibc/extensions/qhttpclient.h
-	${RM} -f ${INST_INCDIR}/qlibc/extensions/qdatabase.h
+	${RM} -f ${INST_INCDIR}/qlibc/qlibcext/qconfig.h
+	${RM} -f ${INST_INCDIR}/qlibc/qlibcext/qaconf.h
+	${RM} -f ${INST_INCDIR}/qlibc/qlibcext/qlog.h
+	${RM} -f ${INST_INCDIR}/qlibc/qlibcext/qhttpclient.h
+	${RM} -f ${INST_INCDIR}/qlibc/qlibcext/qdatabase.h
 	${RM} -f ${INST_LIBDIR}/${QLIBCEXT_LIBNAME}
 	${RM} -f ${INST_LIBDIR}/${QLIBCEXT_SLIBREALNAME}
 	${RM} -f ${INST_LIBDIR}/${QLIBCEXT_SLIBNAME}
 
 deinstall: uninstall
 uninstall: uninstall-qlibc uninstall-qlibcext
-	${RMDIR} ${INST_INCDIR}/qlibc/extensions
+	${RMDIR} ${INST_INCDIR}/qlibc/qlibcext
 	${RMDIR} ${INST_INCDIR}/qlibc
 
 clean:
