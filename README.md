@@ -86,3 +86,9 @@ This is why qLibc encapsulates corresponding function pointers inside the contai
   // release table
   tbl->free(tbl);
 ```
+
+## Looking for people to work with.
+
+We're looking for people who want to work together developing and improving qLibc.
+
+Currently, we have demands on automated testing
