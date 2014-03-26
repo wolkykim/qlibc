@@ -38,29 +38,31 @@
 #ifndef _QLOG_H
 #define _QLOG_H
 
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <limits.h>
+#include "containers/qtype.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "qlibc.h"
+/* types */
+typedef struct qlog_s qlog_t;
 
 /* constants */
 #define QLOG_OPT_THREADSAFE  (0x01)
 #define QLOG_OPT_FLUSH       (0x01 << 1)
 
-/* types */
-typedef struct qlog_s qlog_t;
-
 /* public functions */
 extern qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval, int options);
 
 /**
- * qlog structure
+ * qlog structure object structure
  */
 struct qlog_s {
-    /* capsulated member functions */
+    /* encapsulated member functions */
     bool (*write) (qlog_t *log, const char *str);
     bool (*writef) (qlog_t *log, const char *format, ...);
     bool (*duplicate) (qlog_t *log, FILE *outfp, bool flush);

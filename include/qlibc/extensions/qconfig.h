@@ -37,12 +37,14 @@
 #ifndef _QCONFIG_H
 #define _QCONFIG_H
 
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include "../containers/qlisttbl.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdbool.h>
-#include "qlibc.h"
 
 /* public functions */
 extern qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath, char sepchar);

@@ -38,13 +38,13 @@
 #ifndef _QDATABASE_H
 #define _QDATABASE_H
 
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "qlibc.h"
 
 /* database header files should be included before this header file. */
 #ifdef _mysql_h
@@ -52,8 +52,8 @@ extern "C" {
 #endif /* _mysql_h */
 
 /* types */
-typedef struct qdb_s qdb_t;
 typedef struct qdbresult_s qdbresult_t;
+typedef struct qdb_s qdb_t;
 
 /* public functions */
 extern qdb_t *qdb(const char *dbtype,
@@ -61,8 +61,34 @@ extern qdb_t *qdb(const char *dbtype,
                   const char *username, const char *password, bool autocommit);
 
 /**
- * qdb structure
+ * qdbresult object structure
  */
+struct qdbresult_s {
+    /* capsulated member functions */
+    const char *(*getstr) (qdbresult_t *result, const char *field);
+    const char *(*get_str_at) (qdbresult_t *result, int idx);
+    int (*getint) (qdbresult_t *result, const char *field);
+    int (*get_int_at) (qdbresult_t *result, int idx);
+    bool (*getnext) (qdbresult_t *result);
+
+    int (*get_cols) (qdbresult_t *result);
+    int (*get_rows) (qdbresult_t *result);
+    int (*get_row) (qdbresult_t *result);
+
+    void (*free) (qdbresult_t *result);
+
+#ifdef _Q_ENABLE_MYSQL
+    /* private variables for mysql database - do not access directly */
+    bool fetchtype;
+    MYSQL_RES  *rs;
+    MYSQL_FIELD  *fields;
+    MYSQL_ROW  row;
+    int cols;
+    int cursor;
+#endif
+};
+
+/* qdb object structure */
 struct qdb_s {
     /* capsulated member functions */
     bool (*open) (qdb_t *db);
@@ -104,34 +130,6 @@ struct qdb_s {
 #ifdef _Q_ENABLE_MYSQL
     /* private variables for mysql database - do not access directly */
     MYSQL  *mysql;
-#endif
-};
-
-/**
- * qdbresult structure
- */
-struct qdbresult_s {
-    /* capsulated member functions */
-    const char *(*getstr) (qdbresult_t *result, const char *field);
-    const char *(*get_str_at) (qdbresult_t *result, int idx);
-    int (*getint) (qdbresult_t *result, const char *field);
-    int (*get_int_at) (qdbresult_t *result, int idx);
-    bool (*getnext) (qdbresult_t *result);
-
-    int (*get_cols) (qdbresult_t *result);
-    int (*get_rows) (qdbresult_t *result);
-    int (*get_row) (qdbresult_t *result);
-
-    void (*free) (qdbresult_t *result);
-
-#ifdef _Q_ENABLE_MYSQL
-    /* private variables for mysql database - do not access directly */
-    bool fetchtype;
-    MYSQL_RES  *rs;
-    MYSQL_FIELD  *fields;
-    MYSQL_ROW  row;
-    int cols;
-    int cursor;
 #endif
 };
 

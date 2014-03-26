@@ -38,13 +38,13 @@
 #ifndef _QACONF_H
 #define _QACONF_H
 
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "qlibc.h"
 
 /* types */
 typedef struct qaconf_s qaconf_t;
@@ -68,7 +68,7 @@ enum {
 /**
  * Argument type check
  *
- * uint32_t type 32bit variabit is used for passing argument types.
+ * uint32_t type 32bit variable is used for passing argument types.
  *  notused  bool   float   int     #arg
  *  ---- ---====== ---- --== ==== ---- ----
  *  rrrr rrBb bbbb Ffff ffIi iiii aaaa aaaa  (32bit mask)
@@ -90,8 +90,8 @@ enum {
  *    QAC_TAKE_FLOAT  <= Float type
  *    QAC_TAKE_BOOL   <= Bool type
  *
- *    QAC_TAKE1               <= Equavalent to QAC_TAKE_STR
- *    QAC_TAKE1 | QAC_A1_BOOL <= Equavalent to QAC_TAKE_BOOL
+ *    QAC_TAKE1               <= equivalent to QAC_TAKE_STR
+ *    QAC_TAKE1 | QAC_A1_BOOL <= equivalent to QAC_TAKE_BOOL
  *
  *  An option takes 2 arguments, bool and float.
  *    QAC_TAKE2 | QAC_A1_BOOL | QAC_A2_FLOAT

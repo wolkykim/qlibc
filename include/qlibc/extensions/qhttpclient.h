@@ -37,26 +37,28 @@
 #ifndef _QHTTPCLIENT_H
 #define _QHTTPCLIENT_H
 
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "qlibc.h"
-
 /* types */
 typedef struct qhttpclient_s  qhttpclient_t;
+
+/* constants */
+#define QHTTPCLIENT_NAME "qLibc"
 
 /* public functions */
 extern qhttpclient_t *qhttpclient(const char *hostname, int port);
 
 /**
- * qhttpclient structure
+ * qhttpclient object structure
  */
-
 struct qhttpclient_s {
-    /* capsulated member functions */
+    /* encapsulated member functions */
     bool (*setssl) (qhttpclient_t *client);
     void (*settimeout) (qhttpclient_t *client, int timeoutms);
     void (*setkeepalive) (qhttpclient_t *client, bool keepalive);

@@ -353,7 +353,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Copy src string to dst. </p>
-<p>The dst string arrary will be always terminated by NULL character.</p>
+<p>The dst string array will be always terminated by NULL character. Also allows overlap between src and dst.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">dst</td><td>a pointer of the string to be copied </td></tr>
@@ -403,12 +403,13 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Copy src string to dst no more than n bytes. </p>
-<p>The dst string arrary will be always terminated by NULL character.</p>
+<p>The dst string array will be always terminated by NULL character. Also allows overlap between src and dst.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">dst</td><td>a pointer of the string to be copied </td></tr>
     <tr><td class="paramname">size</td><td>the size of dst character arrary </td></tr>
-    <tr><td class="paramname">src</td><td>a pointer of source string</td></tr>
+    <tr><td class="paramname">src</td><td>a pointer of source string </td></tr>
+    <tr><td class="paramname">nbytes</td><td>number of bytes to copy</td></tr>
   </table>
   </dd>
 </dl>
@@ -965,8 +966,7 @@ Functions</h2></td></tr>
 </div>
 </div><!-- contents -->
 <hr class="footer"/><address class="footer"><small>
-<a href="http://www.qdecoder.org/">The qDecoder Project</a>.
-Tue Mar 25 2014 11:33:26
+<a href="https://github.com/wolkykim/qlibc">The qLibc Project</a>.
 </small></address>
 </body>
 </html>

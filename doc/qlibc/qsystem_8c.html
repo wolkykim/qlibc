@@ -43,18 +43,15 @@
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a7b3b4de8ed5aa04edb05c24ced8c5899"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qsystem_8c.html#a7b3b4de8ed5aa04edb05c24ced8c5899">qgetenv</a> (const char *envname, const char *nullstr)</td></tr>
-<tr class="memdesc:a7b3b4de8ed5aa04edb05c24ced8c5899"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get system environment variable.  <a href="#a7b3b4de8ed5aa04edb05c24ced8c5899"></a><br/></td></tr>
-<tr class="separator:a7b3b4de8ed5aa04edb05c24ced8c5899"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a572fee0d88280a0dd1f5ab0905296eea"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qsystem_8c.html#a572fee0d88280a0dd1f5ab0905296eea">qgetenv</a> (const char *envname, const char *defstr)</td></tr>
+<tr class="memdesc:a572fee0d88280a0dd1f5ab0905296eea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get system environment variable.  <a href="#a572fee0d88280a0dd1f5ab0905296eea"></a><br/></td></tr>
+<tr class="separator:a572fee0d88280a0dd1f5ab0905296eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5463b8e0d69c2f317da6d9c47dee14f4"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qsystem_8c.html#a5463b8e0d69c2f317da6d9c47dee14f4">qsyscmd</a> (const char *cmd)</td></tr>
 <tr class="memdesc:a5463b8e0d69c2f317da6d9c47dee14f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the result string of external command execution.  <a href="#a5463b8e0d69c2f317da6d9c47dee14f4"></a><br/></td></tr>
 <tr class="separator:a5463b8e0d69c2f317da6d9c47dee14f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae272411a753eed2f1fcccc7a41360c6d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qsystem_8c.html#ae272411a753eed2f1fcccc7a41360c6d">qsysgetip</a> (char *buf, size_t bufsize)</td></tr>
-<tr class="memdesc:ae272411a753eed2f1fcccc7a41360c6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get system IP address string.  <a href="#ae272411a753eed2f1fcccc7a41360c6d"></a><br/></td></tr>
-<tr class="separator:ae272411a753eed2f1fcccc7a41360c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a7b3b4de8ed5aa04edb05c24ced8c5899"></a>
+<a class="anchor" id="a572fee0d88280a0dd1f5ab0905296eea"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -68,7 +65,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>nullstr</em>&#160;</td>
+          <td class="paramname"><em>defstr</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -82,7 +79,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">envname</td><td>environment name </td></tr>
-    <tr><td class="paramname">nullstr</td><td>if not found, return this string</td></tr>
+    <tr><td class="paramname">defstr</td><td>if not found, return this string</td></tr>
   </table>
   </dd>
 </dl>
@@ -116,39 +113,9 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ae272411a753eed2f1fcccc7a41360c6d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool qsysgetip </td>
-          <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>buf</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>bufsize</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get system IP address string. </p>
-<dl class="section return"><dt>Returns</dt><dd>malloced string pointer which contains IP address string if successful, otherwise returns NULL </dd></dl>
-
-</div>
-</div>
 </div><!-- contents -->
 <hr class="footer"/><address class="footer"><small>
-<a href="http://www.qdecoder.org/">The qDecoder Project</a>.
-Tue Mar 25 2014 11:33:26
+<a href="https://github.com/wolkykim/qlibc">The qLibc Project</a>.
 </small></address>
 </body>
 </html>

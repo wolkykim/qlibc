@@ -37,10 +37,10 @@
 #ifndef _QLIBCEXT_H
 #define _QLIBCEXT_H
 
-#include "qlibcext/qconfig.h"
-#include "qlibcext/qaconf.h"
-#include "qlibcext/qlog.h"
-#include "qlibcext/qhttpclient.h"
-#include "qlibcext/qdatabase.h"
+#include "extensions/qconfig.h"
+#include "extensions/qaconf.h"
+#include "extensions/qlog.h"
+#include "extensions/qhttpclient.h"
+#include "extensions/qdatabase.h"
 
 #endif /*_QLIBCEXT_H */
