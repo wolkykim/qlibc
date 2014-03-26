@@ -90,5 +90,8 @@ This is why qLibc encapsulates corresponding function pointers inside the contai
 ## Looking for people to work with.
 
 We're looking for people who want to work together developing and improving qLibc.
+Currently, we have high demands on following area.
 
-Currently, we have demands on automated testing
+* Automated testing
+* Documentation.
+* New feature implementation.
