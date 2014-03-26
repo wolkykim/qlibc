@@ -32,12 +32,11 @@
 #include <string.h>
 #include "qlibc.h"
 
-int main(void)
-{
+int main(void) {
     // sample object
     struct sampleobj {
         int num;
-        char    str[10];
+        char str[10];
     };
 
     // get new vector
@@ -48,21 +47,21 @@ int main(void)
     struct sampleobj obj;
     for (i = 0; i < 3; i++) {
         // filling object with sample data
-        obj.num  = i;
+        obj.num = i;
         sprintf(obj.str, "hello%d", i);
 
         // stack
-        vector->add(vector, (void *)&obj, sizeof(struct sampleobj));
+        vector->add(vector, (void *) &obj, sizeof(struct sampleobj));
     }
 
     // final
     struct sampleobj *final;
-    final = (struct sampleobj *)vector->toarray(vector, NULL);
+    final = (struct sampleobj *) vector->toarray(vector, NULL);
 
     // print out
     printf("Number of Objects = %zu\n", vector->size(vector));
     for (i = 0; i < vector->size(vector); i++) {
-        printf("Object%d %d, %s\n", i+1, final[i].num, final[i].str);
+        printf("Object%d %d, %s\n", i + 1, final[i].num, final[i].str);
     }
 
     // release

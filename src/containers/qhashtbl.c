@@ -106,8 +106,7 @@
 static bool put(qhashtbl_t *tbl, const char *name, const void *data,
                 size_t size);
 static bool putstr(qhashtbl_t *tbl, const char *name, const char *str);
-static bool putstrf(qhashtbl_t *tbl, const char *name, const char *format,
-                    ...);
+static bool putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...);
 static bool putint(qhashtbl_t *tbl, const char *name, int64_t num);
 
 static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem);
@@ -153,59 +152,61 @@ static void free_(qhashtbl_t *tbl);
  *   Available options:
  *   - QHASHTBL_OPT_THREADSAFE - make it thread-safe.
  */
-qhashtbl_t *qhashtbl(size_t range, int options)
-{
+qhashtbl_t *qhashtbl(size_t range, int options) {
     if (range == 0) {
         range = DEFAULT_INDEX_RANGE;
     }
 
-    qhashtbl_t *tbl = (qhashtbl_t *)calloc(1, sizeof(qhashtbl_t));
-    if (tbl == NULL) goto malloc_failure;
+    qhashtbl_t *tbl = (qhashtbl_t *) calloc(1, sizeof(qhashtbl_t));
+    if (tbl == NULL)
+        goto malloc_failure;
 
     // allocate table space
-    tbl->slots = (qhnobj_t **)calloc(range, sizeof(qhnobj_t *));
-    if (tbl->slots == NULL) goto malloc_failure;
+    tbl->slots = (qhnobj_t **) calloc(range, sizeof(qhnobj_t *));
+    if (tbl->slots == NULL)
+        goto malloc_failure;
 
     // handle options.
     if (options & QHASHTBL_OPT_THREADSAFE) {
         Q_MUTEX_NEW(tbl->qmutex, true);
-        if (tbl->qmutex == NULL) goto malloc_failure;
+        if (tbl->qmutex == NULL)
+            goto malloc_failure;
     }
 
     // assign methods
-    tbl->put        = put;
-    tbl->putstr     = putstr;
-    tbl->putstrf    = putstrf;
-    tbl->putint     = putint;
+    tbl->put = put;
+    tbl->putstr = putstr;
+    tbl->putstrf = putstrf;
+    tbl->putint = putint;
 
-    tbl->get        = get;
-    tbl->getstr     = getstr;
-    tbl->getint     = getint;
+    tbl->get = get;
+    tbl->getstr = getstr;
+    tbl->getint = getint;
 
-    tbl->getnext    = getnext;
+    tbl->getnext = getnext;
 
-    tbl->remove     = remove_;
+    tbl->remove = remove_;
 
-    tbl->size       = size;
-    tbl->clear      = clear;
-    tbl->debug      = debug;
+    tbl->size = size;
+    tbl->clear = clear;
+    tbl->debug = debug;
 
-    tbl->lock       = lock;
-    tbl->unlock     = unlock;
+    tbl->lock = lock;
+    tbl->unlock = unlock;
 
-    tbl->free       = free_;
+    tbl->free = free_;
 
     // set table range.
     tbl->range = range;
 
     return tbl;
 
-  malloc_failure:
-    errno = ENOMEM;
+    malloc_failure: errno = ENOMEM;
     if (tbl) {
-        if (tbl->slots) free(tbl->slots);
+        if (tbl->slots)
+            free(tbl->slots);
         assert(tbl->qmutex == NULL);
-    	free_(tbl);
+        free_(tbl);
     }
     return NULL;
 }
@@ -224,8 +225,7 @@ qhashtbl_t *qhashtbl(size_t range, int options)
  *  - ENOMEM : Memory allocation failure.
  */
 static bool put(qhashtbl_t *tbl, const char *name, const void *data,
-                size_t size)
-{
+                size_t size) {
     if (name == NULL || data == NULL) {
         errno = EINVAL;
         return false;
@@ -249,8 +249,10 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
     char *dupname = strdup(name);
     void *dupdata = malloc(size);
     if (dupname == NULL || dupdata == NULL) {
-        if (dupname != NULL) free(dupname);
-        if (dupdata != NULL) free(dupdata);
+        if (dupname != NULL)
+            free(dupname);
+        if (dupdata != NULL)
+            free(dupdata);
         unlock(tbl);
         errno = ENOMEM;
         return false;
@@ -260,7 +262,7 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
     // put into table
     if (obj == NULL) {
         // insert
-        obj = (qhnobj_t *)calloc(1, sizeof(qhnobj_t));
+        obj = (qhnobj_t *) calloc(1, sizeof(qhnobj_t));
         if (obj == NULL) {
             free(dupname);
             free(dupdata);
@@ -305,8 +307,7 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  */
-static bool putstr(qhashtbl_t *tbl, const char *name, const char *str)
-{
+static bool putstr(qhashtbl_t *tbl, const char *name, const char *str) {
     size_t size = (str != NULL) ? (strlen(str) + 1) : 0;
     return put(tbl, name, str, size);
 }
@@ -323,8 +324,7 @@ static bool putstr(qhashtbl_t *tbl, const char *name, const char *str)
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  */
-static bool putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...)
-{
+static bool putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...) {
     char *str;
     DYNAMIC_VSPRINTF(str, format);
     if (str == NULL) {
@@ -352,9 +352,8 @@ static bool putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...)
  * @note
  * The integer will be converted to a string object and stored as string object.
  */
-static bool putint(qhashtbl_t *tbl, const char *name, const int64_t num)
-{
-    char str[20+1];
+static bool putint(qhashtbl_t *tbl, const char *name, const int64_t num) {
+    char str[20 + 1];
     snprintf(str, sizeof(str), "%"PRId64, num);
     return putstr(tbl, name, str);
 }
@@ -393,8 +392,7 @@ static bool putint(qhashtbl_t *tbl, const char *name, const int64_t num)
  *  directly and should not be de-allocated by user. In thread-safe mode,
  *  newmem flag should be true always.
  */
-static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem)
-{
+static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem) {
     if (name == NULL) {
         errno = EINVAL;
         return NULL;
@@ -425,12 +423,14 @@ static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem)
             }
             memcpy(data, obj->data, obj->size);
         }
-        if (size != NULL && data != NULL) *size = obj->size;
+        if (size != NULL && data != NULL)
+            *size = obj->size;
     }
 
     unlock(tbl);
 
-    if (data == NULL) errno = ENOENT;
+    if (data == NULL)
+        errno = ENOENT;
     return data;
 }
 
@@ -452,8 +452,7 @@ static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem)
  *  If newmem flag is set, returned data will be malloced and should be
  *  deallocated by user.
  */
-static char *getstr(qhashtbl_t *tbl, const char *name, const bool newmem)
-{
+static char *getstr(qhashtbl_t *tbl, const char *name, const bool newmem) {
     return get(tbl, name, NULL, newmem);
 }
 
@@ -470,8 +469,7 @@ static char *getstr(qhashtbl_t *tbl, const char *name, const bool newmem)
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  */
-static int64_t getint(qhashtbl_t *tbl, const char *name)
-{
+static int64_t getint(qhashtbl_t *tbl, const char *name) {
     int64_t num = 0;
     char *str = getstr(tbl, name, true);
     if (str != NULL) {
@@ -527,8 +525,7 @@ static int64_t getint(qhashtbl_t *tbl, const char *name)
  *  If newmem flag is true, user should de-allocate obj.name and obj.data
  *  resources.
  */
-static bool getnext(qhashtbl_t *tbl, qhnobj_t *obj, const bool newmem)
-{
+static bool getnext(qhashtbl_t *tbl, qhnobj_t *obj, const bool newmem) {
     if (obj == NULL) {
         errno = EINVAL;
         return NULL;
@@ -565,8 +562,10 @@ static bool getnext(qhashtbl_t *tbl, qhnobj_t *obj, const bool newmem)
             obj->data = malloc(cursor->size);
             if (obj->name == NULL || obj->data == NULL) {
                 DEBUG("getnext(): Unable to allocate memory.");
-                if (obj->name != NULL) free(obj->name);
-                if (obj->data != NULL) free(obj->data);
+                if (obj->name != NULL)
+                    free(obj->name);
+                if (obj->data != NULL)
+                    free(obj->data);
                 unlock(tbl);
                 errno = ENOMEM;
                 return false;
@@ -585,7 +584,8 @@ static bool getnext(qhashtbl_t *tbl, qhnobj_t *obj, const bool newmem)
 
     unlock(tbl);
 
-    if (found == false) errno = ENOENT;
+    if (found == false)
+        errno = ENOENT;
 
     return found;
 }
@@ -601,8 +601,7 @@ static bool getnext(qhashtbl_t *tbl, qhnobj_t *obj, const bool newmem)
  *  - ENOENT : No next element.
  *  - EINVAL : Invalid argument.
  */
-static bool remove_(qhashtbl_t *tbl, const char *name)
-{
+static bool remove_(qhashtbl_t *tbl, const char *name) {
     if (name == NULL) {
         errno = EINVAL;
         return false;
@@ -620,8 +619,10 @@ static bool remove_(qhashtbl_t *tbl, const char *name)
     for (obj = tbl->slots[idx]; obj != NULL; obj = obj->next) {
         if (obj->hash == hash && !strcmp(obj->name, name)) {
             // adjust link
-            if (prev == NULL) tbl->slots[idx] = obj->next;
-            else prev->next = obj->next;
+            if (prev == NULL)
+                tbl->slots[idx] = obj->next;
+            else
+                prev->next = obj->next;
 
             // remove
             free(obj->name);
@@ -638,7 +639,8 @@ static bool remove_(qhashtbl_t *tbl, const char *name)
 
     unlock(tbl);
 
-    if (found == false) errno = ENOENT;
+    if (found == false)
+        errno = ENOENT;
 
     return found;
 }
@@ -650,8 +652,7 @@ static bool remove_(qhashtbl_t *tbl, const char *name)
  *
  * @return number of elements stored
  */
-static size_t size(qhashtbl_t *tbl)
-{
+static size_t size(qhashtbl_t *tbl) {
     return tbl->num;
 }
 
@@ -660,12 +661,12 @@ static size_t size(qhashtbl_t *tbl)
  *
  * @param tbl   qhashtbl_t container pointer.
  */
-void clear(qhashtbl_t *tbl)
-{
+void clear(qhashtbl_t *tbl) {
     lock(tbl);
     int idx;
     for (idx = 0; idx < tbl->range && tbl->num > 0; idx++) {
-        if (tbl->slots[idx] == NULL) continue;
+        if (tbl->slots[idx] == NULL)
+            continue;
         qhnobj_t *obj = tbl->slots[idx];
         tbl->slots[idx] = NULL;
         while (obj != NULL) {
@@ -692,20 +693,19 @@ void clear(qhashtbl_t *tbl)
  * @retval errno will be set in error condition.
  *  - EIO : Invalid output stream.
  */
-bool debug(qhashtbl_t *tbl, FILE *out)
-{
+bool debug(qhashtbl_t *tbl, FILE *out) {
     if (out == NULL) {
         errno = EIO;
         return false;
     }
 
     qhnobj_t obj;
-    memset((void *)&obj, 0, sizeof(obj)); // must be cleared before call
+    memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     lock(tbl);
     while (tbl->getnext(tbl, &obj, false) == true) {
-        fprintf(out, "%s=" , obj.name);
+        fprintf(out, "%s=", obj.name);
         _q_humanOut(out, obj.data, obj.size, MAX_HUMANOUT);
-        fprintf(out, " (%zu, hash=%u)\n" , obj.size, obj.hash);
+        fprintf(out, " (%zu, hash=%u)\n", obj.size, obj.hash);
     }
     unlock(tbl);
 
@@ -725,8 +725,7 @@ bool debug(qhashtbl_t *tbl, FILE *out)
  *  This operation will do nothing if QHASHTBL_OPT_THREADSAFE option was not
  *  given at the initialization time.
  */
-static void lock(qhashtbl_t *tbl)
-{
+static void lock(qhashtbl_t *tbl) {
     Q_MUTEX_ENTER(tbl->qmutex);
 }
 
@@ -739,9 +738,8 @@ static void lock(qhashtbl_t *tbl)
  *  This operation will do nothing if QHASHTBL_OPT_THREADSAFE option was not
  *  given at the initialization time.
  */
-static void unlock(qhashtbl_t *tbl)
-{
-	Q_MUTEX_LEAVE(tbl->qmutex);
+static void unlock(qhashtbl_t *tbl) {
+    Q_MUTEX_LEAVE(tbl->qmutex);
 }
 
 /**
@@ -749,11 +747,11 @@ static void unlock(qhashtbl_t *tbl)
  *
  * @param tbl   qhashtbl_t container pointer.
  */
-void free_(qhashtbl_t *tbl)
-{
+void free_(qhashtbl_t *tbl) {
     lock(tbl);
     clear(tbl);
-    if (tbl->slots != NULL) free(tbl->slots);
+    if (tbl->slots != NULL)
+        free(tbl->slots);
     unlock(tbl);
     Q_MUTEX_DESTROY(tbl->qmutex);
     free(tbl);

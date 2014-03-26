@@ -52,24 +52,25 @@
  *
  * @note This modify source string directly.
  */
-char *qstrtrim(char *str)
-{
-    if (str == NULL) return NULL;
+char *qstrtrim(char *str) {
+    if (str == NULL)
+        return NULL;
 
     char *ss, *se;
-    for (ss = str;
-         *ss == ' ' || *ss == '\t' || *ss == '\r' || *ss == '\n';
-         ss++);
-    for (se = ss;
-         *se != '\0';
-         se++);
+    for (ss = str; *ss == ' ' || *ss == '\t' || *ss == '\r' || *ss == '\n';
+            ss++)
+        ;
+    for (se = ss; *se != '\0'; se++)
+        ;
     for (se--;
-         se >= ss && (*se == ' ' || *se == '\t' || *se == '\r' || *se == '\n');
-         se--);
+            se >= ss
+                    && (*se == ' ' || *se == '\t' || *se == '\r' || *se == '\n');
+            se--)
+        ;
     se++;
     *se = '\0';
 
-    if (ss > str ) {
+    if (ss > str) {
         size_t len = (se - ss) + 1;
         memmove(str, ss, len);
     }
@@ -86,16 +87,16 @@ char *qstrtrim(char *str)
  *
  * @note This modify source string directly.
  */
-char *qstrtrim_head(char *str)
-{
-    if (str == NULL) return NULL;
+char *qstrtrim_head(char *str) {
+    if (str == NULL)
+        return NULL;
 
     char *ss;
-    for (ss = str;
-         *ss == ' ' || *ss == '\t' || *ss == '\r' || *ss == '\n';
-         ss++);
+    for (ss = str; *ss == ' ' || *ss == '\t' || *ss == '\r' || *ss == '\n';
+            ss++)
+        ;
 
-    if (ss > str ) {
+    if (ss > str) {
         size_t len = strlen(ss) + 1;
         memmove(str, ss, len);
     }
@@ -112,14 +113,16 @@ char *qstrtrim_head(char *str)
  *
  * @note This modify source string directly.
  */
-char *qstrtrim_tail(char *str)
-{
-    if (str == NULL) return NULL;
+char *qstrtrim_tail(char *str) {
+    if (str == NULL)
+        return NULL;
 
     char *se;
     for (se = str + strlen(str) - 1;
-         se >= str && (*se == ' ' || *se == '\t' || *se == '\r' || *se == '\n');
-         se--);
+            se >= str
+                    && (*se == ' ' || *se == '\t' || *se == '\r' || *se == '\n');
+            se--)
+        ;
     se++;
     *se = '\0';
 
@@ -143,12 +146,12 @@ char *qstrtrim_tail(char *str)
  *   qstrunchar(str, '"', '"'); // to unquote
  * @endcode
  */
-char *qstrunchar(char *str, char head, char tail)
-{
-    if (str == NULL) return NULL;
+char *qstrunchar(char *str, char head, char tail) {
+    if (str == NULL)
+        return NULL;
 
     int len = strlen(str);
-    if (len >= 2 && str[0] == head && str[len-1] == tail) {
+    if (len >= 2 && str[0] == head && str[len - 1] == tail) {
         memmove(str, str + 1, len - 2);
         str[len - 2] = '\0';
     } else {
@@ -231,13 +234,9 @@ char *qstrunchar(char *str, char head, char tail)
  * @endcode
  */
 char *qstrreplace(const char *mode, char *srcstr, const char *tokstr,
-                  const char *word)
-{
-    if (mode == NULL
-        || strlen(mode) != 2
-        || srcstr == NULL
-        || tokstr == NULL
-        || word == NULL) {
+                  const char *word) {
+    if (mode == NULL || strlen(mode) != 2 || srcstr == NULL || tokstr == NULL
+            || word == NULL) {
         DEBUG("Unknown mode \"%s\".", mode);
         return NULL;
     }
@@ -250,38 +249,41 @@ char *qstrreplace(const char *mode, char *srcstr, const char *tokstr,
 
     /* Put replaced string into malloced 'newstr' */
     if (method == 't') { /* Token replace */
-        maxstrlen = strlen(srcstr) * ( (strlen(word) > 0) ? strlen(word) : 1 );
-        newstr = (char *)malloc(maxstrlen + 1);
+        maxstrlen = strlen(srcstr) * ((strlen(word) > 0) ? strlen(word) : 1);
+        newstr = (char *) malloc(maxstrlen + 1);
 
-        for (srcp = (char *)srcstr, newp = newstr; *srcp; srcp++) {
-            for (tokenp = (char *)tokstr; *tokenp; tokenp++) {
+        for (srcp = (char *) srcstr, newp = newstr; *srcp; srcp++) {
+            for (tokenp = (char *) tokstr; *tokenp; tokenp++) {
                 if (*srcp == *tokenp) {
                     char *wordp;
-                    for (wordp = (char *)word; *wordp; wordp++) {
+                    for (wordp = (char *) word; *wordp; wordp++) {
                         *newp++ = *wordp;
                     }
                     break;
                 }
             }
-            if (!*tokenp) *newp++ = *srcp;
+            if (!*tokenp)
+                *newp++ = *srcp;
         }
         *newp = '\0';
     } else if (method == 's') { /* String replace */
         if (strlen(word) > strlen(tokstr)) {
             maxstrlen = ((strlen(srcstr) / strlen(tokstr)) * strlen(word))
-                        + (strlen(srcstr) % strlen(tokstr));
+                    + (strlen(srcstr) % strlen(tokstr));
         } else {
             maxstrlen = strlen(srcstr);
         }
-        newstr = (char *)malloc(maxstrlen + 1);
+        newstr = (char *) malloc(maxstrlen + 1);
         tokstrlen = strlen(tokstr);
 
         for (srcp = srcstr, newp = newstr; *srcp; srcp++) {
             if (!strncmp(srcp, tokstr, tokstrlen)) {
                 char *wordp;
-                for (wordp = (char *)word; *wordp; wordp++) *newp++ = *wordp;
+                for (wordp = (char *) word; *wordp; wordp++)
+                    *newp++ = *wordp;
                 srcp += tokstrlen - 1;
-            } else *newp++ = *srcp;
+            } else
+                *newp++ = *srcp;
         }
         *newp = '\0';
     } else {
@@ -290,7 +292,8 @@ char *qstrreplace(const char *mode, char *srcstr, const char *tokstr,
     }
 
     /* decide whether newing the memory or replacing into exist one */
-    if (memuse == 'n') retp = newstr;
+    if (memuse == 'n')
+        retp = newstr;
     else if (memuse == 'r') {
         strcpy(srcstr, newstr);
         free(newstr);
@@ -314,9 +317,9 @@ char *qstrreplace(const char *mode, char *srcstr, const char *tokstr,
  *
  * @return always returns a pointer of dst
  */
-char *qstrcpy(char *dst, size_t size, const char *src)
-{
-    if (dst == NULL || size == 0 || src == NULL) return dst;
+char *qstrcpy(char *dst, size_t size, const char *src) {
+    if (dst == NULL || size == 0 || src == NULL)
+        return dst;
 
     size_t nbytes = strlen(src);
     return qstrncpy(dst, size, src, nbytes);
@@ -333,12 +336,13 @@ char *qstrcpy(char *dst, size_t size, const char *src)
  *
  * @return always returns a pointer of dst
  */
-char *qstrncpy(char *dst, size_t size, const char *src, size_t nbytes)
-{
-    if (dst == NULL || size == 0 || src == NULL) return dst;
+char *qstrncpy(char *dst, size_t size, const char *src, size_t nbytes) {
+    if (dst == NULL || size == 0 || src == NULL)
+        return dst;
 
-    if (nbytes >= size) nbytes = size - 1;
-    memmove((void *)dst, (void *)src, nbytes);
+    if (nbytes >= size)
+        nbytes = size - 1;
+    memmove((void *) dst, (void *) src, nbytes);
     dst[nbytes] = '\0';
 
     return dst;
@@ -351,11 +355,11 @@ char *qstrncpy(char *dst, size_t size, const char *src, size_t nbytes)
  *
  * @return a pointer of malloced string if successful, otherwise returns NULL
  */
-char *qstrdupf(const char *format, ...)
-{
+char *qstrdupf(const char *format, ...) {
     char *str;
     DYNAMIC_VSPRINTF(str, format);
-    if (str == NULL) return NULL;
+    if (str == NULL)
+        return NULL;
 
     char *dup = strdup(str);
     free(str);
@@ -372,18 +376,19 @@ char *qstrdupf(const char *format, ...)
  *
  * @return a pointer of malloced string if successful, otherwise returns NULL
  */
-char *qstrdup_between(const char *str, const char *start, const char *end)
-{
+char *qstrdup_between(const char *str, const char *start, const char *end) {
     char *s;
-    if ((s = strstr(str, start)) == NULL) return NULL;
+    if ((s = strstr(str, start)) == NULL)
+        return NULL;
     s += strlen(start);
 
     char *e;
-    if ((e = strstr(s, end)) == NULL) return NULL;
+    if ((e = strstr(s, end)) == NULL)
+        return NULL;
 
     int len = e - s;
 
-    char *buf = (char *)malloc(sizeof(char) * (len + 1));
+    char *buf = (char *) malloc(sizeof(char) * (len + 1));
     strncpy(buf, s, len);
     buf[len] = '\0';
 
@@ -398,11 +403,11 @@ char *qstrdup_between(const char *str, const char *start, const char *end)
  *
  * @return a pointer of str if successful, otherwise returns NULL
  */
-char *qstrcatf(char *str, const char *format, ...)
-{
+char *qstrcatf(char *str, const char *format, ...) {
     char *buf;
     DYNAMIC_VSPRINTF(buf, format);
-    if (buf == NULL) return NULL;
+    if (buf == NULL)
+        return NULL;
 
     char *ret = strcat(str, buf);
     free(buf);
@@ -415,7 +420,7 @@ char *qstrcatf(char *str, const char *format, ...)
  * @param buf       buffer pointer
  * @param size      buffer size
  * @param offset    a offset pointer which point source string
-  *
+ *
  * @return a pointer of buffer if successful, otherwise(EOF) returns NULL
  *
  * @note
@@ -431,15 +436,16 @@ char *qstrcatf(char *str, const char *format, ...)
  *   }
  * @endcode
  */
-char *qstrgets(char *buf, size_t size, char **offset)
-{
-    if (offset == NULL || *offset == NULL || **offset == '\0') return NULL;
+char *qstrgets(char *buf, size_t size, char **offset) {
+    if (offset == NULL || *offset == NULL || **offset == '\0')
+        return NULL;
 
     size_t i;
     char *from = *offset;
     char *to = buf;
     for (i = 0; *from != '\0' && i < (size - 1); i++, from++) {
-        if (*from == '\r') continue;
+        if (*from == '\r')
+            continue;
         if (*from == '\n') {
             from++;
             break;
@@ -462,9 +468,9 @@ char *qstrgets(char *buf, size_t size, char **offset)
  *
  * @note This modify str directly.
  */
-char *qstrrev(char *str)
-{
-    if (str == NULL) return str;
+char *qstrrev(char *str) {
+    if (str == NULL)
+        return str;
 
     char *p1, *p2;
     for (p1 = str, p2 = str + (strlen(str) - 1); p2 > p1; p1++, p2--) {
@@ -485,12 +491,14 @@ char *qstrrev(char *str)
  *
  * @note This modify str directly.
  */
-char *qstrupper(char *str)
-{
+char *qstrupper(char *str) {
     char *cp;
 
-    if (!str) return NULL;
-    for (cp = str; *cp; cp++) if (*cp >= 'a' && *cp <= 'z') *cp -= 32;
+    if (!str)
+        return NULL;
+    for (cp = str; *cp; cp++)
+        if (*cp >= 'a' && *cp <= 'z')
+            *cp -= 32;
     return str;
 }
 
@@ -503,12 +511,14 @@ char *qstrupper(char *str)
  *
  * @note This modify str directly.
  */
-char *qstrlower(char *str)
-{
+char *qstrlower(char *str) {
     char *cp;
 
-    if (!str) return NULL;
-    for (cp = str; *cp; cp++) if (*cp >= 'A' && *cp <= 'Z') *cp += 32;
+    if (!str)
+        return NULL;
+    for (cp = str; *cp; cp++)
+        if (*cp >= 'A' && *cp <= 'Z')
+            *cp += 32;
     return str;
 }
 
@@ -541,17 +551,17 @@ char *qstrlower(char *str)
  *  qstrtok() can returns empty string tokens. If the str is "a:b::d", qstrtok()
  *  returns "a", "b", "", "d". But strtok() returns "a","b","d".
  */
-char *qstrtok(char *str, const char *delimiters, char *retstop, int *offset)
-{
+char *qstrtok(char *str, const char *delimiters, char *retstop, int *offset) {
     char *tokensp, *tokenep;
 
-    tokensp = tokenep = (char *)(str + *offset);
+    tokensp = tokenep = (char *) (str + *offset);
     int numdel = strlen(delimiters);
-    for ( ; *tokenep; tokenep++) {
+    for (; *tokenep; tokenep++) {
         int j;
         for (j = 0; j < numdel; j++) {
             if (*tokenep == delimiters[j]) {
-                if (retstop != NULL) *retstop = delimiters[j];
+                if (retstop != NULL)
+                    *retstop = delimiters[j];
                 *tokenep = '\0';
                 tokenep++;
                 *offset = tokenep - str;
@@ -560,7 +570,8 @@ char *qstrtok(char *str, const char *delimiters, char *retstop, int *offset)
         }
     }
 
-    if (retstop != NULL) *retstop = '\0';
+    if (retstop != NULL)
+        *retstop = '\0';
     if (tokensp != tokenep) {
         *offset = tokenep - str;
         return tokensp;
@@ -586,18 +597,18 @@ char *qstrtok(char *str, const char *delimiters, char *retstop, int *offset)
  *   tokens->free(tokens);
  * @endcode
  */
-qlist_t *qstrtokenizer(const char *str, const char *delimiters)
-{
+qlist_t *qstrtokenizer(const char *str, const char *delimiters) {
     qlist_t *list = qlist(0);
-    if (list == NULL) return NULL;
+    if (list == NULL)
+        return NULL;
 
     int i;
     char *dupstr = strdup(str);
     char *token;
     int offset = 0;
     for (i = 1, token = qstrtok(dupstr, delimiters, NULL, &offset);
-         token != NULL;
-         token = qstrtok(dupstr, delimiters, NULL, &offset), i++) {
+            token != NULL;
+            token = qstrtok(dupstr, delimiters, NULL, &offset), i++) {
         list->addlast(list, token, strlen(token) + 1);
     }
     free(dupstr);
@@ -617,8 +628,7 @@ qlist_t *qstrtokenizer(const char *str, const char *delimiters)
  *  character. It's a good idea to call srand() once before calling this because
  *  it uses rand().
  */
-char *qstrunique(const char *seed)
-{
+char *qstrunique(const char *seed) {
     long int usec;
 #ifdef _WIN32
     FILETIME ft;
@@ -631,12 +641,8 @@ char *qstrunique(const char *seed)
 #endif
 
     char uniquestr[128];
-    snprintf(uniquestr, sizeof(uniquestr), "%u%d%lu%ld%s",
-             getpid(),
-             rand(),
-             (unsigned long int)time(NULL),
-             usec,
-             (seed != NULL) ? seed : "");
+    snprintf(uniquestr, sizeof(uniquestr), "%u%d%lu%ld%s", getpid(), rand(),
+             (unsigned long int) time(NULL), usec, (seed != NULL) ? seed : "");
 
     unsigned char md5hash[16];
     qhashmd5(uniquestr, strlen(uniquestr), md5hash);
@@ -653,20 +659,22 @@ char *qstrunique(const char *seed)
  * @return a pointer of malloced string which contains comma separated number
  *         if successful, otherwise returns NULL
  */
-char *qstr_comma_number(int number)
-{
+char *qstr_comma_number(int number) {
     char *str, *strp;
 
-    str = strp = (char *)malloc(sizeof(char) * (14+1));
-    if (str == NULL) return NULL;
+    str = strp = (char *) malloc(sizeof(char) * (14 + 1));
+    if (str == NULL)
+        return NULL;
 
-    char buf[10+1], *bufp;
+    char buf[10 + 1], *bufp;
     snprintf(buf, sizeof(buf), "%d", abs(number));
 
-    if (number < 0) *strp++ = '-';
+    if (number < 0)
+        *strp++ = '-';
     for (bufp = buf; *bufp != '\0'; strp++, bufp++) {
         *strp = *bufp;
-        if ((strlen(bufp)) % 3 == 1 && *(bufp + 1) != '\0') *(++strp) = ',';
+        if ((strlen(bufp)) % 3 == 1 && *(bufp + 1) != '\0')
+            *(++strp) = ',';
     }
     *strp = '\0';
 
@@ -712,10 +720,10 @@ char *qstr_comma_number(int number)
  *    isxdigit -  checks for a hexadecimal digits.
  *  Please refer "man isalnum" for more details about these functions.
  */
-bool qstrtest(int (*testfunc)(int), const char *str)
-{
+bool qstrtest(int (*testfunc)(int), const char *str) {
     for (; *str; str++) {
-        if (testfunc(*str) == 0) return false;
+        if (testfunc(*str) == 0)
+            return false;
     }
     return true;
 }
@@ -727,38 +735,48 @@ bool qstrtest(int (*testfunc)(int), const char *str)
  *
  * @return true if successful, otherwise returns false
  */
-bool qstr_is_email(const char *email)
-{
+bool qstr_is_email(const char *email) {
     int i, alpa, dot, gol;
 
-    if (email == NULL) return false;
+    if (email == NULL)
+        return false;
 
     for (i = alpa = dot = gol = 0; email[i] != '\0'; i++) {
         switch (email[i]) {
-            case '@' : {
-                if (alpa == 0) return false;
-                if (gol > 0)   return false;
+            case '@': {
+                if (alpa == 0)
+                    return false;
+                if (gol > 0)
+                    return false;
                 gol++;
                 break;
             }
-            case '.' : {
-                if ((i > 0)   && (email[i - 1] == '@')) return false;
-                if ((gol > 0) && (email[i - 1] == '.')) return false;
+            case '.': {
+                if ((i > 0) && (email[i - 1] == '@'))
+                    return false;
+                if ((gol > 0) && (email[i - 1] == '.'))
+                    return false;
                 dot++;
                 break;
             }
-            default  : {
+            default: {
                 alpa++;
-                if ((email[i] >= '0') && (email[i] <= '9')) break;
-                else if ((email[i] >= 'A') && (email[i] <= 'Z')) break;
-                else if ((email[i] >= 'a') && (email[i] <= 'z')) break;
-                else if ((email[i] == '-') || (email[i] == '_')) break;
-                else return false;
+                if ((email[i] >= '0') && (email[i] <= '9'))
+                    break;
+                else if ((email[i] >= 'A') && (email[i] <= 'Z'))
+                    break;
+                else if ((email[i] >= 'a') && (email[i] <= 'z'))
+                    break;
+                else if ((email[i] == '-') || (email[i] == '_'))
+                    break;
+                else
+                    return false;
             }
         }
     }
 
-    if ((alpa <= 3) || (gol == 0) || (dot == 0)) return false;
+    if ((alpa <= 3) || (gol == 0) || (dot == 0))
+        return false;
     return true;
 }
 
@@ -775,27 +793,25 @@ bool qstr_is_email(const char *email)
  *   }
  * @endcode
  */
-bool qstr_is_ip4addr(const char *str)
-{
+bool qstr_is_ip4addr(const char *str) {
     char *dupstr = strdup(str);
 
     char *s1, *s2;
     int periodcnt;
-    for (s1 = dupstr, periodcnt = 0;
-         (s2 = strchr(s1, '.')) != NULL;
-         s1 = s2 + 1, periodcnt++) {
+    for (s1 = dupstr, periodcnt = 0; (s2 = strchr(s1, '.')) != NULL;
+            s1 = s2 + 1, periodcnt++) {
         *s2 = '\0';
 
         int n;
-        if (qstrtest(isdigit, s1) == false
-            || (n = atoi(s1)) <= 0 || n >= 256) {
+        if (qstrtest(isdigit, s1) == false || (n = atoi(s1)) <= 0 || n >= 256) {
             free(dupstr);
             return false;
         }
     }
 
     free(dupstr);
-    if (periodcnt != 3) return false;
+    if (periodcnt != 3)
+        return false;
     return true;
 }
 
@@ -819,8 +835,7 @@ bool qstr_is_ip4addr(const char *str)
  * @endcode
  */
 char *qstr_conv_encoding(const char *str, const char *fromcode,
-                         const char *tocode, float mag)
-{
+                         const char *tocode, float mag) {
 #ifdef __linux__
     if (str == NULL) return NULL;
 

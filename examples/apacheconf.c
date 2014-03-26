@@ -32,8 +32,7 @@
 #include "qlibcext.h"
 
 #ifdef DISABLE_QACONF
-int main(void)
-{
+int main(void) {
     printf("qaconf extension is disabled at compile time.\n");
     return 1;
 }
@@ -54,10 +53,10 @@ struct MyConf {
 //   Note) These values are ORed(bit operation), so the number should be
 //         2(1<<1), 4(1<<2), 6(1<<3), 8(1<<4), ...
 enum {
-    OPT_SECTION_ALL        = QAC_SECTION_ALL,   // pre-defined
-    OPT_SECTION_ROOT       = QAC_SECTION_ROOT,  // pre-defined
-    OPT_SECTION_DOMAIN     = (1 << 1),    // user-defined section
-    OPT_SECTION_HOST       = (1 << 2),    // user-defined section
+    OPT_SECTION_ALL = QAC_SECTION_ALL,   // pre-defined
+    OPT_SECTION_ROOT = QAC_SECTION_ROOT,  // pre-defined
+    OPT_SECTION_DOMAIN = (1 << 1),    // user-defined section
+    OPT_SECTION_HOST = (1 << 2),    // user-defined section
 };
 
 // Define callback proto-types.
@@ -66,22 +65,21 @@ static QAC_CB(confcb_userdata_example);
 static QAC_CB(confcb_section_example);
 
 // Define options and callbacks.
-static qaconf_option_t options[] = {
-    {"Listen", QAC_TAKE_INT, confcb_userdata_example, 0, OPT_SECTION_ALL},
-    {"Protocols", QAC_TAKEALL, confcb_debug, 0, OPT_SECTION_ROOT},
-    {"IPSEC", QAC_TAKE_BOOL, confcb_debug, 0, OPT_SECTION_ROOT},
-    {"Domain", QAC_TAKE_STR, confcb_debug, OPT_SECTION_DOMAIN, OPT_SECTION_ROOT},
-    {  "TTL", QAC_TAKE_INT, confcb_debug, 0, OPT_SECTION_DOMAIN | OPT_SECTION_HOST},
-    {  "MX", QAC_TAKE2 | QAC_A1_INT, confcb_debug, 0, OPT_SECTION_DOMAIN},
-    {  "Host", QAC_TAKE_STR, confcb_section_example, OPT_SECTION_HOST, OPT_SECTION_DOMAIN},
-    {    "IPv4", QAC_TAKE_STR, confcb_debug, 0, OPT_SECTION_HOST},
-    {    "TXT", QAC_TAKE_STR, confcb_debug, 0, OPT_SECTION_HOST},
-    {    "CNAME", QAC_TAKE_STR, confcb_debug, 0, OPT_SECTION_HOST},
-    QAC_OPTION_END
-};
+static qaconf_option_t options[] = { { "Listen", QAC_TAKE_INT,
+        confcb_userdata_example, 0, OPT_SECTION_ALL }, { "Protocols",
+        QAC_TAKEALL, confcb_debug, 0, OPT_SECTION_ROOT }, { "IPSEC",
+        QAC_TAKE_BOOL, confcb_debug, 0, OPT_SECTION_ROOT }, { "Domain",
+        QAC_TAKE_STR, confcb_debug, OPT_SECTION_DOMAIN, OPT_SECTION_ROOT }, {
+        "TTL", QAC_TAKE_INT, confcb_debug, 0, OPT_SECTION_DOMAIN
+                | OPT_SECTION_HOST }, { "MX", QAC_TAKE2 | QAC_A1_INT,
+        confcb_debug, 0, OPT_SECTION_DOMAIN }, { "Host", QAC_TAKE_STR,
+        confcb_section_example, OPT_SECTION_HOST, OPT_SECTION_DOMAIN }, {
+        "IPv4", QAC_TAKE_STR, confcb_debug, 0, OPT_SECTION_HOST }, { "TXT",
+        QAC_TAKE_STR, confcb_debug, 0, OPT_SECTION_HOST }, { "CNAME",
+        QAC_TAKE_STR, confcb_debug, 0, OPT_SECTION_HOST },
+QAC_OPTION_END };
 
-int main(void)
-{
+int main(void) {
     // Create a userdata structure.
     struct MyConf myconf;
     memset(&myconf, '\0', sizeof(myconf));
@@ -121,11 +119,10 @@ int main(void)
     return 0;
 }
 
-static QAC_CB(confcb_debug)
-{
+static QAC_CB(confcb_debug) {
     int i;
     for (i = 0; i < data->level; i++) {
-        printf ("    ");
+        printf("    ");
     }
 
     // Print option name
@@ -153,10 +150,9 @@ static QAC_CB(confcb_debug)
     return NULL;
 }
 
-static QAC_CB(confcb_userdata_example)
-{
+static QAC_CB(confcb_userdata_example) {
     // Type casting userdata for convenient use.
-    struct MyConf *myconf = (struct MyConf *)userdata;
+    struct MyConf *myconf = (struct MyConf *) userdata;
 
     /*
      * We don't need to verify number of arguments. qaconf() check the number
@@ -170,7 +166,6 @@ static QAC_CB(confcb_userdata_example)
     //if (data->argc != 2) {
     //    return strdup("Invalid argument!!!");
     //}
-
     // Copy argument into my structure.
     myconf->listen = atoi(data->argv[1]);
 
@@ -181,8 +176,7 @@ static QAC_CB(confcb_userdata_example)
     return NULL;
 }
 
-static QAC_CB(confcb_section_example)
-{
+static QAC_CB(confcb_section_example) {
     /*
      * If option is found in brackets like <Option>, that is called section.
      * It has opening section <Option> and closing section </Option>
@@ -217,7 +211,7 @@ static QAC_CB(confcb_section_example)
     }
 
     // Type casting userdata for convenient use.
-    struct MyConf *myconf = (struct MyConf *)userdata;
+    struct MyConf *myconf = (struct MyConf *) userdata;
     myconf->num_hosts++;
 
     // Return OK.

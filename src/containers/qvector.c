@@ -147,9 +147,8 @@ static void free_(qvector_t *vector);
  *   Available options:
  *   - QVECTOR_OPT_THREADSAFE - make it thread-safe.
  */
-qvector_t *qvector(int options)
-{
-    qvector_t *vector = (qvector_t *)calloc(1, sizeof(qvector_t));
+qvector_t *qvector(int options) {
+    qvector_t *vector = (qvector_t *) calloc(1, sizeof(qvector_t));
     if (vector == NULL) {
         errno = ENOMEM;
         return NULL;
@@ -163,18 +162,18 @@ qvector_t *qvector(int options)
     }
 
     // methods
-    vector->add         = add;
-    vector->addstr      = addstr;
-    vector->addstrf     = addstrf;
+    vector->add = add;
+    vector->addstr = addstr;
+    vector->addstrf = addstrf;
 
-    vector->toarray     = toarray;
-    vector->tostring    = tostring;
+    vector->toarray = toarray;
+    vector->tostring = tostring;
 
-    vector->size        = size;
-    vector->datasize    = datasize;
-    vector->clear       = clear;
-    vector->debug       = debug;
-    vector->free        = free_;
+    vector->size = size;
+    vector->datasize = datasize;
+    vector->clear = clear;
+    vector->debug = debug;
+    vector->free = free_;
 
     return vector;
 }
@@ -191,8 +190,7 @@ qvector_t *qvector(int options)
  *  - EINVAL    : Invalid argument.
  *  - ENOMEM    : Memory allocation failure.
  */
-static bool add(qvector_t *vector, const void *data, size_t size)
-{
+static bool add(qvector_t *vector, const void *data, size_t size) {
     return vector->list->addlast(vector->list, data, size);
 }
 
@@ -207,8 +205,7 @@ static bool add(qvector_t *vector, const void *data, size_t size)
  *  - EINVAL    : Invalid argument.
  *  - ENOMEM    : Memory allocation failure.
  */
-static bool addstr(qvector_t *vector, const char *str)
-{
+static bool addstr(qvector_t *vector, const char *str) {
     return vector->list->addlast(vector->list, str, strlen(str));
 }
 
@@ -223,8 +220,7 @@ static bool addstr(qvector_t *vector, const char *str)
  *  - EINVAL    : Invalid argument.
  *  - ENOMEM    : Memory allocation failure.
  */
-static bool addstrf(qvector_t *vector, const char *format, ...)
-{
+static bool addstrf(qvector_t *vector, const char *format, ...) {
     char *str;
     DYNAMIC_VSPRINTF(str, format);
     if (str == NULL) {
@@ -251,8 +247,7 @@ static bool addstrf(qvector_t *vector, const char *format, ...)
  *  - ENOENT    : Vector is empty.
  *  - ENOMEM    : Memory allocation failure.
  */
-static void *toarray(qvector_t *vector, size_t *size)
-{
+static void *toarray(qvector_t *vector, size_t *size) {
     return vector->list->toarray(vector->list, size);
 }
 
@@ -270,8 +265,7 @@ static void *toarray(qvector_t *vector, size_t *size)
  * @note
  * Return string is always terminated by '\0'.
  */
-static char *tostring(qvector_t *vector)
-{
+static char *tostring(qvector_t *vector) {
     return vector->list->tostring(vector->list);
 }
 
@@ -282,8 +276,7 @@ static char *tostring(qvector_t *vector)
  *
  * @return the number of elements in this vector.
  */
-static size_t size(qvector_t *vector)
-{
+static size_t size(qvector_t *vector) {
     return vector->list->size(vector->list);
 }
 
@@ -295,8 +288,7 @@ static size_t size(qvector_t *vector)
  *
  * @return the sum of total element size in this vector.
  */
-static size_t datasize(qvector_t *vector)
-{
+static size_t datasize(qvector_t *vector) {
     return vector->list->datasize(vector->list);
 }
 
@@ -305,8 +297,7 @@ static size_t datasize(qvector_t *vector)
  *
  * @param vector    qvector_t container pointer.
  */
-static void clear(qvector_t *vector)
-{
+static void clear(qvector_t *vector) {
     vector->list->clear(vector->list);
 }
 
@@ -320,8 +311,7 @@ static void clear(qvector_t *vector)
  * @retval errno will be set in error condition.
  *  - EIO   : Invalid output stream.
  */
-static bool debug(qvector_t *vector, FILE *out)
-{
+static bool debug(qvector_t *vector, FILE *out) {
     return vector->list->debug(vector->list, out);
 }
 
@@ -330,8 +320,7 @@ static bool debug(qvector_t *vector, FILE *out)
  *
  * @param vector    qvector_t container pointer.
  */
-static void free_(qvector_t *vector)
-{
+static void free_(qvector_t *vector) {
     vector->list->free(vector->list);
     free(vector);
 }

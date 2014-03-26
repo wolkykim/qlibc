@@ -102,12 +102,12 @@ static bool _real_open(qlog_t *log);
  *   log->free(log);
  * @endcode
  */
-qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval, int options)
-{
+qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval,
+             int options) {
     qlog_t *log;
 
     // malloc qlog_t structure
-    log = (qlog_t *)calloc(1, sizeof(qlog_t));
+    log = (qlog_t *) calloc(1, sizeof(qlog_t));
     if (log == NULL) {
         errno = ENOMEM;
         return NULL;
@@ -116,7 +116,8 @@ qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval, int optio
     // set up the structure.
     qstrcpy(log->filepathfmt, sizeof(log->filepathfmt), filepathfmt);
     log->mode = mode;
-    if (rotateinterval > 0) log->rotateinterval = rotateinterval;
+    if (rotateinterval > 0)
+        log->rotateinterval = rotateinterval;
 
     // handle options
     if (options & QLOG_OPT_THREADSAFE) {
@@ -139,11 +140,11 @@ qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval, int optio
     }
 
     // member methods
-    log->write  = write_;
+    log->write = write_;
     log->writef = writef;
-    log->duplicate  = duplicate;
-    log->flush  = flush_;
-    log->free   = free_;
+    log->duplicate = duplicate;
+    log->flush = flush_;
+    log->free = free_;
 
     return log;
 }
@@ -156,16 +157,17 @@ qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval, int optio
  *
  * @return true if successful, otherewise returns false
  */
-static bool write_(qlog_t *log, const char *str)
-{
-    if (log == NULL || log->fp == NULL) return false;
+static bool write_(qlog_t *log, const char *str) {
+    if (log == NULL || log->fp == NULL)
+        return false;
 
     Q_MUTEX_ENTER(log->qmutex);
 
     /* duplicate stream */
     if (log->outfp != NULL) {
         fprintf(log->outfp, "%s\n", str);
-        if (log->outflush == true) fflush(log->outfp);
+        if (log->outflush == true)
+            fflush(log->outfp);
     }
 
     /* check if log rotation is needed */
@@ -176,7 +178,8 @@ static bool write_(qlog_t *log, const char *str)
     /* log to file */
     bool ret = false;
     if (fprintf(log->fp, "%s\n", str) >= 0) {
-        if (log->logflush == true) fflush(log->fp);
+        if (log->logflush == true)
+            fflush(log->fp);
         ret = true;
     }
 
@@ -193,13 +196,14 @@ static bool write_(qlog_t *log, const char *str)
  *
  * @return true if successful, otherewise returns false
  */
-static bool writef(qlog_t *log, const char *format, ...)
-{
-    if (log == NULL || log->fp == NULL) return false;
+static bool writef(qlog_t *log, const char *format, ...) {
+    if (log == NULL || log->fp == NULL)
+        return false;
 
     char *str;
     DYNAMIC_VSPRINTF(str, format);
-    if (str == NULL) return false;
+    if (str == NULL)
+        return false;
 
     bool ret = write_(log, str);
 
@@ -223,9 +227,9 @@ static bool writef(qlog_t *log, const char *format, ...)
  *   log->duplicate(log, NULL, false);  // disable console out (default)
  * @endcode
  */
-static bool duplicate(qlog_t *log, FILE *outfp, bool flush)
-{
-    if (log == NULL) return false;
+static bool duplicate(qlog_t *log, FILE *outfp, bool flush) {
+    if (log == NULL)
+        return false;
 
     Q_MUTEX_ENTER(log->qmutex);
     log->outfp = outfp;
@@ -242,14 +246,16 @@ static bool duplicate(qlog_t *log, FILE *outfp, bool flush)
  *
  * @return true if successful, otherewise returns false
  */
-static bool flush_(qlog_t *log)
-{
-    if (log == NULL) return false;
+static bool flush_(qlog_t *log) {
+    if (log == NULL)
+        return false;
 
     // only flush if flush flag is disabled
     Q_MUTEX_ENTER(log->qmutex);
-    if (log->fp != NULL && log->logflush == false) fflush(log->fp);
-    if (log->outfp != NULL && log->outflush == false) fflush(log->outfp);
+    if (log->fp != NULL && log->logflush == false)
+        fflush(log->fp);
+    if (log->outfp != NULL && log->outflush == false)
+        fflush(log->outfp);
     Q_MUTEX_LEAVE(log->qmutex);
 
     return false;
@@ -260,9 +266,9 @@ static bool flush_(qlog_t *log)
  *
  * @param log       a pointer of qlog_t
  */
-static void free_(qlog_t *log)
-{
-    if (log == NULL) return;
+static void free_(qlog_t *log) {
+    if (log == NULL)
+        return;
 
     flush_(log);
     Q_MUTEX_ENTER(log->qmutex);
@@ -278,8 +284,7 @@ static void free_(qlog_t *log)
 
 #ifndef _DOXYGEN_SKIP
 
-static bool _real_open(qlog_t *log)
-{
+static bool _real_open(qlog_t *log) {
     const time_t nowtime = time(NULL);
 
     /* generate filename */
@@ -295,20 +300,22 @@ static bool _real_open(qlog_t *log)
             return false;
         }
 
-        if (log->mode != 0) fchmod(fileno(log->fp), log->mode);
+        if (log->mode != 0)
+            fchmod(fileno(log->fp), log->mode);
         qstrcpy(log->filepath, sizeof(log->filepath), newfilepath);
     } else if (strcmp(log->filepath, newfilepath)) {
         /* have opened stream, only reopen if new filename is different with
-           existing one */
+         existing one */
         FILE *newfp = fopen(newfilepath, "a");
         if (newfp != NULL) {
-            if (log->mode != 0) fchmod(fileno(newfp), log->mode);
+            if (log->mode != 0)
+                fchmod(fileno(newfp), log->mode);
             fclose(log->fp);
             log->fp = newfp;
             qstrcpy(log->filepath, sizeof(log->filepath), newfilepath);
         } else {
             DEBUG("_real_open: Can't open log file '%s' for rotating.",
-                  newfilepath);
+                    newfilepath);
         }
     } else {
         DEBUG("_real_open: skip re-opening log file.");
@@ -319,7 +326,7 @@ static bool _real_open(qlog_t *log)
         time_t ct = time(NULL);
         time_t dt = ct - mktime(gmtime(&ct));
         log->nextrotate = (((ct + dt) / log->rotateinterval) + 1)
-                          * log->rotateinterval - dt;
+                * log->rotateinterval - dt;
     } else {
         log->nextrotate = 0;
     }

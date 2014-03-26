@@ -62,12 +62,12 @@
  *   --------------------
  * @endcode
  */
-int64_t qcount_read(const char *filepath)
-{
+int64_t qcount_read(const char *filepath) {
     int fd = open(filepath, O_RDONLY, 0);
-    if (fd < 0) return 0;
+    if (fd < 0)
+        return 0;
 
-    char buf[20+1];
+    char buf[20 + 1];
     ssize_t readed = read(fd, buf, (sizeof(buf) - 1));
     close(fd);
 
@@ -92,16 +92,18 @@ int64_t qcount_read(const char *filepath)
  *   qcount_save("number.dat", 75);
  * @endcode
  */
-bool qcount_save(const char *filepath, int64_t number)
-{
-    int fd = open(filepath, O_CREAT|O_WRONLY|O_TRUNC, (S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH));
-    if (fd < 0) return false;
+bool qcount_save(const char *filepath, int64_t number) {
+    int fd = open(filepath, O_CREAT | O_WRONLY | O_TRUNC,
+                  (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH));
+    if (fd < 0)
+        return false;
 
     char *str = qstrdupf("%"PRId64, number);
     ssize_t updated = write(fd, str, strlen(str));
     close(fd);
 
-    if (updated > 0) return true;
+    if (updated > 0)
+        return true;
     return false;
 }
 
@@ -119,8 +121,7 @@ bool qcount_save(const char *filepath, int64_t number)
  *   count = qcount_update("number.dat", -3);
  * @endcode
  */
-int64_t qcount_update(const char *filepath, int64_t number)
-{
+int64_t qcount_update(const char *filepath, int64_t number) {
     int64_t counter = qcount_read(filepath);
     counter += number;
     if (qcount_save(filepath, counter) == true) {

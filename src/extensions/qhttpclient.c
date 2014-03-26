@@ -134,6 +134,7 @@
 #include "qinternal.h"
 #include "utilities/qio.h"
 #include "utilities/qstring.h"
+#include "utilities/qsocket.h"
 #include "containers/qlisttbl.h"
 #include "containers/qvector.h"
 #include "extensions/qhttpclient.h"
@@ -148,19 +149,16 @@ static void setuseragent(qhttpclient_t *client, const char *agentname);
 
 static bool head(qhttpclient_t *client, const char *uri, int *rescode,
                  qlisttbl_t *reqheaders, qlisttbl_t *resheaders);
-static bool get(qhttpclient_t *client, const char *uri, int fd,
-                off_t *savesize, int *rescode,
-                qlisttbl_t *reqheaders, qlisttbl_t *resheaders,
+static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
+                int *rescode, qlisttbl_t *reqheaders, qlisttbl_t *resheaders,
                 bool (*callback)(void *userdata, off_t recvbytes),
                 void *userdata);
 static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
-                int *rescode,
-                qlisttbl_t *reqheaders, qlisttbl_t *resheaders,
+                int *rescode, qlisttbl_t *reqheaders, qlisttbl_t *resheaders,
                 bool (*callback)(void *userdata, off_t sentbytes),
                 void *userdata);
 static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
-                 void *data, size_t size,
-                 int *rescode, size_t *contentslength,
+                 void *data, size_t size, int *rescode, size_t *contentslength,
                  qlisttbl_t *reqheaders, qlisttbl_t *resheaders);
 
 static bool sendrequest(qhttpclient_t *client, const char *method,
@@ -216,7 +214,7 @@ static bool _parse_uri(const char *uri, bool *protocol, char *hostname,
 #define MAX_ATOMIC_DATA_SIZE    (32 * 1024)  /*< maximum sending bytes */
 
 #ifdef  ENABLE_OPENSSL
-struct  SslConn {
+struct SslConn {
     SSL *ssl;
     SSL_CTX *ctx;
 };
@@ -244,13 +242,12 @@ struct  SslConn {
  *  setkeepalive(). If destname is URI string starting with
  *  "https://", setssl() will be called internally.
  */
-qhttpclient_t *qhttpclient(const char *destname, int port)
-{
+qhttpclient_t *qhttpclient(const char *destname, int port) {
     bool ishttps = false;
     char hostname[256];
     if (port == 0 || strstr(hostname, "://") != NULL) {
         if (_parse_uri(destname, &ishttps, hostname, sizeof(hostname), &port)
-            == false) {
+                == false) {
             DEBUG("Can't parse URI %s", destname);
             return NULL;
         }
@@ -267,47 +264,49 @@ qhttpclient_t *qhttpclient(const char *destname, int port)
     }
 
     // allocate  object
-    qhttpclient_t *client = (qhttpclient_t *)malloc(sizeof(qhttpclient_t));
-    if (client == NULL) return NULL;
-    memset((void *)client, 0, sizeof(qhttpclient_t));
+    qhttpclient_t *client = (qhttpclient_t *) malloc(sizeof(qhttpclient_t));
+    if (client == NULL)
+        return NULL;
+    memset((void *) client, 0, sizeof(qhttpclient_t));
 
     // initialize object
     client->socket = -1;
 
-    memcpy((void *)&client->addr, (void *)&addr, sizeof(client->addr));
+    memcpy((void *) &client->addr, (void *) &addr, sizeof(client->addr));
     client->hostname = strdup(hostname);
-    client->port     = port;
+    client->port = port;
 
     // member methods
-    client->setssl          = setssl;
-    client->settimeout      = settimeout;
-    client->setkeepalive    = setkeepalive;
-    client->setuseragent    = setuseragent;
+    client->setssl = setssl;
+    client->settimeout = settimeout;
+    client->setkeepalive = setkeepalive;
+    client->setuseragent = setuseragent;
 
-    client->open            = open_;
+    client->open = open_;
 
-    client->head            = head;
-    client->get             = get;
-    client->put             = put;
-    client->cmd             = cmd;
+    client->head = head;
+    client->get = get;
+    client->put = put;
+    client->cmd = cmd;
 
-    client->sendrequest     = sendrequest;
-    client->readresponse    = readresponse;
+    client->sendrequest = sendrequest;
+    client->readresponse = readresponse;
 
-    client->gets            = gets_;
-    client->read            = read_;
-    client->write           = write_;
-    client->recvfile        = recvfile;
-    client->sendfile        = sendfile_;
+    client->gets = gets_;
+    client->read = read_;
+    client->write = write_;
+    client->recvfile = recvfile;
+    client->sendfile = sendfile_;
 
-    client->close           = _close;
-    client->free            = _free;
+    client->close = _close;
+    client->free = _free;
 
     // init client
     settimeout(client, 0);
     setkeepalive(client, false);
     setuseragent(client, QHTTPCLIENT_NAME);
-    if (ishttps == true) setssl(client);
+    if (ishttps == true)
+        setssl(client);
 
     return client;
 }
@@ -321,8 +320,7 @@ qhttpclient_t *qhttpclient(const char *destname, int port)
  *   httpclient->setssl(httpclient);
  * @endcode
  */
-static bool setssl(qhttpclient_t *client)
-{
+static bool setssl(qhttpclient_t *client) {
 #ifdef  ENABLE_OPENSSL
     static bool initialized = false;
 
@@ -362,9 +360,9 @@ static bool setssl(qhttpclient_t *client)
  *   httpclient->settimeout(httpclient, 5000); // 5 seconds
  * @endcode
  */
-static void settimeout(qhttpclient_t *client, int timeoutms)
-{
-    if (timeoutms <= 0) timeoutms = -1;
+static void settimeout(qhttpclient_t *client, int timeoutms) {
+    if (timeoutms <= 0)
+        timeoutms = -1;
     client->timeoutms = timeoutms;
 }
 
@@ -379,8 +377,7 @@ static void settimeout(qhttpclient_t *client, int timeoutms)
  *   httpclient->setkeepalive(httpclient, false); // keep-alive off
  * @endcode
  */
-static void setkeepalive(qhttpclient_t *client, bool keepalive)
-{
+static void setkeepalive(qhttpclient_t *client, bool keepalive) {
     client->keepalive = keepalive;
 }
 
@@ -394,9 +391,9 @@ static void setkeepalive(qhttpclient_t *client, bool keepalive)
  *   httpclient->setuseragent(httpclient, "MyAgent/1.0");
  * @endcode
  */
-static void setuseragent(qhttpclient_t *client, const char *useragent)
-{
-    if (client->useragent != NULL) free(client->useragent);
+static void setuseragent(qhttpclient_t *client, const char *useragent) {
+    if (client->useragent != NULL)
+        free(client->useragent);
     client->useragent = strdup(useragent);
 }
 
@@ -417,11 +414,11 @@ static void setuseragent(qhttpclient_t *client, const char *useragent)
  *   if(httpclient->open(httpclient) == false) return;
  * @endcode
  */
-static bool open_(qhttpclient_t *client)
-{
+static bool open_(qhttpclient_t *client) {
     if (client->socket >= 0) {
         // check if connection is still alive
-        if (qio_wait_writable(client->socket, 0) > 0) return true;
+        if (qio_wait_writable(client->socket, 0) > 0)
+            return true;
         _close(client);
     }
 
@@ -440,12 +437,11 @@ static bool open_(qhttpclient_t *client)
     }
 
     // try to connect
-    int status = connect(sockfd,
-                         (struct sockaddr *)&client->addr,
+    int status = connect(sockfd, (struct sockaddr *) &client->addr,
                          sizeof(client->addr));
     if (status < 0
-        && (errno != EINPROGRESS
-            || qio_wait_writable(sockfd, client->timeoutms) <= 0) ) {
+            && (errno != EINPROGRESS
+                    || qio_wait_writable(sockfd, client->timeoutms) <= 0)) {
         DEBUG("connection failed. (%d)", errno);
         close(sockfd);
         return false;
@@ -555,25 +551,27 @@ static bool open_(qhttpclient_t *client)
  * @endcode
  */
 static bool head(qhttpclient_t *client, const char *uri, int *rescode,
-                 qlisttbl_t *reqheaders, qlisttbl_t *resheaders)
-{
+                 qlisttbl_t *reqheaders, qlisttbl_t *resheaders) {
 
     // reset rescode
-    if (rescode != NULL) *rescode = 0;
+    if (rescode != NULL)
+        *rescode = 0;
 
     // generate request headers if necessary
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
+        reqheaders = qlisttbl(
+                QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
         freeReqHeaders = true;
     }
 
     // add additional headers
-    reqheaders->putstr(reqheaders,  "Accept", "*/*");
+    reqheaders->putstr(reqheaders, "Accept", "*/*");
 
     // send request
     bool sendret = sendrequest(client, "HEAD", uri, reqheaders);
-    if (freeReqHeaders == true) reqheaders->free(reqheaders);
+    if (freeReqHeaders == true)
+        reqheaders->free(reqheaders);
     if (sendret == false) {
         _close(client);
         return false;
@@ -582,7 +580,8 @@ static bool head(qhttpclient_t *client, const char *uri, int *rescode,
     // read response
     off_t clength = 0;
     int resno = readresponse(client, resheaders, &clength);
-    if (rescode != NULL) *rescode = resno;
+    if (rescode != NULL)
+        *rescode = resno;
 
     // throw out content
     if (clength > 0) {
@@ -596,7 +595,8 @@ static bool head(qhttpclient_t *client, const char *uri, int *rescode,
         _close(client);
     }
 
-    if (resno == HTTP_CODE_OK) return true;
+    if (resno == HTTP_CODE_OK)
+        return true;
     return false;
 }
 
@@ -687,29 +687,31 @@ static bool head(qhttpclient_t *client, const char *uri, int *rescode,
  *  server even though it returns false.
  */
 static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
-                int *rescode,
-                qlisttbl_t *reqheaders, qlisttbl_t *resheaders,
+                int *rescode, qlisttbl_t *reqheaders, qlisttbl_t *resheaders,
                 bool (*callback)(void *userdata, off_t recvbytes),
-                void *userdata)
-{
+                void *userdata) {
 
     // reset rescode
-    if (rescode != NULL) *rescode = 0;
-    if (savesize != NULL) *savesize = 0;
+    if (rescode != NULL)
+        *rescode = 0;
+    if (savesize != NULL)
+        *savesize = 0;
 
     // generate request headers if necessary
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
+        reqheaders = qlisttbl(
+                QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
         freeReqHeaders = true;
     }
 
     // add additional headers
-    reqheaders->putstr(reqheaders,  "Accept", "*/*");
+    reqheaders->putstr(reqheaders, "Accept", "*/*");
 
     // send request
     bool sendret = sendrequest(client, "GET", uri, reqheaders);
-    if (freeReqHeaders == true) reqheaders->free(reqheaders);
+    if (freeReqHeaders == true)
+        reqheaders->free(reqheaders);
     if (sendret == false) {
         _close(client);
         return false;
@@ -718,7 +720,8 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
     // read response
     off_t clength = 0;
     int resno = readresponse(client, resheaders, &clength);
-    if (rescode != NULL) *rescode = resno;
+    if (rescode != NULL)
+        *rescode = resno;
 
     // check response code
     if (resno != HTTP_CODE_OK) {
@@ -753,9 +756,11 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
             }
 
             ssize_t ret = recvfile(client, fd, recvsize);
-            if (ret <= 0) break; // Connection closed by peer
+            if (ret <= 0)
+                break;  // Connection closed by peer
             recv += ret;
-            if (savesize != NULL) *savesize = recv;
+            if (savesize != NULL)
+                *savesize = recv;
 
             if (callback != NULL) {
                 if (callback(userdata, recv) == false) {
@@ -770,12 +775,13 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
             return false;
         }
 
-    } else if (clength == -1) { // chunked
+    } else if (clength == -1) {  // chunked
         bool completed = false;
         do {
             // read chunk size
             char buf[64];
-            if (gets_(client, buf, sizeof(buf)) <= 0) break;
+            if (gets_(client, buf, sizeof(buf)) <= 0)
+                break;
 
             // parse chunk size
             unsigned int recvsize;  // this time chunk size
@@ -791,18 +797,21 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
             // save chunk
             if (recvsize > 0) {
                 ssize_t ret = recvfile(client, fd, recvsize);
-                if (ret != recvsize) break;
+                if (ret != recvsize)
+                    break;
                 recv += ret;
                 DEBUG("%zd %zd", recv, ret);
-                if (savesize != NULL) *savesize = recv;
+                if (savesize != NULL)
+                    *savesize = recv;
             }
 
             // read tailing CRLF
-            if (gets_(client, buf, sizeof(buf)) <= 0) break;
+            if (gets_(client, buf, sizeof(buf)) <= 0)
+                break;
 
             // call back
-            if (recvsize > 0
-                && callback != NULL && callback(userdata, recv) == false) {
+            if (recvsize > 0 && callback != NULL
+                    && callback(userdata, recv) == false) {
                 _close(client);
                 return false;
             }
@@ -910,28 +919,28 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
  *  server even though it returns false.
  */
 static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
-                int *rescode,
-                qlisttbl_t *reqheaders, qlisttbl_t *resheaders,
+                int *rescode, qlisttbl_t *reqheaders, qlisttbl_t *resheaders,
                 bool (*callback)(void *userdata, off_t sentbytes),
-                void *userdata)
-{
+                void *userdata) {
 
     // reset rescode
-    if (rescode != NULL) *rescode = 0;
+    if (rescode != NULL)
+        *rescode = 0;
 
     // generate request headers
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
+        reqheaders = qlisttbl(
+                QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
         freeReqHeaders = true;
     }
 
     // add additional headers
     reqheaders->putstrf(reqheaders, "Content-Length", "%jd", length);
-    reqheaders->putstr(reqheaders,  "Expect", "100-continue");
+    reqheaders->putstr(reqheaders, "Expect", "100-continue");
 
     // send request
-    bool sendret =sendrequest(client, "PUT", uri, reqheaders);
+    bool sendret = sendrequest(client, "PUT", uri, reqheaders);
     if (freeReqHeaders == true) {
         reqheaders->free(reqheaders);
         reqheaders = NULL;
@@ -952,7 +961,8 @@ static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
     off_t clength = 0;
     int resno = readresponse(client, resheaders, &clength);
     if (resno != HTTP_CODE_CONTINUE) {
-        if (rescode != NULL) *rescode = resno;
+        if (rescode != NULL)
+            *rescode = resno;
 
         if (clength > 0) {
             if (read_(client, NULL, clength) != clength) {
@@ -978,11 +988,14 @@ static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
     if (length > 0) {
         while (sent < length) {
             size_t sendsize;    // this time sending size
-            if (length - sent < MAX_ATOMIC_DATA_SIZE) sendsize = length - sent;
-            else sendsize = MAX_ATOMIC_DATA_SIZE;
+            if (length - sent < MAX_ATOMIC_DATA_SIZE)
+                sendsize = length - sent;
+            else
+                sendsize = MAX_ATOMIC_DATA_SIZE;
 
             ssize_t ret = sendfile_(client, fd, sendsize);
-            if (ret <= 0) break; // Connection closed by peer
+            if (ret <= 0)
+                break;  // Connection closed by peer
             sent += ret;
 
             if (callback != NULL) {
@@ -1009,7 +1022,8 @@ static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
     // read response
     clength = 0;
     resno = readresponse(client, resheaders, &clength);
-    if (rescode != NULL) *rescode = resno;
+    if (rescode != NULL)
+        *rescode = resno;
 
     if (resno == HTTP_NO_RESPONSE) {
         _close(client);
@@ -1027,7 +1041,8 @@ static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
         _close(client);
     }
 
-    if (resno == HTTP_CODE_CREATED) return true;
+    if (resno == HTTP_CODE_CREATED)
+        return true;
     return false;
 }
 
@@ -1077,19 +1092,20 @@ static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
  *  terminated.
  */
 static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
-                 void *data, size_t size,
-                 int *rescode, size_t *contentslength,
-                 qlisttbl_t *reqheaders, qlisttbl_t *resheaders)
-{
+                 void *data, size_t size, int *rescode, size_t *contentslength,
+                 qlisttbl_t *reqheaders, qlisttbl_t *resheaders) {
 
     // reset rescode
-    if (rescode != NULL) *rescode = 0;
-    if (contentslength != NULL) *contentslength = 0;
+    if (rescode != NULL)
+        *rescode = 0;
+    if (contentslength != NULL)
+        *contentslength = 0;
 
     // send request
     bool freeReqHeaders = false;
     if (reqheaders == NULL && data != NULL && size > 0) {
-        reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
+        reqheaders = qlisttbl(
+                QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
         reqheaders->putstrf(reqheaders, "Content-Length", "%jd", size);
         freeReqHeaders = true;
     }
@@ -1116,8 +1132,10 @@ static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
     // read response
     off_t clength = 0;
     int resno = readresponse(client, resheaders, &clength);
-    if (rescode != NULL) *rescode = resno;
-    if (contentslength != NULL) *contentslength = clength;
+    if (rescode != NULL)
+        *rescode = resno;
+    if (contentslength != NULL)
+        *contentslength = clength;
 
     // malloc data
     void *content = NULL;
@@ -1125,7 +1143,7 @@ static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
         content = malloc(clength + 1);
         if (content != NULL) {
             if (read_(client, content, clength) == clength) {
-                *(char *)(content + clength) = '\0';
+                *(char *) (content + clength) = '\0';
             } else {
                 free(content);
                 content = NULL;
@@ -1169,8 +1187,7 @@ static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
  * @endcode
  */
 static bool sendrequest(qhttpclient_t *client, const char *method,
-                        const char *uri, qlisttbl_t *reqheaders)
-{
+                        const char *uri, qlisttbl_t *reqheaders) {
     if (open_(client) == false) {
         return false;
     }
@@ -1178,38 +1195,42 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
     // generate request headers if necessary
     bool freeReqHeaders = false;
     if (reqheaders == NULL) {
-        reqheaders = qlisttbl(QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
-        if (reqheaders == NULL) return false;
+        reqheaders = qlisttbl(
+                QLISTTBL_OPT_UNIQUEKEY | QLISTTBL_OPT_CASEINSENSITIVE);
+        if (reqheaders == NULL)
+            return false;
         freeReqHeaders = true;
     }
 
     // append default headers
     if (reqheaders->get(reqheaders, "Host", NULL, false) == NULL) {
-        reqheaders->putstrf(reqheaders, "Host", "%s:%d", client->hostname, client->port);
+        reqheaders->putstrf(reqheaders, "Host", "%s:%d", client->hostname,
+                            client->port);
     }
     if (reqheaders->get(reqheaders, "User-Agent", NULL, false) == NULL) {
         reqheaders->putstr(reqheaders, "User-Agent", client->useragent);
     }
     if (reqheaders->get(reqheaders, "Connection", NULL, false) == NULL) {
-        reqheaders->putstr(reqheaders, "Connection", (client->keepalive==true) ? "Keep-Alive" : "close");
+        reqheaders->putstr(
+                reqheaders, "Connection",
+                (client->keepalive == true) ? "Keep-Alive" : "close");
     }
 
     // create stream buffer
     qvector_t *outBuf = qvector(0);
-    if (outBuf == NULL) return false;
+    if (outBuf == NULL)
+        return false;
 
     // buffer out command
-    outBuf->addstrf(outBuf, "%s %s %s\r\n",
-                    method,
-                    uri,
-                    HTTP_PROTOCOL_11);
+    outBuf->addstrf(outBuf, "%s %s %s\r\n", method, uri,
+    HTTP_PROTOCOL_11);
 
     // buffer out headers
     qdlnobj_t obj;
-    memset((void *)&obj, 0, sizeof(obj)); // must be cleared before call
+    memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     reqheaders->lock(reqheaders);
     while (reqheaders->getnext(reqheaders, &obj, NULL, false) == true) {
-        outBuf->addstrf(outBuf, "%s: %s\r\n", obj.name, (char *)obj.data);
+        outBuf->addstrf(outBuf, "%s: %s\r\n", obj.name, (char *) obj.data);
     }
     reqheaders->unlock(reqheaders);
 
@@ -1226,9 +1247,11 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
 
     // de-allocate
     outBuf->free(outBuf);
-    if (freeReqHeaders == true) reqheaders->free(reqheaders);
+    if (freeReqHeaders == true)
+        reqheaders->free(reqheaders);
 
-    if (written > 0 && written == towrite) return true;
+    if (written > 0 && written == towrite)
+        return true;
     return false;
 }
 
@@ -1263,26 +1286,30 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
  *  Keep-Alive session. Please refer qhttpclient->read().
  */
 static int readresponse(qhttpclient_t *client, qlisttbl_t *resheaders,
-                        off_t *contentlength)
-{
+                        off_t *contentlength) {
     if (contentlength != NULL) {
         *contentlength = 0;
     }
 
     // read response
     char buf[1024];
-    if (gets_(client, buf, sizeof(buf)) <= 0) return HTTP_NO_RESPONSE;
+    if (gets_(client, buf, sizeof(buf)) <= 0)
+        return HTTP_NO_RESPONSE;
 
     // parse response code
-    if (strncmp(buf, "HTTP/", CONST_STRLEN("HTTP/"))) return HTTP_NO_RESPONSE;
+    if (strncmp(buf, "HTTP/", CONST_STRLEN("HTTP/")))
+        return HTTP_NO_RESPONSE;
     char *tmp = strstr(buf, " ");
-    if (tmp == NULL) return HTTP_NO_RESPONSE;
-    int rescode = atoi(tmp+1);
-    if (rescode == 0) return HTTP_NO_RESPONSE;
+    if (tmp == NULL)
+        return HTTP_NO_RESPONSE;
+    int rescode = atoi(tmp + 1);
+    if (rescode == 0)
+        return HTTP_NO_RESPONSE;
 
     // read headers
     while (gets_(client, buf, sizeof(buf)) > 0) {
-        if (buf[0] == '\0') break;
+        if (buf[0] == '\0')
+            break;
 
         // parse header
         char *name = buf;
@@ -1313,7 +1340,7 @@ static int readresponse(qhttpclient_t *client, qlisttbl_t *resheaders,
             }
             // check transfer-encoding header
             else if (!strcasecmp(name, "Transfer-Encoding")
-                     && !strcasecmp(value, "chunked")) {
+                    && !strcasecmp(value, "chunked")) {
                 *contentlength = -1;
             }
         }
@@ -1337,8 +1364,7 @@ static int readresponse(qhttpclient_t *client, qlisttbl_t *resheaders,
  *  It means how many bytes are readed from the file descriptor, so the new-line
  *  characters will be counted, but not be stored.
  */
-static ssize_t gets_(qhttpclient_t *client, char *buf, size_t bufsize)
-{
+static ssize_t gets_(qhttpclient_t *client, char *buf, size_t bufsize) {
 #ifdef ENABLE_OPENSSL
     if (client->ssl == NULL) {
         return qio_gets(client->socket, buf, bufsize, client->timeoutms);
@@ -1363,7 +1389,7 @@ static ssize_t gets_(qhttpclient_t *client, char *buf, size_t bufsize)
                 }
 
                 DEBUG("OpenSSL: %s (%d)",
-                      ERR_reason_error_string(sslerr), rsize);
+                        ERR_reason_error_string(sslerr), rsize);
                 break;
             }
 
@@ -1402,8 +1428,7 @@ static ssize_t gets_(qhttpclient_t *client, char *buf, size_t bufsize)
  *   }
  * @endcode
  */
-static ssize_t read_(qhttpclient_t *client, void *buf, size_t nbytes)
-{
+static ssize_t read_(qhttpclient_t *client, void *buf, size_t nbytes) {
 #ifdef ENABLE_OPENSSL
     if (client->ssl == NULL) {
         return qio_read(client->socket, buf, nbytes, client->timeoutms);
@@ -1411,7 +1436,7 @@ static ssize_t read_(qhttpclient_t *client, void *buf, size_t nbytes)
         if (nbytes == 0) return 0;
 
         struct SslConn *ssl = client->ssl;
-        ssize_t total  = 0;
+        ssize_t total = 0;
         while (total < nbytes) {
             //if (qio_wait_readable(client->socket, client->timeoutms) <= 0) {
             //    break;
@@ -1428,7 +1453,7 @@ static ssize_t read_(qhttpclient_t *client, void *buf, size_t nbytes)
             }
             if (rsize <= 0) {
                 DEBUG("OpenSSL: %s (%d)",
-                      ERR_reason_error_string(ERR_get_error()), rsize);
+                        ERR_reason_error_string(ERR_get_error()), rsize);
                 unsigned long sslerr = ERR_get_error();
                 if (sslerr == SSL_ERROR_WANT_READ) {
                     usleep(1);
@@ -1457,8 +1482,7 @@ static ssize_t read_(qhttpclient_t *client, void *buf, size_t nbytes)
  *
  * @return number of bytes written.
  */
-static ssize_t write_(qhttpclient_t *client, const void *buf, size_t nbytes)
-{
+static ssize_t write_(qhttpclient_t *client, const void *buf, size_t nbytes) {
 #ifdef ENABLE_OPENSSL
     if (client->ssl == NULL) {
         return qio_write(client->socket, buf, nbytes, -1);
@@ -1466,13 +1490,13 @@ static ssize_t write_(qhttpclient_t *client, const void *buf, size_t nbytes)
         if (nbytes == 0) return 0;
 
         struct SslConn *ssl = client->ssl;
-        ssize_t total  = 0;
+        ssize_t total = 0;
         while (total < nbytes) {
             errno = 0;
             int wsize = SSL_write(ssl->ssl, buf + total, nbytes - total);
             if (wsize <= 0) {
                 DEBUG("OpenSSL: %s (%d)",
-                      ERR_reason_error_string(ERR_get_error()), wsize);
+                        ERR_reason_error_string(ERR_get_error()), wsize);
                 unsigned long sslerr = ERR_get_error();
                 if (sslerr == SSL_ERROR_WANT_WRITE) {
                     usleep(1);
@@ -1502,26 +1526,30 @@ static ssize_t write_(qhttpclient_t *client, const void *buf, size_t nbytes)
  *
  * @return the number of bytes written if successful, otherwise returns -1.
  */
-static off_t recvfile(qhttpclient_t *client, int fd, off_t nbytes)
-{
-    if (nbytes == 0) return 0;
+static off_t recvfile(qhttpclient_t *client, int fd, off_t nbytes) {
+    if (nbytes == 0)
+        return 0;
 
     unsigned char buf[MAX_ATOMIC_DATA_SIZE];
 
-    off_t total = 0; // total size sent
+    off_t total = 0;  // total size sent
     while (total < nbytes) {
-        size_t chunksize; // this time sending size
-        if (nbytes - total <= sizeof(buf)) chunksize = nbytes - total;
-        else chunksize = sizeof(buf);
+        size_t chunksize;  // this time sending size
+        if (nbytes - total <= sizeof(buf))
+            chunksize = nbytes - total;
+        else
+            chunksize = sizeof(buf);
 
         // read
         ssize_t rsize = read_(client, buf, chunksize);
-        if (rsize <= 0) break;
+        if (rsize <= 0)
+            break;
 
         // write
         ssize_t wsize = qio_write(fd, buf, rsize, -1);
         DEBUG("FILE write: %zd", wsize);
-        if (wsize <= 0) break;
+        if (wsize <= 0)
+            break;
 
         total += wsize;
         if (rsize != wsize) {
@@ -1530,7 +1558,8 @@ static off_t recvfile(qhttpclient_t *client, int fd, off_t nbytes)
         }
     }
 
-    if (total > 0) return total;
+    if (total > 0)
+        return total;
     return -1;
 }
 
@@ -1543,26 +1572,30 @@ static off_t recvfile(qhttpclient_t *client, int fd, off_t nbytes)
  *
  * @return the number of bytes sent if successful, otherwise returns -1.
  */
-static off_t sendfile_(qhttpclient_t *client, int fd, off_t nbytes)
-{
-    if (nbytes == 0) return 0;
+static off_t sendfile_(qhttpclient_t *client, int fd, off_t nbytes) {
+    if (nbytes == 0)
+        return 0;
 
     unsigned char buf[MAX_ATOMIC_DATA_SIZE];
 
-    off_t total = 0; // total size sent
+    off_t total = 0;  // total size sent
     while (total < nbytes) {
-        size_t chunksize; // this time sending size
-        if (nbytes - total <= sizeof(buf)) chunksize = nbytes - total;
-        else chunksize = sizeof(buf);
+        size_t chunksize;  // this time sending size
+        if (nbytes - total <= sizeof(buf))
+            chunksize = nbytes - total;
+        else
+            chunksize = sizeof(buf);
 
         // read
         ssize_t rsize = qio_read(fd, buf, chunksize, -1);
         DEBUG("FILE read: %zd", rsize);
-        if (rsize <= 0) break;
+        if (rsize <= 0)
+            break;
 
         // write
         ssize_t wsize = write_(client, buf, rsize);
-        if (wsize <= 0) break;
+        if (wsize <= 0)
+            break;
 
         total += wsize;
         if (rsize != wsize) {
@@ -1571,7 +1604,8 @@ static off_t sendfile_(qhttpclient_t *client, int fd, off_t nbytes)
         }
     }
 
-    if (total > 0) return total;
+    if (total > 0)
+        return total;
     return -1;
 }
 
@@ -1586,9 +1620,9 @@ static off_t sendfile_(qhttpclient_t *client, int fd, off_t nbytes)
  *   httpclient->close(httpclient);
  * @endcode
  */
-static bool _close(qhttpclient_t *client)
-{
-    if (client->socket < 0) return false;
+static bool _close(qhttpclient_t *client) {
+    if (client->socket < 0)
+        return false;
 
 #ifdef ENABLE_OPENSSL
     // release ssl connection
@@ -1609,11 +1643,11 @@ static bool _close(qhttpclient_t *client)
 #endif
 
     // shutdown connection
-    if (client->ssl == NULL
-        && MAX_SHUTDOWN_WAIT >= 0 && shutdown(client->socket, SHUT_WR) == 0) {
+    if (client->ssl == NULL && MAX_SHUTDOWN_WAIT >= 0
+            && shutdown(client->socket, SHUT_WR) == 0) {
         char buf[1024];
-        while (qio_read(client->socket, buf, sizeof(buf), MAX_SHUTDOWN_WAIT)
-               > 0);
+        while (qio_read(client->socket, buf, sizeof(buf), MAX_SHUTDOWN_WAIT) > 0)
+            ;
     }
 
     // close connection
@@ -1637,23 +1671,23 @@ static bool _close(qhttpclient_t *client)
  *   httpclient->free(httpclient);
  * @endcode
  */
-static void _free(qhttpclient_t *client)
-{
+static void _free(qhttpclient_t *client) {
     if (client->socket >= 0) {
         client->close(client);
     }
 
-    if (client->ssl != NULL) free(client->ssl);
-    if (client->hostname != NULL) free(client->hostname);
-    if (client->useragent != NULL) free(client->useragent);
+    if (client->ssl != NULL)
+        free(client->ssl);
+    if (client->hostname != NULL)
+        free(client->hostname);
+    if (client->useragent != NULL)
+        free(client->useragent);
 
     free(client);
 }
 
-
 #ifndef _DOXYGEN_SKIP
-static bool _set_socket_option(int socket)
-{
+static bool _set_socket_option(int socket) {
     bool ret = true;
 
     // linger option
@@ -1679,9 +1713,8 @@ static bool _set_socket_option(int socket)
     return ret;
 }
 
-static bool _parse_uri(const char *uri, bool *protocol,
-                       char *hostname, size_t namesize, int *port)
-{
+static bool _parse_uri(const char *uri, bool *protocol, char *hostname,
+                       size_t namesize, int *port) {
 
     if (!strncasecmp(uri, "http://", CONST_STRLEN("http://"))) {
         *protocol = false;
@@ -1696,9 +1729,11 @@ static bool _parse_uri(const char *uri, bool *protocol,
     char *t1 = strstr(uri, "://");
     t1 += 3;
     char *t2 = strstr(t1, "/");
-    if (t2 == NULL) t2 = (char *)uri + strlen(uri);
+    if (t2 == NULL)
+        t2 = (char *) uri + strlen(uri);
 
-    if (t2 - t1 + 1 > namesize) return false;
+    if (t2 - t1 + 1 > namesize)
+        return false;
     qstrncpy(hostname, namesize, t1, t2 - t1);
 
     t1 = strstr(hostname, ":");

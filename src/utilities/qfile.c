@@ -71,19 +71,19 @@
  *   }
  * @endcode
  */
-bool qfile_lock(int fd)
-{
+bool qfile_lock(int fd) {
 #ifdef _WIN32
     return false;
 #else
     struct flock lock;
-    memset((void *)&lock, 0, sizeof(flock));
+    memset((void *) &lock, 0, sizeof(flock));
     lock.l_type = F_WRLCK;
     lock.l_whence = SEEK_SET;
     lock.l_start = 0;
     lock.l_len = 0;
     int ret = fcntl(fd, F_SETLK, &lock);
-    if (ret == 0) return true;
+    if (ret == 0)
+        return true;
     return false;
 #endif
 }
@@ -95,19 +95,19 @@ bool qfile_lock(int fd)
  *
  * @return true if successful, otherwise returns false.
  */
-bool qfile_unlock(int fd)
-{
+bool qfile_unlock(int fd) {
 #ifdef _WIN32
     return false;
 #else
     struct flock lock;
-    memset((void *)&lock, 0, sizeof(flock));
+    memset((void *) &lock, 0, sizeof(flock));
     lock.l_type = F_UNLCK;
     lock.l_whence = SEEK_SET;
     lock.l_start = 0;
     lock.l_len = 0;
     int ret = fcntl(fd, F_SETLK, &lock);
-    if (ret == 0) return true;
+    if (ret == 0)
+        return true;
     return false;
 #endif
 }
@@ -119,9 +119,9 @@ bool qfile_unlock(int fd)
  *
  * @return true if exists, otherwise returns false.
  */
-bool qfile_exist(const char *filepath)
-{
-    if (access(filepath, F_OK) == 0) return true;
+bool qfile_exist(const char *filepath) {
+    if (access(filepath, F_OK) == 0)
+        return true;
     return false;
 }
 
@@ -156,10 +156,10 @@ bool qfile_exist(const char *filepath)
  *  character. By the way, the actual file size 10 will be returned at nbytes
  *  variable.
  */
-void *qfile_load(const char *filepath, size_t *nbytes)
-{
+void *qfile_load(const char *filepath, size_t *nbytes) {
     int fd;
-    if ((fd = open(filepath, O_RDONLY, 0)) < 0) return NULL;
+    if ((fd = open(filepath, O_RDONLY, 0)) < 0)
+        return NULL;
 
     struct stat fs;
     if (fstat(fd, &fs) < 0) {
@@ -168,7 +168,8 @@ void *qfile_load(const char *filepath, size_t *nbytes)
     }
 
     size_t size = fs.st_size;
-    if (nbytes != NULL && *nbytes > 0 && *nbytes < fs.st_size) size = *nbytes;
+    if (nbytes != NULL && *nbytes > 0 && *nbytes < fs.st_size)
+        size = *nbytes;
 
     void *buf = malloc(size + 1);
     if (buf == NULL) {
@@ -184,9 +185,10 @@ void *qfile_load(const char *filepath, size_t *nbytes)
         return NULL;
     }
 
-    ((char *)buf)[count] = '\0';
+    ((char *) buf)[count] = '\0';
 
-    if (nbytes != NULL) *nbytes = count;
+    if (nbytes != NULL)
+        *nbytes = count;
     return buf;
 }
 
@@ -209,8 +211,7 @@ void *qfile_load(const char *filepath, size_t *nbytes)
  *  This method append NULL character at the end of stream. but nbytes only
  *  counts actual readed bytes.
  */
-void *qfile_read(FILE *fp, size_t *nbytes)
-{
+void *qfile_read(FILE *fp, size_t *nbytes) {
     size_t memsize = 1024;
     size_t size = 0;
 
@@ -223,10 +224,11 @@ void *qfile_read(FILE *fp, size_t *nbytes)
     size_t c_count;
     char *data = NULL;
     for (c_count = 0; (c = fgetc(fp)) != EOF;) {
-        if (size > 0 && c_count == size) break;
+        if (size > 0 && c_count == size)
+            break;
 
         if (c_count == 0) {
-            data = (char *)malloc(sizeof(char) * memsize);
+            data = (char *) malloc(sizeof(char) * memsize);
             if (data == NULL) {
                 DEBUG("Memory allocation failed.");
                 return NULL;
@@ -235,7 +237,7 @@ void *qfile_read(FILE *fp, size_t *nbytes)
             memsize *= 2;
 
             /* Here, we don't use realloc(). Sometimes it is unstable. */
-            char *datatmp = (char *)malloc(sizeof(char) * (memsize + 1));
+            char *datatmp = (char *) malloc(sizeof(char) * (memsize + 1));
             if (datatmp == NULL) {
                 DEBUG("Memory allocation failed.");
                 free(data);
@@ -245,15 +247,17 @@ void *qfile_read(FILE *fp, size_t *nbytes)
             free(data);
             data = datatmp;
         }
-        data[c_count++] = (char)c;
+        data[c_count++] = (char) c;
     }
 
-    if (c_count == 0 && c == EOF) return NULL;
+    if (c_count == 0 && c == EOF)
+        return NULL;
     data[c_count] = '\0';
 
-    if (nbytes != NULL) *nbytes = c_count;
+    if (nbytes != NULL)
+        *nbytes = c_count;
 
-    return (void *)data;
+    return (void *) data;
 }
 
 /**
@@ -277,16 +281,18 @@ void *qfile_read(FILE *fp, size_t *nbytes)
  * @endcode
  */
 ssize_t qfile_save(const char *filepath, const void *buf, size_t size,
-                   bool append)
-{
+                   bool append) {
     int fd;
 
     if (append == false) {
-        fd = open(filepath, O_CREAT|O_WRONLY|O_TRUNC, (S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH));
+        fd = open(filepath, O_CREAT | O_WRONLY | O_TRUNC,
+                  (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH));
     } else {
-        fd = open(filepath, O_CREAT|O_WRONLY|O_APPEND, (S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH));
+        fd = open(filepath, O_CREAT | O_WRONLY | O_APPEND,
+                  (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH));
     }
-    if (fd < 0) return -1;
+    if (fd < 0)
+        return -1;
 
     ssize_t count = write(fd, buf, size);
     close(fd);
@@ -303,16 +309,16 @@ ssize_t qfile_save(const char *filepath, const void *buf, size_t size,
  *
  * @return true if successful, otherwise returns false.
  */
-bool qfile_mkdir(const char *dirpath, mode_t mode, bool recursive)
-{
+bool qfile_mkdir(const char *dirpath, mode_t mode, bool recursive) {
     DEBUG("try to create directory %s", dirpath);
-    if (mkdir(dirpath, mode) == 0) return true;
+    if (mkdir(dirpath, mode) == 0)
+        return true;
 
     bool ret = false;
     if (recursive == true && errno == ENOENT) {
         char *parentpath = qfile_get_dir(dirpath);
         if (qfile_mkdir(parentpath, mode, true) == true
-            && mkdir(dirpath, mode) == 0) {
+                && mkdir(dirpath, mode) == 0) {
             ret = true;
         }
         free(parentpath);
@@ -328,16 +334,17 @@ bool qfile_mkdir(const char *dirpath, mode_t mode, bool recursive)
  *
  * @return true if ok, otherwise returns false.
  */
-bool qfile_check_path(const char *path)
-{
-    if (path == NULL) return false;
+bool qfile_check_path(const char *path) {
+    if (path == NULL)
+        return false;
 
     int nLen = strlen(path);
-    if (nLen == 0 || nLen >= PATH_MAX) return false;
-    else if (strpbrk(path, "\\:*?\"<>|") != NULL) return false;
+    if (nLen == 0 || nLen >= PATH_MAX)
+        return false;
+    else if (strpbrk(path, "\\:*?\"<>|") != NULL)
+        return false;
     return true;
 }
-
 
 /**
  * Get filename from filepath
@@ -346,8 +353,7 @@ bool qfile_check_path(const char *path)
  *
  * @return malloced filename string
  */
-char *qfile_get_name(const char *filepath)
-{
+char *qfile_get_name(const char *filepath) {
     char *path = strdup(filepath);
     char *bname = basename(path);
     char *filename = strdup(bname);
@@ -362,8 +368,7 @@ char *qfile_get_name(const char *filepath)
  *
  * @return malloced filepath string
  */
-char *qfile_get_dir(const char *filepath)
-{
+char *qfile_get_dir(const char *filepath) {
     char *path = strdup(filepath);
     char *dname = dirname(path);
     char *dir = strdup(dname);
@@ -378,16 +383,14 @@ char *qfile_get_dir(const char *filepath)
  *
  * @return malloced extension string which is converted to lower case.
  */
-char *qfile_get_ext(const char *filepath)
-{
+char *qfile_get_ext(const char *filepath) {
 #define MAX_EXTENSION_LENGTH        (8)
     char *filename = qfile_get_name(filepath);
     char *p = strrchr(filename, '.');
     char *ext = NULL;
-    if (p != NULL
-        && strlen(p+1) <= MAX_EXTENSION_LENGTH
-        && qstrtest(isalnum, p+1) == true) {
-        ext = strdup(p+1);
+    if (p != NULL && strlen(p + 1) <= MAX_EXTENSION_LENGTH
+            && qstrtest(isalnum, p + 1) == true) {
+        ext = strdup(p + 1);
         qstrlower(ext);
     } else {
         ext = strdup("");
@@ -404,10 +407,10 @@ char *qfile_get_ext(const char *filepath)
  *
  * @return the file size if exists, otherwise returns -1.
  */
-off_t qfile_get_size(const char *filepath)
-{
+off_t qfile_get_size(const char *filepath) {
     struct stat finfo;
-    if (stat(filepath, &finfo) < 0) return -1;
+    if (stat(filepath, &finfo) < 0)
+        return -1;
     return finfo.st_size;
 }
 
@@ -428,9 +431,9 @@ off_t qfile_get_size(const char *filepath)
  *   "/../hello//world/" => "/hello/world"
  * @endcode
  */
-char *qfile_correct_path(char *path)
-{
-    if (path == NULL) return NULL;
+char *qfile_correct_path(char *path) {
+    if (path == NULL)
+        return NULL;
 
     // take off heading & tailing white spaces
     qstrtrim(path);
@@ -524,14 +527,15 @@ char *qfile_correct_path(char *path)
  *   qfile_abspath(buf, sizeof(buf), "/etc/"); // returns "/etc/"
  * @endcode
  */
-char *qfile_abspath(char *buf, size_t bufsize, const char *path)
-{
-    if (bufsize == 0) return NULL;
+char *qfile_abspath(char *buf, size_t bufsize, const char *path) {
+    if (bufsize == 0)
+        return NULL;
 
     if (path[0] == '/') {
         qstrcpy(buf, bufsize, path);
     } else {
-        if (getcwd(buf, bufsize) == NULL) return NULL;
+        if (getcwd(buf, bufsize) == NULL)
+            return NULL;
         strcat(buf, "/");
         strcat(buf, path);
     }

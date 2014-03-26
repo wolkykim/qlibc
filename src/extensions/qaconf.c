@@ -238,23 +238,23 @@ static int _is_str_bool(const char *s);
  *   }
  * @endcode
  */
-qaconf_t *qaconf(void)
-{
+qaconf_t *qaconf(void) {
     // Malloc qaconf_t structure
-    qaconf_t *qaconf = (qaconf_t *)malloc(sizeof(qaconf_t));
-    if (qaconf == NULL) return NULL;
+    qaconf_t *qaconf = (qaconf_t *) malloc(sizeof(qaconf_t));
+    if (qaconf == NULL)
+        return NULL;
 
     // Initialize the structure
-    memset((void *)(qaconf), '\0', sizeof(qaconf_t));
+    memset((void *) (qaconf), '\0', sizeof(qaconf_t));
 
     // member methods
-    qaconf->addoptions      = addoptions;
-    qaconf->setdefhandler   = setdefhandler;
-    qaconf->setuserdata     = setuserdata;
-    qaconf->parse           = parse;
-    qaconf->errmsg          = errmsg;
-    qaconf->reseterror     = reseterror;
-    qaconf->free            = free_;
+    qaconf->addoptions = addoptions;
+    qaconf->setdefhandler = setdefhandler;
+    qaconf->setuserdata = setuserdata;
+    qaconf->parse = parse;
+    qaconf->errmsg = errmsg;
+    qaconf->reseterror = reseterror;
+    qaconf->free = free_;
 
     return qaconf;
 }
@@ -431,8 +431,7 @@ qaconf_t *qaconf(void)
  * QAC_SECTION_ROOT means an option can be appeared only in top level and not
  * inside of any sections.
  */
-static int addoptions(qaconf_t *qaconf, const qaconf_option_t *options)
-{
+static int addoptions(qaconf_t *qaconf, const qaconf_option_t *options) {
     if (qaconf == NULL || options == NULL) {
         _seterrmsg(qaconf, "Invalid parameters.");
         return -1;
@@ -440,13 +439,16 @@ static int addoptions(qaconf_t *qaconf, const qaconf_option_t *options)
 
     // Count a number of options
     uint32_t numopts;
-    for (numopts = 0; options[numopts].name != NULL; numopts++);
-    if (numopts == 0) return 0;
+    for (numopts = 0; options[numopts].name != NULL; numopts++)
+        ;
+    if (numopts == 0)
+        return 0;
 
     // Realloc
     size_t newsize = sizeof(qaconf_option_t) * (qaconf->numoptions + numopts);
-    qaconf->options = (qaconf_option_t *)realloc(qaconf->options, newsize);
-    memcpy(&qaconf->options[qaconf->numoptions], options, sizeof(qaconf_option_t) * numopts);
+    qaconf->options = (qaconf_option_t *) realloc(qaconf->options, newsize);
+    memcpy(&qaconf->options[qaconf->numoptions], options,
+           sizeof(qaconf_option_t) * numopts);
     qaconf->numoptions += numopts;
 
     return numopts;
@@ -461,8 +463,7 @@ static int addoptions(qaconf_t *qaconf, const qaconf_option_t *options)
  * @param qaconf qaconf_t object.
  * @param callback callback function pointer
  */
-static void setdefhandler(qaconf_t *qaconf, const qaconf_cb_t *callback)
-{
+static void setdefhandler(qaconf_t *qaconf, const qaconf_cb_t *callback) {
     qaconf->defcb = callback;
 }
 
@@ -498,9 +499,8 @@ static void setdefhandler(qaconf_t *qaconf, const qaconf_cb_t *callback)
  *   }
  * @endcode
  */
-static void setuserdata(qaconf_t *qaconf, const void *userdata)
-{
-    qaconf->userdata = (void *)userdata;
+static void setuserdata(qaconf_t *qaconf, const void *userdata) {
+    qaconf->userdata = (void *) userdata;
 }
 
 /**
@@ -527,8 +527,7 @@ static void setuserdata(qaconf_t *qaconf, const void *userdata)
  *   c = conf->parse(conf, "sm3.conf", QAC_CASEINSENSITIVE | QAC_IGNOREUNKNOWN);
  * @endcode
  */
-static int parse(qaconf_t *qaconf, const char *filepath, uint8_t flags)
-{
+static int parse(qaconf_t *qaconf, const char *filepath, uint8_t flags) {
     // Open file
     FILE *fp = fopen(filepath, "r");
     if (fp == NULL) {
@@ -537,7 +536,8 @@ static int parse(qaconf_t *qaconf, const char *filepath, uint8_t flags)
     }
 
     // Set info
-    if (qaconf->filepath != NULL) free(qaconf->filepath);
+    if (qaconf->filepath != NULL)
+        free(qaconf->filepath);
     qaconf->filepath = strdup(filepath);
     qaconf->lineno = 0;
 
@@ -565,9 +565,8 @@ static int parse(qaconf_t *qaconf, const char *filepath, uint8_t flags)
  *   }
  * @endcode
  */
-static const char *errmsg(qaconf_t *qaconf)
-{
-    return (const char*)qaconf->errstr;
+static const char *errmsg(qaconf_t *qaconf) {
+    return (const char*) qaconf->errstr;
 }
 
 /**
@@ -583,8 +582,7 @@ static const char *errmsg(qaconf_t *qaconf)
  *   }
  * @endcode
  */
-static void reseterror(qaconf_t *qaconf)
-{
+static void reseterror(qaconf_t *qaconf) {
     if (qaconf->errstr != NULL) {
         free(qaconf->errstr);
         qaconf->errstr = NULL;
@@ -600,11 +598,13 @@ static void reseterror(qaconf_t *qaconf)
  *   conf->free(conf);
  * @endcode
  */
-static void free_(qaconf_t *qaconf)
-{
-    if (qaconf->filepath != NULL) free(qaconf->filepath);
-    if (qaconf->errstr != NULL) free(qaconf->errstr);
-    if (qaconf->options != NULL) free(qaconf->options);
+static void free_(qaconf_t *qaconf) {
+    if (qaconf->filepath != NULL)
+        free(qaconf->filepath);
+    if (qaconf->errstr != NULL)
+        free(qaconf->errstr);
+    if (qaconf->options != NULL)
+        free(qaconf->options);
     free(qaconf);
 }
 
@@ -615,11 +615,11 @@ static void free_(qaconf_t *qaconf)
 #define MAX_TYPECHECK   (5)
 static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
                          enum qaconf_section sectionid,
-                         qaconf_cbdata_t *cbdata_parent)
-{
+                         qaconf_cbdata_t *cbdata_parent) {
     // Assign compare function.
     int (*cmpfunc)(const char *, const char *) = strcmp;
-    if (flags & QAC_CASEINSENSITIVE) cmpfunc = strcasecmp;
+    if (flags & QAC_CASEINSENSITIVE)
+        cmpfunc = strcasecmp;
 
     char buf[MAX_LINESIZE];
     bool doneloop = false;
@@ -639,8 +639,7 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
         if (fgets(buf, MAX_LINESIZE, fp) == NULL) {
             // Check if section was opened and never closed
             if (cbdata_parent != NULL) {
-                EXITLOOP("<%s> section was not closed.",
-                          cbdata_parent->argv[0]);
+                EXITLOOP("<%s> section was not closed.", cbdata_parent->argv[0]);
             }
             break;
         }
@@ -659,11 +658,12 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
         DEBUG("%s (line=%d)", buf, qaconf->lineno);
 
         // Create a callback data
-        qaconf_cbdata_t *cbdata = (qaconf_cbdata_t*)malloc(sizeof(qaconf_cbdata_t));
+        qaconf_cbdata_t *cbdata = (qaconf_cbdata_t*) malloc(
+                sizeof(qaconf_cbdata_t));
         ASSERT(cbdata != NULL);
         memset(cbdata, '\0', sizeof(qaconf_cbdata_t));
         if (cbdata_parent != NULL) {
-            cbdata->section = sectionid ;
+            cbdata->section = sectionid;
             cbdata->sections = cbdata_parent->sections | sectionid;
             cbdata->level = cbdata_parent->level + 1;
             cbdata->parent = cbdata_parent;
@@ -704,16 +704,18 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
         int argvsize = 0;
         char *wp1, *wp2;
         bool doneparsing = false;
-        for (wp1 = (char *)cbdata->data; doneparsing == false; wp1 = wp2) {
+        for (wp1 = (char *) cbdata->data; doneparsing == false; wp1 = wp2) {
             // Allocate/Realloc argv array
             if (argvsize == cbdata->argc) {
                 argvsize += (argvsize == 0) ? ARGV_INIT_SIZE : ARGV_INCR_STEP;
-                cbdata->argv = (char**)realloc((void *)cbdata->argv, sizeof(char*) * argvsize);
+                cbdata->argv = (char**) realloc((void *) cbdata->argv,
+                                                sizeof(char*) * argvsize);
                 ASSERT(cbdata->argv != NULL);
             }
 
             // Skip whitespaces
-            for (; (*wp1 == ' ' || *wp1 == '\t'); wp1++);
+            for (; (*wp1 == ' ' || *wp1 == '\t'); wp1++)
+                ;
 
             // Quote handling
             int qtmark = 0;  // 1 for singlequotation, 2 for doublequotation
@@ -726,7 +728,7 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
             }
 
             // Parse a word
-            for (wp2 = wp1; ; wp2++) {
+            for (wp2 = wp1;; wp2++) {
                 if (*wp2 == '\0') {
                     doneparsing = true;
                     break;
@@ -743,12 +745,14 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
                 } else if (*wp2 == '\\') {
                     if (qtmark > 0) {
                         size_t wordlen = wp2 - wp1;
-                        if (wordlen > 0) memmove(wp1 + 1, wp1, wordlen);
+                        if (wordlen > 0)
+                            memmove(wp1 + 1, wp1, wordlen);
                         wp1++;
                         wp2++;
                     }
                 } else if (*wp2 == ' ' || *wp2 == '\t') {
-                    if (qtmark == 0) break;
+                    if (qtmark == 0)
+                        break;
                 }
             }
             *wp2 = '\0';
@@ -772,10 +776,10 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
 
         // Check mismatch sectionclose
         if (cbdata->otype == QAC_OTYPE_SECTIONCLOSE) {
-            if (cbdata_parent == NULL ||
-                cmpfunc(cbdata->argv[0], cbdata_parent->argv[0])) {
+            if (cbdata_parent == NULL
+                    || cmpfunc(cbdata->argv[0], cbdata_parent->argv[0])) {
                 EXITLOOP("Trying to close <%s> section that wasn't opened.",
-                          cbdata->argv[0]);
+                         cbdata->argv[0]);
             }
         }
 
@@ -787,9 +791,9 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
 
             if (!cmpfunc(cbdata->argv[0], option->name)) {
                 // Check sections
-                if ((cbdata->otype != QAC_OTYPE_SECTIONCLOSE) &&
-                    (option->sections != QAC_SECTION_ALL) &&
-                    (option->sections & sectionid) == 0) {
+                if ((cbdata->otype != QAC_OTYPE_SECTIONCLOSE)
+                        && (option->sections != QAC_SECTION_ALL)
+                        && (option->sections & sectionid) == 0) {
                     EXITLOOP("Option '%s' is in wrong section.", option->name);
                 }
 
@@ -797,46 +801,58 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
                 if (cbdata->otype != QAC_OTYPE_SECTIONCLOSE) {
                     // Check number of arguments
                     int numtake = option->take & QAC_TAKEALL;
-                    if (numtake != QAC_TAKEALL && numtake != (cbdata->argc -1 )) {
+                    if (numtake != QAC_TAKEALL
+                            && numtake != (cbdata->argc - 1)) {
                         EXITLOOP("'%s' option takes %d arguments.",
                                  option->name, numtake);
                     }
 
                     // Check argument types
-                    int deftype; // 0:str, 1:int, 2:float, 3:bool
-                    if (option->take & QAC_AA_INT) deftype = 1;
-                    else if (option->take & QAC_AA_FLOAT) deftype = 2;
-                    else if (option->take & QAC_AA_BOOL) deftype = 3;
-                    else deftype = 0;
+                    int deftype;  // 0:str, 1:int, 2:float, 3:bool
+                    if (option->take & QAC_AA_INT)
+                        deftype = 1;
+                    else if (option->take & QAC_AA_FLOAT)
+                        deftype = 2;
+                    else if (option->take & QAC_AA_BOOL)
+                        deftype = 3;
+                    else
+                        deftype = 0;
 
                     int j;
                     for (j = 1; j < cbdata->argc && j <= MAX_TYPECHECK; j++) {
                         int argtype;
-                        if (option->take & (QAC_A1_INT << (j - 1))) argtype = 1;
-                        else if (option->take & (QAC_A1_FLOAT << (j - 1))) argtype = 2;
-                        else if (option->take & (QAC_A1_BOOL << (j - 1))) argtype = 3;
-                        else argtype = deftype;
+                        if (option->take & (QAC_A1_INT << (j - 1)))
+                            argtype = 1;
+                        else if (option->take & (QAC_A1_FLOAT << (j - 1)))
+                            argtype = 2;
+                        else if (option->take & (QAC_A1_BOOL << (j - 1)))
+                            argtype = 3;
+                        else
+                            argtype = deftype;
 
                         if (argtype == 1) {
                             // integer type
-                            if(_is_str_number(cbdata->argv[j]) != 1) {
-                                EXITLOOP("%dth argument of '%s' must be integer type.",
-                                         j, option->name);
+                            if (_is_str_number(cbdata->argv[j]) != 1) {
+                                EXITLOOP(
+                                        "%dth argument of '%s' must be integer type.",
+                                        j, option->name);
                             }
                         } else if (argtype == 2) {
                             // floating point type
-                            if(_is_str_number(cbdata->argv[j]) == 0) {
-                                EXITLOOP("%dth argument of '%s' must be floating point. type",
-                                         j, option->name);
+                            if (_is_str_number(cbdata->argv[j]) == 0) {
+                                EXITLOOP(
+                                        "%dth argument of '%s' must be floating point. type",
+                                        j, option->name);
                             }
                         } else if (argtype == 3) {
                             // bool type
-                            if(_is_str_bool(cbdata->argv[j]) != 0) {
+                            if (_is_str_bool(cbdata->argv[j]) != 0) {
                                 // Change argument to "1".
                                 strcpy(cbdata->argv[j], "1");
                             } else {
-                                EXITLOOP("%dth argument of '%s' must be bool type.",
-                                         j, option->name);
+                                EXITLOOP(
+                                        "%dth argument of '%s' must be bool type.",
+                                        j, option->name);
                             }
                         }
                     }
@@ -845,7 +861,8 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
                 // Callback
                 //DEBUG("Callback %s", option->name);
                 qaconf_cb_t *usercb = option->cb;
-                if (usercb == NULL) usercb = qaconf->defcb;
+                if (usercb == NULL)
+                    usercb = qaconf->defcb;
                 if (usercb != NULL) {
                     char *cberrmsg = NULL;
 
@@ -897,14 +914,13 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
         if (cbdata->otype == QAC_OTYPE_SECTIONOPEN) {
             // Enter recursive call
             DEBUG("Entering next level %d.", cbdata->level+1);
-            int optcount2 = _parse_inline(qaconf, fp, flags,
-                                          newsectionid, cbdata);
+            int optcount2 = _parse_inline(qaconf, fp, flags, newsectionid,
+                                          cbdata);
             if (optcount2 >= 0) {
                 optcount += optcount2;
             } else {
                 exception = true;
-            }
-            DEBUG("Returned to previous level %d.", cbdata->level);
+            }DEBUG("Returned to previous level %d.", cbdata->level);
         } else if (cbdata->otype == QAC_OTYPE_SECTIONCLOSE) {
             // Leave recursive call
             doneloop = true;
@@ -935,38 +951,40 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
     return (exception == false) ? optcount : -1;
 }
 
-static void _seterrmsg(qaconf_t *qaconf, const char *format, ...)
-{
-    if (qaconf->errstr != NULL) free(qaconf->errstr);
+static void _seterrmsg(qaconf_t *qaconf, const char *format, ...) {
+    if (qaconf->errstr != NULL)
+        free(qaconf->errstr);
     DYNAMIC_VSPRINTF(qaconf->errstr, format);
 }
 
-static void _free_cbdata(qaconf_cbdata_t *cbdata)
-{
-    if (cbdata->argv != NULL) free(cbdata->argv);
-    if (cbdata->data != NULL) free(cbdata->data);
+static void _free_cbdata(qaconf_cbdata_t *cbdata) {
+    if (cbdata->argv != NULL)
+        free(cbdata->argv);
+    if (cbdata->data != NULL)
+        free(cbdata->data);
     free(cbdata);
 }
 
 // return 2 for floating point .
 // return 1 for integer
 // return 0 for non number
-static int _is_str_number(const char *s)
-{
-    char *op = (char *)s;
+static int _is_str_number(const char *s) {
+    char *op = (char *) s;
     if (*op == '-') {
         op++;
     }
 
     char *cp, *dp;
     for (cp = op, dp = NULL; *cp != '\0'; cp++) {
-        if ('0' <= *cp  && *cp <= '9') {
+        if ('0' <= *cp && *cp <= '9') {
             continue;
         }
 
         if (*cp == '.') {
-            if (cp == op) return 0;  // dot can't be at the beginning.
-            if (dp != NULL) return 0;  // dot can't be appeared more than once.
+            if (cp == op)
+                return 0;  // dot can't be at the beginning.
+            if (dp != NULL)
+                return 0;  // dot can't be appeared more than once.
             dp = cp;
             continue;
         }
@@ -979,7 +997,8 @@ static int _is_str_number(const char *s)
     }
 
     if (dp != NULL) {
-        if (dp + 1 == cp) return 0;  // dot can't be at the end.
+        if (dp + 1 == cp)
+            return 0;  // dot can't be at the end.
         return 2;  // float point
     }
 
@@ -987,12 +1006,15 @@ static int _is_str_number(const char *s)
     return 1;
 }
 
-static int _is_str_bool(const char *s)
-{
-    if (!strcasecmp(s, "true")) return 1;
-    else if (!strcasecmp(s, "on")) return 1;
-    else if (!strcasecmp(s, "yes")) return 1;
-    else if (!strcasecmp(s, "1")) return 1;
+static int _is_str_bool(const char *s) {
+    if (!strcasecmp(s, "true"))
+        return 1;
+    else if (!strcasecmp(s, "on"))
+        return 1;
+    else if (!strcasecmp(s, "yes"))
+        return 1;
+    else if (!strcasecmp(s, "1"))
+        return 1;
     return 0;
 }
 

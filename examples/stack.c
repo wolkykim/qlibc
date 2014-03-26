@@ -34,8 +34,7 @@
 #include <string.h>
 #include "qlibc.h"
 
-int main(void)
-{
+int main(void) {
     // create stack
     qstack_t *stack = qstack(QSTACK_OPT_THREADSAFE);
 
@@ -69,13 +68,13 @@ int main(void)
     stack->push(stack, "C object", sizeof("C object"));
 
     void *obj = stack->pop(stack, NULL);
-    printf("pop(): %s\n", (char *)obj);
+    printf("pop(): %s\n", (char *) obj);
     free(obj);
     obj = stack->pop(stack, NULL);
-    printf("pop(): %s\n", (char *)obj);
+    printf("pop(): %s\n", (char *) obj);
     free(obj);
     obj = stack->pop(stack, NULL);
-    printf("pop(): %s\n", (char *)obj);
+    printf("pop(): %s\n", (char *) obj);
     free(obj);
 
     // release

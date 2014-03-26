@@ -32,8 +32,7 @@
 #include <string.h>
 #include "qlibc.h"
 
-int main(void)
-{
+int main(void) {
     // create a list.
     qlist_t *list = qlist(QLIST_OPT_THREADSAFE);
 
@@ -57,20 +56,20 @@ int main(void)
     //
 
     printf("\n--[Test 2 : get methods]--\n");
-    printf("getFirst() : %s\n", (char *)list->getfirst(list, NULL, false));
-    printf("getLast() : %s\n", (char *)list->getlast(list, NULL, false));
-    printf("getAt(0) : %s\n", (char *)list->getat(list, 0, NULL, false));
-    printf("getAt(5) : %s\n", (char *)list->getat(list, 4, NULL, false));
-    printf("getAt(-1) : %s\n", (char *)list->getat(list, -1, NULL, false));
-    printf("getAt(-2) : %s\n", (char *)list->getat(list, -2, NULL, false));
+    printf("getFirst() : %s\n", (char *) list->getfirst(list, NULL, false));
+    printf("getLast() : %s\n", (char *) list->getlast(list, NULL, false));
+    printf("getAt(0) : %s\n", (char *) list->getat(list, 0, NULL, false));
+    printf("getAt(5) : %s\n", (char *) list->getat(list, 4, NULL, false));
+    printf("getAt(-1) : %s\n", (char *) list->getat(list, -1, NULL, false));
+    printf("getAt(-2) : %s\n", (char *) list->getat(list, -2, NULL, false));
 
     //
     // TEST 3 : pop methods
     //
 
     printf("\n--[Test 3 : pop(get and remove) methods]--\n");
-    char *first = (char *)list->popfirst(list, NULL);
-    char *last = (char *)list->poplast(list, NULL);
+    char *first = (char *) list->popfirst(list, NULL);
+    char *last = (char *) list->poplast(list, NULL);
     printf("popFirst() : %s\n", first);
     printf("popLast() : %s\n", last);
     free(first);
@@ -85,10 +84,10 @@ int main(void)
     printf("\n--[Test 4 : travesal list]--\n");
     printf("list size : %zu elements\n", list->size(list));
     qdlobj_t obj;
-    memset((void *)&obj, 0, sizeof(obj)); // must be cleared before call
+    memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     list->lock(list);
     while (list->getnext(list, &obj, false) == true) {
-        printf("DATA=%s, SIZE=%zu\n", (char *)obj.data, obj.size);
+        printf("DATA=%s, SIZE=%zu\n", (char *) obj.data, obj.size);
     }
     list->unlock(list);
 

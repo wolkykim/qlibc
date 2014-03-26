@@ -33,8 +33,7 @@
 #include <string.h>
 #include "qlibc.h"
 
-int main(void)
-{
+int main(void) {
     qvector_t *vector = qvector(QVECTOR_OPT_THREADSAFE);
 
     // add elements

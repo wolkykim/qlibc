@@ -64,8 +64,7 @@
  *   free(md5ascii);
  * @endcode
  */
-bool qhashmd5(const void *data, size_t nbytes, void *retbuf)
-{
+bool qhashmd5(const void *data, size_t nbytes, void *retbuf) {
     if (data == NULL || retbuf == NULL) {
         errno = EINVAL;
         return false;
@@ -73,7 +72,7 @@ bool qhashmd5(const void *data, size_t nbytes, void *retbuf)
 
     MD5_CTX context;
     MD5Init(&context);
-    MD5Update(&context, (unsigned char *)data, (unsigned int)nbytes);
+    MD5Update(&context, (unsigned char *) data, (unsigned int) nbytes);
     MD5Final(retbuf, &context);
 
     return true;
@@ -96,18 +95,19 @@ bool qhashmd5(const void *data, size_t nbytes, void *retbuf)
  * @endcode
  */
 bool qhashmd5_file(const char *filepath, off_t offset, ssize_t nbytes,
-                   void *retbuf)
-{
+                   void *retbuf) {
     if (filepath == NULL || offset < 0 || nbytes < 0 || retbuf == NULL) {
         errno = EINVAL;
         return false;
     }
 
     int fd = open(filepath, O_RDONLY, 0);
-    if (fd < 0) return false;
+    if (fd < 0)
+        return false;
 
     struct stat st;
-    if (fstat(fd, &st) < 0) return false;
+    if (fstat(fd, &st) < 0)
+        return false;
     size_t size = st.st_size;
 
     // check filesize
@@ -128,15 +128,19 @@ bool qhashmd5_file(const char *filepath, off_t offset, ssize_t nbytes,
     MD5_CTX context;
     MD5Init(&context);
     ssize_t toread, nread;
-    unsigned char buf[32*1024];
+    unsigned char buf[32 * 1024];
     for (toread = nbytes; toread > 0; toread -= nread) {
-        if (toread > sizeof(buf)) nread = read(fd, buf, sizeof(buf));
-        else nread = read(fd, buf, toread);
-        if (nread < 0) break;
+        if (toread > sizeof(buf))
+            nread = read(fd, buf, sizeof(buf));
+        else
+            nread = read(fd, buf, toread);
+        if (nread < 0)
+            break;
         MD5Update(&context, buf, nread);
     }
     close(fd);
-    if (toread != 0) return false;
+    if (toread != 0)
+        return false;
     MD5Final(retbuf, &context);
 
     return true;
@@ -180,14 +184,14 @@ bool qhashmd5_file(const char *filepath, off_t offset, ssize_t nbytes,
  *  for more details as well as other forms of the FNV hash.
  * @endcode
  */
-uint32_t qhashfnv1_32(const void *data, size_t nbytes)
-{
-    if (data == NULL || nbytes == 0) return 0;
+uint32_t qhashfnv1_32(const void *data, size_t nbytes) {
+    if (data == NULL || nbytes == 0)
+        return 0;
 
     unsigned char *dp;
     uint32_t h = 0x811C9DC5;
 
-    for (dp = (unsigned char *)data; *dp && nbytes > 0; dp++, nbytes--) {
+    for (dp = (unsigned char *) data; *dp && nbytes > 0; dp++, nbytes--) {
 #ifdef __GNUC__
         h += (h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24);
 #else
@@ -211,17 +215,17 @@ uint32_t qhashfnv1_32(const void *data, size_t nbytes)
  *   uint64_t fnv64 = qhashfnv1_64((void*)"hello", 5);
  * @endcode
  */
-uint64_t qhashfnv1_64(const void *data, size_t nbytes)
-{
-    if (data == NULL || nbytes == 0) return 0;
+uint64_t qhashfnv1_64(const void *data, size_t nbytes) {
+    if (data == NULL || nbytes == 0)
+        return 0;
 
     unsigned char *dp;
     uint64_t h = 0xCBF29CE484222325ULL;
 
-    for (dp = (unsigned char *)data; *dp && nbytes > 0; dp++, nbytes--) {
+    for (dp = (unsigned char *) data; *dp && nbytes > 0; dp++, nbytes--) {
 #ifdef __GNUC__
         h += (h << 1) + (h << 4) + (h << 5) +
-             (h << 7) + (h << 8) + (h << 40);
+        (h << 7) + (h << 8) + (h << 40);
 #else
         h *= 0x100000001B3ULL;
 #endif
@@ -251,16 +255,16 @@ uint64_t qhashfnv1_64(const void *data, size_t nbytes)
  *  in 2012 and published it as a part of qLibc component.
  * @endcode
  */
-uint32_t qhashmurmur3_32(const void *data, size_t nbytes)
-{
-    if (data == NULL || nbytes == 0) return 0;
+uint32_t qhashmurmur3_32(const void *data, size_t nbytes) {
+    if (data == NULL || nbytes == 0)
+        return 0;
 
     const uint32_t c1 = 0xcc9e2d51;
     const uint32_t c2 = 0x1b873593;
 
     const int nblocks = nbytes / 4;
-    const uint32_t *blocks = (const uint32_t *)(data);
-    const uint8_t *tail = (const uint8_t *)(data + (nblocks * 4));
+    const uint32_t *blocks = (const uint32_t *) (data);
+    const uint8_t *tail = (const uint8_t *) (data + (nblocks * 4));
 
     uint32_t h = 0;
 
@@ -323,16 +327,16 @@ uint32_t qhashmurmur3_32(const void *data, size_t nbytes)
  *   free(ascii);
  * @endcode
  */
-bool qhashmurmur3_128(const void *data, size_t nbytes, void *retbuf)
-{
-    if (data == NULL || nbytes == 0) return false;
+bool qhashmurmur3_128(const void *data, size_t nbytes, void *retbuf) {
+    if (data == NULL || nbytes == 0)
+        return false;
 
     const uint64_t c1 = 0x87c37b91114253d5ULL;
     const uint64_t c2 = 0x4cf5ad432745937fULL;
 
     const int nblocks = nbytes / 16;
-    const uint64_t *blocks = (const uint64_t *)(data);
-    const uint8_t *tail = (const uint8_t *)(data + (nblocks * 16));
+    const uint64_t *blocks = (const uint64_t *) (data);
+    const uint8_t *tail = (const uint8_t *) (data + (nblocks * 16));
 
     uint64_t h1 = 0;
     uint64_t h2 = 0;
@@ -340,26 +344,26 @@ bool qhashmurmur3_128(const void *data, size_t nbytes, void *retbuf)
     int i;
     uint64_t k1, k2;
     for (i = 0; i < nblocks; i++) {
-        k1 = blocks[i*2+0];
-        k2 = blocks[i*2+1];
+        k1 = blocks[i * 2 + 0];
+        k2 = blocks[i * 2 + 1];
 
         k1 *= c1;
-        k1  = (k1 << 31) | (k1 >> (64 - 31));
+        k1 = (k1 << 31) | (k1 >> (64 - 31));
         k1 *= c2;
         h1 ^= k1;
 
         h1 = (h1 << 27) | (h1 >> (64 - 27));
         h1 += h2;
-        h1 = h1*5+0x52dce729;
+        h1 = h1 * 5 + 0x52dce729;
 
         k2 *= c2;
-        k2  = (k2 << 33) | (k2 >> (64 - 33));
+        k2 = (k2 << 33) | (k2 >> (64 - 33));
         k2 *= c1;
         h2 ^= k2;
 
         h2 = (h2 << 31) | (h2 >> (64 - 31));
         h2 += h1;
-        h2 = h2*5+0x38495ab5;
+        h2 = h2 * 5 + 0x38495ab5;
     }
 
     k1 = k2 = 0;
@@ -375,32 +379,32 @@ bool qhashmurmur3_128(const void *data, size_t nbytes, void *retbuf)
         case 11:
             k2 ^= (uint64_t)(tail[10]) << 16;
         case 10:
-            k2 ^= (uint64_t)(tail[ 9]) << 8;
-        case  9:
-            k2 ^= (uint64_t)(tail[ 8]) << 0;
+            k2 ^= (uint64_t)(tail[9]) << 8;
+        case 9:
+            k2 ^= (uint64_t)(tail[8]) << 0;
             k2 *= c2;
-            k2  = (k2 << 33) | (k2 >> (64 - 33));
+            k2 = (k2 << 33) | (k2 >> (64 - 33));
             k2 *= c1;
             h2 ^= k2;
 
-        case  8:
-            k1 ^= (uint64_t)(tail[ 7]) << 56;
-        case  7:
-            k1 ^= (uint64_t)(tail[ 6]) << 48;
-        case  6:
-            k1 ^= (uint64_t)(tail[ 5]) << 40;
-        case  5:
-            k1 ^= (uint64_t)(tail[ 4]) << 32;
-        case  4:
-            k1 ^= (uint64_t)(tail[ 3]) << 24;
-        case  3:
-            k1 ^= (uint64_t)(tail[ 2]) << 16;
-        case  2:
-            k1 ^= (uint64_t)(tail[ 1]) << 8;
-        case  1:
-            k1 ^= (uint64_t)(tail[ 0]) << 0;
+        case 8:
+            k1 ^= (uint64_t)(tail[7]) << 56;
+        case 7:
+            k1 ^= (uint64_t)(tail[6]) << 48;
+        case 6:
+            k1 ^= (uint64_t)(tail[5]) << 40;
+        case 5:
+            k1 ^= (uint64_t)(tail[4]) << 32;
+        case 4:
+            k1 ^= (uint64_t)(tail[3]) << 24;
+        case 3:
+            k1 ^= (uint64_t)(tail[2]) << 16;
+        case 2:
+            k1 ^= (uint64_t)(tail[1]) << 8;
+        case 1:
+            k1 ^= (uint64_t)(tail[0]) << 0;
             k1 *= c1;
-            k1  = (k1 << 31) | (k1 >> (64 - 31));
+            k1 = (k1 << 31) | (k1 >> (64 - 31));
             k1 *= c2;
             h1 ^= k1;
     };
@@ -429,8 +433,8 @@ bool qhashmurmur3_128(const void *data, size_t nbytes, void *retbuf)
     h1 += h2;
     h2 += h1;
 
-    ((uint64_t *)retbuf)[0] = h1;
-    ((uint64_t *)retbuf)[1] = h2;
+    ((uint64_t *) retbuf)[0] = h1;
+    ((uint64_t *) retbuf)[1] = h2;
 
     return true;
 }

@@ -33,8 +33,7 @@
 #include <assert.h>
 #include "qlibc.h"
 
-int main(void)
-{
+int main(void) {
     // create a list-table.
     qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
     qdlnobj_t obj;
@@ -45,7 +44,7 @@ int main(void)
     //
 
     // insert elements (key duplication allowed)
-    tbl->put(tbl, "e1", "object1", strlen("object1")+1);
+    tbl->put(tbl, "e1", "object1", strlen("object1") + 1);
     tbl->putstr(tbl, "e2", "object2");
     tbl->putstr(tbl, "e3", "object3");
     tbl->putstr(tbl, "e4", "object4");
@@ -60,7 +59,7 @@ int main(void)
     //
 
     printf("\n--[Test 2 : many ways to find key]--\n");
-    printf("get('e2') : %s\n", (char *)tbl->get(tbl, "e2", NULL, false));
+    printf("get('e2') : %s\n", (char *) tbl->get(tbl, "e2", NULL, false));
     printf("getstr('e2') : %s\n", tbl->getstr(tbl, "e2", false));
 
     char *e2 = tbl->getstr(tbl, "e2", true);
@@ -74,10 +73,10 @@ int main(void)
     printf("\n--[Test 3 : getmulti() - fetch all duplicated 'e2' keys]--\n");
     size_t numobjs = 0;
     qobj_t *objs = tbl->getmulti(tbl, "e2", true, &numobjs);
-    printf("getmulti('e2') : %d objects found.\n", (int)numobjs);
+    printf("getmulti('e2') : %d objects found.\n", (int) numobjs);
     for (i = 0; objs[i].data != NULL; i++) {
-        printf("getmulti('e2')[%d]=%s (%zu)\n",
-               i, (char *)objs[i].data, objs[i].size);
+        printf("getmulti('e2')[%d]=%s (%zu)\n", i, (char *) objs[i].data,
+               objs[i].size);
     }
     tbl->freemulti(objs);
 
@@ -86,11 +85,11 @@ int main(void)
     //
 
     printf("\n--[Test 4 : travesal a particular key 'e2']--\n");
-    memset((void *)&obj, 0, sizeof(obj)); // must be cleared before call
+    memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     tbl->lock(tbl);
     while (tbl->getnext(tbl, &obj, "e2", false) == true) {
-        printf("NAME=%s, DATA=%s, SIZE=%zu\n",
-               obj.name, (char *)obj.data, obj.size);
+        printf("NAME=%s, DATA=%s, SIZE=%zu\n", obj.name, (char *) obj.data,
+               obj.size);
     }
     tbl->unlock(tbl);
 
@@ -100,11 +99,11 @@ int main(void)
 
     printf("\n--[Test 5 : travesal a list]--\n");
     printf("list size : %zu elements\n", tbl->size(tbl));
-    memset((void *)&obj, 0, sizeof(obj)); // must be cleared before call
+    memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     tbl->lock(tbl);
     while (tbl->getnext(tbl, &obj, NULL, true) == true) {
-        printf("NAME=%s, DATA=%s, SIZE=%zu\n",
-               obj.name, (char *)obj.data, obj.size);
+        printf("NAME=%s, DATA=%s, SIZE=%zu\n", obj.name, (char *) obj.data,
+               obj.size);
         free(obj.name);
         free(obj.data);
     }

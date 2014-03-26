@@ -88,26 +88,29 @@
  *
  * @return non-negative shared memory identifier if successful, otherwise returns -1
  */
-int qshm_init(const char *keyfile, int keyid, size_t size, bool recreate)
-{
+int qshm_init(const char *keyfile, int keyid, size_t size, bool recreate) {
     key_t semkey;
     int shmid;
 
     /* generate unique key using ftok() */
     if (keyfile != NULL) {
         semkey = ftok(keyfile, keyid);
-        if (semkey == -1) return -1;
+        if (semkey == -1)
+            return -1;
     } else {
         semkey = IPC_PRIVATE;
     }
 
     /* create shared memory */
     if ((shmid = shmget(semkey, size, IPC_CREAT | IPC_EXCL | 0666)) == -1) {
-        if (recreate == false) return -1;
+        if (recreate == false)
+            return -1;
 
         /* destroy & re-create */
-        if ((shmid = qshm_getid(keyfile, keyid)) >= 0) qshm_free(shmid);
-        if ((shmid = shmget(semkey, size, IPC_CREAT | IPC_EXCL | 0666)) == -1) return -1;
+        if ((shmid = qshm_getid(keyfile, keyid)) >= 0)
+            qshm_free(shmid);
+        if ((shmid = shmget(semkey, size, IPC_CREAT | IPC_EXCL | 0666)) == -1)
+            return -1;
     }
 
     return shmid;
@@ -121,16 +124,17 @@ int qshm_init(const char *keyfile, int keyid, size_t size, bool recreate)
  *
  * @return non-negative shared memory identifier if successful, otherwise returns -1
  */
-int qshm_getid(const char *keyfile, int keyid)
-{
+int qshm_getid(const char *keyfile, int keyid) {
     int shmid;
 
     /* generate unique key using ftok() */
     key_t semkey = ftok(keyfile, keyid);
-    if (semkey == -1) return -1;
+    if (semkey == -1)
+        return -1;
 
     /* get current shared memory id */
-    if ((shmid = shmget(semkey, 0, 0)) == -1) return -1;
+    if ((shmid = shmget(semkey, 0, 0)) == -1)
+        return -1;
 
     return shmid;
 }
@@ -142,13 +146,14 @@ int qshm_getid(const char *keyfile, int keyid)
  *
  * @return a pointer of shared memory
  */
-void *qshm_get(int shmid)
-{
+void *qshm_get(int shmid) {
     void *pShm;
 
-    if (shmid < 0) return NULL;
+    if (shmid < 0)
+        return NULL;
     pShm = shmat(shmid, 0, 0);
-    if (pShm == (void *)-1) return NULL;
+    if (pShm == (void *) -1)
+        return NULL;
     return pShm;
 }
 
@@ -159,10 +164,11 @@ void *qshm_get(int shmid)
  *
  * @return true if successful, otherwise returns false
  */
-bool qshm_free(int shmid)
-{
-    if (shmid < 0) return false;
-    if (shmctl(shmid, IPC_RMID, 0) != 0) return false;
+bool qshm_free(int shmid) {
+    if (shmid < 0)
+        return false;
+    if (shmctl(shmid, IPC_RMID, 0) != 0)
+        return false;
     return true;
 }
 

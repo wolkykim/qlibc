@@ -32,8 +32,7 @@
 #include <string.h>
 #include "qlibc.h"
 
-int main(void)
-{
+int main(void) {
     // create a hash-table.
     qhashtbl_t *tbl = qhashtbl(0, QHASHTBL_OPT_THREADSAFE);
 
@@ -58,7 +57,7 @@ int main(void)
     //
 
     printf("\n--[Test 2 : many ways to find a key]--\n");
-    printf("get('e2') : %s\n", (char *)tbl->get(tbl, "e2", NULL, false));
+    printf("get('e2') : %s\n", (char *) tbl->get(tbl, "e2", NULL, false));
     printf("getstr('e2') : %s\n", tbl->getstr(tbl, "e2", false));
 
     char *e2 = tbl->getstr(tbl, "e2", true);
@@ -72,11 +71,11 @@ int main(void)
     printf("\n--[Test 3 : travesal a table]--\n");
     printf("list size : %zu elements\n", tbl->size(tbl));
     qhnobj_t obj;
-    memset((void *)&obj, 0, sizeof(obj)); // must be cleared before call
+    memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     tbl->lock(tbl);
     while (tbl->getnext(tbl, &obj, true) == true) {
-        printf("NAME=%s, DATA=%s, SIZE=%zu\n",
-               obj.name, (char *)obj.data, obj.size);
+        printf("NAME=%s, DATA=%s, SIZE=%zu\n", obj.name, (char *) obj.data,
+               obj.size);
         free(obj.name);
         free(obj.data);
     }

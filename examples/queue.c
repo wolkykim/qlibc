@@ -34,8 +34,7 @@
 #include <string.h>
 #include "qlibc.h"
 
-int main(void)
-{
+int main(void) {
     // create queue
     qqueue_t *queue = qqueue(QQUEUE_OPT_THREADSAFE);
 
@@ -69,13 +68,13 @@ int main(void)
     queue->push(queue, "C object", sizeof("C object"));
 
     void *obj = queue->pop(queue, NULL);
-    printf("pop(): %s\n", (char *)obj);
+    printf("pop(): %s\n", (char *) obj);
     free(obj);
     obj = queue->pop(queue, NULL);
-    printf("pop(): %s\n", (char *)obj);
+    printf("pop(): %s\n", (char *) obj);
     free(obj);
     obj = queue->pop(queue, NULL);
-    printf("pop(): %s\n", (char *)obj);
+    printf("pop(): %s\n", (char *) obj);
     free(obj);
 
     // release

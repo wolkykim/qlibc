@@ -32,8 +32,7 @@
 #include <string.h>
 #include "qlibc.h"
 
-int main(void)
-{
+int main(void) {
     // initialize hash-table
     char memory[1000 * 10];
     qhasharr_t *tbl = qhasharr(memory, sizeof(memory));
@@ -79,8 +78,8 @@ int main(void)
     int idx = 0;
     qnobj_t obj;
     while (tbl->getnext(tbl, &obj, &idx) == true) {
-        printf("NAME=%s, DATA=%s, SIZE=%zu\n",
-               obj.name, (char *)obj.data, obj.size);
+        printf("NAME=%s, DATA=%s, SIZE=%zu\n", obj.name, (char *) obj.data,
+               obj.size);
         free(obj.name);
         free(obj.data);
     }

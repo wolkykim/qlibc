@@ -35,8 +35,7 @@
 
 #define CONF_PATH   "config.conf"
 
-int main(void)
-{
+int main(void) {
 #ifdef DISABLE_QCONFIG
     printf("qconfig extension is disabled at compile time.\n");
     return 1;
