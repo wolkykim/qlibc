@@ -59,9 +59,9 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <errno.h>
-#include "qlibc.h"
-#include "qlibcext.h"
 #include "qinternal.h"
+#include "utilities/qstring.h"
+#include "extensions/qlog.h"
 
 #ifndef _DOXYGEN_SKIP
 static bool write_(qlog_t *log, const char *str);

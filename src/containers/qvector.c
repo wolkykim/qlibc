@@ -109,8 +109,8 @@
 #include <stdarg.h>
 #include <string.h>
 #include <errno.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "containers/qvector.h"
 
 /*
  * Member method protos

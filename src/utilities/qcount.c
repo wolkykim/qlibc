@@ -40,8 +40,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "utilities/qstring.h"
+#include "utilities/qcount.h"
 
 /**
  * Read counter(integer) from file with advisory file locking.
@@ -93,7 +94,7 @@ int64_t qcount_read(const char *filepath)
  */
 bool qcount_save(const char *filepath, int64_t number)
 {
-    int fd = open(filepath, O_CREAT|O_WRONLY|O_TRUNC, DEF_FILE_MODE);
+    int fd = open(filepath, O_CREAT|O_WRONLY|O_TRUNC, (S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH));
     if (fd < 0) return false;
 
     char *str = qstrdupf("%"PRId64, number);

@@ -93,8 +93,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <errno.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "containers/qlist.h"
 
 /*
  * Member method protos

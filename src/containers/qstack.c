@@ -106,8 +106,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <errno.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "containers/qstack.h"
 
 /*
  * Member method protos

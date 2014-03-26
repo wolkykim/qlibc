@@ -118,6 +118,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -130,9 +131,12 @@
 #include "openssl/err.h"
 #endif
 
-#include "qlibc.h"
-#include "qlibcext.h"
 #include "qinternal.h"
+#include "utilities/qio.h"
+#include "utilities/qstring.h"
+#include "containers/qlisttbl.h"
+#include "containers/qvector.h"
+#include "extensions/qhttpclient.h"
 
 #ifndef _DOXYGEN_SKIP
 
@@ -302,7 +306,7 @@ qhttpclient_t *qhttpclient(const char *destname, int port)
     // init client
     settimeout(client, 0);
     setkeepalive(client, false);
-    setuseragent(client, _Q_PRGNAME "/" _Q_VERSION);
+    setuseragent(client, QHTTPCLIENT_NAME);
     if (ishttps == true) setssl(client);
 
     return client;

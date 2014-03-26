@@ -75,8 +75,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <sys/shm.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "ipc/qshm.h"
 
 /**
  * Initialize shared-memory

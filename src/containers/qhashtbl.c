@@ -94,8 +94,9 @@
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "utilities/qhash.h"
+#include "containers/qhashtbl.h"
 
 #define DEFAULT_INDEX_RANGE (1000)  /*!< default value of hash-index range */
 

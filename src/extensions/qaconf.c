@@ -201,9 +201,9 @@
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
-#include "qlibc.h"
-#include "qlibcext.h"
 #include "qinternal.h"
+#include "utilities/qstring.h"
+#include "extensions/qaconf.h"
 
 #ifndef _DOXYGEN_SKIP
 #define MAX_LINESIZE    (1024*4)

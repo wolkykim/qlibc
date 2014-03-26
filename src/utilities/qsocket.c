@@ -30,7 +30,6 @@
  * @file qsocket.c Socket dandling APIs.
  */
 
-#ifndef DISABLE_SOCKET
 #ifndef _WIN32
 
 #include <stdio.h>
@@ -45,8 +44,10 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "utilities/qio.h"
+#include "utilities/qstring.h"
+#include "utilities/qsocket.h"
 
 /**
  * Create a TCP socket for the remote host and port.
@@ -61,8 +62,7 @@
  *         -2 in case of socket creation failure,
  *         -3 in case of connection failure.
  */
-int qsocket_open(const char *hostname, int port, int timeoutms)
-{
+int qsocket_open(const char *hostname, int port, int timeoutms) {
     /* host conversion */
     struct sockaddr_in addr;
     if (qsocket_get_addr(&addr, hostname, port) == false) {
@@ -77,18 +77,21 @@ int qsocket_open(const char *hostname, int port, int timeoutms)
 
     /* set to non-block socket*/
     int flags = fcntl(sockfd, F_GETFL, 0);
-    if (timeoutms >= 0) fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
+    if (timeoutms >= 0)
+        fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
     /* try to connect */
-    int status = connect(sockfd, (struct sockaddr *)&addr, sizeof(addr));
-    if ( status < 0 && (errno != EINPROGRESS
-                        || qio_wait_writable(sockfd, timeoutms) <= 0) ) {
+    int status = connect(sockfd, (struct sockaddr *) &addr, sizeof(addr));
+    if (status < 0
+            && (errno != EINPROGRESS
+                    || qio_wait_writable(sockfd, timeoutms) <= 0)) {
         close(sockfd);
         return -3; /* connection failed */
     }
 
     /* restore to block socket */
-    if (timeoutms >= 0) fcntl(sockfd, F_SETFL, flags);
+    if (timeoutms >= 0)
+        fcntl(sockfd, F_SETFL, flags);
 
     return sockfd;
 }
@@ -103,19 +106,19 @@ int qsocket_open(const char *hostname, int port, int timeoutms)
  *
  * @return true on success, or false if an error occurred.
  */
-bool qsocket_close(int sockfd, int timeoutms)
-{
+bool qsocket_close(int sockfd, int timeoutms) {
     // close connection
     if (timeoutms >= 0 && shutdown(sockfd, SHUT_WR) == 0) {
         char buf[1024];
         while (true) {
             ssize_t read = qio_read(sockfd, buf, sizeof(buf), timeoutms);
-            if (read <= 0) break;
-            DEBUG("Throw %zu bytes from dummy input stream.", read);
+            if (read <= 0)
+                break; DEBUG("Throw %zu bytes from dummy input stream.", read);
         }
     }
 
-    if (close(sockfd) == 0) return true;
+    if (close(sockfd) == 0)
+        return true;
     return false;
 }
 
@@ -128,14 +131,14 @@ bool qsocket_close(int sockfd, int timeoutms)
  *
  * @return true if successful, otherwise returns false.
  */
-bool qsocket_get_addr(struct sockaddr_in *addr, const char *hostname, int port)
-{
+bool qsocket_get_addr(struct sockaddr_in *addr, const char *hostname, int port) {
     /* here we assume that the hostname argument contains ip address */
-    memset((void *)addr, 0, sizeof(struct sockaddr_in));
+    memset((void *) addr, 0, sizeof(struct sockaddr_in));
     if (!inet_aton(hostname, &addr->sin_addr)) { /* fail then try another way */
         struct hostent *hp;
-        if ((hp = gethostbyname (hostname)) == 0) return false;
-        memcpy (&addr->sin_addr, hp->h_addr, sizeof(struct in_addr));
+        if ((hp = gethostbyname(hostname)) == 0)
+            return false;
+        memcpy(&addr->sin_addr, hp->h_addr, sizeof(struct in_addr));
     }
     addr->sin_family = AF_INET;
     addr->sin_port = htons(port);
@@ -143,5 +146,27 @@ bool qsocket_get_addr(struct sockaddr_in *addr, const char *hostname, int port)
     return true;
 }
 
+/**
+ * Return local IP address.
+ *
+ * @return malloced string pointer which contains IP address string if
+ *         successful, otherwise returns NULL
+ */
+char *qsocket_get_localaddr(char *buf, size_t bufsize) {
+    char hostname[63 + 1];
+    if (gethostname(hostname, sizeof(hostname)) != 0)
+        return NULL;
+
+    struct hostent *hostentry = gethostbyname(hostname);
+    if (hostentry == NULL)
+        return NULL;
+
+    char *localip = inet_ntoa(*(struct in_addr *) *hostentry->h_addr_list);
+    if (localip == NULL)
+        return NULL;
+
+    qstrcpy(buf, bufsize, localip);
+    return buf;
+}
+
 #endif /* _WIN32 */
-#endif /* DISABLE_SOCKET */

@@ -143,8 +143,9 @@
 #include <stdarg.h>
 #include <string.h>
 #include <errno.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "utilities/qhash.h"
+#include "containers/qhasharr.h"
 
 #ifndef _DOXYGEN_SKIP
 

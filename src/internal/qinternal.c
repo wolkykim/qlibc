@@ -34,7 +34,6 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <errno.h>
-#include "qlibc.h"
 #include "qinternal.h"
 
 // Change two hex character to one hex value.

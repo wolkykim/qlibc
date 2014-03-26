@@ -82,8 +82,8 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <sys/sem.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "ipc/qsem.h"
 
 /**
  * Initialize semaphore

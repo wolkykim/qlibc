@@ -38,12 +38,14 @@
 #include <unistd.h>
 #include <libgen.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/file.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "utilities/qstring.h"
+#include "utilities/qfile.h"
 
 /**
  * Lock file
@@ -280,9 +282,9 @@ ssize_t qfile_save(const char *filepath, const void *buf, size_t size,
     int fd;
 
     if (append == false) {
-        fd = open(filepath, O_CREAT|O_WRONLY|O_TRUNC, DEF_FILE_MODE);
+        fd = open(filepath, O_CREAT|O_WRONLY|O_TRUNC, (S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH));
     } else {
-        fd = open(filepath, O_CREAT|O_WRONLY|O_APPEND, DEF_FILE_MODE);
+        fd = open(filepath, O_CREAT|O_WRONLY|O_APPEND, (S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH));
     }
     if (fd < 0) return -1;
 

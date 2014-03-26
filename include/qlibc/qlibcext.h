@@ -29,8 +29,6 @@
 /**
  * qlibc extension header file.
  *
- * This includes all extension header files at once.
- *
  * @file qlibcext.h
  */
 

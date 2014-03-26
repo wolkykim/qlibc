@@ -36,10 +36,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <limits.h>
 #include <errno.h>
-#include "qlibc.h"
-#include "qlibcext.h"
 #include "qinternal.h"
+#include "utilities/qfile.h"
+#include "utilities/qstring.h"
+#include "utilities/qsystem.h"
+#include "extensions/qconfig.h"
 
 #define _INCLUDE_DIRECTIVE  "@INCLUDE "
 
@@ -120,21 +123,24 @@ static char *_parsestr(qlisttbl_t *tbl, const char *str);
  *   rev=822? (4)
  * @endcode
  */
-qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath, char sepchar)
-{
+qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
+                               char sepchar) {
     char *str = qfile_load(filepath, NULL);
-    if (str == NULL) return NULL;
+    if (str == NULL)
+        return NULL;
 
     // process include directive
-    char *strp = str;;
+    char *strp = str;
+
     while ((strp = strstr(strp, _INCLUDE_DIRECTIVE)) != NULL) {
         if (strp == str || strp[-1] == '\n') {
             char buf[PATH_MAX];
 
             // parse filename
             char *tmpp;
-            for (tmpp = strp + CONST_STRLEN(_INCLUDE_DIRECTIVE); *tmpp != '\n'
-                 && *tmpp != '\0'; tmpp++);
+            for (tmpp = strp + CONST_STRLEN(_INCLUDE_DIRECTIVE);
+                    *tmpp != '\n' && *tmpp != '\0'; tmpp++)
+                ;
             int len = tmpp - (strp + CONST_STRLEN(_INCLUDE_DIRECTIVE));
             if (len >= sizeof(buf)) {
                 DEBUG("Can't process %s directive.", _INCLUDE_DIRECTIVE);
@@ -166,7 +172,7 @@ qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath, char sepch
             char *incdata;
             if (strlen(buf) == 0 || (incdata = qfile_load(buf, NULL)) == NULL) {
                 DEBUG("Can't process '%s%s' directive.", _INCLUDE_DIRECTIVE,
-                      buf);
+                        buf);
                 free(str);
                 return NULL;
             }
@@ -207,20 +213,22 @@ qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath, char sepch
  *  tbl = qconfig_parse_str(NULL, "key = value\nhello = world", '=');
  * @endcode
  */
-qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar)
-{
-    if (str == NULL) return NULL;
+qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar) {
+    if (str == NULL)
+        return NULL;
 
     if (tbl == NULL) {
         tbl = qlisttbl(0);
-        if (tbl == NULL) return NULL;
+        if (tbl == NULL)
+            return NULL;
     }
 
     char *section = NULL;
     char *org, *buf, *offset;
-    for (org = buf = offset = strdup(str); *offset != '\0'; ) {
+    for (org = buf = offset = strdup(str); *offset != '\0';) {
         // get one line into buf
-        for (buf = offset; *offset != '\n' && *offset != '\0'; offset++);
+        for (buf = offset; *offset != '\n' && *offset != '\0'; offset++)
+            ;
         if (*offset != '\0') {
             *offset = '\0';
             offset++;
@@ -228,12 +236,14 @@ qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar)
         qstrtrim(buf);
 
         // skip blank or comment line
-        if ((buf[0] == '#') || (buf[0] == '\0')) continue;
+        if ((buf[0] == '#') || (buf[0] == '\0'))
+            continue;
 
         // section header
         if ((buf[0] == '[') && (buf[strlen(buf) - 1] == ']')) {
             // extract section name
-            if (section != NULL) free(section);
+            if (section != NULL)
+                free(section);
             section = strdup(buf + 1);
             section[strlen(section) - 1] = '\0';
             qstrtrim(section);
@@ -251,7 +261,7 @@ qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar)
 
         // parse & store
         char *value = strdup(buf);
-        char *name  = _q_makeword(value, sepchar);
+        char *name = _q_makeword(value, sepchar);
         qstrtrim(value);
         qstrtrim(name);
 
@@ -273,7 +283,8 @@ qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar)
         free(value);
     }
     free(org);
-    if (section != NULL) free(section);
+    if (section != NULL)
+        free(section);
 
     return tbl;
 }
@@ -312,8 +323,7 @@ qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar)
  *  qLibc, /home/qlibc, Wed Nov 24 00:30:58 UTC 2010
  * @endcode
  */
-static char *_parsestr(qlisttbl_t *tbl, const char *str)
-{
+static char *_parsestr(qlisttbl_t *tbl, const char *str) {
     if (str == NULL) {
         errno = EINVAL;
         return NULL;
@@ -328,47 +338,55 @@ static char *_parsestr(qlisttbl_t *tbl, const char *str)
         char *s, *e;
         int openedbrakets;
         for (s = value; *s != '\0'; s++) {
-            if (!(*s == _VAR && *(s+1) == _VAR_OPEN)) continue;
+            if (!(*s == _VAR && *(s + 1) == _VAR_OPEN))
+                continue;
 
             // found ${, try to find }. s points $
-            openedbrakets = 1; // braket open counter
+            openedbrakets = 1;  // braket open counter
             for (e = s + 2; *e != '\0'; e++) {
-                if (*e == _VAR && *(e+1) == _VAR_OPEN) { // found internal ${
+                if (*e == _VAR && *(e + 1) == _VAR_OPEN) {  // found internal ${
                     // e is always bigger than s, negative overflow never occure
                     s = e - 1;
                     break;
-                } else if (*e == _VAR_OPEN) openedbrakets++;
-                else if (*e == _VAR_CLOSE) openedbrakets--;
-                else continue;
+                } else if (*e == _VAR_OPEN)
+                    openedbrakets++;
+                else if (*e == _VAR_CLOSE)
+                    openedbrakets--;
+                else
+                    continue;
 
-                if (openedbrakets == 0) break;
+                if (openedbrakets == 0)
+                    break;
             }
-            if (*e == '\0') break; // braket mismatch
-            if (openedbrakets > 0) continue; // found internal ${
+            if (*e == '\0')
+                break;  // braket mismatch
+            if (openedbrakets > 0)
+                continue;  // found internal ${
 
             // pick string between ${, }
-            int varlen = e - s - 2; // length between ${ , }
-            char *varstr = (char *)malloc(varlen + 3 + 1);
-            if (varstr == NULL) continue;
+            int varlen = e - s - 2;  // length between ${ , }
+            char *varstr = (char *) malloc(varlen + 3 + 1);
+            if (varstr == NULL)
+                continue;
             strncpy(varstr, s + 2, varlen);
             varstr[varlen] = '\0';
 
             // get the new string to replace
             char *newstr = NULL;
             switch (varstr[0]) {
-                case _VAR_CMD : {
+                case _VAR_CMD: {
                     if ((newstr = qstrtrim(qsyscmd(varstr + 1))) == NULL) {
                         newstr = strdup("");
                     }
                     break;
                 }
-                case _VAR_ENV : {
+                case _VAR_ENV: {
                     newstr = strdup(qgetenv(varstr + 1, ""));
                     break;
                 }
-                default : {
+                default: {
                     if ((newstr = tbl->getstr(tbl, varstr, true)) == NULL) {
-                        s = e; // not found
+                        s = e;  // not found
                         continue;
                     }
                     break;
@@ -376,7 +394,7 @@ static char *_parsestr(qlisttbl_t *tbl, const char *str)
             }
 
             // replace
-            strncpy(varstr, s, varlen + 3); // ${str}
+            strncpy(varstr, s, varlen + 3);  // ${str}
             varstr[varlen + 3] = '\0';
 
             s = qstrreplace("sn", value, varstr, newstr);

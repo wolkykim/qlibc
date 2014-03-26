@@ -41,8 +41,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "md5/md5.h"
-#include "qlibc.h"
 #include "qinternal.h"
+#include "utilities/qhash.h"
 
 /**
  * Calculate 128-bit(16-bytes) MD5 hash.

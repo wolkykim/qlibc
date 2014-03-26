@@ -93,9 +93,8 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <string.h>
-#include "qlibc.h"
-#include "qlibcext.h"
 #include "qinternal.h"
+#include "extensions/qdatabase.h"
 
 /*
  * Member method protos

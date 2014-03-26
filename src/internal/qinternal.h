@@ -29,14 +29,6 @@
 #ifndef _QINTERNAL_H
 #define _QINTERNAL_H
 
-#include <fcntl.h>
-
-/*
- * Internal Definitions
- */
-#define DEF_DIR_MODE   (S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH)
-#define DEF_FILE_MODE  (S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH)
-
 /*
  * Macro Functions
  */

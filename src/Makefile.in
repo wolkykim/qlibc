@@ -78,7 +78,6 @@ QLIBC_OBJS	= \
 		utilities/qfile.o		\
 		utilities/qhash.o		\
 		utilities/qio.o			\
-		utilities/qlibc.o		\
 		utilities/qsocket.o		\
 		utilities/qstring.o		\
 		utilities/qsystem.o		\
@@ -119,9 +118,32 @@ qlibcext: ${QLIBCEXT_OBJS}
 
 install: ${INSTALL_TARGETS}
 
+HEADERS = containers/qtype.h
 install-qlibc: qlibc
 	${MKDIR_P} ${INST_INCDIR}/qlibc
 	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibc.h ${INST_INCDIR}/qlibc/qlibc.h
+	${MKDIR_P} ${INST_INCDIR}/qlibc/containers/
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qtype.h ${INST_INCDIR}/qlibc/containers/qtype.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qhasharr.h ${INST_INCDIR}/qlibc/containers/qhasharr.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qhashtbl.h ${INST_INCDIR}/qlibc/containers/qhashtbl.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qlist.h ${INST_INCDIR}/qlibc/containers/qlist.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qlisttbl.h ${INST_INCDIR}/qlibc/containers/qlisttbl.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qqueue.h ${INST_INCDIR}/qlibc/containers/qqueue.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qstack.h ${INST_INCDIR}/qlibc/containers/qstack.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qvector.h ${INST_INCDIR}/qlibc/containers/qvector.h
+	${MKDIR_P} ${INST_INCDIR}/qlibc/utilities/
+	${INSTALL_DATA} ${QLIBC_INCDIR}/utilities/qcount.h ${INST_INCDIR}/qlibc/utilities/qcount.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/utilities/qencode.h ${INST_INCDIR}/qlibc/utilities/qencode.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/utilities/qfile.h ${INST_INCDIR}/qlibc/utilities/qfile.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/utilities/qhash.h ${INST_INCDIR}/qlibc/utilities/qhash.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/utilities/qio.h ${INST_INCDIR}/qlibc/utilities/qio.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/utilities/qsocket.h ${INST_INCDIR}/qlibc/utilities/qsocket.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/utilities/qstring.h ${INST_INCDIR}/qlibc/utilities/qstring.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/utilities/qsystem.h ${INST_INCDIR}/qlibc/utilities/qsystem.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/utilities/qtime.h ${INST_INCDIR}/qlibc/utilities/qtime.h
+	${MKDIR_P} ${INST_INCDIR}/qlibc/ipc/
+	${INSTALL_DATA} ${QLIBC_INCDIR}/ipc/qsem.h ${INST_INCDIR}/qlibc/ipc/qsem.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/ipc/qshm.h ${INST_INCDIR}/qlibc/ipc/qshm.h
 	${MKDIR_P} ${INST_LIBDIR}
 	${INSTALL_DATA} ${QLIBC_LIBDIR}/${QLIBC_LIBNAME} ${INST_LIBDIR}/${QLIBC_LIBNAME}
 	${INSTALL_DATA} ${QLIBC_LIBDIR}/${QLIBC_SLIBREALNAME} ${INST_LIBDIR}/${QLIBC_SLIBREALNAME}
@@ -129,19 +151,22 @@ install-qlibc: qlibc
 
 uninstall-qlibc:
 	${RM} -f ${INST_INCDIR}/qlibc/qlibc.h
+	${RM} -rf ${INST_INCDIR}/qlibc/containers
+	${RM} -rf ${INST_INCDIR}/qlibc/utilities
+	${RM} -rf ${INST_INCDIR}/qlibc/ipc
 	${RM} -f ${INST_LIBDIR}/${QLIBC_LIBNAME}
 	${RM} -f ${INST_LIBDIR}/${QLIBC_SLIBREALNAME}
 	${RM} -f ${INST_LIBDIR}/${QLIBC_SLIBNAME}
 
 install-qlibcext: qlibcext
 	${MKDIR_P} ${INST_INCDIR}/qlibc
-	${MKDIR_P} ${INST_INCDIR}/qlibc/qlibcext/
 	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext.h ${INST_INCDIR}/qlibc/qlibcext.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext/qconfig.h ${INST_INCDIR}/qlibc/qlibcext/qconfig.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext/qaconf.h ${INST_INCDIR}/qlibc/qlibcext/qaconf.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext/qlog.h ${INST_INCDIR}/qlibc/qlibcext/qlog.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext/qhttpclient.h ${INST_INCDIR}/qlibc/qlibcext/qhttpclient.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibcext/qdatabase.h ${INST_INCDIR}/qlibc/qlibcext/qdatabase.h
+	${MKDIR_P} ${INST_INCDIR}/qlibc/extensions/
+	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qconfig.h ${INST_INCDIR}/qlibc/extensions/qconfig.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qaconf.h ${INST_INCDIR}/qlibc/extensions/qaconf.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qlog.h ${INST_INCDIR}/qlibc/extensions/qlog.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qhttpclient.h ${INST_INCDIR}/qlibc/extensions/qhttpclient.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/extensions/qdatabase.h ${INST_INCDIR}/qlibc/extensions/qdatabase.h
 	${MKDIR_P} ${INST_LIBDIR}
 	${INSTALL_DATA} ${QLIBC_LIBDIR}/${QLIBCEXT_LIBNAME} ${INST_LIBDIR}/${QLIBCEXT_LIBNAME}
 	${INSTALL_DATA} ${QLIBC_LIBDIR}/${QLIBCEXT_SLIBREALNAME} ${INST_LIBDIR}/${QLIBCEXT_SLIBREALNAME}
@@ -149,18 +174,13 @@ install-qlibcext: qlibcext
 
 uninstall-qlibcext:
 	${RM} -f ${INST_INCDIR}/qlibc/qlibcext.h
-	${RM} -f ${INST_INCDIR}/qlibc/qlibcext/qconfig.h
-	${RM} -f ${INST_INCDIR}/qlibc/qlibcext/qaconf.h
-	${RM} -f ${INST_INCDIR}/qlibc/qlibcext/qlog.h
-	${RM} -f ${INST_INCDIR}/qlibc/qlibcext/qhttpclient.h
-	${RM} -f ${INST_INCDIR}/qlibc/qlibcext/qdatabase.h
+	${RM} -rf ${INST_INCDIR}/qlibc/extensions
 	${RM} -f ${INST_LIBDIR}/${QLIBCEXT_LIBNAME}
 	${RM} -f ${INST_LIBDIR}/${QLIBCEXT_SLIBREALNAME}
 	${RM} -f ${INST_LIBDIR}/${QLIBCEXT_SLIBNAME}
 
 deinstall: uninstall
 uninstall: uninstall-qlibc uninstall-qlibcext
-	${RMDIR} ${INST_INCDIR}/qlibc/qlibcext
 	${RMDIR} ${INST_INCDIR}/qlibc
 
 clean:

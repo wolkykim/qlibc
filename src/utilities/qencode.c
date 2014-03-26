@@ -34,8 +34,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "utilities/qstring.h"
+#include "utilities/qencode.h"
 
 /**
  * Parse URL encoded query string

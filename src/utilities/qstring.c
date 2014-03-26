@@ -38,8 +38,10 @@
 #include <ctype.h>
 #include <time.h>
 #include <unistd.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "utilities/qencode.h"
+#include "utilities/qhash.h"
+#include "utilities/qstring.h"
 
 /**
  * Remove white spaces(including CR, LF) from head and tail of the string.
@@ -303,8 +305,8 @@ char *qstrreplace(const char *mode, char *srcstr, const char *tokstr,
 }
 
 /**
- * Copy src string to dst. The dst string arrary will be always terminated by
- * NULL character.
+ * Copy src string to dst. The dst string array will be always terminated by
+ * NULL character. Also allows overlap between src and dst.
  *
  * @param dst       a pointer of the string to be copied
  * @param size      the size of dst character arrary
@@ -321,12 +323,13 @@ char *qstrcpy(char *dst, size_t size, const char *src)
 }
 
 /**
- * Copy src string to dst no more than n bytes. The dst string arrary will be
- * always terminated by NULL character.
+ * Copy src string to dst no more than n bytes. The dst string array will be
+ * always terminated by NULL character. Also allows overlap between src and dst.
  *
  * @param dst       a pointer of the string to be copied
  * @param size      the size of dst character arrary
  * @param src       a pointer of source string
+ * @param nbytes    number of bytes to copy
  *
  * @return always returns a pointer of dst
  */

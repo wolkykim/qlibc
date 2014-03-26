@@ -35,8 +35,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
-#include "qlibc.h"
 #include "qinternal.h"
+#include "utilities/qtime.h"
 
 /**
  * Get custom formmatted local time string.
