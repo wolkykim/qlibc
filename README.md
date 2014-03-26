@@ -1,7 +1,7 @@
 What's qLibc?
 =============
 
-The goal of qLibc project is to provide a **simple but powerful general purpose C/C++ library** which includes all kinds of containers and general library routines. It provides ready-made set of common container APIs with constant look that can be used with any built-in types and with any user-defined types.
+qLibc is currently one of the most functionally complete public licensed C/C++ libraries. The goal of qLibc project is to provide a **simple but powerful general purpose C/C++ library** which includes all kinds of containers and general library routines. It provides ready-made set of common container APIs with constant look that can be used with any built-in types and with any user-defined types.
 
 ## qLibc Copyright
 
@@ -86,3 +86,12 @@ This is why qLibc encapsulates corresponding function pointers inside the contai
   // release table
   tbl->free(tbl);
 ```
+
+## Looking for people to work with.
+
+We're looking for people who want to work together developing and improving qLibc.
+Currently, we have high demands on following areas.
+
+* Automated testing
+* Documentation.
+* New feature implementation.
