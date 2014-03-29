@@ -61,7 +61,7 @@
 <div class="line"><span class="comment">// objects which can be stored. You can put as many as you want but if</span></div>
 <div class="line"><span class="comment">// this range is too small, hash conflict will happen and fetch time will</span></div>
 <div class="line"><span class="comment">// slightly increase.</span></div>
-<div class="line">qhashtbl_t *tbl = qHashtbl(0, QHASHTBL_OPT_THREADSAFE);</div>
+<div class="line">qhashtbl_t *tbl = <a class="code" href="qhashtbl_8c.html#acce512d557a3c776d474bfc977f34045" title="Initialize hash table.">qhashtbl</a>(0, QHASHTBL_THREADSAFE);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// put objects into table.</span></div>
 <div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;sample1&quot;</span>, <span class="stringliteral">&quot;binary&quot;</span>, 6);</div>
@@ -199,9 +199,9 @@ Functions</h2></td></tr>
 <div class="line">qhashtbl_t *basic_hashtbl = qHashtbl(0, 0);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// create a large hash-table for millions of keys with thread-safe option.</span></div>
-<div class="line">qhashtbl_t *small_hashtbl = qHashtbl(1000000, QHASHTBL_OPT_THREADSAFE);</div>
+<div class="line">qhashtbl_t *small_hashtbl = qHashtbl(1000000, QHASHTBL_THREADSAFE);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Setting the right range is a magic. In practice, pick a value between (total keys / 3) ~ (total keys * 2). Available options:<ul>
-<li>QHASHTBL_OPT_THREADSAFE - make it thread-safe. </li>
+<li>QHASHTBL_THREADSAFE - make it thread-safe. </li>
 </ul>
 </dd></dl>
 
@@ -938,7 +938,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>From user side, normally locking operation is only needed when traverse all elements using qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a08a0546a583711e148887d0234924ce9" title="qhashtbl-&gt;getnext(): Get next element.">getnext()</a>.</dd>
 <dd>
-This operation will do nothing if QHASHTBL_OPT_THREADSAFE option was not given at the initialization time. </dd></dl>
+This operation will do nothing if QHASHTBL_THREADSAFE option was not given at the initialization time. </dd></dl>
 
 </div>
 </div>
@@ -971,7 +971,7 @@ This operation will do nothing if QHASHTBL_OPT_THREADSAFE option was not given a
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>This operation will do nothing if QHASHTBL_OPT_THREADSAFE option was not given at the initialization time. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This operation will do nothing if QHASHTBL_THREADSAFE option was not given at the initialization time. </dd></dl>
 
 </div>
 </div>

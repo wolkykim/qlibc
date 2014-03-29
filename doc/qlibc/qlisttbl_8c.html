@@ -57,7 +57,7 @@
 <div class="line">                            | KEY B | | VALUE B |</div>
 <div class="line">                            +-------+ +---------+</div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="comment">// create a list table.</span></div>
-<div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>(QLISTTBL_OPT_THREADSAFE);</div>
+<div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>(QLISTTBL_THREADSAFE);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// insert elements (key duplication allowed)</span></div>
 <div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;e1&quot;</span>, <span class="stringliteral">&quot;a&quot;</span>, strlen(<span class="stringliteral">&quot;e1&quot;</span>)+1); <span class="comment">// equal to putstr();</span></div>
@@ -193,13 +193,13 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <div class="fragment"><div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>(0);</div>
-<div class="line">qlisttbl_t *threadsafe_tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>(QLISTTBL_OPT_THREADSAFE);</div>
+<div class="line">qlisttbl_t *threadsafe_tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>(QLISTTBL_THREADSAFE);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Available options:<ul>
-<li>QLISTTBL_OPT_THREADSAFE - make it thread-safe.</li>
-<li>QLISTTBL_OPT_UNIQUEKEY - keys are all unique. replace same key</li>
-<li>QLISTTBL_OPT_CASEINSENSITIVE - key is case insensitive</li>
-<li>QLISTTBL_OPT_INSERTTOP - insert new key at the top</li>
-<li>QLISTTBL_OPT_LOOKUPFORWARD - find key from the top </li>
+<li>QLISTTBL_THREADSAFE - make it thread-safe.</li>
+<li>QLISTTBL_UNIQUEKEY - keys are all unique. replace same key</li>
+<li>QLISTTBL_CASEINSENSITIVE - key is case insensitive</li>
+<li>QLISTTBL_INSERTTOP - insert new key at the top</li>
+<li>QLISTTBL_LOOKUPFORWARD - find key from the top </li>
 </ul>
 </dd></dl>
 
@@ -280,7 +280,7 @@ Functions</h2></td></tr>
 <div class="line"><span class="comment">// create a table and add a sample object.</span></div>
 <div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7" title="Create a new Q_LIST linked-list container.">qlisttbl</a>();</div>
 <div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;obj1&quot;</span>, &amp;obj, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> my_obj));</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The default behavior is adding an object at the end of this table unless QLISTTBL_OPT_INSERTTOP option was given. </dd></dl>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The default behavior is adding an object at the end of this table unless QLISTTBL_INSERTTOP option was given. </dd></dl>
 
 </div>
 </div>
@@ -519,7 +519,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a9c577ce23ac27fff2cf8f239b3e607dd" title="qlisttbl-&gt;get(): Finds an object with given name.">get()</a>: Finds an object with given name. </p>
-<p>If there are duplicate keys in the table, this will return the first matched one from the bottom (or the top if QLISTTBL_OPT_LOOKUPFORWARD option was given). So if there are duplicated keys, it'll return recently inserted one.</p>
+<p>If there are duplicate keys in the table, this will return the first matched one from the bottom (or the top if QLISTTBL_LOOKUPFORWARD option was given). So if there are duplicated keys, it'll return recently inserted one.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
@@ -833,7 +833,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#ac16016e661f135f63b1a0398ffeea189" title="qlisttbl-&gt;getnext(): Get next element.">getnext()</a>: Get next element. </p>
-<p>Default searching direction is backward, from the bottom to top unless QLISTTBL_OPT_LOOKUPFORWARD option was specified.</p>
+<p>Default searching direction is backward, from the bottom to top unless QLISTTBL_LOOKUPFORWARD option was specified.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>

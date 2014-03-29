@@ -48,7 +48,7 @@
 <div class="line">(positive index)     0    1    2</div>
 <div class="line">(negative index)    -3   -2   -1</div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="comment">// create stack</span></div>
-<div class="line">qstack_t *stack = <a class="code" href="qstack_8c.html#ad59200fd9723a575e042365b916e150b" title="Create a new stack container.">qstack</a>(QSTACK_OPT_THREADSAFE);</div>
+<div class="line">qstack_t *stack = <a class="code" href="qstack_8c.html#ad59200fd9723a575e042365b916e150b" title="Create a new stack container.">qstack</a>(QSTACK_THREADSAFE);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// example: integer stack</span></div>
 <div class="line">stack-&gt;pushint(stack, 1);</div>
@@ -189,9 +189,9 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<div class="fragment"><div class="line">qstack_t *stack = <a class="code" href="qstack_8c.html#ad59200fd9723a575e042365b916e150b" title="Create a new stack container.">qstack</a>(QSTACK_OPT_THREADSAFE);</div>
+<div class="fragment"><div class="line">qstack_t *stack = <a class="code" href="qstack_8c.html#ad59200fd9723a575e042365b916e150b" title="Create a new stack container.">qstack</a>(QSTACK_THREADSAFE);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Available options:<ul>
-<li>QSTACK_OPT_THREADSAFE - make it thread-safe. </li>
+<li>QSTACK_THREADSAFE - make it thread-safe. </li>
 </ul>
 </dd></dl>
 

@@ -42,7 +42,7 @@
 <div class="textblock"><p>Vector implementation. </p>
 <p>qvector container is a vector implementation. It implements a growable array of objects and it extends qlist container that allow a linked-list to be treated as a vector.</p>
 <div class="fragment"><div class="line">[Code sample - Object]</div>
-<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#a203044eab6c840e593223148b24e8995" title="Initialize vector.">qvector</a>(QVECTOR_OPT_THREADSAFE);</div>
+<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#a203044eab6c840e593223148b24e8995" title="Initialize vector.">qvector</a>(QVECTOR_THREADSAFE);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// add elements</span></div>
 <div class="line">vector-&gt;addstr(vector, <span class="stringliteral">&quot;AB&quot;</span>);      <span class="comment">// no need to supply size</span></div>
@@ -174,10 +174,10 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <div class="fragment"><div class="line"><span class="comment">// allocate memory</span></div>
-<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#a203044eab6c840e593223148b24e8995" title="Initialize vector.">qvector</a>(QVECTOR_OPT_THREADSAFE);</div>
+<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#a203044eab6c840e593223148b24e8995" title="Initialize vector.">qvector</a>(QVECTOR_THREADSAFE);</div>
 <div class="line">vector-&gt;free(vector);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Available options:<ul>
-<li>QVECTOR_OPT_THREADSAFE - make it thread-safe. </li>
+<li>QVECTOR_THREADSAFE - make it thread-safe. </li>
 </ul>
 </dd></dl>
 

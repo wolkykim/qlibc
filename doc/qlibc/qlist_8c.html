@@ -56,7 +56,7 @@
 <div class="line">               | DATA B                                 |</div>
 <div class="line">               +----------------------------------------+</div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="comment">// create a list.</span></div>
-<div class="line">qlist_t *list = <a class="code" href="qlist_8c.html#a171f1b505417b5a936e198993c9cb372" title="Create new qlist_t linked-list container.">qlist</a>(QLIST_OPT_THREADSAFE);</div>
+<div class="line">qlist_t *list = <a class="code" href="qlist_8c.html#a171f1b505417b5a936e198993c9cb372" title="Create new qlist_t linked-list container.">qlist</a>(QLIST_THREADSAFE);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// insert elements</span></div>
 <div class="line">list-&gt;addlast(list, <span class="stringliteral">&quot;e1&quot;</span>, <span class="keyword">sizeof</span>(<span class="stringliteral">&quot;e1&quot;</span>));</div>
@@ -198,7 +198,7 @@ Functions</h2></td></tr>
 </dl>
 <div class="fragment"><div class="line">qlist_t *list = <a class="code" href="qlist_8c.html#a171f1b505417b5a936e198993c9cb372" title="Create new qlist_t linked-list container.">qlist</a>(0);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Available options:<ul>
-<li>QLIST_OPT_THREADSAFE - make it thread-safe. </li>
+<li>QLIST_THREADSAFE - make it thread-safe. </li>
 </ul>
 </dd></dl>
 
