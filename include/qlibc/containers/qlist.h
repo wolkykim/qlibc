@@ -50,7 +50,7 @@ typedef struct qlist_s qlist_t;
 
 /* public functions */
 enum {
-    QLIST_OPT_THREADSAFE = (0x01)  /*!< make it thread-safe */
+    QLIST_THREADSAFE = (0x01)  /*!< make it thread-safe */
 };
 
 extern qlist_t *qlist(int options); /*!< qlist constructor */

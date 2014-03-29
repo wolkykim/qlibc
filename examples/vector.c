@@ -34,7 +34,7 @@
 #include "qlibc.h"
 
 int main(void) {
-    qvector_t *vector = qvector(QVECTOR_OPT_THREADSAFE);
+    qvector_t *vector = qvector(0);
 
     // add elements
     vector->addstr(vector, "AB");       // no need to supply size

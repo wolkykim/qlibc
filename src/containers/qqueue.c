@@ -147,12 +147,12 @@ static void free_(qqueue_t *queue);
  *  - ENOMEM    : Memory allocation failure.
  *
  * @code
- *   qqueue_t *queue = qQueue(QQUEUE_OPT_THREADSAFE);
+ *   qqueue_t *queue = qQueue(QQUEUE_THREADSAFE);
  * @endcode
  *
  * @note
  *   Available options:
- *   - QQUEUE_OPT_THREADSAFE - make it thread-safe.
+ *   - QQUEUE_THREADSAFE - make it thread-safe.
  */
 qqueue_t *qqueue(int options) {
     qqueue_t *queue = (qqueue_t *) malloc(sizeof(qqueue_t));

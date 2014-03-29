@@ -62,7 +62,7 @@
  *  // objects which can be stored. You can put as many as you want but if
  *  // this range is too small, hash conflict will happen and fetch time will
  *  // slightly increase.
- *  qhashtbl_t *tbl = qHashtbl(0, QHASHTBL_OPT_THREADSAFE);
+ *  qhashtbl_t *tbl = qhashtbl(0, QHASHTBL_THREADSAFE);
  *
  *  // put objects into table.
  *  tbl->put(tbl, "sample1", "binary", 6);
@@ -143,14 +143,14 @@ static void free_(qhashtbl_t *tbl);
  *  qhashtbl_t *basic_hashtbl = qHashtbl(0, 0);
  *
  *  // create a large hash-table for millions of keys with thread-safe option.
- *  qhashtbl_t *small_hashtbl = qHashtbl(1000000, QHASHTBL_OPT_THREADSAFE);
+ *  qhashtbl_t *small_hashtbl = qHashtbl(1000000, QHASHTBL_THREADSAFE);
  * @endcode
  *
  * @note
  *   Setting the right range is a magic.
  *   In practice, pick a value between (total keys / 3) ~ (total keys * 2).
  *   Available options:
- *   - QHASHTBL_OPT_THREADSAFE - make it thread-safe.
+ *   - QHASHTBL_THREADSAFE - make it thread-safe.
  */
 qhashtbl_t *qhashtbl(size_t range, int options) {
     if (range == 0) {
@@ -167,7 +167,7 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
         goto malloc_failure;
 
     // handle options.
-    if (options & QHASHTBL_OPT_THREADSAFE) {
+    if (options & QHASHTBL_THREADSAFE) {
         Q_MUTEX_NEW(tbl->qmutex, true);
         if (tbl->qmutex == NULL)
             goto malloc_failure;
@@ -722,7 +722,7 @@ bool debug(qhashtbl_t *tbl, FILE *out) {
  *  all elements using qhashtbl->getnext().
  *
  * @note
- *  This operation will do nothing if QHASHTBL_OPT_THREADSAFE option was not
+ *  This operation will do nothing if QHASHTBL_THREADSAFE option was not
  *  given at the initialization time.
  */
 static void lock(qhashtbl_t *tbl) {
@@ -735,7 +735,7 @@ static void lock(qhashtbl_t *tbl) {
  * @param tbl   qhashtbl_t container pointer.
  *
  * @note
- *  This operation will do nothing if QHASHTBL_OPT_THREADSAFE option was not
+ *  This operation will do nothing if QHASHTBL_THREADSAFE option was not
  *  given at the initialization time.
  */
 static void unlock(qhashtbl_t *tbl) {

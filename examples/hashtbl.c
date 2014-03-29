@@ -34,7 +34,7 @@
 
 int main(void) {
     // create a hash-table.
-    qhashtbl_t *tbl = qhashtbl(0, QHASHTBL_OPT_THREADSAFE);
+    qhashtbl_t *tbl = qhashtbl(0, 0);
 
     //
     // TEST 1 : adding elements.

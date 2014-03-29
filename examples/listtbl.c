@@ -35,7 +35,7 @@
 
 int main(void) {
     // create a list-table.
-    qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
+    qlisttbl_t *tbl = qlisttbl(0);
     qdlnobj_t obj;
     int i;
 
@@ -110,29 +110,29 @@ int main(void) {
     tbl->unlock(tbl);
 
     //
-    // TEST 6 : QLISTTBL_OPT_INSERTTOP option.
+    // TEST 6 : QLISTTBL_INSERTTOP option.
     //
     tbl->free(tbl);
-    tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE | QLISTTBL_OPT_INSERTTOP);
+    tbl = qlisttbl(QLISTTBL_INSERTTOP);
     tbl->putstr(tbl, "e1", "object1");
     tbl->putstr(tbl, "e2", "object2");
 
     // print out
-    printf("\n--[Test 6 : QLISTTBL_OPT_INSERTTOP option]--\n");
+    printf("\n--[Test 6 : QLISTTBL_INSERTTOP option]--\n");
     tbl->debug(tbl, stdout);
 
     //
-    // TEST 7 :  QLISTTBL_OPT_LOOKUPFORWARD option
+    // TEST 7 :  QLISTTBL_LOOKUPFORWARD option
     //
     tbl->free(tbl);
-    tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE | QLISTTBL_OPT_LOOKUPFORWARD);
+    tbl = qlisttbl(QLISTTBL_LOOKUPFORWARD);
     tbl->putstr(tbl, "e1", "object1");
     tbl->putstr(tbl, "e2", "object2");
     tbl->putstr(tbl, "e1", "object11");
     tbl->putstr(tbl, "e2", "object22");
 
     // print out
-    printf("\n--[Test 7 : QLISTTBL_OPT_LOOKUPFORWARD]--\n");
+    printf("\n--[Test 7 : QLISTTBL_LOOKUPFORWARD]--\n");
     assert(!strcmp("object1", tbl->getstr(tbl, "e1", false)));
     tbl->debug(tbl, stdout);
 
@@ -140,7 +140,7 @@ int main(void) {
     //  TEST 8 : Sorting test.
     //
     tbl->free(tbl);
-    tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
+    tbl = qlisttbl(0);
     tbl->putstr(tbl, "e1", "object1");
     tbl->putstr(tbl, "e8", "object8");
     tbl->putstr(tbl, "e2", "object2");

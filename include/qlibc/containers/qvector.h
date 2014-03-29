@@ -49,7 +49,7 @@ typedef struct qvector_s qvector_t;
 
 /* public functions */
 enum {
-    QVECTOR_OPT_THREADSAFE = (QLIST_OPT_THREADSAFE)  /*!< make it thread-safe */
+    QVECTOR_THREADSAFE = (QLIST_THREADSAFE)  /*!< make it thread-safe */
 };
 
 extern qvector_t *qvector(int options);

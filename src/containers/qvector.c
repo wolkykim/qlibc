@@ -35,7 +35,7 @@
  *
  * @code
  *  [Code sample - Object]
- *  qvector_t *vector = qvector(QVECTOR_OPT_THREADSAFE);
+ *  qvector_t *vector = qvector(QVECTOR_THREADSAFE);
  *
  *  // add elements
  *  vector->addstr(vector, "AB");      // no need to supply size
@@ -139,13 +139,13 @@ static void free_(qvector_t *vector);
  *
  * @code
  *  // allocate memory
- *  qvector_t *vector = qvector(QVECTOR_OPT_THREADSAFE);
+ *  qvector_t *vector = qvector(QVECTOR_THREADSAFE);
  *  vector->free(vector);
  * @endcode
  *
  * @note
  *   Available options:
- *   - QVECTOR_OPT_THREADSAFE - make it thread-safe.
+ *   - QVECTOR_THREADSAFE - make it thread-safe.
  */
 qvector_t *qvector(int options) {
     qvector_t *vector = (qvector_t *) calloc(1, sizeof(qvector_t));

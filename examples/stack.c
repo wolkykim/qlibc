@@ -36,7 +36,7 @@
 
 int main(void) {
     // create stack
-    qstack_t *stack = qstack(QSTACK_OPT_THREADSAFE);
+    qstack_t *stack = qstack(0);
 
     // example: integer stack
     stack->pushint(stack, 1);

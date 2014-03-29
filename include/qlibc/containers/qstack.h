@@ -49,7 +49,7 @@ typedef struct qstack_s qstack_t;
 
 /* public functions */
 enum {
-    QSTACK_OPT_THREADSAFE = (QLIST_OPT_THREADSAFE)  /*!< make it thread-safe */
+    QSTACK_THREADSAFE = (QLIST_THREADSAFE)  /*!< make it thread-safe */
 };
 
 extern qstack_t *qstack(int options);

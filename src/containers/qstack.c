@@ -44,7 +44,7 @@
  *
  * @code
  *  // create stack
- *  qstack_t *stack = qstack(QSTACK_OPT_THREADSAFE);
+ *  qstack_t *stack = qstack(QSTACK_THREADSAFE);
  *
  *  // example: integer stack
  *  stack->pushint(stack, 1);
@@ -147,12 +147,12 @@ static void free_(qstack_t *stack);
  *  - ENOMEM    : Memory allocation failure.
  *
  * @code
- *   qstack_t *stack = qstack(QSTACK_OPT_THREADSAFE);
+ *   qstack_t *stack = qstack(QSTACK_THREADSAFE);
  * @endcode
  *
  * @note
  *   Available options:
- *   - QSTACK_OPT_THREADSAFE - make it thread-safe.
+ *   - QSTACK_THREADSAFE - make it thread-safe.
  */
 qstack_t *qstack(int options) {
     qstack_t *stack = (qstack_t *) malloc(sizeof(qstack_t));

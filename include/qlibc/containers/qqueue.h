@@ -49,7 +49,7 @@ typedef struct qqueue_s qqueue_t;
 
 /* public functions */
 enum {
-    QQUEUE_OPT_THREADSAFE = (QLIST_OPT_THREADSAFE)  /*!< make it thread-safe */
+    QQUEUE_THREADSAFE = (QLIST_THREADSAFE)  /*!< make it thread-safe */
 };
 
 extern qqueue_t *qqueue(int options);

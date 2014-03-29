@@ -56,7 +56,7 @@
  *
  * @code
  *  // create a list table.
- *  qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
+ *  qlisttbl_t *tbl = qlisttbl(QLISTTBL_THREADSAFE);
  *
  *  // insert elements (key duplication allowed)
  *  tbl->put(tbl, "e1", "a", strlen("e1")+1); // equal to putstr();
@@ -167,16 +167,16 @@ static bool _namecasematch(qdlnobj_t *obj, const char *name, uint32_t hash);
  *
  * @code
  *  qlisttbl_t *tbl = qlisttbl(0);
- *  qlisttbl_t *threadsafe_tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
+ *  qlisttbl_t *threadsafe_tbl = qlisttbl(QLISTTBL_THREADSAFE);
  * @endcode
  *
  * @note
  *   Available options:
- *   - QLISTTBL_OPT_THREADSAFE - make it thread-safe.
- *   - QLISTTBL_OPT_UNIQUEKEY  - keys are all unique. replace same key
- *   - QLISTTBL_OPT_CASEINSENSITIVE  - key is case insensitive
- *   - QLISTTBL_OPT_INSERTTOP        - insert new key at the top
- *   - QLISTTBL_OPT_LOOKUPFORWARD    - find key from the top
+ *   - QLISTTBL_THREADSAFE - make it thread-safe.
+ *   - QLISTTBL_UNIQUEKEY  - keys are all unique. replace same key
+ *   - QLISTTBL_CASEINSENSITIVE  - key is case insensitive
+ *   - QLISTTBL_INSERTTOP        - insert new key at the top
+ *   - QLISTTBL_LOOKUPFORWARD    - find key from the top
  */
 qlisttbl_t *qlisttbl(int options)
 {
@@ -223,7 +223,7 @@ qlisttbl_t *qlisttbl(int options)
     tbl->namecmp    = strcmp;
 
     // handle options.
-    if (options & QLISTTBL_OPT_THREADSAFE) {
+    if (options & QLISTTBL_THREADSAFE) {
         Q_MUTEX_NEW(tbl->qmutex, true);
         if (tbl->qmutex == NULL) {
             errno = ENOMEM;
@@ -231,17 +231,17 @@ qlisttbl_t *qlisttbl(int options)
             return NULL;
         }
     }
-    if (options & QLISTTBL_OPT_UNIQUEKEY) {
+    if (options & QLISTTBL_UNIQUEKEY) {
         tbl->uniquekey = true;
     }
-    if (options & QLISTTBL_OPT_CASEINSENSITIVE) {
+    if (options & QLISTTBL_CASEINSENSITIVE) {
         tbl->namematch = _namecasematch;
         tbl->namecmp = strcasecmp;
     }
-    if (options & QLISTTBL_OPT_INSERTTOP) {
+    if (options & QLISTTBL_INSERTTOP) {
       tbl->inserttop = true;
     }
-    if (options & QLISTTBL_OPT_LOOKUPFORWARD) {
+    if (options & QLISTTBL_LOOKUPFORWARD) {
       tbl->lookupforward = true;
     }
 
@@ -275,8 +275,8 @@ qlisttbl_t *qlisttbl(int options)
  * @endcode
  *
  * @note
- *  The default behavior is adding an object at the end of this table unless
- *  QLISTTBL_OPT_INSERTTOP option was given.
+ *  The default behavior is adding an object at the end of this table
+ *  unless QLISTTBL_INSERTTOP option was given.
  */
 static bool put(qlisttbl_t *tbl, const char *name, const void *data, size_t size)
 {
@@ -384,7 +384,7 @@ static bool putint(qlisttbl_t *tbl, const char *name, int64_t num)
 /**
  * qlisttbl->get(): Finds an object with given name.
  * If there are duplicate keys in the table, this will return the first matched
- * one from the bottom (or the top if QLISTTBL_OPT_LOOKUPFORWARD option was given).
+ * one from the bottom (or the top if QLISTTBL_LOOKUPFORWARD option was given).
  * So if there are duplicated keys, it'll return recently inserted one.
  *
  * @param tbl       qlisttbl container pointer.
@@ -614,7 +614,7 @@ static void freemulti(qobj_t *objs)
 /**
  * qlisttbl->getnext(): Get next element.
  * Default searching direction is backward, from the bottom to top
- * unless QLISTTBL_OPT_LOOKUPFORWARD option was specified.
+ * unless QLISTTBL_LOOKUPFORWARD option was specified.
  *
  * @param tbl       qlisttbl container pointer.
  * @param obj       found data will be stored in this object

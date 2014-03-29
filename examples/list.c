@@ -34,7 +34,7 @@
 
 int main(void) {
     // create a list.
-    qlist_t *list = qlist(QLIST_OPT_THREADSAFE);
+    qlist_t *list = qlist(0);
 
     //
     // TEST 1 : adding elements.

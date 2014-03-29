@@ -53,7 +53,7 @@
  *
  * @code
  *  // create a list.
- *  qlist_t *list = qlist(QLIST_OPT_THREADSAFE);
+ *  qlist_t *list = qlist(QLIST_THREADSAFE);
  *
  *  // insert elements
  *  list->addlast(list, "e1", sizeof("e1"));
@@ -155,7 +155,7 @@ static bool _remove_obj(qlist_t *list, qdlobj_t *obj);
  *
  * @note
  *   Available options:
- *   - QLIST_OPT_THREADSAFE - make it thread-safe.
+ *   - QLIST_THREADSAFE - make it thread-safe.
  */
 qlist_t *qlist(int options) {
     qlist_t *list = (qlist_t *) calloc(1, sizeof(qlist_t));
@@ -165,7 +165,7 @@ qlist_t *qlist(int options) {
     }
 
     // handle options.
-    if (options & QLIST_OPT_THREADSAFE) {
+    if (options & QLIST_THREADSAFE) {
         Q_MUTEX_NEW(list->qmutex, true);
         if (list->qmutex == NULL) {
             errno = ENOMEM;

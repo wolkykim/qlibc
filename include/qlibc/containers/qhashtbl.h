@@ -49,7 +49,7 @@ typedef struct qhashtbl_s qhashtbl_t;
 
 /* public functions */
 enum {
-    QHASHTBL_OPT_THREADSAFE = (0x01)  /*!< make it thread-safe */
+    QHASHTBL_THREADSAFE = (0x01)  /*!< make it thread-safe */
 };
 
 extern qhashtbl_t *qhashtbl(size_t range, int options);  /*!< qhashtbl constructor */
