@@ -173,7 +173,7 @@ static bool _namecasematch(qdlnobj_t *obj, const char *name, uint32_t hash);
  * @note
  *   Available options:
  *   - QLISTTBL_THREADSAFE - make it thread-safe.
- *   - QLISTTBL_UNIQUEKEY  - keys are all unique. replace same key
+ *   - QLISTTBL_UNIQUE     - keys are all unique. replace same key
  *   - QLISTTBL_CASEINSENSITIVE  - key is case insensitive
  *   - QLISTTBL_INSERTTOP        - insert new key at the top
  *   - QLISTTBL_LOOKUPFORWARD    - find key from the top
@@ -231,8 +231,8 @@ qlisttbl_t *qlisttbl(int options)
             return NULL;
         }
     }
-    if (options & QLISTTBL_UNIQUEKEY) {
-        tbl->uniquekey = true;
+    if (options & QLISTTBL_UNIQUE) {
+        tbl->unique = true;
     }
     if (options & QLISTTBL_CASEINSENSITIVE) {
         tbl->namematch = _namecasematch;
@@ -290,7 +290,7 @@ static bool put(qlisttbl_t *tbl, const char *name, const void *data, size_t size
     lock(tbl);
 
     // if unique flag is set, remove same key
-    if (tbl->uniquekey == true) remove_(tbl, name);
+    if (tbl->unique == true) remove_(tbl, name);
 
     // insert into table
     if (tbl->num == 0) {

@@ -50,7 +50,7 @@ typedef struct qlisttbl_s qlisttbl_t;
 /* public functions */
 enum {
     QLISTTBL_THREADSAFE      = (0x01),      /*!< make it thread-safe */
-    QLISTTBL_UNIQUEKEY       = (0x01 << 1), /*!< keys are unique */
+    QLISTTBL_UNIQUE          = (0x01 << 1), /*!< keys are unique */
     QLISTTBL_CASEINSENSITIVE = (0x01 << 2), /*!< keys are case insensitive */
     QLISTTBL_INSERTTOP       = (0x01 << 3), /*!< insert new key at the top */
     QLISTTBL_LOOKUPFORWARD   = (0x01 << 4), /*!< find key from the top (default: backward) */
@@ -100,7 +100,7 @@ struct qlisttbl_s {
     int (*namecmp) (const char *s1, const char *s2);
 
     /* private variables - do not access directly */
-    bool uniquekey;        /*!< keys are unique */
+    bool unique;           /*!< keys are unique */
     bool caseinsensitive;  /*!< case insensitive key comparison */
     bool keepsorted;       /*!< keep table in sorted (default: insertion order) */
     bool inserttop;        /*!< add new key at the top. (default: bottom) */
