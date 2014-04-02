@@ -35,7 +35,7 @@ All of the deliverable code in qLibc has been dedicated to the public domain by 
   * HTTP client.
   * Database(MySQL) interface.
 
-## Constant Look
+## Consistant API Look
 
 All container APIs have constant look, basically it provides a creator function which usually returns a pointer of a container structure. And **every functions related to the container can be accessed through function pointers inside of the container**.
 
