@@ -328,15 +328,18 @@ static bool setssl(qhttpclient_t *client) {
         // must be set before making a connection.
         return false;
     }
-    if (initialized == true || client->ssl != NULL) {
+    
+    if (client->ssl != NULL) {
         // already initialized.
         return true;
     }
 
     // init openssl
-    initialized = true;
-    SSL_load_error_strings();
-    SSL_library_init();
+    if (initialized == false) {
+      initialized = true;
+      SSL_load_error_strings();
+      SSL_library_init();
+    }
 
     // allocate ssl structure
     client->ssl = malloc(sizeof(struct SslConn));
