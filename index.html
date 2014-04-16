@@ -29,26 +29,21 @@
       <div class="inner clearfix">
         <section id="main-content">
           <h1>
-<a name="qlibc-project" class="anchor" href="#qlibc-project"><span class="octicon octicon-link"></span></a>qLibc Project</h1>
+<a name="whats-qlibc" class="anchor" href="#whats-qlibc"><span class="octicon octicon-link"></span></a>What's qLibc?</h1>
 
-<h2>
-<a name="whats-qlibc" class="anchor" href="#whats-qlibc"><span class="octicon octicon-link"></span></a>What's qLibc?</h2>
-
-<p>The goal of qLibc project is to provide a <strong>simple but powerful general purpose C/C++ library</strong> which includes all kinds of containers and general library routines. It provides ready-made set of common container APIs with constant look that can be used with any built-in types and with any user-defined types.</p>
+<p>qLibc is currently one of the most functionally complete public licensed C/C++ libraries. The goal of qLibc project is to provide a <strong>simple and powerful general purpose C/C++ library</strong> which includes all kinds of containers and general library routines. It provides ready-made set of common container APIs with consistant API look.</p>
 
 <h2>
 <a name="qlibc-copyright" class="anchor" href="#qlibc-copyright"><span class="octicon octicon-link"></span></a>qLibc Copyright</h2>
 
 <p>All of the deliverable code in qLibc has been dedicated to the public domain by the authors. Anyone is free to copy, modify, publish, use, compile, sell, or distribute the original qLibc code, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means. </p>
 
-<p>All of the deliverable code in qLibc has been written from scratch (except of MD5 code published by RSA Data Security, Inc). No code has been taken from other projects or from the open internet. Every line of code can be traced back to its original author. So the qLibc code base is clean and is not contaminated with licensed code from other projects. </p>
-
 <h2>
 <a name="api-reference" class="anchor" href="#api-reference"><span class="octicon octicon-link"></span></a>API Reference</h2>
 
 <ul>
 <li>
-<a href="http://wolkykim.github.io/qlibc/doc/qlibc/files.html">qlibc Core API Reference</a></p>
+<p><a href="http://wolkykim.github.io/qlibc/doc/qlibc/files.html">qlibc Core API Reference</a></p>
 
 <ul>
 <li>Containers
@@ -79,7 +74,7 @@
 </ul>
 </li>
 <li>
-<a href="http://wolkykim.github.io/qlibc/doc/qlibcext/files.html">qLibc Extension API Reference</a></p>
+<p><a href="http://wolkykim.github.io/qlibc/doc/qlibcext/files.html">qLibc Extension API Reference</a></p>
 
 <ul>
 <li>INI-style Configuration File Parser.</li>
@@ -90,7 +85,7 @@
 </ul>
 </li>
 </ul><h2>
-<a name="constant-look" class="anchor" href="#constant-look"><span class="octicon octicon-link"></span></a>Constant Look</h2>
+<a name="consistant-api-look" class="anchor" href="#consistant-api-look"><span class="octicon octicon-link"></span></a>Consistant API Look</h2>
 
 <p>All container APIs have constant look, basically it provides a creator function which usually returns a pointer of a container structure. And <strong>every functions related to the container can be accessed through function pointers inside of the container</strong>.</p>
 
@@ -100,44 +95,57 @@
 
 <p>See the example below to see how it works.</p>
 
-<pre><code>// create a hash-table with hash range 100.
-// Hash range does NOT mean maximum number of elements. Refer API doc.
-qhashtbl_t *tbl = qhashtbl(100);
+<pre><code>  // create a hash-table.
+  qhashtbl_t *tbl = qhashtbl(0, QHASHTBL_OPT_THREADSAFE);
 
-// add an element which key name is "score".
-int x = 12345;
-tbl-&gt;put(tbl, "score", &amp;x, sizeof(int));
+  // add an element which key name is "score".
+  int x = 12345;
+  tbl-&gt;put(tbl, "score", &amp;x, sizeof(int));
 
-// get the value of the element.
-int *px = tbl-&gt;get(tbl, "score", NULL, true);
-if(px != NULL) {
-  printf("%d\n", *px);             
-  free(px);
-}
+  // get the value of the element.
+  int *px = tbl-&gt;get(tbl, "score");
+  if(px != NULL) {
+    printf("%d\n", *px);
+    free(px);
+  }
 
-// release table
-tbl-&gt;free(tbl);
+  // release table
+  tbl-&gt;free(tbl);
 </code></pre>
 
-<p>Here is a same implementation of above code but using Linked-List-Table container.</p>
+<p>Here is an identical implementation with Linked-List-Table container.
+You might noticed that there's no code change entirely except of 1 line for the table creation.
+This is why qLibc encapsulates corresponding function pointers inside the container object.</p>
 
-<pre><code>// create a linked-list-table.
-qlisttbl_t *tbl = qlisttbl();
+<pre><code>  // create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.
+  qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
 
-// add an element which key name is "score".
-int x = 12345;
-tbl-&gt;put(tbl, "score", &amp;x, sizeof(int), true);
+  // add an element which key name is "score".
+  int x = 12345;
+  tbl-&gt;put(tbl, "score", &amp;x, sizeof(int));
 
-// get the value of the element.
-int *px = tbl-&gt;get(tbl, "score", NULL, true);
-if(px != NULL) {
-  printf("%d\n", *px);             
-  free(px);
-}
+  // get the value of the element.
+  int *px = tbl-&gt;get(tbl, "score");
+  if(px != NULL) {
+    printf("%d\n", *px);             
+    free(px);
+  }
 
-// release table
-tbl-&gt;free(tbl);
+  // release table
+  tbl-&gt;free(tbl);
 </code></pre>
+
+<h2>
+<a name="looking-for-people-to-work-with" class="anchor" href="#looking-for-people-to-work-with"><span class="octicon octicon-link"></span></a>Looking for people to work with.</h2>
+
+<p>We're looking for people who want to work together developing and improving qLibc.
+Currently, we have high demands on following areas.</p>
+
+<ul>
+<li>Automated testing</li>
+<li>Documentation.</li>
+<li>New feature implementation.</li>
+</ul>
         </section>
 
         <aside id="sidebar">
