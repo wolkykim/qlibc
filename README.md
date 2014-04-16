@@ -9,7 +9,7 @@ All of the deliverable code in qLibc has been dedicated to the public domain by 
 
 ## API Reference
 
-* [qlibc Core API Reference](http://wolkykim.github.io/qlibc/doc/qlibc/files.html)
+* [qlibc Core API Reference](http://wolkykim.github.io/qlibc/doc/html/files.html)
   * Containers
     * List --- Doubly Linked List.
     * List Table --- KEY/VALUE paired table implemented on linked-list.
@@ -28,7 +28,7 @@ All of the deliverable code in qLibc has been dedicated to the public domain by 
     * System
     * Time
 
-* [qLibc Extension API Reference](http://wolkykim.github.io/qlibc/doc/qlibcext/files.html)
+* [qLibc Extension API Reference](http://wolkykim.github.io/qlibc/doc/html/files.html)
   * INI-style Configuration File Parser.
   * Apache-style Configuration File Parser.
   * Rotating File Logger.
