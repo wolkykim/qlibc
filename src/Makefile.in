@@ -190,12 +190,10 @@ clean:
 	( cd ${QLIBC_LIBDIR}; ${RM} -f ${QLIBCEXT_LIBNAME} ${QLIBCEXT_SLIBREALNAME} ${QLIBCEXT_SLIBNAME} )
 
 doc:
-	doxygen doxygen-qlibc.conf
-	doxygen doxygen-qlibcext.conf
+	doxygen doxygen.conf
 
 cleandoc:
-	${RM} -rf ../doc/qlibc
-	${RM} -rf ../doc/qlibcext
+	${RM} -rf ../doc/html
 
 ## Compile
 .c.o:
