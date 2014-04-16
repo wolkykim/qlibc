@@ -90,7 +90,92 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> *****************************************************************************/</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * @file qhttpclient.c HTTP client object.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"> * qhttpclient implements HTTP client.</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"> * Example code for simple HTTP GET operation.</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"> *  #define REMOTE_URL  &quot;/robots.txt&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"> *  #define SAVEFILE    &quot;/tmp/robots.txt&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"> *  int main(void) {</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"> *    // create new HTTP client</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment"> *    qhttpclient_t *httpclient = qhttpclient(&quot;https://secure.qdecoder.org&quot;, 0);</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"> *    if(httpclient == NULL) return -1;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment"> *    // open file for writing</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment"> *    int nFd = open(SAVEFILE, O_CREAT | O_TRUNC | O_WRONLY, 0644);</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment"> *    if(nFd &lt; 0) {</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment"> *      httpclient-&gt;free(httpclient);</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"> *      return -1;</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"> *    }</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> *    // container for storing response headers for debugging purpose</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> *    qlisttbl_t *resheaders = qlisttbl(QLISTTBL_UNIQUE | QLISTTBL_CASEINSENSITIVE);</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment"> *    // download</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment"> *    off_t nSavesize = 0;</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"> *    int nRescode = 0;</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> *    bool bRet = httpclient-&gt;get(httpclient, REMOTE_URL, nFd, &amp;nSavesize,</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> *                                &amp;nRescode, NULL, resheaders, NULL, NULL);</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment"> *    // close file</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"> *    close(nFd);</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment"> *    // print out debugging info</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment"> *    printf(&quot;%s %d, %d bytes saved\n&quot;, (bRet?&quot;Success&quot;:&quot;Failed&quot;), nRescode,</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"> *                                       (int)nSavesize);</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment"> *    resheaders-&gt;debug(resheaders, stdout);</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"> *    // de-allocate HTTP client object</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment"> *    httpclient-&gt;free(httpclient);</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"> *    return (bRet ? 0 : -1);</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> *  }</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"> *  [Output]</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment"> *  Success 200, 30 bytes saved</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment"> *  Date=Fri, 11 Feb 2011 23:40:50 GMT? (30)</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"> *  Server=Apache? (7)</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"> *  Last-Modified=Sun, 15 Mar 2009 11:43:07 GMT? (30)</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"> *  ETag=&quot;2e5c9d-1e-46526d665c8c0&quot;? (26)</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment"> *  Accept-Ranges=bytes? (6)</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"> *  Content-Length=30? (3)</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"> *  Cache-Control=max-age=604800? (15)</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"> *  Expires=Fri, 18 Feb 2011 23:40:50 GMT? (30)</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"> *  Connection=close? (6)</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> *  Content-Type=text/plain? (11)</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment"> * Example code for multiple PUT operation using same keep-alive connection.</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment"> *  // create new HTTP client</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment"> *  qhttpclient_t *httpclient = qhttpclient(&quot;www.qdecoder.org&quot;, 80);</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment"> *  if(httpclient == NULL) return;</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment"> *  // set options</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment"> *  httpclient-&gt;setkeepalive(httpclient, true);</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment"> *  // make a connection</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment"> *  if(httpclient-&gt;open(httpclient) == false) return;</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment"> *  // upload files</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment"> *  httpclient-&gt;put(httpclient, ...);</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment"> *  httpclient-&gt;put(httpclient, ...); // will be done within same connection.</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment"> *  // close connection - not necessary if we call free() just after this.</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment"> *  httpclient-&gt;close(httpclient);</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment"> *  // de-allocate HTTP client object</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment"> *  httpclient-&gt;free(httpclient);</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#ifndef DISABLE_QHTTPCLIENT</span></div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
@@ -199,7 +284,29 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    SSL_CTX *ctx;</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;};</div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="preprocessor"></span><span class="comment"></span></div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="comment"> * Initialize &amp; create new HTTP client.</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="comment"> * @param destname  remote address, one of IP address, FQDN domain name and URI.</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="comment"> * @param port      remote port number. (can be 0 when destname is URI)</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="comment"> * @return HTTP client object if succcessful, otherwise returns NULL.</span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="comment"> *   qhttpclient_t *client = qhttpclient(&quot;1.2.3.4&quot;, 80);</span></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="comment"> *   qhttpclient_t *client = qhttpclient(&quot;www.qdecoder.org&quot;, 80);</span></div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="comment"> *   qhttpclient_t *client = qhttpclient(&quot;http://www.qdecoder.org&quot;, 0);</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="comment"> *   qhttpclient_t *client = qhttpclient(&quot;http://www.qdecoder.org:80&quot;, 0);</span></div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;<span class="comment"> *   qhttpclient_t *client = qhttpclient(&quot;https://www.qdecoder.org&quot;, 0);</span></div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="comment"> *   qhttpclient_t *client = qhttpclient(&quot;https://www.qdecoder.org:443&quot;, 0);</span></div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="comment"> *  Keep-alive feature is turned off by default. Turn it on by calling</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="comment"> *  setkeepalive(). If destname is URI string starting with</span></div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="comment"> *  &quot;https://&quot;, setssl() will be called internally.</span></div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00245"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#acba5e1d5c9b1666945f7b0ca4da0785b">  245</a></span>&#160;qhttpclient_t *<a class="code" href="qhttpclient_8c.html#acba5e1d5c9b1666945f7b0ca4da0785b" title="Initialize &amp; create new HTTP client.">qhttpclient</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *destname, <span class="keywordtype">int</span> port) {</div>
 <div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keywordtype">bool</span> ishttps = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    <span class="keywordtype">char</span> hostname[256];</div>
@@ -268,7 +375,16 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;</div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    <span class="keywordflow">return</span> client;</div>
 <div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;}</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="comment"> * qhttpclient-&gt;setssl(): Sets connection to HTTPS connection</span></div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;<span class="comment"> * @param client    qhttpclient object pointer</span></div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="comment"> *   httpclient-&gt;setssl(httpclient);</span></div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00323"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#a5c8eb3bb63df37fe248d858715894870">  323</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="qhttpclient_8c.html#a5c8eb3bb63df37fe248d858715894870" title="qhttpclient-&gt;setssl(): Sets connection to HTTPS connection">setssl</a>(qhttpclient_t *client) {</div>
 <div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="preprocessor">#ifdef  ENABLE_OPENSSL</span></div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;<span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> initialized = <span class="keyword">false</span>;</div>
@@ -297,23 +413,72 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;<span class="comment"> * qhttpclient-&gt;settimeout(): Sets connection wait timeout.</span></div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;<span class="comment"> * @param client    qhttpclient object pointer</span></div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;<span class="comment"> * @param timeoutms timeout mili-seconds. 0 for system defaults</span></div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;<span class="comment"> *   httpclient-&gt;settimeout(httpclient, 0);    // default</span></div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;<span class="comment"> *   httpclient-&gt;settimeout(httpclient, 5000); // 5 seconds</span></div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00363"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#a12e0c5c0a30dafae0ece655d6095a75c">  363</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="qhttpclient_8c.html#a12e0c5c0a30dafae0ece655d6095a75c" title="qhttpclient-&gt;settimeout(): Sets connection wait timeout.">settimeout</a>(qhttpclient_t *client, <span class="keywordtype">int</span> timeoutms) {</div>
 <div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keywordflow">if</span> (timeoutms &lt;= 0)</div>
 <div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;        timeoutms = -1;</div>
 <div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    client-&gt;timeoutms = timeoutms;</div>
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;}</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;<span class="comment"> * qhttpclient-&gt;setkeepalive(): Sets KEEP-ALIVE feature on/off.</span></div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;<span class="comment"> * @param client    qhttpclient object pointer</span></div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="comment"> * @param keepalive true to set keep-alive on, false to set keep-alive off</span></div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="comment"> *   httpclient-&gt;setkeepalive(httpclient, true);  // keep-alive on</span></div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="comment"> *   httpclient-&gt;setkeepalive(httpclient, false); // keep-alive off</span></div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00380"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#a7ee9c5a86a3f561a5dcfe201ff20c350">  380</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="qhttpclient_8c.html#a7ee9c5a86a3f561a5dcfe201ff20c350" title="qhttpclient-&gt;setkeepalive(): Sets KEEP-ALIVE feature on/off.">setkeepalive</a>(qhttpclient_t *client, <span class="keywordtype">bool</span> keepalive) {</div>
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;    client-&gt;keepalive = keepalive;</div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;}</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;<span class="comment"> * qhttpclient-&gt;setuseragent(): Sets user-agent string.</span></div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;<span class="comment"> * @param client    qhttpclient object pointer</span></div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;<span class="comment"> * @param useragent user-agent string</span></div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;<span class="comment"> *   httpclient-&gt;setuseragent(httpclient, &quot;MyAgent/1.0&quot;);</span></div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00394"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#af6bffb8f3d215b7225da20a6832bf440">  394</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="qhttpclient_8c.html#af6bffb8f3d215b7225da20a6832bf440" title="qhttpclient-&gt;setuseragent(): Sets user-agent string.">setuseragent</a>(qhttpclient_t *client, <span class="keyword">const</span> <span class="keywordtype">char</span> *useragent) {</div>
 <div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;    <span class="keywordflow">if</span> (client-&gt;useragent != NULL)</div>
 <div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;        free(client-&gt;useragent);</div>
 <div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;    client-&gt;useragent = strdup(useragent);</div>
 <div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;}</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;<span class="comment"> * qhttpclient-&gt;open(): Opens a connection to the remote host.</span></div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;<span class="comment"> * @param client    qhttpclient object pointer</span></div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false</span></div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;<span class="comment"> *  Don&#39;t need to open a connection unless you definitely need to do this,</span></div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;<span class="comment"> *  because qhttpclient open a connection automatically when it&#39;s needed.</span></div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;<span class="comment"> *  This function also can be used to veryfy a connection failure with remote</span></div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;<span class="comment"> *  host.</span></div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;<span class="comment"> *   if(httpclient-&gt;open(httpclient) == false) return;</span></div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00417"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#aaab09f1f3ab6486633b0ea1c0fd65cd2">  417</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="qhttpclient_8c.html#aaab09f1f3ab6486633b0ea1c0fd65cd2" title="qhttpclient-&gt;open(): Opens a connection to the remote host.">open_</a>(qhttpclient_t *client) {</div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;    <span class="keywordflow">if</span> (client-&gt;socket &gt;= 0) {</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;        <span class="comment">// check if connection is still alive</span></div>
@@ -401,7 +566,55 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;}</div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;<span class="comment"> * qhttpclient-&gt;head(): Sends a HEAD request.</span></div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;<span class="comment"> * @param client        qhttpclient object pointer.</span></div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;<span class="comment"> * @param uri           URL encoded remote URI for downloading file.</span></div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;<span class="comment"> *                      (&quot;/path&quot; or &quot;http://.../path&quot;)</span></div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;<span class="comment"> * @param rescode       if not NULL, remote response code will be stored.</span></div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;<span class="comment"> *                      (can be NULL)</span></div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;<span class="comment"> * @param reqheaders    qlisttbl_t pointer which contains additional user</span></div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;<span class="comment"> *                      request headers. (can be NULL)</span></div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;<span class="comment"> * @param resheaders    qlisttbl_t pointer for storing response headers.</span></div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;<span class="comment"> *                      (can be NULL)</span></div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;<span class="comment"> * @return true if successful(got 200 response), otherwise returns false</span></div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;<span class="comment"> *   main() {</span></div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;<span class="comment"> *     // create new HTTP client</span></div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;<span class="comment"> *     qhttpclient_t *httpclient = qhttpclient(&quot;http://www.qdecoder.org&quot;, 0);</span></div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;<span class="comment"> *     if(httpclient == NULL) return;</span></div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;<span class="comment"> *     // set additional custom headers</span></div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;<span class="comment"> *     qlisttbl_t *reqheaders = qlisttbl(QLISTTBL_UNIQUE | QLISTTBL_CASEINSENSITIVE);</span></div>
+<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;<span class="comment"> *     qlisttbl_t *resheaders = qlisttbl(QLISTTBL_UNIQUE | QLISTTBL_CASEINSENSITIVE);</span></div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;<span class="comment"> *     // send HEAD request</span></div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;<span class="comment"> *     int nRescode = 0;</span></div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;<span class="comment"> *     char *pszEncPath = qEncodeUrl(&quot;/img/qdecoder.png&quot;);</span></div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;<span class="comment"> *     bool bRet = httpclient-&gt;head(httpclient, pszEncPath, &amp;nRescode,</span></div>
+<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;<span class="comment"> *                                 reqheaders, resheaders);</span></div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;<span class="comment"> *     free(pszEncPath);</span></div>
+<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;<span class="comment"> *     // to print out request, response headers</span></div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;<span class="comment"> *     reqheaders-&gt;debug(reqheaders, stdout);</span></div>
+<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;<span class="comment"> *     resheaders-&gt;debug(resheaders, stdout);</span></div>
+<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;<span class="comment"> *     // check results</span></div>
+<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;<span class="comment"> *     if(bRet == false) {</span></div>
+<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;<span class="comment"> *       ...(error occured)...</span></div>
+<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;<span class="comment"> *     }</span></div>
+<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;<span class="comment"> *     // free resources</span></div>
+<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;<span class="comment"> *     httpclient-&gt;free(httpclient);</span></div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;<span class="comment"> *     reqheaders-&gt;free(reqheaders);</span></div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;<span class="comment"> *     resheaders-&gt;free(resheaders);</span></div>
+<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00553"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#ac3c34055be115314ffe7f18c3d19eb54">  553</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="qhttpclient_8c.html#ac3c34055be115314ffe7f18c3d19eb54" title="qhttpclient-&gt;head(): Sends a HEAD request.">head</a>(qhttpclient_t *client, <span class="keyword">const</span> <span class="keywordtype">char</span> *uri, <span class="keywordtype">int</span> *rescode,</div>
 <div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;                 qlisttbl_t *reqheaders, qlisttbl_t *resheaders) {</div>
 <div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;</div>
@@ -451,7 +664,93 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;}</div>
-<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;</div>
+<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;<span class="comment"> * qhttpclient-&gt;get(): Downloads a file from the remote host using GET</span></div>
+<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;<span class="comment"> * method.</span></div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;<span class="comment"> * @param client    qhttpclient object pointer.</span></div>
+<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;<span class="comment"> * @param uri       URL encoded remote URI for downloading file.</span></div>
+<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;<span class="comment"> *                  (&quot;/path&quot; or &quot;http://.../path&quot;)</span></div>
+<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;<span class="comment"> * @param fd        opened file descriptor for writing.</span></div>
+<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;<span class="comment"> * @param savesize  if not NULL, the length of stored bytes will be stored.</span></div>
+<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;<span class="comment"> *                  (can be NULL)</span></div>
+<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;<span class="comment"> * @param rescode   if not NULL, remote response code will be stored.</span></div>
+<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;<span class="comment"> *                  (can be NULL)</span></div>
+<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;<span class="comment"> * @param reqheaders    qlisttbl_t pointer which contains additional user</span></div>
+<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;<span class="comment"> *                      request headers. (can be NULL)</span></div>
+<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;<span class="comment"> * @param resheaders    qlisttbl_t pointer for storing response headers.</span></div>
+<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160;<span class="comment"> *                      (can be NULL)</span></div>
+<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;<span class="comment"> * @param callback  set user call-back function. (can be NULL)</span></div>
+<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;<span class="comment"> * @param userdata  set user data for call-back. (can be NULL)</span></div>
+<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;<span class="comment"> * @return true if successful(200 OK), otherwise returns false</span></div>
+<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;<span class="comment"> *   struct userdata {</span></div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;<span class="comment"> *     ...</span></div>
+<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;<span class="comment"> *   };</span></div>
+<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;<span class="comment"> *   static bool callback(void *userdata, off_t sentbytes) {</span></div>
+<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;<span class="comment"> *     struct userdata *pMydata = (struct userdata*)userdata;</span></div>
+<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;<span class="comment"> *     ...(codes)...</span></div>
+<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;<span class="comment"> *     if(need_to_cancel) return false; // stop file uploading immediately</span></div>
+<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;<span class="comment"> *     return true;</span></div>
+<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;<span class="comment"> *   main() {</span></div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;<span class="comment"> *     // create new HTTP client</span></div>
+<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;<span class="comment"> *     qhttpclient_t *httpclient = qhttpclient(&quot;http://www.qdecoder.org&quot;, 0);</span></div>
+<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;<span class="comment"> *     if(httpclient == NULL) return;</span></div>
+<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;<span class="comment"> *     // open file</span></div>
+<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;<span class="comment"> *     int nFd = open(&quot;/tmp/test.data&quot;, O_WRONLY | O_CREAT, 0644);</span></div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;<span class="comment"> *     // set additional custom headers</span></div>
+<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;<span class="comment"> *     qlisttbl_t *reqheaders = qlisttbl(QLISTTBL_UNIQUE | QLISTTBL_CASEINSENSITIVE);</span></div>
+<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;<span class="comment"> *     qlisttbl_t *resheaders = qlisttbl(QLISTTBL_UNIQUE | QLISTTBL_CASEINSENSITIVE);</span></div>
+<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;<span class="comment"> *     // set userdata</span></div>
+<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;<span class="comment"> *     struct userdata mydata;</span></div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;<span class="comment"> *     ...(codes)...</span></div>
+<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;<span class="comment"> *     // send file</span></div>
+<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;<span class="comment"> *     int nRescode = 0;</span></div>
+<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;<span class="comment"> *     off_t nSavesize = 0;</span></div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;<span class="comment"> *     char *pszEncPath = qEncodeUrl(&quot;/img/qdecoder.png&quot;);</span></div>
+<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;<span class="comment"> *     bool bRet = httpclient-&gt;get(httpclient, pszEncPath, nFd, &amp;nSavesize,</span></div>
+<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;<span class="comment"> *                                 &amp;nRescode,</span></div>
+<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;<span class="comment"> *                                 reqheaders, resheaders,</span></div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;<span class="comment"> *                                 callback, (void*)&amp;mydata);</span></div>
+<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;<span class="comment"> *     free(pszEncPath);</span></div>
+<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;<span class="comment"> *     // to print out request, response headers</span></div>
+<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;<span class="comment"> *     reqheaders-&gt;debug(reqheaders, stdout);</span></div>
+<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;<span class="comment"> *     resheaders-&gt;debug(resheaders, stdout);</span></div>
+<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;<span class="comment"> *     // check results</span></div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;<span class="comment"> *     if(bRet == false) {</span></div>
+<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;<span class="comment"> *       ...(error occured)...</span></div>
+<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;<span class="comment"> *     }</span></div>
+<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;<span class="comment"> *     // free resources</span></div>
+<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;<span class="comment"> *     httpclient-&gt;free(httpclient);</span></div>
+<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;<span class="comment"> *     reqheaders-&gt;free(reqheaders);</span></div>
+<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;<span class="comment"> *     resheaders-&gt;free(resheaders);</span></div>
+<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;<span class="comment"> *     close(nFd);</span></div>
+<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;<span class="comment"> *  The call-back function will be called peridically whenever it send data as</span></div>
+<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;<span class="comment"> *  much as MAX_ATOMIC_DATA_SIZE. To stop uploading, return false in the</span></div>
+<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;<span class="comment"> *  call-back function, then PUT process will be stopped immediately.</span></div>
+<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;<span class="comment"> *  If a connection was not opened, it will open a connection automatically.</span></div>
+<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;<span class="comment"> *  The &quot;rescode&quot; will be set if it received any response code from a remote</span></div>
+<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;<span class="comment"> *  server even though it returns false.</span></div>
+<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00689"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#af16a3eb0912e8b5d4896466632d9c843">  689</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <span class="keyword">get</span>(qhttpclient_t *client, <span class="keyword">const</span> <span class="keywordtype">char</span> *uri, <span class="keywordtype">int</span> fd, off_t *savesize,</div>
 <div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;                <span class="keywordtype">int</span> *rescode, qlisttbl_t *reqheaders, qlisttbl_t *resheaders,</div>
 <div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;                bool (*callback)(<span class="keywordtype">void</span> *userdata, off_t recvbytes),</div>
@@ -597,7 +896,93 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;</div>
 <div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160;}</div>
-<div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;</div>
+<div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;<span class="comment"> * qhttpclient-&gt;put(): Uploads a file to the remote host using PUT method.</span></div>
+<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;<span class="comment"> * @param client    qhttpclient object pointer.</span></div>
+<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;<span class="comment"> * @param uri       remote URL for uploading file.</span></div>
+<div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;<span class="comment"> *                  (&quot;/path&quot; or &quot;http://.../path&quot;)</span></div>
+<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;<span class="comment"> * @param fd        opened file descriptor for reading.</span></div>
+<div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;<span class="comment"> * @param length    send size.</span></div>
+<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;<span class="comment"> * @param rescode   if not NULL, remote response code will be stored.</span></div>
+<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;<span class="comment"> *                  (can be NULL)</span></div>
+<div class="line"><a name="l00845"></a><span class="lineno">  845</span>&#160;<span class="comment"> * @param reqheaders    qlisttbl_t pointer which contains additional user</span></div>
+<div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160;<span class="comment"> *                      request headers. (can be NULL)</span></div>
+<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;<span class="comment"> * @param resheaders    qlisttbl_t pointer for storing response headers.</span></div>
+<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160;<span class="comment"> *                      (can be NULL)</span></div>
+<div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160;<span class="comment"> * @param callback  set user call-back function. (can be NULL)</span></div>
+<div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160;<span class="comment"> * @param userdata  set user data for call-back. (can be NULL)</span></div>
+<div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;<span class="comment"> * @return true if successful(201 Created), otherwise returns false</span></div>
+<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;<span class="comment"> *   struct userdata {</span></div>
+<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;<span class="comment"> *     ...</span></div>
+<div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;<span class="comment"> *   };</span></div>
+<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;<span class="comment"> *   static bool callback(void *userdata, off_t sentbytes) {</span></div>
+<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;<span class="comment"> *     struct userdata *pMydata = (struct userdata*)userdata;</span></div>
+<div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;<span class="comment"> *     ...(codes)...</span></div>
+<div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160;<span class="comment"> *     if(need_to_cancel) return false; // stop file uploading immediately</span></div>
+<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;<span class="comment"> *     return true;</span></div>
+<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;<span class="comment"> *   main() {</span></div>
+<div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160;<span class="comment"> *     // create new HTTP client</span></div>
+<div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160;<span class="comment"> *     qhttpclient_t *httpclient = qhttpclient(&quot;http://www.qdecoder.org&quot;, 0);</span></div>
+<div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;<span class="comment"> *     if(httpclient == NULL) return;</span></div>
+<div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;<span class="comment"> *     // open file</span></div>
+<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;<span class="comment"> *     int nFd = open(...);</span></div>
+<div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;<span class="comment"> *     off_t nFileSize = ...;</span></div>
+<div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;<span class="comment"> *     char *pFileMd5sum = ...;</span></div>
+<div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;<span class="comment"> *     time_t nFileDate = ...;</span></div>
+<div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00877"></a><span class="lineno">  877</span>&#160;<span class="comment"> *     // set additional custom headers</span></div>
+<div class="line"><a name="l00878"></a><span class="lineno">  878</span>&#160;<span class="comment"> *     qlisttbl_t *reqheaders = qlisttbl(QLISTTBL_UNIQUE | QLISTTBL_CASEINSENSITIVE);</span></div>
+<div class="line"><a name="l00879"></a><span class="lineno">  879</span>&#160;<span class="comment"> *     reqheaders-&gt;putstr(reqheaders, &quot;X-FILE-MD5SUM&quot;, pFileMd5sum);</span></div>
+<div class="line"><a name="l00880"></a><span class="lineno">  880</span>&#160;<span class="comment"> *     reqheaders-&gt;putInt(reqheaders, &quot;X-FILE-DATE&quot;, nFileDate);</span></div>
+<div class="line"><a name="l00881"></a><span class="lineno">  881</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00882"></a><span class="lineno">  882</span>&#160;<span class="comment"> *     // set userdata</span></div>
+<div class="line"><a name="l00883"></a><span class="lineno">  883</span>&#160;<span class="comment"> *     struct userdata mydata;</span></div>
+<div class="line"><a name="l00884"></a><span class="lineno">  884</span>&#160;<span class="comment"> *     ...(codes)...</span></div>
+<div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00886"></a><span class="lineno">  886</span>&#160;<span class="comment"> *     // send file</span></div>
+<div class="line"><a name="l00887"></a><span class="lineno">  887</span>&#160;<span class="comment"> *     int nRescode = 0;</span></div>
+<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;<span class="comment"> *     qlisttbl_t *resheaders = qlisttbl(QLISTTBL_UNIQUE | QLISTTBL_CASEINSENSITIVE);</span></div>
+<div class="line"><a name="l00889"></a><span class="lineno">  889</span>&#160;<span class="comment"> *     bool bRet = httpclient-&gt;put(httpclient,</span></div>
+<div class="line"><a name="l00890"></a><span class="lineno">  890</span>&#160;<span class="comment"> *                                 &quot;/img/qdecoder.png&quot;, nFd, nFileSize,</span></div>
+<div class="line"><a name="l00891"></a><span class="lineno">  891</span>&#160;<span class="comment"> *                                 &amp;nRescode,</span></div>
+<div class="line"><a name="l00892"></a><span class="lineno">  892</span>&#160;<span class="comment"> *                                 reqheaders, resheaders,</span></div>
+<div class="line"><a name="l00893"></a><span class="lineno">  893</span>&#160;<span class="comment"> *                                 callback, (void*)&amp;mydata);</span></div>
+<div class="line"><a name="l00894"></a><span class="lineno">  894</span>&#160;<span class="comment"> *     // to print out request, response headers</span></div>
+<div class="line"><a name="l00895"></a><span class="lineno">  895</span>&#160;<span class="comment"> *     reqheaders-&gt;debug(reqheaders, stdout);</span></div>
+<div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;<span class="comment"> *     resheaders-&gt;debug(resheaders, stdout);</span></div>
+<div class="line"><a name="l00897"></a><span class="lineno">  897</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00898"></a><span class="lineno">  898</span>&#160;<span class="comment"> *     // check results</span></div>
+<div class="line"><a name="l00899"></a><span class="lineno">  899</span>&#160;<span class="comment"> *     if(bRet == false) {</span></div>
+<div class="line"><a name="l00900"></a><span class="lineno">  900</span>&#160;<span class="comment"> *       ...(error occured)...</span></div>
+<div class="line"><a name="l00901"></a><span class="lineno">  901</span>&#160;<span class="comment"> *     }</span></div>
+<div class="line"><a name="l00902"></a><span class="lineno">  902</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00903"></a><span class="lineno">  903</span>&#160;<span class="comment"> *     // free resources</span></div>
+<div class="line"><a name="l00904"></a><span class="lineno">  904</span>&#160;<span class="comment"> *     httpclient-&gt;free(httpclient);</span></div>
+<div class="line"><a name="l00905"></a><span class="lineno">  905</span>&#160;<span class="comment"> *     reqheaders-&gt;free(reqheaders);</span></div>
+<div class="line"><a name="l00906"></a><span class="lineno">  906</span>&#160;<span class="comment"> *     resheaders-&gt;free(resheaders);</span></div>
+<div class="line"><a name="l00907"></a><span class="lineno">  907</span>&#160;<span class="comment"> *     close(nFd);</span></div>
+<div class="line"><a name="l00908"></a><span class="lineno">  908</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l00909"></a><span class="lineno">  909</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00910"></a><span class="lineno">  910</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00911"></a><span class="lineno">  911</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00912"></a><span class="lineno">  912</span>&#160;<span class="comment"> *  The call-back function will be called peridically whenever it send data as</span></div>
+<div class="line"><a name="l00913"></a><span class="lineno">  913</span>&#160;<span class="comment"> *  much as MAX_ATOMIC_DATA_SIZE. To stop uploading, return false in the</span></div>
+<div class="line"><a name="l00914"></a><span class="lineno">  914</span>&#160;<span class="comment"> *  call-back function, then PUT process will be stopped immediately.</span></div>
+<div class="line"><a name="l00915"></a><span class="lineno">  915</span>&#160;<span class="comment"> *  If a connection was not opened, it will open a connection automatically.</span></div>
+<div class="line"><a name="l00916"></a><span class="lineno">  916</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00917"></a><span class="lineno">  917</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00918"></a><span class="lineno">  918</span>&#160;<span class="comment"> *  The &quot;rescode&quot; will be set if it received any response code from a remote</span></div>
+<div class="line"><a name="l00919"></a><span class="lineno">  919</span>&#160;<span class="comment"> *  server even though it returns false.</span></div>
+<div class="line"><a name="l00920"></a><span class="lineno">  920</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00921"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#ae9ac3bd43c11509c0cbd8fb284bf13eb">  921</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="qhttpclient_8c.html#ae9ac3bd43c11509c0cbd8fb284bf13eb" title="qhttpclient-&gt;put(): Uploads a file to the remote host using PUT method.">put</a>(qhttpclient_t *client, <span class="keyword">const</span> <span class="keywordtype">char</span> *uri, <span class="keywordtype">int</span> fd, off_t length,</div>
 <div class="line"><a name="l00922"></a><span class="lineno">  922</span>&#160;                <span class="keywordtype">int</span> *rescode, qlisttbl_t *reqheaders, qlisttbl_t *resheaders,</div>
 <div class="line"><a name="l00923"></a><span class="lineno">  923</span>&#160;                <span class="keywordtype">bool</span> (*callback)(<span class="keywordtype">void</span> *userdata, off_t sentbytes),</div>
@@ -725,7 +1110,52 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l01045"></a><span class="lineno"> 1045</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l01046"></a><span class="lineno"> 1046</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01047"></a><span class="lineno"> 1047</span>&#160;}</div>
-<div class="line"><a name="l01048"></a><span class="lineno"> 1048</span>&#160;</div>
+<div class="line"><a name="l01048"></a><span class="lineno"> 1048</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l01049"></a><span class="lineno"> 1049</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l01050"></a><span class="lineno"> 1050</span>&#160;<span class="comment"> * qhttpclient-&gt;cmd(): Sends a custom request(method) to the remote host</span></div>
+<div class="line"><a name="l01051"></a><span class="lineno"> 1051</span>&#160;<span class="comment"> * and reads it&#39;s response.</span></div>
+<div class="line"><a name="l01052"></a><span class="lineno"> 1052</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01053"></a><span class="lineno"> 1053</span>&#160;<span class="comment"> * @param client    qhttpclient object pointer.</span></div>
+<div class="line"><a name="l01054"></a><span class="lineno"> 1054</span>&#160;<span class="comment"> * @param method    method name.</span></div>
+<div class="line"><a name="l01055"></a><span class="lineno"> 1055</span>&#160;<span class="comment"> * @param uri       remote URL for uploading file.</span></div>
+<div class="line"><a name="l01056"></a><span class="lineno"> 1056</span>&#160;<span class="comment"> *                  (&quot;/path&quot; or &quot;http://.../path&quot;)</span></div>
+<div class="line"><a name="l01057"></a><span class="lineno"> 1057</span>&#160;<span class="comment"> * @param data      data to send. (can be NULL)</span></div>
+<div class="line"><a name="l01058"></a><span class="lineno"> 1058</span>&#160;<span class="comment"> * @param size      data size.</span></div>
+<div class="line"><a name="l01059"></a><span class="lineno"> 1059</span>&#160;<span class="comment"> * @param rescode   if not NULL, remote response code will be stored.</span></div>
+<div class="line"><a name="l01060"></a><span class="lineno"> 1060</span>&#160;<span class="comment"> *                  (can be NULL)</span></div>
+<div class="line"><a name="l01061"></a><span class="lineno"> 1061</span>&#160;<span class="comment"> * @param contentslength if not NULL, the contents length will be stored.</span></div>
+<div class="line"><a name="l01062"></a><span class="lineno"> 1062</span>&#160;<span class="comment"> *                       (can be NULL)</span></div>
+<div class="line"><a name="l01063"></a><span class="lineno"> 1063</span>&#160;<span class="comment"> * @param reqheaders    qlisttbl_t pointer which contains additional user</span></div>
+<div class="line"><a name="l01064"></a><span class="lineno"> 1064</span>&#160;<span class="comment"> *                      request headers. (can be NULL)</span></div>
+<div class="line"><a name="l01065"></a><span class="lineno"> 1065</span>&#160;<span class="comment"> * @param resheaders    qlisttbl_t pointer for storing response headers.</span></div>
+<div class="line"><a name="l01066"></a><span class="lineno"> 1066</span>&#160;<span class="comment"> *                      (can be NULL)</span></div>
+<div class="line"><a name="l01067"></a><span class="lineno"> 1067</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01068"></a><span class="lineno"> 1068</span>&#160;<span class="comment"> * @return malloced content data if successful, otherwise returns NULL</span></div>
+<div class="line"><a name="l01069"></a><span class="lineno"> 1069</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01070"></a><span class="lineno"> 1070</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l01071"></a><span class="lineno"> 1071</span>&#160;<span class="comment"> *   int nResCode;</span></div>
+<div class="line"><a name="l01072"></a><span class="lineno"> 1072</span>&#160;<span class="comment"> *   size_t nContentsLength;</span></div>
+<div class="line"><a name="l01073"></a><span class="lineno"> 1073</span>&#160;<span class="comment"> *   void *contents = httpclient-&gt;cmd(httpclient, &quot;DELETE&quot; &quot;/img/qdecoder.png&quot;,</span></div>
+<div class="line"><a name="l01074"></a><span class="lineno"> 1074</span>&#160;<span class="comment"> *                                    NULL, 0</span></div>
+<div class="line"><a name="l01075"></a><span class="lineno"> 1075</span>&#160;<span class="comment"> *                                    &amp;nRescode, &amp;nContentsLength</span></div>
+<div class="line"><a name="l01076"></a><span class="lineno"> 1076</span>&#160;<span class="comment"> *                                    NULL, NULL);</span></div>
+<div class="line"><a name="l01077"></a><span class="lineno"> 1077</span>&#160;<span class="comment"> *   if(contents == NULL) {</span></div>
+<div class="line"><a name="l01078"></a><span class="lineno"> 1078</span>&#160;<span class="comment"> *     ...(error occured)...</span></div>
+<div class="line"><a name="l01079"></a><span class="lineno"> 1079</span>&#160;<span class="comment"> *   } else {</span></div>
+<div class="line"><a name="l01080"></a><span class="lineno"> 1080</span>&#160;<span class="comment"> *     printf(&quot;Response code : %d\n&quot;, nResCode);</span></div>
+<div class="line"><a name="l01081"></a><span class="lineno"> 1081</span>&#160;<span class="comment"> *     printf(&quot;Contents length : %zu\n&quot;, nContentsLength);</span></div>
+<div class="line"><a name="l01082"></a><span class="lineno"> 1082</span>&#160;<span class="comment"> *     printf(&quot;Contents : %s\n&quot;, (char*)contents);  // if contents is printable</span></div>
+<div class="line"><a name="l01083"></a><span class="lineno"> 1083</span>&#160;<span class="comment"> *     free(contents);  // de-allocate</span></div>
+<div class="line"><a name="l01084"></a><span class="lineno"> 1084</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l01085"></a><span class="lineno"> 1085</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l01086"></a><span class="lineno"> 1086</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01087"></a><span class="lineno"> 1087</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l01088"></a><span class="lineno"> 1088</span>&#160;<span class="comment"> *  This store server&#39;s response into memory so if you expect server responses</span></div>
+<div class="line"><a name="l01089"></a><span class="lineno"> 1089</span>&#160;<span class="comment"> *  large amount of data, consider to use sendrequest() and readresponse()</span></div>
+<div class="line"><a name="l01090"></a><span class="lineno"> 1090</span>&#160;<span class="comment"> *  instead of using this. The returning malloced content will be allocated</span></div>
+<div class="line"><a name="l01091"></a><span class="lineno"> 1091</span>&#160;<span class="comment"> *  +1 byte than actual content size &#39;contentslength&#39; and will be null</span></div>
+<div class="line"><a name="l01092"></a><span class="lineno"> 1092</span>&#160;<span class="comment"> *  terminated.</span></div>
+<div class="line"><a name="l01093"></a><span class="lineno"> 1093</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l01094"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#af152fd3b6a32a801dc70a03119b13154"> 1094</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> *<a class="code" href="qhttpclient_8c.html#af152fd3b6a32a801dc70a03119b13154" title="qhttpclient-&gt;cmd(): Sends a custom request(method) to the remote host and reads it&#39;s response...">cmd</a>(qhttpclient_t *client, <span class="keyword">const</span> <span class="keywordtype">char</span> *method, <span class="keyword">const</span> <span class="keywordtype">char</span> *uri,</div>
 <div class="line"><a name="l01095"></a><span class="lineno"> 1095</span>&#160;                 <span class="keywordtype">void</span> *data, <span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#aa309538c94c6fb98c6cedf81df24f81e" title="qlist-&gt;size(): Returns the number of elements in this list.">size</a>, <span class="keywordtype">int</span> *rescode, <span class="keywordtype">size_t</span> *contentslength,</div>
 <div class="line"><a name="l01096"></a><span class="lineno"> 1096</span>&#160;                 qlisttbl_t *reqheaders, qlisttbl_t *resheaders) {</div>
@@ -797,7 +1227,30 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l01162"></a><span class="lineno"> 1162</span>&#160;</div>
 <div class="line"><a name="l01163"></a><span class="lineno"> 1163</span>&#160;    <span class="keywordflow">return</span> content;</div>
 <div class="line"><a name="l01164"></a><span class="lineno"> 1164</span>&#160;}</div>
-<div class="line"><a name="l01165"></a><span class="lineno"> 1165</span>&#160;</div>
+<div class="line"><a name="l01165"></a><span class="lineno"> 1165</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l01166"></a><span class="lineno"> 1166</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l01167"></a><span class="lineno"> 1167</span>&#160;<span class="comment"> * qhttpclient-&gt;sendrequest(): Sends a HTTP request to the remote host.</span></div>
+<div class="line"><a name="l01168"></a><span class="lineno"> 1168</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01169"></a><span class="lineno"> 1169</span>&#160;<span class="comment"> * @param client    qhttpclient object pointer</span></div>
+<div class="line"><a name="l01170"></a><span class="lineno"> 1170</span>&#160;<span class="comment"> * @param method    HTTP method name</span></div>
+<div class="line"><a name="l01171"></a><span class="lineno"> 1171</span>&#160;<span class="comment"> * @param uri       URI string for the method. (&quot;/path&quot; or &quot;http://.../path&quot;)</span></div>
+<div class="line"><a name="l01172"></a><span class="lineno"> 1172</span>&#160;<span class="comment"> * @param reqheaders    qlisttbl_t pointer which contains additional user</span></div>
+<div class="line"><a name="l01173"></a><span class="lineno"> 1173</span>&#160;<span class="comment"> *                      request headers. (can be NULL)</span></div>
+<div class="line"><a name="l01174"></a><span class="lineno"> 1174</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01175"></a><span class="lineno"> 1175</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false</span></div>
+<div class="line"><a name="l01176"></a><span class="lineno"> 1176</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01177"></a><span class="lineno"> 1177</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l01178"></a><span class="lineno"> 1178</span>&#160;<span class="comment"> *  Default headers(Host, User-Agent, Connection) will be used if reqheaders</span></div>
+<div class="line"><a name="l01179"></a><span class="lineno"> 1179</span>&#160;<span class="comment"> *  does not have those headers in it.</span></div>
+<div class="line"><a name="l01180"></a><span class="lineno"> 1180</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01181"></a><span class="lineno"> 1181</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l01182"></a><span class="lineno"> 1182</span>&#160;<span class="comment"> *   qlisttbl_t *reqheaders = qlisttbl(QLISTTBL_UNIQUE | QLISTTBL_CASEINSENSITIVE);</span></div>
+<div class="line"><a name="l01183"></a><span class="lineno"> 1183</span>&#160;<span class="comment"> *   reqheaders-&gt;putstr(reqheaders,  &quot;Date&quot;, qTimeGetGmtStaticStr(0), true);</span></div>
+<div class="line"><a name="l01184"></a><span class="lineno"> 1184</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01185"></a><span class="lineno"> 1185</span>&#160;<span class="comment"> *   httpclient-&gt;sendrequest(client,</span></div>
+<div class="line"><a name="l01186"></a><span class="lineno"> 1186</span>&#160;<span class="comment"> *                           &quot;DELETE&quot;, &quot;/img/qdecoder.png&quot;, reqheaders);</span></div>
+<div class="line"><a name="l01187"></a><span class="lineno"> 1187</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l01188"></a><span class="lineno"> 1188</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l01189"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#a1d31e08f7bc114b63cd3140f5f8dc259"> 1189</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="qhttpclient_8c.html#a1d31e08f7bc114b63cd3140f5f8dc259" title="qhttpclient-&gt;sendrequest(): Sends a HTTP request to the remote host.">sendrequest</a>(qhttpclient_t *client, <span class="keyword">const</span> <span class="keywordtype">char</span> *method,</div>
 <div class="line"><a name="l01190"></a><span class="lineno"> 1190</span>&#160;                        <span class="keyword">const</span> <span class="keywordtype">char</span> *uri, qlisttbl_t *reqheaders) {</div>
 <div class="line"><a name="l01191"></a><span class="lineno"> 1191</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="qhttpclient_8c.html#aaab09f1f3ab6486633b0ea1c0fd65cd2" title="qhttpclient-&gt;open(): Opens a connection to the remote host.">open_</a>(client) == <span class="keyword">false</span>) {</div>
@@ -866,7 +1319,37 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l01254"></a><span class="lineno"> 1254</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l01255"></a><span class="lineno"> 1255</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01256"></a><span class="lineno"> 1256</span>&#160;}</div>
-<div class="line"><a name="l01257"></a><span class="lineno"> 1257</span>&#160;</div>
+<div class="line"><a name="l01257"></a><span class="lineno"> 1257</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l01258"></a><span class="lineno"> 1258</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;<span class="comment"> * qhttpclient-&gt;readresponse(): Reads HTTP response header from the</span></div>
+<div class="line"><a name="l01260"></a><span class="lineno"> 1260</span>&#160;<span class="comment"> * remote host.</span></div>
+<div class="line"><a name="l01261"></a><span class="lineno"> 1261</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;<span class="comment"> * @param client        qhttpclient object pointer</span></div>
+<div class="line"><a name="l01263"></a><span class="lineno"> 1263</span>&#160;<span class="comment"> * @param resheaders    qlisttbl_t pointer for storing response headers.</span></div>
+<div class="line"><a name="l01264"></a><span class="lineno"> 1264</span>&#160;<span class="comment"> *                      (can be NULL)</span></div>
+<div class="line"><a name="l01265"></a><span class="lineno"> 1265</span>&#160;<span class="comment"> * @param contentlength length of content body(or -1 for chunked transfer</span></div>
+<div class="line"><a name="l01266"></a><span class="lineno"> 1266</span>&#160;<span class="comment"> *                      encoding) will be stored. (can be NULL)</span></div>
+<div class="line"><a name="l01267"></a><span class="lineno"> 1267</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01268"></a><span class="lineno"> 1268</span>&#160;<span class="comment"> * @return numeric HTTP response code if successful, otherwise returns 0.</span></div>
+<div class="line"><a name="l01269"></a><span class="lineno"> 1269</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01270"></a><span class="lineno"> 1270</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l01271"></a><span class="lineno"> 1271</span>&#160;<span class="comment"> *   // send request</span></div>
+<div class="line"><a name="l01272"></a><span class="lineno"> 1272</span>&#160;<span class="comment"> *   httpclient-&gt;sendrequest(client, &quot;DELETE&quot;, &quot;/img/qdecoder.png&quot;, NULL);</span></div>
+<div class="line"><a name="l01273"></a><span class="lineno"> 1273</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01274"></a><span class="lineno"> 1274</span>&#160;<span class="comment"> *   // read response</span></div>
+<div class="line"><a name="l01275"></a><span class="lineno"> 1275</span>&#160;<span class="comment"> *   qlisttbl_t *resheaders = qlisttbl(QLISTTBL_UNIQUE | QLISTTBL_CASEINSENSITIVE);</span></div>
+<div class="line"><a name="l01276"></a><span class="lineno"> 1276</span>&#160;<span class="comment"> *   off_t clength;</span></div>
+<div class="line"><a name="l01277"></a><span class="lineno"> 1277</span>&#160;<span class="comment"> *   int rescode = httpclient-&gt;readresponse(client, resheaders, &amp;clength);</span></div>
+<div class="line"><a name="l01278"></a><span class="lineno"> 1278</span>&#160;<span class="comment"> *   if(clength &gt; 0) {</span></div>
+<div class="line"><a name="l01279"></a><span class="lineno"> 1279</span>&#160;<span class="comment"> *     // read &amp; throw out a content. don&#39;t need content</span></div>
+<div class="line"><a name="l01280"></a><span class="lineno"> 1280</span>&#160;<span class="comment"> *     httpclient-&gt;read(client, NULL, clength);</span></div>
+<div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l01285"></a><span class="lineno"> 1285</span>&#160;<span class="comment"> *  Data of content body must be read by a application side, if you want to use</span></div>
+<div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;<span class="comment"> *  Keep-Alive session. Please refer qhttpclient-&gt;read().</span></div>
+<div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l01288"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#a865df9ac070a17d0751e1083af770bb1"> 1288</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="qhttpclient_8c.html#a865df9ac070a17d0751e1083af770bb1" title="qhttpclient-&gt;readresponse(): Reads HTTP response header from the remote host.">readresponse</a>(qhttpclient_t *client, qlisttbl_t *resheaders,</div>
 <div class="line"><a name="l01289"></a><span class="lineno"> 1289</span>&#160;                        off_t *contentlength) {</div>
 <div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160;    <span class="keywordflow">if</span> (contentlength != NULL) {</div>
@@ -930,7 +1413,22 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l01348"></a><span class="lineno"> 1348</span>&#160;</div>
 <div class="line"><a name="l01349"></a><span class="lineno"> 1349</span>&#160;    <span class="keywordflow">return</span> rescode;</div>
 <div class="line"><a name="l01350"></a><span class="lineno"> 1350</span>&#160;}</div>
-<div class="line"><a name="l01351"></a><span class="lineno"> 1351</span>&#160;</div>
+<div class="line"><a name="l01351"></a><span class="lineno"> 1351</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l01352"></a><span class="lineno"> 1352</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l01353"></a><span class="lineno"> 1353</span>&#160;<span class="comment"> * qhttpclient-&gt;gets(): Reads a text line from a HTTP/HTTPS stream.</span></div>
+<div class="line"><a name="l01354"></a><span class="lineno"> 1354</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01355"></a><span class="lineno"> 1355</span>&#160;<span class="comment"> * @param   client      qhttpclient object pointer</span></div>
+<div class="line"><a name="l01356"></a><span class="lineno"> 1356</span>&#160;<span class="comment"> * @param   buf         data buffer pointer</span></div>
+<div class="line"><a name="l01357"></a><span class="lineno"> 1357</span>&#160;<span class="comment"> * @param   bufsize     buffer size</span></div>
+<div class="line"><a name="l01358"></a><span class="lineno"> 1358</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01359"></a><span class="lineno"> 1359</span>&#160;<span class="comment"> * @return the number of bytes read from file descriptor if successful,</span></div>
+<div class="line"><a name="l01360"></a><span class="lineno"> 1360</span>&#160;<span class="comment"> *         otherwise returns -1.</span></div>
+<div class="line"><a name="l01361"></a><span class="lineno"> 1361</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01362"></a><span class="lineno"> 1362</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l01363"></a><span class="lineno"> 1363</span>&#160;<span class="comment"> *  Be sure the return value does not mean the length of actual stored data.</span></div>
+<div class="line"><a name="l01364"></a><span class="lineno"> 1364</span>&#160;<span class="comment"> *  It means how many bytes are readed from the file descriptor, so the new-line</span></div>
+<div class="line"><a name="l01365"></a><span class="lineno"> 1365</span>&#160;<span class="comment"> *  characters will be counted, but not be stored.</span></div>
+<div class="line"><a name="l01366"></a><span class="lineno"> 1366</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l01367"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#ade555b391a0ff83b074eb16a5ba2192f"> 1367</a></span>&#160;<span class="keyword">static</span> ssize_t <a class="code" href="qhttpclient_8c.html#ade555b391a0ff83b074eb16a5ba2192f" title="qhttpclient-&gt;gets(): Reads a text line from a HTTP/HTTPS stream.">gets_</a>(qhttpclient_t *client, <span class="keywordtype">char</span> *buf, <span class="keywordtype">size_t</span> bufsize) {</div>
 <div class="line"><a name="l01368"></a><span class="lineno"> 1368</span>&#160;<span class="preprocessor">#ifdef ENABLE_OPENSSL</span></div>
 <div class="line"><a name="l01369"></a><span class="lineno"> 1369</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (client-&gt;ssl == NULL) {</div>
@@ -975,7 +1473,26 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l01408"></a><span class="lineno"> 1408</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">return</span> <a class="code" href="qio_8c.html#ab7ce64cc8cd837de47c91d1bdcb17cf5" title="Read a line from a file descriptor into the buffer pointed to until either a terminating newline or E...">qio_gets</a>(client-&gt;socket, buf, bufsize, client-&gt;timeoutms);</div>
 <div class="line"><a name="l01409"></a><span class="lineno"> 1409</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l01410"></a><span class="lineno"> 1410</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l01411"></a><span class="lineno"> 1411</span>&#160;</div>
+<div class="line"><a name="l01411"></a><span class="lineno"> 1411</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160;<span class="comment"> * qhttpclient-&gt;read(): Reads data from a HTTP/HTTPS stream.</span></div>
+<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160;<span class="comment"> * @param client    qhttpclient object pointer.</span></div>
+<div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160;<span class="comment"> * @param buf       a buffer pointer for storing content. (can be NULL, then</span></div>
+<div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160;<span class="comment"> *                  read &amp; throw out content)</span></div>
+<div class="line"><a name="l01418"></a><span class="lineno"> 1418</span>&#160;<span class="comment"> * @param length    content size to read.</span></div>
+<div class="line"><a name="l01419"></a><span class="lineno"> 1419</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01420"></a><span class="lineno"> 1420</span>&#160;<span class="comment"> * @return number of bytes readed</span></div>
+<div class="line"><a name="l01421"></a><span class="lineno"> 1421</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01422"></a><span class="lineno"> 1422</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l01423"></a><span class="lineno"> 1423</span>&#160;<span class="comment"> *   off_t clength = 0;</span></div>
+<div class="line"><a name="l01424"></a><span class="lineno"> 1424</span>&#160;<span class="comment"> *   int resno = client-&gt;readresponse(client, NULL, &amp;clength);</span></div>
+<div class="line"><a name="l01425"></a><span class="lineno"> 1425</span>&#160;<span class="comment"> *   if(clength &gt; 0) {</span></div>
+<div class="line"><a name="l01426"></a><span class="lineno"> 1426</span>&#160;<span class="comment"> *     void *buf = malloc(clength);</span></div>
+<div class="line"><a name="l01427"></a><span class="lineno"> 1427</span>&#160;<span class="comment"> *     client-&gt;read(client, buf, clength);</span></div>
+<div class="line"><a name="l01428"></a><span class="lineno"> 1428</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l01429"></a><span class="lineno"> 1429</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l01430"></a><span class="lineno"> 1430</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l01431"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#a5dd8f813968295a3cfba53c0acaee487"> 1431</a></span>&#160;<span class="keyword">static</span> ssize_t <a class="code" href="qhttpclient_8c.html#a5dd8f813968295a3cfba53c0acaee487" title="qhttpclient-&gt;read(): Reads data from a HTTP/HTTPS stream.">read_</a>(qhttpclient_t *client, <span class="keywordtype">void</span> *buf, <span class="keywordtype">size_t</span> nbytes) {</div>
 <div class="line"><a name="l01432"></a><span class="lineno"> 1432</span>&#160;<span class="preprocessor">#ifdef ENABLE_OPENSSL</span></div>
 <div class="line"><a name="l01433"></a><span class="lineno"> 1433</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (client-&gt;ssl == NULL) {</div>
@@ -1020,7 +1537,16 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l01472"></a><span class="lineno"> 1472</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">return</span> <a class="code" href="qio_8c.html#aa34911362f1793ed1e744d3eb63500db" title="Read from a file descriptor.">qio_read</a>(client-&gt;socket, buf, nbytes, client-&gt;timeoutms);</div>
 <div class="line"><a name="l01473"></a><span class="lineno"> 1473</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l01474"></a><span class="lineno"> 1474</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l01475"></a><span class="lineno"> 1475</span>&#160;</div>
+<div class="line"><a name="l01475"></a><span class="lineno"> 1475</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l01476"></a><span class="lineno"> 1476</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l01477"></a><span class="lineno"> 1477</span>&#160;<span class="comment"> * qhttpclient-&gt;write(): Writes data to a HTTP/HTTPS stream.</span></div>
+<div class="line"><a name="l01478"></a><span class="lineno"> 1478</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01479"></a><span class="lineno"> 1479</span>&#160;<span class="comment"> * @param client    qhttpclient object pointer.</span></div>
+<div class="line"><a name="l01480"></a><span class="lineno"> 1480</span>&#160;<span class="comment"> * @param buf       a data pointer.</span></div>
+<div class="line"><a name="l01481"></a><span class="lineno"> 1481</span>&#160;<span class="comment"> * @param length    content size to write.</span></div>
+<div class="line"><a name="l01482"></a><span class="lineno"> 1482</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01483"></a><span class="lineno"> 1483</span>&#160;<span class="comment"> * @return number of bytes written.</span></div>
+<div class="line"><a name="l01484"></a><span class="lineno"> 1484</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l01485"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#a69254acf43767884d060506b96f5c274"> 1485</a></span>&#160;<span class="keyword">static</span> ssize_t <a class="code" href="qhttpclient_8c.html#a69254acf43767884d060506b96f5c274" title="qhttpclient-&gt;write(): Writes data to a HTTP/HTTPS stream.">write_</a>(qhttpclient_t *client, <span class="keyword">const</span> <span class="keywordtype">void</span> *buf, <span class="keywordtype">size_t</span> nbytes) {</div>
 <div class="line"><a name="l01486"></a><span class="lineno"> 1486</span>&#160;<span class="preprocessor">#ifdef ENABLE_OPENSSL</span></div>
 <div class="line"><a name="l01487"></a><span class="lineno"> 1487</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (client-&gt;ssl == NULL) {</div>
@@ -1054,7 +1580,17 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l01515"></a><span class="lineno"> 1515</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">return</span> <a class="code" href="qio_8c.html#a0645cf0a3bcfc79ee3829012243d46d8" title="Write to a file descriptor.">qio_write</a>(client-&gt;socket, buf, nbytes, -1);</div>
 <div class="line"><a name="l01516"></a><span class="lineno"> 1516</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l01517"></a><span class="lineno"> 1517</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l01518"></a><span class="lineno"> 1518</span>&#160;</div>
+<div class="line"><a name="l01518"></a><span class="lineno"> 1518</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l01519"></a><span class="lineno"> 1519</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l01520"></a><span class="lineno"> 1520</span>&#160;<span class="comment"> * qhttpclient-&gt;recvfile(): Reads data from a HTTP/HTTPS stream and save</span></div>
+<div class="line"><a name="l01521"></a><span class="lineno"> 1521</span>&#160;<span class="comment"> * into a file descriptor.</span></div>
+<div class="line"><a name="l01522"></a><span class="lineno"> 1522</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01523"></a><span class="lineno"> 1523</span>&#160;<span class="comment"> * @param   client      qhttpclient object pointer.</span></div>
+<div class="line"><a name="l01524"></a><span class="lineno"> 1524</span>&#160;<span class="comment"> * @param   fd          output file descriptor</span></div>
+<div class="line"><a name="l01525"></a><span class="lineno"> 1525</span>&#160;<span class="comment"> * @param   nbytes      the number of bytes to read and save.</span></div>
+<div class="line"><a name="l01526"></a><span class="lineno"> 1526</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01527"></a><span class="lineno"> 1527</span>&#160;<span class="comment"> * @return the number of bytes written if successful, otherwise returns -1.</span></div>
+<div class="line"><a name="l01528"></a><span class="lineno"> 1528</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l01529"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#a2036374892fed2d1eff6eee25dcbfd9b"> 1529</a></span>&#160;<span class="keyword">static</span> off_t <a class="code" href="qhttpclient_8c.html#a2036374892fed2d1eff6eee25dcbfd9b" title="qhttpclient-&gt;recvfile(): Reads data from a HTTP/HTTPS stream and save into a file descriptor...">recvfile</a>(qhttpclient_t *client, <span class="keywordtype">int</span> fd, off_t nbytes) {</div>
 <div class="line"><a name="l01530"></a><span class="lineno"> 1530</span>&#160;    <span class="keywordflow">if</span> (nbytes == 0)</div>
 <div class="line"><a name="l01531"></a><span class="lineno"> 1531</span>&#160;        <span class="keywordflow">return</span> 0;</div>
@@ -1091,7 +1627,16 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l01562"></a><span class="lineno"> 1562</span>&#160;        <span class="keywordflow">return</span> total;</div>
 <div class="line"><a name="l01563"></a><span class="lineno"> 1563</span>&#160;    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l01564"></a><span class="lineno"> 1564</span>&#160;}</div>
-<div class="line"><a name="l01565"></a><span class="lineno"> 1565</span>&#160;</div>
+<div class="line"><a name="l01565"></a><span class="lineno"> 1565</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l01566"></a><span class="lineno"> 1566</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l01567"></a><span class="lineno"> 1567</span>&#160;<span class="comment"> * qhttpclient-&gt;sendfile(): Send file data to a HTTP/HTTPS stream.</span></div>
+<div class="line"><a name="l01568"></a><span class="lineno"> 1568</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01569"></a><span class="lineno"> 1569</span>&#160;<span class="comment"> * @param   client      qhttpclient object pointer.</span></div>
+<div class="line"><a name="l01570"></a><span class="lineno"> 1570</span>&#160;<span class="comment"> * @param   fd          input file descriptor</span></div>
+<div class="line"><a name="l01571"></a><span class="lineno"> 1571</span>&#160;<span class="comment"> * @param   nbytes      the number of bytes to read and send.</span></div>
+<div class="line"><a name="l01572"></a><span class="lineno"> 1572</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01573"></a><span class="lineno"> 1573</span>&#160;<span class="comment"> * @return the number of bytes sent if successful, otherwise returns -1.</span></div>
+<div class="line"><a name="l01574"></a><span class="lineno"> 1574</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l01575"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#add20b33d4c87e18756f7023bbc38f22e"> 1575</a></span>&#160;<span class="keyword">static</span> off_t <a class="code" href="qhttpclient_8c.html#add20b33d4c87e18756f7023bbc38f22e" title="qhttpclient-&gt;sendfile(): Send file data to a HTTP/HTTPS stream.">sendfile_</a>(qhttpclient_t *client, <span class="keywordtype">int</span> fd, off_t nbytes) {</div>
 <div class="line"><a name="l01576"></a><span class="lineno"> 1576</span>&#160;    <span class="keywordflow">if</span> (nbytes == 0)</div>
 <div class="line"><a name="l01577"></a><span class="lineno"> 1577</span>&#160;        <span class="keywordflow">return</span> 0;</div>
@@ -1128,7 +1673,18 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l01608"></a><span class="lineno"> 1608</span>&#160;        <span class="keywordflow">return</span> total;</div>
 <div class="line"><a name="l01609"></a><span class="lineno"> 1609</span>&#160;    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l01610"></a><span class="lineno"> 1610</span>&#160;}</div>
-<div class="line"><a name="l01611"></a><span class="lineno"> 1611</span>&#160;</div>
+<div class="line"><a name="l01611"></a><span class="lineno"> 1611</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l01612"></a><span class="lineno"> 1612</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l01613"></a><span class="lineno"> 1613</span>&#160;<span class="comment"> * qhttpclient-&gt;close(): Closes the connection.</span></div>
+<div class="line"><a name="l01614"></a><span class="lineno"> 1614</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01615"></a><span class="lineno"> 1615</span>&#160;<span class="comment"> * @param qhttpclient_t  HTTP object pointer</span></div>
+<div class="line"><a name="l01616"></a><span class="lineno"> 1616</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01617"></a><span class="lineno"> 1617</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false</span></div>
+<div class="line"><a name="l01618"></a><span class="lineno"> 1618</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01619"></a><span class="lineno"> 1619</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l01620"></a><span class="lineno"> 1620</span>&#160;<span class="comment"> *   httpclient-&gt;close(httpclient);</span></div>
+<div class="line"><a name="l01621"></a><span class="lineno"> 1621</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l01622"></a><span class="lineno"> 1622</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l01623"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#a6154b9124c5a57bccfb2dc47c791e555"> 1623</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="qhttpclient_8c.html#a6154b9124c5a57bccfb2dc47c791e555" title="qhttpclient-&gt;close(): Closes the connection.">_close</a>(qhttpclient_t *client) {</div>
 <div class="line"><a name="l01624"></a><span class="lineno"> 1624</span>&#160;    <span class="keywordflow">if</span> (client-&gt;socket &lt; 0)</div>
 <div class="line"><a name="l01625"></a><span class="lineno"> 1625</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
@@ -1166,7 +1722,20 @@ $(document).ready(function(){initNavTree('qhttpclient_8c_source.html','');});
 <div class="line"><a name="l01657"></a><span class="lineno"> 1657</span>&#160;</div>
 <div class="line"><a name="l01658"></a><span class="lineno"> 1658</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l01659"></a><span class="lineno"> 1659</span>&#160;}</div>
-<div class="line"><a name="l01660"></a><span class="lineno"> 1660</span>&#160;</div>
+<div class="line"><a name="l01660"></a><span class="lineno"> 1660</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l01661"></a><span class="lineno"> 1661</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l01662"></a><span class="lineno"> 1662</span>&#160;<span class="comment"> * qhttpclient-&gt;free(): Free object.</span></div>
+<div class="line"><a name="l01663"></a><span class="lineno"> 1663</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01664"></a><span class="lineno"> 1664</span>&#160;<span class="comment"> * @param qhttpclient_t  HTTP object pointer</span></div>
+<div class="line"><a name="l01665"></a><span class="lineno"> 1665</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01666"></a><span class="lineno"> 1666</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l01667"></a><span class="lineno"> 1667</span>&#160;<span class="comment"> *  If the connection was not closed, it will close the connection first prior</span></div>
+<div class="line"><a name="l01668"></a><span class="lineno"> 1668</span>&#160;<span class="comment"> *  to de-allocate object.</span></div>
+<div class="line"><a name="l01669"></a><span class="lineno"> 1669</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l01670"></a><span class="lineno"> 1670</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l01671"></a><span class="lineno"> 1671</span>&#160;<span class="comment"> *   httpclient-&gt;free(httpclient);</span></div>
+<div class="line"><a name="l01672"></a><span class="lineno"> 1672</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l01673"></a><span class="lineno"> 1673</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l01674"></a><span class="lineno"><a class="code" href="qhttpclient_8c.html#a7a0cda760109d998ee40b94b665ef0ca"> 1674</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="qhttpclient_8c.html#a7a0cda760109d998ee40b94b665ef0ca" title="qhttpclient-&gt;free(): Free object.">_free</a>(qhttpclient_t *client) {</div>
 <div class="line"><a name="l01675"></a><span class="lineno"> 1675</span>&#160;    <span class="keywordflow">if</span> (client-&gt;socket &gt;= 0) {</div>
 <div class="line"><a name="l01676"></a><span class="lineno"> 1676</span>&#160;        client-&gt;close(client);</div>
