@@ -34,6 +34,7 @@ All of the deliverable code in qLibc has been dedicated to the public domain by 
   * Rotating File Logger.
   * HTTP client.
   * Database(MySQL) interface.
+  * Token-Bucket.
 
 ## Consistant API Look
 
