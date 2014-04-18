@@ -43,6 +43,8 @@
 extern "C" {
 #endif
 
+extern long qtime_current_milli(void);
+
 extern char *qtime_localtime_strf(char *buf, int size, time_t utctime,
                                   const char *format);
 extern char *qtime_localtime_str(time_t utctime);

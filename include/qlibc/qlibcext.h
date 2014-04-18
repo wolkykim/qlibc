@@ -40,5 +40,6 @@
 #include "extensions/qlog.h"
 #include "extensions/qhttpclient.h"
 #include "extensions/qdatabase.h"
+#include "extensions/qtokenbucket.h"
 
 #endif /*_QLIBCEXT_H */

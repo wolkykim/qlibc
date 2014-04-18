@@ -94,7 +94,8 @@ QLIBCEXT_OBJS	= \
 		extensions/qaconf.o		\
 		extensions/qlog.o		\
 		extensions/qhttpclient.o	\
-		extensions/qdatabase.o
+		extensions/qdatabase.o		\
+		extensions/qtokenbucket.o
 
 ## Which compiler & options for release
 CC		= @CC@

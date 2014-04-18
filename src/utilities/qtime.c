@@ -39,6 +39,18 @@
 #include "utilities/qtime.h"
 
 /**
+ * Returns the current time in milliseconds.
+ *
+ * @return current time in milliseconds.
+ */
+long qtime_current_milli(void) {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    long time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+    return time;
+}
+
+/**
  * Get custom formmatted local time string.
  *
  * @param buf       save buffer
