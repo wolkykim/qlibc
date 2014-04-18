@@ -90,7 +90,11 @@ $(document).ready(function(){initNavTree('qconfig_8c_source.html','');});
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> *****************************************************************************/</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * @file qconfig.c INI-style configuration file parser.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#ifndef DISABLE_QCONFIG</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
@@ -117,7 +121,73 @@ $(document).ready(function(){initNavTree('qconfig_8c_source.html','');});
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">/* internal functions */</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">static</span> <span class="keywordtype">char</span> *_parsestr(qlisttbl_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *str);</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span><span class="comment"></span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment"> * Load &amp; parse configuration file</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"> * @param tbl       a pointer of qlisttbl_t. NULL will generate a new table.</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment"> * @param filepath  configuration file path</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment"> * @param sepchar   separater used in configuration file to divice key and value</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment"> * @return a pointer of qlisttbl_t in case of successful,</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"> *  otherwise(file not found) returns NULL</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment"> *   # This is &quot;config.conf&quot; file.</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"> *   # A line which starts with # character is comment</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> *   @INCLUDE config.def  =&gt; include &#39;config.def&#39; file.</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment"> *   prefix=/tmp        =&gt; set static value. &#39;prefix&#39; is the key for this entry.</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment"> *   log=${prefix}/log  =&gt; get the value from previously defined key &#39;prefix&#39;.</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"> *   user=${%USER}      =&gt; get environment variable.</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"> *   host=${!/bin/hostname -s}  =&gt; run external command and put it&#39;s output.</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"> *   id=${user}@${host}</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"> *   # now entering into &#39;system&#39; section.</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"> *   [system]           =&gt; a key &#39;system.&#39; with value &#39;system&#39; will be inserted.</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"> *   ostype=${%OSTYPE}  =&gt; &#39;system.ostype&#39; is the key for this entry.</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"> *   machtype=${%MACHTYPE}  =&gt; &#39;system.machtype&#39; is the key for this entry.</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"> *   # entering into &#39;daemon&#39; section.</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment"> *   [daemon]</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment"> *   port=1234</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment"> *   name=${user}_${host}_${system.ostype}_${system.machtype}</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment"> *   # escape section. (go back to root)</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment"> *   []</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment"> *   rev=822</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment"> *   # This is &quot;config.def&quot; file.</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment"> *   prefix = /usr/local</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment"> *   bin = ${prefix}/bin</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment"> *   log = ${prefix}/log</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment"> *   user = unknown</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment"> *   host = unknown</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment"> *   qlisttbl_t *tbl = qconfig_parse_file(NULL, &quot;config.conf&quot;, &#39;=&#39;, true);</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment"> *   tbl-&gt;debug(tbl, stdout);</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment"> *   [Output]</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment"> *   bin=/usr/local/bin? (15)</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment"> *   prefix=/tmp? (5)</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment"> *   log=/tmp/log? (9)</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment"> *   user=seungyoung.kim? (9)</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment"> *   host=eng22? (6)</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment"> *   id=seungyoung.kim@eng22? (15)</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment"> *   system.=system? (7)</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment"> *   system.ostype=linux? (6)</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment"> *   system.machtype=x86_64? (7)</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment"> *   daemon.=daemon? (7)</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment"> *   daemon.port=1234? (5)</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment"> *   daemon.name=seungyoung.kim_eng22_linux_x86_64? (28)</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment"> *   rev=822? (4)</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00126"></a><span class="lineno"><a class="code" href="qconfig_8c.html#a935668a20d0b3f5b6b84b46e9262bc0b">  126</a></span>&#160;qlisttbl_t *<a class="code" href="qconfig_8c.html#a935668a20d0b3f5b6b84b46e9262bc0b" title="Load &amp; parse configuration file.">qconfig_parse_file</a>(qlisttbl_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *filepath,</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                               <span class="keywordtype">char</span> sepchar) {</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">char</span> *str = <a class="code" href="qfile_8c.html#a0d1cd1e907efc6272ae969e702c7eb22" title="Load file into memory.">qfile_load</a>(filepath, NULL);</div>
@@ -190,7 +260,24 @@ $(document).ready(function(){initNavTree('qconfig_8c_source.html','');});
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="keywordflow">return</span> tbl;</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;}</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="comment"> * Parse string</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="comment"> * @param tbl       a pointer of qlisttbl_t. NULL will generate a new table.</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="comment"> * @param str       key, value pair strings</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="comment"> * @param sepchar   separater used in configuration file to divice key and value</span></div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="comment"> * @return a pointer of qlisttbl_t in case of successful,</span></div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="comment"> *         otherwise(file not found) returns NULL</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="comment"> * @see qconfig_parse_file</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="comment"> *  qlisttbl_t *tbl;</span></div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="comment"> *  tbl = qconfig_parse_str(NULL, &quot;key = value\nhello = world&quot;, &#39;=&#39;);</span></div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00216"></a><span class="lineno"><a class="code" href="qconfig_8c.html#ae70b6b473d2fcb3f17bde60297007336">  216</a></span>&#160;qlisttbl_t *<a class="code" href="qconfig_8c.html#ae70b6b473d2fcb3f17bde60297007336" title="Parse string.">qconfig_parse_str</a>(qlisttbl_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *str, <span class="keywordtype">char</span> sepchar) {</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keywordflow">if</span> (str == NULL)</div>
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
@@ -268,7 +355,39 @@ $(document).ready(function(){initNavTree('qconfig_8c_source.html','');});
 <div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;}</div>
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;</div>
 <div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="preprocessor">#ifndef _DOXYGEN_SKIP</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="preprocessor"></span><span class="comment"></span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="comment"> * (qlisttbl_t*)-&gt;parsestr(): Parse a string and replace variables in the</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="comment"> * string to the data in this list.</span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="comment"> * @param tbl   qlisttbl container pointer.</span></div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="comment"> * @param str   string value which may contain variables like ${...}</span></div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="comment"> * @return malloced string if successful, otherwise returns NULL.</span></div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="comment"> *  - EINVAL : Invalid argument.</span></div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;<span class="comment"> *  ${key_name}          - replace this with a matched value data in this list.</span></div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;<span class="comment"> *  ${!system_command}   - run external command and put it&#39;s output here.</span></div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;<span class="comment"> *  ${%PATH}             - get environment variable.</span></div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="comment"> *  --[tbl Table]------------------------</span></div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;<span class="comment"> *  NAME = qLibc</span></div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<span class="comment"> *  -------------------------------------</span></div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;<span class="comment"> *  char *str = _parsestr(tbl, &quot;${NAME}, ${%HOME}, ${!date -u}&quot;);</span></div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;<span class="comment"> *  if(str != NULL) {</span></div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="comment"> *    printf(&quot;%s\n&quot;, str);</span></div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="comment"> *    free(str);</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="comment"> *  }</span></div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="comment"> *  [Output]</span></div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;<span class="comment"> *  qLibc, /home/qlibc, Wed Nov 24 00:30:58 UTC 2010</span></div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<span class="keyword">static</span> <span class="keywordtype">char</span> *_parsestr(qlisttbl_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *str) {</div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    <span class="keywordflow">if</span> (str == NULL) {</div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        errno = EINVAL;</div>

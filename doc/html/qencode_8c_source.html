@@ -90,7 +90,11 @@ $(document).ready(function(){initNavTree('qencode_8c_source.html','');});
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> *****************************************************************************/</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * @file qencode.c Encoding/decoding APIs.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
@@ -98,7 +102,28 @@ $(document).ready(function(){initNavTree('qencode_8c_source.html','');});
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;qinternal.h&quot;</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;utilities/qstring.h&quot;</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;utilities/qencode.h&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment"> * Parse URL encoded query string</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"> * @param tbl       a pointer of qlisttbl_t container. NULL can be used to</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment"> *                  create new table.</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment"> * @param query     URL encoded string.</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment"> * @param equalchar separater of key, value pair.</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment"> * @param sepchar   separater of line.</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"> * @param count     if count is not NULL, a number of parsed entries are stored.</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> * @return qlisttbl container pointer, otherwise returns NULL.</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> *  cont char query = &quot;category=love&amp;str=%C5%A5%B5%F0%C4%DA%B4%F5&amp;sort=asc&quot;;</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment"> *  qlisttbl_t *tbl = qparse_queries(NULL, req-&gt;pszQueryString, &#39;=&#39;, &#39;&amp;&#39;, NULL);</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment"> *  printf(&quot;category = %s\n&quot;, tbl-&gt;get_str(tbl, &quot;category&quot;, false));</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"> *  printf(&quot;str = %s\n&quot;, tbl-&gt;get_str(tbl, &quot;str&quot;, false));</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> *  printf(&quot;sort = %s\n&quot;, tbl-&gt;get_str(tbl, &quot;sort&quot;, false));</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> *  tbl-&gt;free(tbl);</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno"><a class="code" href="qencode_8c.html#ac3a72331130b2c04d2ca3c33bf0846b3">   62</a></span>&#160;qlisttbl_t *<a class="code" href="qencode_8c.html#ac3a72331130b2c04d2ca3c33bf0846b3" title="Parse URL encoded query string.">qparse_queries</a>(qlisttbl_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *query, <span class="keywordtype">char</span> equalchar,</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                           <span class="keywordtype">char</span> sepchar, <span class="keywordtype">int</span> *count) {</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">if</span> (tbl == NULL) {</div>
@@ -130,7 +155,36 @@ $(document).ready(function(){initNavTree('qencode_8c_source.html','');});
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">return</span> tbl;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment"> * Encode data using URL encoding(Percent encoding) algorithm.</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment"> * @param bin   a pointer of input data.</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment"> * @param size  the length of input data.</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment"> * @return a malloced string pointer of URL encoded string in case of</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment"> *         successful, otherwise returns NULL</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment"> *   const char *text = &quot;hello &#39;qLibc&#39; world&quot;;</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment"> *   char *encstr = qurl_encode(text, strlen(text));</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment"> *   if(encstr == NULL) return -1;</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment"> *   printf(&quot;Original: %s\n&quot;, text);</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment"> *   printf(&quot;Encoded : %s\n&quot;, encstr);</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment"> *   size_t decsize = qurl_decode(encstr);</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment"> *   printf(&quot;Decoded : %s (%zu bytes)\n&quot;, encstr, decsize);</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment"> *   free(encstr);</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment"> *   --[output]--</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment"> *   Original: hello &#39;qLibc&#39; world</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment"> *   Encoded:  hello%20%27qLibc%27%20world</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment"> *   Decoded:  hello &#39;qLibc&#39; world (19 bytes)</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00123"></a><span class="lineno"><a class="code" href="qencode_8c.html#a254eadb7e79e9c22042c0779feac9e93">  123</a></span>&#160;<span class="keywordtype">char</span> *<a class="code" href="qencode_8c.html#a254eadb7e79e9c22042c0779feac9e93" title="Encode data using URL encoding(Percent encoding) algorithm.">qurl_encode</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *bin, <span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#aa309538c94c6fb98c6cedf81df24f81e" title="qlist-&gt;size(): Returns the number of elements in this list.">size</a>) {</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> URLCHARTBL[16*16] = {</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        00 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , <span class="comment">// 00-0F</span></div>
@@ -185,7 +239,19 @@ $(document).ready(function(){initNavTree('qencode_8c_source.html','');});
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keywordflow">return</span> pszEncStr;</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;}</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="comment"> * Decode URL encoded string.</span></div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="comment"> * @param str   a pointer of URL encoded string.</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="comment"> * @return the length of bytes stored in the str memory in case of successful,</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="comment"> *         otherwise returns NULL</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="comment"> *  This modify str directly. And the &#39;str&#39; is always terminated by NULL</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="comment"> *  character.</span></div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00190"></a><span class="lineno"><a class="code" href="qencode_8c.html#adefa85504919e3790adff444d8604496">  190</a></span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="qencode_8c.html#adefa85504919e3790adff444d8604496" title="Decode URL encoded string.">qurl_decode</a>(<span class="keywordtype">char</span> *str) {</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="keywordflow">if</span> (str == NULL) {</div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        <span class="keywordflow">return</span> 0;</div>
@@ -213,7 +279,36 @@ $(document).ready(function(){initNavTree('qencode_8c_source.html','');});
 <div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;</div>
 <div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keywordflow">return</span> (pBinPt - str);</div>
 <div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;}</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="comment"> * Encode data using BASE64 algorithm.</span></div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;<span class="comment"> * @param bin   a pointer of input data.</span></div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="comment"> * @param size  the length of input data.</span></div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="comment"> * @return a malloced string pointer of BASE64 encoded string in case of</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="comment"> *         successful, otherwise returns NULL</span></div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment"> *   const char *text = &quot;hello world&quot;;</span></div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="comment"> *   char *encstr = qbase64_encode(text, strlen(text));</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="comment"> *   if(encstr == NULL) return -1;</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="comment"> *   printf(&quot;Original: %s\n&quot;, text);</span></div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="comment"> *   printf(&quot;Encoded : %s\n&quot;, encstr);</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;<span class="comment"> *   size_t decsize = qbase64_decode(encstr);</span></div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="comment"> *   printf(&quot;Decoded : %s (%zu bytes)\n&quot;, encstr, decsize);</span></div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="comment"> *   free(encstr);</span></div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="comment"> *   --[output]--</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="comment"> *   Original: hello world</span></div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="comment"> *   Encoded:  aGVsbG8gd29ybGQ=</span></div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="comment"> *   Decoded:  hello world (11 bytes)</span></div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00247"></a><span class="lineno"><a class="code" href="qencode_8c.html#ad245826b85045ed82d49ad33200ae38d">  247</a></span>&#160;<span class="keywordtype">char</span> *<a class="code" href="qencode_8c.html#ad245826b85045ed82d49ad33200ae38d" title="Encode data using BASE64 algorithm.">qbase64_encode</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *bin, <span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#aa309538c94c6fb98c6cedf81df24f81e" title="qlist-&gt;size(): Returns the number of elements in this list.">size</a>) {</div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> B64CHARTBL[64] = {</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;        <span class="charliteral">&#39;A&#39;</span>,<span class="charliteral">&#39;B&#39;</span>,<span class="charliteral">&#39;C&#39;</span>,<span class="charliteral">&#39;D&#39;</span>,<span class="charliteral">&#39;E&#39;</span>,<span class="charliteral">&#39;F&#39;</span>,<span class="charliteral">&#39;G&#39;</span>,<span class="charliteral">&#39;H&#39;</span>,<span class="charliteral">&#39;I&#39;</span>,<span class="charliteral">&#39;J&#39;</span>,<span class="charliteral">&#39;K&#39;</span>,<span class="charliteral">&#39;L&#39;</span>,<span class="charliteral">&#39;M&#39;</span>,<span class="charliteral">&#39;N&#39;</span>,<span class="charliteral">&#39;O&#39;</span>,<span class="charliteral">&#39;P&#39;</span>, <span class="comment">// 00-0F</span></div>
@@ -260,7 +355,19 @@ $(document).ready(function(){initNavTree('qencode_8c_source.html','');});
 <div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;</div>
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    <span class="keywordflow">return</span> pszB64;</div>
 <div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;}</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="comment"> * Decode BASE64 encoded string.</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="comment"> * @param str   a pointer of Base64 encoded string.</span></div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="comment"> * @return the length of bytes stored in the str memory in case of successful,</span></div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="comment"> *         otherwise returns NULL</span></div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="comment"> *  This modify str directly. And the &#39;str&#39; is always terminated by NULL</span></div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="comment"> *  character.</span></div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00306"></a><span class="lineno"><a class="code" href="qencode_8c.html#a5bb9ee36ce61ff6061c7d8a50cafdcbf">  306</a></span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="qencode_8c.html#a5bb9ee36ce61ff6061c7d8a50cafdcbf" title="Decode BASE64 encoded string.">qbase64_decode</a>(<span class="keywordtype">char</span> *str) {</div>
 <div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> B64MAPTBL[16 * 16] = {</div>
 <div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,  <span class="comment">// 00-0F</span></div>
@@ -314,7 +421,38 @@ $(document).ready(function(){initNavTree('qencode_8c_source.html','');});
 <div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;</div>
 <div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    <span class="keywordflow">return</span> (pBinPt - str);</div>
 <div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;}</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="comment"> * Encode data to Hexadecimal digit format.</span></div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;<span class="comment"> * @param bin   a pointer of input data.</span></div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;<span class="comment"> * @param size  the length of input data.</span></div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;<span class="comment"> * @return a malloced string pointer of Hexadecimal encoded string in case of</span></div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;<span class="comment"> *         successful, otherwise returns NULL</span></div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;<span class="comment"> *   const char *text = &quot;hello world&quot;;</span></div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;<span class="comment"> *   char *encstr = qhex_encode(text, strlen(text));</span></div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="comment"> *   if(encstr == NULL) return -1;</span></div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="comment"> *   printf(&quot;Original: %s\n&quot;, text);</span></div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="comment"> *   printf(&quot;Encoded : %s\n&quot;, encstr);</span></div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;<span class="comment"> *   size_t decsize = qhex_decode(encstr);</span></div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="comment"> *   printf(&quot;Decoded : %s (%zu bytes)\n&quot;, encstr, decsize);</span></div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;<span class="comment"> *   free(encstr);</span></div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;<span class="comment"> *   return 0;</span></div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;<span class="comment"> *   --[output]--</span></div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;<span class="comment"> *   Original: hello world</span></div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;<span class="comment"> *   Encoded : 68656c6c6f20776f726c64</span></div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;<span class="comment"> *   Decoded : hello world (11 bytes)</span></div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00391"></a><span class="lineno"><a class="code" href="qencode_8c.html#acf074770f495d087f9bbb268a52debb9">  391</a></span>&#160;<span class="keywordtype">char</span> *<a class="code" href="qencode_8c.html#acf074770f495d087f9bbb268a52debb9" title="Encode data to Hexadecimal digit format.">qhex_encode</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *bin, <span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#aa309538c94c6fb98c6cedf81df24f81e" title="qlist-&gt;size(): Returns the number of elements in this list.">size</a>) {</div>
 <div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> HEXCHARTBL[16] = {</div>
 <div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        <span class="charliteral">&#39;0&#39;</span>,<span class="charliteral">&#39;1&#39;</span>,<span class="charliteral">&#39;2&#39;</span>,<span class="charliteral">&#39;3&#39;</span>,<span class="charliteral">&#39;4&#39;</span>,<span class="charliteral">&#39;5&#39;</span>,<span class="charliteral">&#39;6&#39;</span>,<span class="charliteral">&#39;7&#39;</span>,<span class="charliteral">&#39;8&#39;</span>,<span class="charliteral">&#39;9&#39;</span>,<span class="charliteral">&#39;a&#39;</span>,<span class="charliteral">&#39;b&#39;</span>,<span class="charliteral">&#39;c&#39;</span>,<span class="charliteral">&#39;d&#39;</span>,<span class="charliteral">&#39;e&#39;</span>,<span class="charliteral">&#39;f&#39;</span></div>
@@ -335,7 +473,19 @@ $(document).ready(function(){initNavTree('qencode_8c_source.html','');});
 <div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;</div>
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;    <span class="keywordflow">return</span> pHexStr;</div>
 <div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;}</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;<span class="comment"> * Decode Hexadecimal encoded data.</span></div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<span class="comment"> * @param str   a pointer of Hexadecimal encoded string.</span></div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;<span class="comment"> * @return the length of bytes stored in the str memory in case of successful,</span></div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;<span class="comment"> *         otherwise returns NULL</span></div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;<span class="comment"> *  This modify str directly. And the &#39;str&#39; is always terminated by NULL</span></div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;<span class="comment"> *  character.</span></div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00424"></a><span class="lineno"><a class="code" href="qencode_8c.html#abe7be5bbdf9ee3928bf84f4663d272e8">  424</a></span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="qencode_8c.html#abe7be5bbdf9ee3928bf84f4663d272e8" title="Decode Hexadecimal encoded data.">qhex_decode</a>(<span class="keywordtype">char</span> *str) {</div>
 <div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> HEXMAPTBL[16*16] = {</div>
 <div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;        0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, <span class="comment">// 00-0F</span></div>

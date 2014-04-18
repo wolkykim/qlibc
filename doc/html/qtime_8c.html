@@ -73,6 +73,9 @@ $(document).ready(function(){initNavTree('qtime_8c.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ac76cd4f42a13ecab1ea0a82f5748fda8"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qtime_8c.html#ac76cd4f42a13ecab1ea0a82f5748fda8">current_time_milli</a> (void)</td></tr>
+<tr class="memdesc:ac76cd4f42a13ecab1ea0a82f5748fda8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current time in milliseconds.  <a href="#ac76cd4f42a13ecab1ea0a82f5748fda8"></a><br/></td></tr>
+<tr class="separator:ac76cd4f42a13ecab1ea0a82f5748fda8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0feed44026ab24d9d366c5997a2173b4"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qtime_8c.html#a0feed44026ab24d9d366c5997a2173b4">qtime_localtime_strf</a> (char *buf, int <a class="el" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361">size</a>, time_t utctime, const char *format)</td></tr>
 <tr class="memdesc:a0feed44026ab24d9d366c5997a2173b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get custom formmatted local time string.  <a href="#a0feed44026ab24d9d366c5997a2173b4"></a><br/></td></tr>
 <tr class="separator:a0feed44026ab24d9d366c5997a2173b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -100,6 +103,27 @@ Functions</h2></td></tr>
 
 <p>Definition in file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="ac76cd4f42a13ecab1ea0a82f5748fda8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">long current_time_milli </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the current time in milliseconds. </p>
+<dl class="section return"><dt>Returns</dt><dd>current time in milliseconds. </dd></dl>
+
+<p>Definition at line <a class="el" href="qtime_8c_source.html#l00046">46</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a0feed44026ab24d9d366c5997a2173b4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -152,7 +176,7 @@ Functions</h2></td></tr>
 <div class="line"><span class="keywordtype">char</span> *timestr = <a class="code" href="qtime_8c.html#a0feed44026ab24d9d366c5997a2173b4" title="Get custom formmatted local time string.">qtime_localtime_strf</a>(0, <span class="stringliteral">&quot;%Y%m%d%H%M%S&quot;</span>); <span class="comment">// YYMMDDhhmmss</span></div>
 <div class="line">free(timestr);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qtime_8c_source.html#l00058">58</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
+<p>Definition at line <a class="el" href="qtime_8c_source.html#l00070">70</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
 
 </div>
 </div>
@@ -186,7 +210,7 @@ Functions</h2></td></tr>
 <div class="line">timestr = <a class="code" href="qtime_8c.html#a89b28885c2bb13906855cd6c34cfaed7" title="Get local time string formatted like &#39;02-Nov-2007 16:37:39 +0900&#39;.">qtime_localtime_str</a>(time(NULL) - 86400));  <span class="comment">// 1 day before</span></div>
 <div class="line">free(timestr);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qtime_8c_source.html#l00088">88</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
+<p>Definition at line <a class="el" href="qtime_8c_source.html#l00100">100</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
 
 </div>
 </div>
@@ -215,7 +239,7 @@ Functions</h2></td></tr>
 <div class="fragment"><div class="line">printf(<span class="stringliteral">&quot;%s&quot;</span>, <a class="code" href="qtime_8c.html#adf628449c7e5425b5c16b61f14a51eaf" title="Get local time string formatted like &#39;02-Nov-2007 16:37:39 +0900&#39;.">qtime_localtime_staticstr</a>(0));  <span class="comment">// now</span></div>
 <div class="line">printf(<span class="stringliteral">&quot;%s&quot;</span>, <a class="code" href="qtime_8c.html#adf628449c7e5425b5c16b61f14a51eaf" title="Get local time string formatted like &#39;02-Nov-2007 16:37:39 +0900&#39;.">qtime_localtime_staticstr</a>(time(NULL) + 86400)); <span class="comment">// 1 day later</span></div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qtime_8c_source.html#l00107">107</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
+<p>Definition at line <a class="el" href="qtime_8c_source.html#l00119">119</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
 
 </div>
 </div>
@@ -269,7 +293,7 @@ Functions</h2></td></tr>
 <div class="fragment"><div class="line"><span class="keywordtype">char</span> timestr[8+1];</div>
 <div class="line"><a class="code" href="qtime_8c.html#a1a3f24d676b909313177459cefa78899" title="Get custom formmatted GMT time string.">qtime_gmt_strf</a>(buf, <span class="keyword">sizeof</span>(buf), 0, <span class="stringliteral">&quot;%H:%M:%S&quot;</span>); <span class="comment">// HH:MM:SS</span></div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qtime_8c_source.html#l00130">130</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
+<p>Definition at line <a class="el" href="qtime_8c_source.html#l00142">142</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
 
 </div>
 </div>
@@ -303,7 +327,7 @@ Functions</h2></td></tr>
 <div class="line">timestr = <a class="code" href="qtime_8c.html#acbacded92c55a0674eec7590b65d7a3d" title="Get GMT time string formatted like &#39;Wed, 11-Nov-2007 23:19:25 GMT&#39;.">qtime_gmt_str</a>(time(NULL) - 86400)); <span class="comment">// 1 day before</span></div>
 <div class="line">free(timestr);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qtime_8c_source.html#l00156">156</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
+<p>Definition at line <a class="el" href="qtime_8c_source.html#l00168">168</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
 
 </div>
 </div>
@@ -332,7 +356,7 @@ Functions</h2></td></tr>
 <div class="fragment"><div class="line">printf(<span class="stringliteral">&quot;%s&quot;</span>, <a class="code" href="qtime_8c.html#a7e54e9b38d82df0fe112440a89b372dc" title="Get GMT time string formatted like &#39;Wed, 11-Nov-2007 23:19:25 GMT&#39;.">qtime_gmt_staticstr</a>(0));         <span class="comment">// now</span></div>
 <div class="line">printf(<span class="stringliteral">&quot;%s&quot;</span>, <a class="code" href="qtime_8c.html#a7e54e9b38d82df0fe112440a89b372dc" title="Get GMT time string formatted like &#39;Wed, 11-Nov-2007 23:19:25 GMT&#39;.">qtime_gmt_staticstr</a>(time(NULL) + 86400));    <span class="comment">// 1 day later</span></div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qtime_8c_source.html#l00176">176</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
+<p>Definition at line <a class="el" href="qtime_8c_source.html#l00188">188</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
 
 </div>
 </div>
@@ -365,7 +389,7 @@ Functions</h2></td></tr>
 <div class="line">printf(<span class="stringliteral">&quot;%d\n&quot;</span>, <a class="code" href="qtime_8c.html#a6c536941cca900b390fc199eb3b50c6b" title="This parses GMT/Timezone(+/-) formatted time sting like &#39;Sun, 04 May 2008 18:50:39 GMT&#39;...">qtime_parse_gmtstr</a>(s)); <span class="comment">// this must be same as t</span></div>
 <div class="line">free(s);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qtime_8c_source.html#l00202">202</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
+<p>Definition at line <a class="el" href="qtime_8c_source.html#l00214">214</a> of file <a class="el" href="qtime_8c_source.html">qtime.c</a>.</p>
 
 </div>
 </div>

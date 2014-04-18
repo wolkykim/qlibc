@@ -90,7 +90,82 @@ $(document).ready(function(){initNavTree('qstack_8c_source.html','');});
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> *****************************************************************************/</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * @file qstack.c Stack implementation.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"> * qstack container is a stack implementation. It represents a</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"> * last-in-first-out(LIFO). It extends qlist container that allow a linked-list</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"> * to be treated as a stack.</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"> *  [Conceptional Data Structure Diagram]</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment"> *                       top     bottom</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"> *  DATA PUSH/POP &lt;==&gt; [ C ][ B ][ A ]</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"> *  (positive index)     0    1    2</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment"> *  (negative index)    -3   -2   -1</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment"> *  // create stack</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment"> *  qstack_t *stack = qstack(QSTACK_THREADSAFE);</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"> *  // example: integer stack</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"> *  stack-&gt;pushint(stack, 1);</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> *  stack-&gt;pushint(stack, 2);</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> *  stack-&gt;pushint(stack, 3);</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> *  printf(&quot;popint(): %d\n&quot;, stack-&gt;popint(stack));</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment"> *  printf(&quot;popint(): %d\n&quot;, stack-&gt;popint(stack));</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment"> *  printf(&quot;popint(): %d\n&quot;, stack-&gt;popint(stack));</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> *  // example: string stack</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> *  stack-&gt;pushstr(stack, &quot;A string&quot;);</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"> *  stack-&gt;pushstr(stack, &quot;B string&quot;);</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment"> *  stack-&gt;pushstr(stack, &quot;C string&quot;);</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"> *  char *str = stack-&gt;popstr(stack);</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment"> *  printf(&quot;popstr(): %s\n&quot;, str);</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment"> *  free(str);</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"> *  str = stack-&gt;popstr(stack);</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment"> *  printf(&quot;popstr(): %s\n&quot;, str);</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"> *  free(str);</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"> *  str = stack-&gt;popstr(stack);</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment"> *  printf(&quot;popstr(): %s\n&quot;, str);</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment"> *  free(str);</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> *  // example: object stack</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> *  stack-&gt;push(stack, &quot;A object&quot;, sizeof(&quot;A object&quot;));</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"> *  stack-&gt;push(stack, &quot;B object&quot;, sizeof(&quot;B object&quot;));</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment"> *  stack-&gt;push(stack, &quot;C object&quot;, sizeof(&quot;C object&quot;));</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"> *  void *obj = stack-&gt;pop(stack, NULL);</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"> *  printf(&quot;pop(): %s\n&quot;, (char*)obj);</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"> *  free(obj);</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment"> *  str = stack-&gt;pop(stack, NULL);</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"> *  printf(&quot;pop(): %s\n&quot;, (char*)obj);</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"> *  free(obj);</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"> *  str = stack-&gt;pop(stack, NULL);</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"> *  printf(&quot;pop(): %s\n&quot;, (char*)obj);</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> *  free(obj);</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment"> *  // release</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment"> *  stack-&gt;free(stack);</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment"> *  [Output]</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment"> *  popint(): 3</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment"> *  popint(): 2</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment"> *  popint(): 1</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment"> *  popstr(): C string</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment"> *  popstr(): B string</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment"> *  popstr(): A string</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment"> *  pop(): C object</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment"> *  pop(): B object</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment"> *  pop(): A object</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
@@ -126,7 +201,24 @@ $(document).ready(function(){initNavTree('qstack_8c_source.html','');});
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="qlist_8c.html#a93bf354464970a479f071f5007c5b5b5" title="qlist-&gt;free(): Free qlist_t.">free_</a>(qstack_t *stack);</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor"></span><span class="comment"></span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="comment"> * Create a new stack container</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="comment"> * @param options   combination of initialization options.</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="comment"> * @return a pointer of malloced qstack_t container, otherwise returns NULL.</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment"> *   qstack_t *stack = qstack(QSTACK_THREADSAFE);</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment"> *   Available options:</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="comment"> *   - QSTACK_THREADSAFE - make it thread-safe.</span></div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00157"></a><span class="lineno"><a class="code" href="qstack_8c.html#ad59200fd9723a575e042365b916e150b">  157</a></span>&#160;qstack_t *<a class="code" href="qstack_8c.html#ad59200fd9723a575e042365b916e150b" title="Create a new stack container.">qstack</a>(<span class="keywordtype">int</span> options) {</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    qstack_t *stack = (qstack_t *) malloc(<span class="keyword">sizeof</span>(qstack_t));</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordflow">if</span> (stack == NULL) {</div>
@@ -165,15 +257,52 @@ $(document).ready(function(){initNavTree('qstack_8c_source.html','');});
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keywordflow">return</span> stack;</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;}</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="comment"> * qstack-&gt;setsize(): Sets maximum number of elements allowed in this</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="comment"> * stack.</span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="comment"> * @param max   maximum number of elements. 0 means no limit.</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="comment"> * @return previous maximum number.</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00205"></a><span class="lineno"><a class="code" href="qstack_8c.html#ad20394721071363bd28969791a09a832">  205</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code" href="qstack_8c.html#ad20394721071363bd28969791a09a832" title="qstack-&gt;setsize(): Sets maximum number of elements allowed in this stack.">setsize</a>(qstack_t *stack, <span class="keywordtype">size_t</span> max) {</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <span class="keywordflow">return</span> stack-&gt;list-&gt;setsize(stack-&gt;list, max);</div>
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;}</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="comment"> * qstack-&gt;push(): Pushes an element onto the top of this stack.</span></div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="comment"> * @param data  a pointer which points data memory.</span></div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="comment"> * @param size  size of the data.</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false.</span></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="comment"> *  - EINVAL    : Invalid argument.</span></div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="comment"> *  - ENOBUFS   : Stack full. Only happens when this stack has set to have</span></div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="comment"> *                limited number of elements)</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00223"></a><span class="lineno"><a class="code" href="qstack_8c.html#ad817ff05014a9e934d2ceb6c0a602cfe">  223</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="qstack_8c.html#ad817ff05014a9e934d2ceb6c0a602cfe" title="qstack-&gt;push(): Pushes an element onto the top of this stack.">push</a>(qstack_t *stack, <span class="keyword">const</span> <span class="keywordtype">void</span> *data, <span class="keywordtype">size_t</span> <a class="code" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361" title="qstack-&gt;size(): Returns the number of elements in this stack.">size</a>) {</div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keywordflow">return</span> stack-&gt;list-&gt;addfirst(stack-&gt;list, data, size);</div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;}</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment"> * qstack-&gt;pushstr(): Pushes a string onto the top of this stack.</span></div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="comment"> * @param data  a pointer which points data memory.</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="comment"> * @param size  size of the data.</span></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false.</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;<span class="comment"> *  - EINVAL    : Invalid argument.</span></div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="comment"> *  - ENOBUFS   : Stack full. Only happens when this stack has set to have</span></div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="comment"> *                limited number of elements.</span></div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00241"></a><span class="lineno"><a class="code" href="qstack_8c.html#a59c4ae894c04bcc4c6ce4545b2963c41">  241</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="qstack_8c.html#a59c4ae894c04bcc4c6ce4545b2963c41" title="qstack-&gt;pushstr(): Pushes a string onto the top of this stack.">pushstr</a>(qstack_t *stack, <span class="keyword">const</span> <span class="keywordtype">char</span> *str) {</div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keywordflow">if</span> (str == NULL) {</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;        errno = EINVAL;</div>
@@ -181,15 +310,53 @@ $(document).ready(function(){initNavTree('qstack_8c_source.html','');});
 <div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    }</div>
 <div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keywordflow">return</span> stack-&gt;list-&gt;addfirst(stack-&gt;list, str, strlen(str) + 1);</div>
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;}</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="comment"> * qstack-&gt;pushint(): Pushes a integer onto the top of this stack.</span></div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="comment"> * @param num   integer data.</span></div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false.</span></div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="comment"> *  - ENOBUFS   : Stack full. Only happens when this stack has set to have</span></div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="comment"> *                limited number of elements.</span></div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00261"></a><span class="lineno"><a class="code" href="qstack_8c.html#a732360a1af67d1006a1551d16e1d793f">  261</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="qstack_8c.html#a732360a1af67d1006a1551d16e1d793f" title="qstack-&gt;pushint(): Pushes a integer onto the top of this stack.">pushint</a>(qstack_t *stack, int64_t num) {</div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <span class="keywordflow">return</span> stack-&gt;list-&gt;addfirst(stack-&gt;list, &amp;num, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;}</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="comment"> * qstack-&gt;pop(): Removes a element at the top of this stack and returns</span></div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="comment"> * that element.</span></div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="comment"> * @param size  if size is not NULL, element size will be stored.</span></div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="comment"> * @return a pointer of malloced element, otherwise returns NULL.</span></div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;<span class="comment"> *  - ENOENT    : Stack is empty.</span></div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00277"></a><span class="lineno"><a class="code" href="qstack_8c.html#a27ca4172a7d67dad5ba9e18b17aeeaa5">  277</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> *<a class="code" href="qstack_8c.html#a27ca4172a7d67dad5ba9e18b17aeeaa5" title="qstack-&gt;pop(): Removes a element at the top of this stack and returns that element.">pop</a>(qstack_t *stack, <span class="keywordtype">size_t</span> *<a class="code" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361" title="qstack-&gt;size(): Returns the number of elements in this stack.">size</a>) {</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keywordflow">return</span> stack-&gt;list-&gt;popfirst(stack-&gt;list, size);</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;}</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="comment"> * qstack-&gt;popstr(): Removes a element at the top of this stack and</span></div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="comment"> * returns that element.</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="comment"> * @return a pointer of malloced string element, otherwise returns NULL.</span></div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="comment"> *  - ENOENT    : Stack is empty.</span></div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="comment"> * The string element should be pushed through pushstr().</span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00295"></a><span class="lineno"><a class="code" href="qstack_8c.html#a4e80e286501b9f25150169685e0c22cb">  295</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">char</span> *<a class="code" href="qstack_8c.html#a4e80e286501b9f25150169685e0c22cb" title="qstack-&gt;popstr(): Removes a element at the top of this stack and returns that element.">popstr</a>(qstack_t *stack) {</div>
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keywordtype">size_t</span> strsize;</div>
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    <span class="keywordtype">char</span> *str = stack-&gt;list-&gt;popfirst(stack-&gt;list, &amp;strsize);</div>
@@ -199,7 +366,21 @@ $(document).ready(function(){initNavTree('qstack_8c_source.html','');});
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;</div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <span class="keywordflow">return</span> str;</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;}</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;<span class="comment"> * qstack-&gt;popint(): Removes a integer at the top of this stack and</span></div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;<span class="comment"> * returns that element.</span></div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="comment"> * @return an integer value, otherwise returns 0.</span></div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;<span class="comment"> *  - ENOENT    : Stack is empty.</span></div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;<span class="comment"> * The integer element should be pushed through pushint().</span></div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00319"></a><span class="lineno"><a class="code" href="qstack_8c.html#adc04350b403ec0021f9d1389efe675ef">  319</a></span>&#160;<span class="keyword">static</span> int64_t <a class="code" href="qstack_8c.html#adc04350b403ec0021f9d1389efe675ef" title="qstack-&gt;popint(): Removes a integer at the top of this stack and returns that element.">popint</a>(qstack_t *stack) {</div>
 <div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    int64_t num = 0;</div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    int64_t *pnum = stack-&gt;list-&gt;popfirst(stack-&gt;list, NULL);</div>
@@ -210,15 +391,60 @@ $(document).ready(function(){initNavTree('qstack_8c_source.html','');});
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;</div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    <span class="keywordflow">return</span> num;</div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;}</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="comment"> * qstack-&gt;popat(): Returns and remove the element at the specified</span></div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;<span class="comment"> * position in this stack.</span></div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="comment"> * @param index index at which the specified element is to be inserted</span></div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="comment"> * @param size  if size is not NULL, element size will be stored.</span></div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;<span class="comment"> * @return a pointer of malloced element, otherwise returns NULL.</span></div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;<span class="comment"> *  - ERANGE    : Index out of range.</span></div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;<span class="comment"> *  Negative index can be used for addressing a element from the bottom in</span></div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="comment"> *  this stack. For example, index -1 will always pop a element which is pushed</span></div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;<span class="comment"> *  at very first time.</span></div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00348"></a><span class="lineno"><a class="code" href="qstack_8c.html#a9c68d6c8f76a298b8afc02ce9fe7b59c">  348</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> *<a class="code" href="qstack_8c.html#a9c68d6c8f76a298b8afc02ce9fe7b59c" title="qstack-&gt;popat(): Returns and remove the element at the specified position in this stack...">popat</a>(qstack_t *stack, <span class="keywordtype">int</span> index, <span class="keywordtype">size_t</span> *<a class="code" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361" title="qstack-&gt;size(): Returns the number of elements in this stack.">size</a>) {</div>
 <div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    <span class="keywordflow">return</span> stack-&gt;list-&gt;popat(stack-&gt;list, index, size);</div>
 <div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;}</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;<span class="comment"> * qstack-&gt;get(): Returns an element at the top of this stack without</span></div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;<span class="comment"> * removing it.</span></div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;<span class="comment"> * @param stack     qstack container pointer.</span></div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;<span class="comment"> * @param size      if size is not NULL, element size will be stored.</span></div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;<span class="comment"> * @param newmem    whether or not to allocate memory for the element.</span></div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;<span class="comment"> *  - ENOENT    : Stack is empty.</span></div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;<span class="comment"> * @return a pointer of malloced element, otherwise returns NULL.</span></div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00365"></a><span class="lineno"><a class="code" href="qstack_8c.html#a6847a7ff26c2793e44ebe7f77d482e0f">  365</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> *<span class="keyword">get</span>(qstack_t *stack, <span class="keywordtype">size_t</span> *<a class="code" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361" title="qstack-&gt;size(): Returns the number of elements in this stack.">size</a>, <span class="keywordtype">bool</span> newmem) {</div>
 <div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <span class="keywordflow">return</span> stack-&gt;list-&gt;getfirst(stack-&gt;list, <a class="code" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361" title="qstack-&gt;size(): Returns the number of elements in this stack.">size</a>, newmem);</div>
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;}</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;<span class="comment"> * qstack-&gt;getstr(): Returns an string at the top of this stack without</span></div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;<span class="comment"> * removing it.</span></div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="comment"> * @return a pointer of malloced string element, otherwise returns NULL.</span></div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="comment"> *  - ENOENT    : Stack is empty.</span></div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;<span class="comment"> * The string element should be pushed through pushstr().</span></div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00383"></a><span class="lineno"><a class="code" href="qstack_8c.html#af08cacd57275cecda09efb83b309bb1f">  383</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">char</span> *<a class="code" href="qstack_8c.html#af08cacd57275cecda09efb83b309bb1f" title="qstack-&gt;getstr(): Returns an string at the top of this stack without removing it.">getstr</a>(qstack_t *stack) {</div>
 <div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;    <span class="keywordtype">size_t</span> strsize;</div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    <span class="keywordtype">char</span> *str = stack-&gt;list-&gt;getfirst(stack-&gt;list, &amp;strsize, <span class="keyword">true</span>);</div>
@@ -228,7 +454,21 @@ $(document).ready(function(){initNavTree('qstack_8c_source.html','');});
 <div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;</div>
 <div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    <span class="keywordflow">return</span> str;</div>
 <div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;}</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;<span class="comment"> * qstack-&gt;getint(): Returns an integer at the top of this stack without</span></div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;<span class="comment"> * removing it.</span></div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;<span class="comment"> * @return an integer value, otherwise returns 0.</span></div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;<span class="comment"> *  - ENOENT    : Stack is empty.</span></div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;<span class="comment"> * The integer element should be pushed through pushint().</span></div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00407"></a><span class="lineno"><a class="code" href="qstack_8c.html#abe09b7cc7c85cfd5511c48d01eb412c1">  407</a></span>&#160;<span class="keyword">static</span> int64_t <a class="code" href="qstack_8c.html#abe09b7cc7c85cfd5511c48d01eb412c1" title="qstack-&gt;getint(): Returns an integer at the top of this stack without removing it.">getint</a>(qstack_t *stack) {</div>
 <div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;    int64_t num = 0;</div>
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;    int64_t *pnum = stack-&gt;list-&gt;getfirst(stack-&gt;list, NULL, <span class="keyword">true</span>);</div>
@@ -239,23 +479,69 @@ $(document).ready(function(){initNavTree('qstack_8c_source.html','');});
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;</div>
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;    <span class="keywordflow">return</span> num;</div>
 <div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;}</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;<span class="comment"> * qstack-&gt;getat(): Returns an element at the specified position in this</span></div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;<span class="comment"> * stack without removing it.</span></div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;<span class="comment"> * @param stack     qstack container pointer.</span></div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;<span class="comment"> * @param index     index at which the specified element is to be inserted</span></div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;<span class="comment"> * @param size      if size is not NULL, element size will be stored.</span></div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;<span class="comment"> * @param newmem    whether or not to allocate memory for the element.</span></div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;<span class="comment"> * @return a pointer of element, otherwise returns NULL.</span></div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;<span class="comment"> *  - ERANGE    : Index out of range.</span></div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;<span class="comment"> * Negative index can be used for addressing a element from the bottom in this</span></div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;<span class="comment"> * stack. For example, index -1 will always get a element which is pushed at</span></div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;<span class="comment"> * very first time.</span></div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00437"></a><span class="lineno"><a class="code" href="qstack_8c.html#a874ed8e3bba1b466c4bac8f02d826126">  437</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> *<a class="code" href="qstack_8c.html#a874ed8e3bba1b466c4bac8f02d826126" title="qstack-&gt;getat(): Returns an element at the specified position in this stack without removing it...">getat</a>(qstack_t *stack, <span class="keywordtype">int</span> index, <span class="keywordtype">size_t</span> *<a class="code" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361" title="qstack-&gt;size(): Returns the number of elements in this stack.">size</a>, <span class="keywordtype">bool</span> newmem) {</div>
 <div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    <span class="keywordflow">return</span> stack-&gt;list-&gt;getat(stack-&gt;list, index, size, newmem);</div>
 <div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;}</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;<span class="comment"> * qstack-&gt;size(): Returns the number of elements in this stack.</span></div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;<span class="comment"> * @return the number of elements in this stack.</span></div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00448"></a><span class="lineno"><a class="code" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361">  448</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361" title="qstack-&gt;size(): Returns the number of elements in this stack.">size</a>(qstack_t *stack) {</div>
 <div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;    <span class="keywordflow">return</span> stack-&gt;list-&gt;size(stack-&gt;list);</div>
 <div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;}</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;<span class="comment"> * qstack-&gt;clear(): Removes all of the elements from this stack.</span></div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00457"></a><span class="lineno"><a class="code" href="qstack_8c.html#ac8ec3111fd4606d17568e49fb780990e">  457</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="qlist_8c.html#a0f462d5ea446855501d65f2a8f4d1f9d" title="qlist-&gt;clear(): Removes all of the elements from this list.">clear</a>(qstack_t *stack) {</div>
 <div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;    stack-&gt;list-&gt;clear(stack-&gt;list);</div>
 <div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;}</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;<span class="comment"> * qstack-&gt;debug(): Print out stored elements for debugging purpose.</span></div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;<span class="comment"> * @param stack     qstack container pointer.</span></div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;<span class="comment"> * @param out       output stream FILE descriptor such like stdout, stderr.</span></div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false.</span></div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00469"></a><span class="lineno"><a class="code" href="qstack_8c.html#a12983cb7d84637772d82eadea193bb70">  469</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="qlist_8c.html#af3b9229df76dcd4156c587baf5802ff9" title="qlist-&gt;debug(): Prints out stored elements for debugging purpose.">debug</a>(qstack_t *stack, FILE *out) {</div>
 <div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;    <span class="keywordflow">return</span> stack-&gt;list-&gt;debug(stack-&gt;list, out);</div>
 <div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;}</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;<span class="comment"> * qstack-&gt;free(): Free qstack_t</span></div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;<span class="comment"> * @param stack qstack container pointer.</span></div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;<span class="comment"> * @return always returns true.</span></div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00480"></a><span class="lineno"><a class="code" href="qstack_8c.html#a7f09a81615cb778f43e74017750a775d">  480</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="qlist_8c.html#a93bf354464970a479f071f5007c5b5b5" title="qlist-&gt;free(): Free qlist_t.">free_</a>(qstack_t *stack) {</div>
 <div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;    stack-&gt;list-&gt;free(stack-&gt;list);</div>
 <div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;    free(stack);</div>

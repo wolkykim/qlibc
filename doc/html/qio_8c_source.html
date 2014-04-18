@@ -90,7 +90,11 @@ $(document).ready(function(){initNavTree('qio_8c_source.html','');});
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> *****************************************************************************/</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * @file qio.c I/O handling APIs.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
@@ -103,7 +107,20 @@ $(document).ready(function(){initNavTree('qio_8c_source.html','');});
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;utilities/qio.h&quot;</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define MAX_IOSEND_SIZE     (32 * 1024)</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span><span class="comment"></span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment"> * Test &amp; wait until the file descriptor has readable data.</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"> * @param fd        file descriptor</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"> * @param timeoutms wait timeout milliseconds. 0 for no wait,</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> *                  -1 for infinite wait</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> * @return 1 if readable, 0 on timeout, -1 if an error occurred.</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment"> *  The argument timeoutms can be used to set maximum wait time for a socket</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"> *  descriptor.</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00059"></a><span class="lineno"><a class="code" href="qio_8c.html#a8a695a43ebb605d243e56ad48937862e">   59</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="qio_8c.html#a8a695a43ebb605d243e56ad48937862e" title="Test &amp; wait until the file descriptor has readable data.">qio_wait_readable</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">int</span> timeoutms) {</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">struct </span>pollfd fds[1];</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
@@ -122,7 +139,16 @@ $(document).ready(function(){initNavTree('qio_8c_source.html','');});
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"> * Test &amp; wait until the file descriptor is ready for writing.</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment"> * @param fd        file descriptor</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"> * @param timeoutms wait timeout milliseconds. 0 for no wait,</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"> *                  -1 for infinite wait</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"> * @return 1 if writable, 0 on timeout, -1 if an error occurred.</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00087"></a><span class="lineno"><a class="code" href="qio_8c.html#ac905811f0daa394ffef7beab68585a55">   87</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="qio_8c.html#ac905811f0daa394ffef7beab68585a55" title="Test &amp; wait until the file descriptor is ready for writing.">qio_wait_writable</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">int</span> timeoutms) {</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">struct </span>pollfd fds[1];</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
@@ -141,7 +167,19 @@ $(document).ready(function(){initNavTree('qio_8c_source.html','');});
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment"> * Read from a file descriptor.</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment"> * @param fd        file descriptor</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment"> * @param buf       data buffer pointer to write to</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment"> * @param nbytes    the number of bytes to read from file descriptor &amp; write</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment"> *                  into buffer</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment"> * @param timeoutms wait timeout milliseconds. 0 for no wait, -1 for infinite</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment"> *                  wait</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment"> * @return the number of bytes read if successful, 0 on timeout, -1 for error.</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00118"></a><span class="lineno"><a class="code" href="qio_8c.html#aa34911362f1793ed1e744d3eb63500db">  118</a></span>&#160;ssize_t <a class="code" href="qio_8c.html#aa34911362f1793ed1e744d3eb63500db" title="Read from a file descriptor.">qio_read</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">void</span> *buf, <span class="keywordtype">size_t</span> nbytes, <span class="keywordtype">int</span> timeoutms) {</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">if</span> (nbytes == 0)</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">return</span> 0;</div>
@@ -169,7 +207,20 @@ $(document).ready(function(){initNavTree('qio_8c_source.html','');});
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;}</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="comment"> * Write to a file descriptor.</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment"> * @param fd        file descriptor</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment"> * @param buf       data buffer pointer to read from</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment"> * @param nbytes    the number of bytes to write to file descriptor &amp; read</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment"> *                  from buffer</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment"> * @param timeoutms wait timeout milliseconds. 0 for no wait, -1 for infinite</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment"> *                  wait</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="comment"> * @return the number of bytes written if successful, 0 on timeout,</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="comment"> *         -1 for error.</span></div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00159"></a><span class="lineno"><a class="code" href="qio_8c.html#a0645cf0a3bcfc79ee3829012243d46d8">  159</a></span>&#160;ssize_t <a class="code" href="qio_8c.html#a0645cf0a3bcfc79ee3829012243d46d8" title="Write to a file descriptor.">qio_write</a>(<span class="keywordtype">int</span> fd, <span class="keyword">const</span> <span class="keywordtype">void</span> *buf, <span class="keywordtype">size_t</span> nbytes, <span class="keywordtype">int</span> timeoutms) {</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordflow">if</span> (nbytes == 0)</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordflow">return</span> 0;</div>
@@ -196,7 +247,20 @@ $(document).ready(function(){initNavTree('qio_8c_source.html','');});
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;}</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="comment"> * Transfer data between file descriptors</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="comment"> * @param outfd       output file descriptor</span></div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="comment"> * @param infd        input file descriptor</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="comment"> * @param nbytes      the number of bytes to copy between file descriptors.</span></div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="comment"> *                    0 means transfer until end of infd.</span></div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="comment"> * @param timeoutms   wait timeout milliseconds. 0 for no wait, -1 for infinite</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="comment"> *                    wait</span></div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="comment"> * @return the number of bytes transferred if successful, 0 on timeout,</span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="comment"> *         -1 for error.</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00199"></a><span class="lineno"><a class="code" href="qio_8c.html#aafd34a0ab9f916ded37b1634cac3ab6a">  199</a></span>&#160;off_t <a class="code" href="qio_8c.html#aafd34a0ab9f916ded37b1634cac3ab6a" title="Transfer data between file descriptors.">qio_send</a>(<span class="keywordtype">int</span> outfd, <span class="keywordtype">int</span> infd, off_t nbytes, <span class="keywordtype">int</span> timeoutms) {</div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="keywordflow">if</span> (nbytes == 0)</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        <span class="keywordflow">return</span> 0;</div>
@@ -236,7 +300,25 @@ $(document).ready(function(){initNavTree('qio_8c_source.html','');});
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;}</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="comment"> * Read a line from a file descriptor into the buffer pointed to until either a</span></div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="comment"> * terminating newline or EOF. New-line characters(CR, LF ) will not be stored</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="comment"> * into buffer.</span></div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="comment"> * @param fd      file descriptor</span></div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;<span class="comment"> * @param buf     data buffer pointer</span></div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="comment"> * @param bufsize     buffer size</span></div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;<span class="comment"> * @param timeoutms   wait timeout milliseconds. 0 for no wait, -1 for infinite</span></div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="comment"> *                    wait</span></div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="comment"> * @return the number of bytes read if successful, 0 on timeout, -1 for error.</span></div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="comment"> *  Be sure the return value does not mean the length of actual stored data.</span></div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="comment"> *  It means how many bytes are readed from the file descriptor,</span></div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<span class="comment"> *  so the new-line characters will be counted, but not be stored.</span></div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00257"></a><span class="lineno"><a class="code" href="qio_8c.html#ab7ce64cc8cd837de47c91d1bdcb17cf5">  257</a></span>&#160;ssize_t <a class="code" href="qio_8c.html#ab7ce64cc8cd837de47c91d1bdcb17cf5" title="Read a line from a file descriptor into the buffer pointed to until either a terminating newline or E...">qio_gets</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">char</span> *buf, <span class="keywordtype">size_t</span> bufsize, <span class="keywordtype">int</span> timeoutms) {</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="keywordflow">if</span> (bufsize &lt;= 1)</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        <span class="keywordflow">return</span> -1;</div>
@@ -269,7 +351,18 @@ $(document).ready(function(){initNavTree('qio_8c_source.html','');});
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;}</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="comment"> * Writes the string and a trailing newline to file descriptor.</span></div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="comment"> * @param fd        file descriptor</span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="comment"> * @param str       string pointer</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="comment"> * @param timeoutms wait timeout milliseconds. 0 for no wait, -1 for infinite</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="comment"> *                  wait</span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="comment"> * @return the number of bytes written including trailing newline characters</span></div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="comment"> *         if successful, 0 for timeout and -1 for errors.</span></div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00301"></a><span class="lineno"><a class="code" href="qio_8c.html#a2c00200ce1766b2b81dafd9b9f20f6d0">  301</a></span>&#160;ssize_t <a class="code" href="qio_8c.html#a2c00200ce1766b2b81dafd9b9f20f6d0" title="Writes the string and a trailing newline to file descriptor.">qio_puts</a>(<span class="keywordtype">int</span> fd, <span class="keyword">const</span> <span class="keywordtype">char</span> *str, <span class="keywordtype">int</span> timeoutms) {</div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <span class="keywordtype">size_t</span> strsize = strlen(str);</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    <span class="keywordtype">char</span> *newstr = (<span class="keywordtype">char</span> *) malloc(strsize + 1 + 1);</div>
@@ -282,7 +375,18 @@ $(document).ready(function(){initNavTree('qio_8c_source.html','');});
 <div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    free(newstr);</div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    <span class="keywordflow">return</span> ret;</div>
 <div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;}</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="comment"> * Formatted output to a file descriptor</span></div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;<span class="comment"> * @param fd        file descriptor</span></div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="comment"> * @param timeoutms wait timeout milliseconds. 0 for no wait, -1 for infinite</span></div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="comment"> *                  wait</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="comment"> * @param format    format string</span></div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="comment"> * @return the number of bytes written including trailing newline characters</span></div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;<span class="comment"> *         if successful, 0 for timeout and -1 for errors.</span></div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00325"></a><span class="lineno"><a class="code" href="qio_8c.html#ad2b7b0e9eb6e217a36422de18570b4e3">  325</a></span>&#160;ssize_t <a class="code" href="qio_8c.html#ad2b7b0e9eb6e217a36422de18570b4e3" title="Formatted output to a file descriptor.">qio_printf</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">int</span> timeoutms, <span class="keyword">const</span> <span class="keywordtype">char</span> *format, ...) {</div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <span class="keywordtype">char</span> *buf;</div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    DYNAMIC_VSPRINTF(buf, format);</div>

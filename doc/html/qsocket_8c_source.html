@@ -90,7 +90,11 @@ $(document).ready(function(){initNavTree('qsocket_8c_source.html','');});
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> *****************************************************************************/</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * @file qsocket.c Socket dandling APIs.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#ifndef _WIN32</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
@@ -109,7 +113,20 @@ $(document).ready(function(){initNavTree('qsocket_8c_source.html','');});
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &quot;utilities/qio.h&quot;</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#include &quot;utilities/qstring.h&quot;</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#include &quot;utilities/qsocket.h&quot;</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> * Create a TCP socket for the remote host and port.</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment"> * @param hostname  remote hostname</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment"> * @param port      remote port</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"> * @param timeoutms wait timeout milliseconds. if set to negative value,</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> *                  wait indefinitely.</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"> * @return the new socket descriptor, or</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment"> *         -1 in case of invalid hostname,</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"> *         -2 in case of socket creation failure,</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"> *         -3 in case of connection failure.</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno"><a class="code" href="qsocket_8c.html#a86e043367b6ba401408c64736192319d">   65</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="qsocket_8c.html#a86e043367b6ba401408c64736192319d" title="Create a TCP socket for the remote host and port.">qsocket_open</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *hostname, <span class="keywordtype">int</span> port, <span class="keywordtype">int</span> timeoutms) {</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">/* host conversion */</span></div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">struct </span>sockaddr_in addr;</div>
@@ -143,7 +160,17 @@ $(document).ready(function(){initNavTree('qsocket_8c_source.html','');});
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">return</span> sockfd;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment"> * Close socket.</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment"> * @param sockfd    socket descriptor</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment"> * @param timeoutms if timeoutms &gt;= 0, shut down write connection first then</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment"> *                  wait and throw out input stream data. set to -1 to close</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment"> *                  socket immediately.</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment"> * @return true on success, or false if an error occurred.</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00109"></a><span class="lineno"><a class="code" href="qsocket_8c.html#a536b1963c73ec5ace917a57ffed1f3cd">  109</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qsocket_8c.html#a536b1963c73ec5ace917a57ffed1f3cd" title="Close socket.">qsocket_close</a>(<span class="keywordtype">int</span> sockfd, <span class="keywordtype">int</span> timeoutms) {</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="comment">// close connection</span></div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">if</span> (timeoutms &gt;= 0 &amp;&amp; shutdown(sockfd, SHUT_WR) == 0) {</div>
@@ -159,7 +186,16 @@ $(document).ready(function(){initNavTree('qsocket_8c_source.html','');});
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment"> * Convert hostname to sockaddr_in structure.</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="comment"> * @param addr      sockaddr_in structure pointer</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment"> * @param hostname  IP string address or hostname</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment"> * @param port      port number</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false.</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00134"></a><span class="lineno"><a class="code" href="qsocket_8c.html#a4285c6dd3c52560f3d471f332f6558bc">  134</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qsocket_8c.html#a4285c6dd3c52560f3d471f332f6558bc" title="Convert hostname to sockaddr_in structure.">qsocket_get_addr</a>(<span class="keyword">struct</span> sockaddr_in *addr, <span class="keyword">const</span> <span class="keywordtype">char</span> *hostname, <span class="keywordtype">int</span> port) {</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="comment">/* here we assume that the hostname argument contains ip address */</span></div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    memset((<span class="keywordtype">void</span> *) addr, 0, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr_in));</div>
@@ -174,7 +210,13 @@ $(document).ready(function(){initNavTree('qsocket_8c_source.html','');});
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;}</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment"> * Return local IP address.</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment"> * @return malloced string pointer which contains IP address string if</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment"> *         successful, otherwise returns NULL</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00155"></a><span class="lineno"><a class="code" href="qsocket_8c.html#aac413225be88d873f0d6f19f2ee5e42b">  155</a></span>&#160;<span class="keywordtype">char</span> *<a class="code" href="qsocket_8c.html#aac413225be88d873f0d6f19f2ee5e42b" title="Return local IP address.">qsocket_get_localaddr</a>(<span class="keywordtype">char</span> *buf, <span class="keywordtype">size_t</span> bufsize) {</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordtype">char</span> hostname[63 + 1];</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keywordflow">if</span> (gethostname(hostname, <span class="keyword">sizeof</span>(hostname)) != 0)</div>
