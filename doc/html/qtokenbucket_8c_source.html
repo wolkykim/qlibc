@@ -63,7 +63,7 @@ $(document).ready(function(){initNavTree('qtokenbucket_8c_source.html','');});
 <div class="title">qtokenbucket.c</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/******************************************************************************</span></div>
+<a href="qtokenbucket_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/******************************************************************************</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * qLibc</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright (c) 2010-2014 Seungyoung Kim.</span></div>
@@ -90,82 +90,120 @@ $(document).ready(function(){initNavTree('qtokenbucket_8c_source.html','');});
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> *****************************************************************************/</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;extensions/qtokenbucket.h&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;strings.h&gt;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;sys/time.h&gt;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;utilities/qtime.h&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;qinternal.h&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"> * Token Bucket implementation.</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment"> * Current implementation is not thread-safe.</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"> * More information about token-bucket:</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment"> *   http://en.wikipedia.org/wiki/Token_bucket</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">/* internal functions */</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> refill_tokens(qtokenbucket_t *bucket);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"> * Initialize the token bucket.</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> * @param init_tokens</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> *      the initial number of tokens.</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> * @param max_tokens</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> *      maximum number of tokens in the bucket.</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment"> * @param tokens_per_sec</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment"> *      number of tokens to fill per a second.</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> qtokenbucket_init(qtokenbucket_t *bucket, <span class="keywordtype">int</span> init_tokens, <span class="keywordtype">int</span> max_tokens,</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                      <span class="keywordtype">int</span> tokens_per_sec) {</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    bzero(bucket, <span class="keyword">sizeof</span>(qtokenbucket_t));</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    bucket-&gt;tokens = init_tokens;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    bucket-&gt;max_tokens = max_tokens;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    bucket-&gt;tokens_per_sec = tokens_per_sec;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    bucket-&gt;last_fill = <a class="code" href="qtime_8c.html#ac76cd4f42a13ecab1ea0a82f5748fda8" title="Returns the current time in milliseconds.">current_time_milli</a>();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"> * Consume tokens from the bucket.</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment"> * @param bucket tockenbucket object.</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment"> * @param tokens number of tokens to request.</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> * @return return 0 if there are enough tokens, otherwise -1.</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">int</span> qtokenbucket_consume(qtokenbucket_t *bucket, <span class="keywordtype">int</span> tokens) {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    refill_tokens(bucket);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">if</span> (bucket-&gt;tokens &lt; tokens) {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    bucket-&gt;tokens -= tokens;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"> * Refill tokens.</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> refill_tokens(qtokenbucket_t *bucket) {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">long</span> now = <a class="code" href="qtime_8c.html#ac76cd4f42a13ecab1ea0a82f5748fda8" title="Returns the current time in milliseconds.">current_time_milli</a>();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">if</span> (bucket-&gt;tokens &lt; bucket-&gt;max_tokens) {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordtype">double</span> new_tokens = (now - bucket-&gt;last_fill) * 0.001</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                * bucket-&gt;tokens_per_sec;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        bucket-&gt;tokens =</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                ((bucket-&gt;tokens + new_tokens) &lt; bucket-&gt;max_tokens) ?</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                        (bucket-&gt;tokens + new_tokens) : bucket-&gt;max_tokens;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    bucket-&gt;last_fill = now;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * @file qtokenbucket.c Token Bucket implementation.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"> * Current implementation is not thread-safe.</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"> * More information about token-bucket:</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"> *   http://en.wikipedia.org/wiki/Token_bucket</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"> *   qtokenbucket_t bucket;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment"> *   qtokenbucket_init(&amp;bucket, 500, 1000, 1000);</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"> *   while (1) {</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"> *     if (qtokenbucket_consume(&amp;bucket, 1) == false) {</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment"> *       // Bucket is empty. Let&#39;s wait</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"> *       usleep(qtokenbucket_waittime(&amp;bucket, 1) * 1000);</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"> *       continue;</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment"> *     }</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment"> *     // Got a token. Let&#39;s do something here.</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment"> *     do_something();</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#include &quot;extensions/qtokenbucket.h&quot;</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#include &lt;strings.h&gt;</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#include &lt;sys/time.h&gt;</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#include &quot;utilities/qtime.h&quot;</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#include &quot;qinternal.h&quot;</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#ifndef _DOXYGEN_SKIP</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor"></span><span class="comment">/* internal functions */</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> refill_tokens(qtokenbucket_t *bucket);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor"></span><span class="comment"></span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment"> * Initialize the token bucket.</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"> * @param init_tokens</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment"> *      the initial number of tokens.</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment"> * @param max_tokens</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"> *      maximum number of tokens in the bucket.</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> * @param tokens_per_sec</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> *      number of tokens to fill per a second.</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="code" href="qtokenbucket_8c.html#a8da36d9c0f027f0a24086526593e2eab">   76</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="qtokenbucket_8c.html#a8da36d9c0f027f0a24086526593e2eab" title="Initialize the token bucket.">qtokenbucket_init</a>(qtokenbucket_t *bucket, <span class="keywordtype">int</span> init_tokens, <span class="keywordtype">int</span> max_tokens,</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                       <span class="keywordtype">int</span> tokens_per_sec) {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    bzero(bucket, <span class="keyword">sizeof</span>(qtokenbucket_t));</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    bucket-&gt;tokens = init_tokens;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    bucket-&gt;max_tokens = max_tokens;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    bucket-&gt;tokens_per_sec = tokens_per_sec;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    bucket-&gt;last_fill = <a class="code" href="qtime_8c.html#a689f608f871f45fb772266bf1f18cdd7" title="Returns the current time in milliseconds.">qtime_current_milli</a>();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> * Consume tokens from the bucket.</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment"> * @param bucket tockenbucket object.</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment"> * @param tokens number of tokens to request.</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment"> * @return return true if there are enough tokens, otherwise false.</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="code" href="qtokenbucket_8c.html#aec09c4e8a1ef411e4a5ee6d9036dbca0">   93</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qtokenbucket_8c.html#aec09c4e8a1ef411e4a5ee6d9036dbca0" title="Consume tokens from the bucket.">qtokenbucket_consume</a>(qtokenbucket_t *bucket, <span class="keywordtype">int</span> tokens) {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    refill_tokens(bucket);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">if</span> (bucket-&gt;tokens &lt; tokens) {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    bucket-&gt;tokens -= tokens;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment"> * Get the estimate time until given number of token is ready.</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment"> * @param tokens number of tokens</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment"> * @return estimated milliseconds</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno"><a class="code" href="qtokenbucket_8c.html#a5464647c7e3874f8517fdbe787ee6ce3">  109</a></span>&#160;<span class="keywordtype">long</span> <a class="code" href="qtokenbucket_8c.html#a5464647c7e3874f8517fdbe787ee6ce3" title="Get the estimate time until given number of token is ready.">qtokenbucket_waittime</a>(qtokenbucket_t *bucket, <span class="keywordtype">int</span> tokens) {</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    refill_tokens(bucket);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">if</span> (bucket-&gt;tokens &gt;= tokens) {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordtype">int</span> tokens_needed = tokens - (int)bucket-&gt;tokens;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordtype">double</span> estimate_milli = (1000 * tokens_needed) / bucket-&gt;tokens_per_sec;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    estimate_milli += ((1000 * tokens_needed) % bucket-&gt;tokens_per_sec) ? 1 : 0;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordflow">return</span> estimate_milli;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;}</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#ifndef _DOXYGEN_SKIP</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor"></span><span class="comment">/**</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment"> * Refill tokens.</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> refill_tokens(qtokenbucket_t *bucket) {</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordtype">long</span> now = <a class="code" href="qtime_8c.html#a689f608f871f45fb772266bf1f18cdd7" title="Returns the current time in milliseconds.">qtime_current_milli</a>();</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordflow">if</span> (bucket-&gt;tokens &lt; bucket-&gt;max_tokens) {</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="keywordtype">double</span> new_tokens = (now - bucket-&gt;last_fill) * 0.001</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                * bucket-&gt;tokens_per_sec;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        bucket-&gt;tokens =</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                ((bucket-&gt;tokens + new_tokens) &lt; bucket-&gt;max_tokens) ?</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                        (bucket-&gt;tokens + new_tokens) : bucket-&gt;max_tokens;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    }</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    bucket-&gt;last_fill = now;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;}</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="preprocessor">#endif // _DOXYGEN_SKIP</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_445263fafd9544f9ee19804b2b65121e.html">extensions</a></li><li class="navelem"><b>qtokenbucket.c</b></li>
+    <li class="navelem"><a class="el" href="dir_445263fafd9544f9ee19804b2b65121e.html">extensions</a></li><li class="navelem"><a class="el" href="qtokenbucket_8c.html">qtokenbucket.c</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.2 </li>

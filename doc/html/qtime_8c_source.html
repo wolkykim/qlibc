@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('qtime_8c_source.html','');});
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"> * @return current time in milliseconds.</span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="code" href="qtime_8c.html#ac76cd4f42a13ecab1ea0a82f5748fda8">   46</a></span>&#160;<span class="keywordtype">long</span> <a class="code" href="qtime_8c.html#ac76cd4f42a13ecab1ea0a82f5748fda8" title="Returns the current time in milliseconds.">current_time_milli</a>(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="code" href="qtime_8c.html#a689f608f871f45fb772266bf1f18cdd7">   46</a></span>&#160;<span class="keywordtype">long</span> <a class="code" href="qtime_8c.html#a689f608f871f45fb772266bf1f18cdd7" title="Returns the current time in milliseconds.">qtime_current_milli</a>(<span class="keywordtype">void</span>) {</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">struct </span>timeval tv;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    gettimeofday(&amp;tv, NULL);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">long</span> time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);</div>
