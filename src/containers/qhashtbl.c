@@ -201,7 +201,8 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
 
     return tbl;
 
-    malloc_failure: errno = ENOMEM;
+  malloc_failure:
+    errno = ENOMEM;
     if (tbl) {
         if (tbl->slots)
             free(tbl->slots);
