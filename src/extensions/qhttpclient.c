@@ -329,11 +329,6 @@ static bool setssl(qhttpclient_t *client) {
         return false;
     }
     
-    if (client->ssl != NULL) {
-        // already initialized.
-        return true;
-    }
-
     // init openssl
     if (initialized == false) {
       initialized = true;
@@ -342,9 +337,11 @@ static bool setssl(qhttpclient_t *client) {
     }
 
     // allocate ssl structure
-    client->ssl = malloc(sizeof(struct SslConn));
-    if (client->ssl == NULL) return false;
-    memset(client->ssl, 0, sizeof(struct SslConn));
+    if (client->ssl == NULL) {
+        client->ssl = malloc(sizeof(struct SslConn));
+        if (client->ssl == NULL) return false;
+        memset(client->ssl, 0, sizeof(struct SslConn));
+    }
 
     return true;
 #else
@@ -1364,8 +1361,8 @@ static int readresponse(qhttpclient_t *client, qlisttbl_t *resheaders,
  *
  * @note
  *  Be sure the return value does not mean the length of actual stored data.
- *  It means how many bytes are readed from the file descriptor, so the new-line
- *  characters will be counted, but not be stored.
+ *  It means how many bytes are read from the file descriptor, so the new-line
+ *  characters will be counted, but not stored.
  */
 static ssize_t gets_(qhttpclient_t *client, char *buf, size_t bufsize) {
 #ifdef ENABLE_OPENSSL
@@ -1649,8 +1646,7 @@ static bool _close(qhttpclient_t *client) {
     if (client->ssl == NULL && MAX_SHUTDOWN_WAIT >= 0
             && shutdown(client->socket, SHUT_WR) == 0) {
         char buf[1024];
-        while (qio_read(client->socket, buf, sizeof(buf), MAX_SHUTDOWN_WAIT) > 0)
-            ;
+        while (qio_read(client->socket, buf, sizeof(buf), MAX_SHUTDOWN_WAIT) > 0);
     }
 
     // close connection
