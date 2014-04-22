@@ -77,7 +77,7 @@ AC_DEFUN([Q_ARG_DISABLE], [
 AC_INIT([qLibc], [2 RELEASE], [https://github.com/wolkykim/qlibc])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADER([config.h])
-AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile examples/Makefile])
 AC_SUBST(BUILD_TARGETS, ["qlibc qlibcext"])
 AC_SUBST(INSTALL_TARGETS, ["install-qlibc install-qlibcext"])
 AC_SUBST(EXAMPLES_TARGETS, ["TARGETS1"])

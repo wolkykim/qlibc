@@ -26,36 +26,40 @@
 ## POSSIBILITY OF SUCH DAMAGE.
 ################################################################################
 
-RM	= @RM@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
 
-all:
-	@for DIR in src; do					\
-		echo "===> $${DIR}";				\
-		(cd $${DIR}; make all);				\
-		echo "<=== $${DIR}";				\
-	done
+## qlibc definitions
+QLIBC_INCDIR		= ../include/qlibc
+QLIBC_LIBDIR		= ../lib
 
-install:
-	(cd src/; make install)
+## Compiler options
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+CPPFLAGS	= @CPPFLAGS@ -I${QLIBC_INCDIR}
+RM		= @RM@
+DEPLIBS		= @DEPLIBS@
 
-deinstall: uninstall
-uninstall:
-	(cd src/; make deinstall)
+TARGETS1	= test_qstring
+TARGETS2	= ${TARGETS1}
+TARGETS		= ${@EXAMPLES_TARGETS@}
+LIBQLIBC	= ${QLIBC_LIBDIR}/libqlibc.a ${DEPLIBS}
+LIBQLIBCEXT	= ${QLIBC_LIBDIR}/libqlibcext.a
 
+## Main
+all:	${TARGETS}
+
+run:	${TARGETS}
+	@./test_qstring
+
+test_qstring: test_qstring.o
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qstring.o ${LIBQLIBC}
+
+## Clear Module
 clean:
-	@for DIR in src; do					\
-		echo "===> $${DIR}";				\
-		(cd $${DIR}; make clean);			\
-		echo "<=== $${DIR}";				\
-	done
+	${RM} -f *.o ${TARGETS}
 
-distclean: clean
-	@for DIR in src tests examples; do			\
-		echo "===> $${DIR}";				\
-		(cd $${DIR}; make clean; ${RM} -f Makefile);	\
-		echo "<=== $${DIR}";				\
-	done
-	${RM} -rf autom4te.cache
-	${RM} -f configure.lineno config.log config.status config.h
-	${RM} -f Makefile
+## Compile Module
+.c.o:
+	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
 
