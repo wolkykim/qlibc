@@ -53,7 +53,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <strings.h>
+#include <string.h>
 #include <sys/time.h>
 #include "utilities/qtime.h"
 #include "qinternal.h"
@@ -75,7 +75,7 @@ static void refill_tokens(qtokenbucket_t *bucket);
  */
 void qtokenbucket_init(qtokenbucket_t *bucket, int init_tokens, int max_tokens,
                        int tokens_per_sec) {
-    bzero(bucket, sizeof(qtokenbucket_t));
+    memset(bucket, 0, sizeof(qtokenbucket_t));
     bucket->tokens = init_tokens;
     bucket->max_tokens = max_tokens;
     bucket->tokens_per_sec = tokens_per_sec;
