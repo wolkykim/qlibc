@@ -96,3 +96,18 @@ Currently, we have high demands on following areas.
 * Automated testing
 * Documentation.
 * New feature implementation.
+
+## Contributors
+
+The following people have helped with suggestions, ideas, code or fixing bugs:
+(in alphabetical order by first name)
+
+* Colin
+* HyoSup Woo
+* Krishna
+* Luis Jimenez
+* Maik Beckmann
+* RQ
+* Seungyoung Kim
+
+If your name is forgotten here, please let us know.
