@@ -102,12 +102,14 @@ Currently, we have high demands on following areas.
 The following people have helped with suggestions, ideas, code or fixing bugs:
 (in alphabetical order by first name)
 
+* Cesar
 * Colin
 * HyoSup Woo
 * Krishna
 * Luis Jimenez
 * Maik Beckmann
 * RQ
+* Umesh
 * Seungyoung Kim
 
-If your name is forgotten here, please let us know.
+If your name is forgotten or spelled not in the way you want, please let us know.
