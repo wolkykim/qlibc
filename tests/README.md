@@ -16,7 +16,7 @@ PASS - 3/3 tests passed.
 
 # How to write unit tests
 
-We need your help on writing unit tests. Please refer test_qstring.c as a sample.
+We need your help to write unit tests. Please refer test_qstring.c as a sample.
 
 ```
 #include "qunit.h"
