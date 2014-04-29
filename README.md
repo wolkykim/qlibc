@@ -112,4 +112,4 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * Umesh
 * Seungyoung Kim
 
-If your name is forgotten or spelled not in the way you want, please let us know.
+If we have forgotten your name or spelled not in the way you want, please let us know.
