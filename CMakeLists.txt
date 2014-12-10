@@ -1,0 +1,24 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+PROJECT(qlibc C)
+
+INCLUDE_DIRECTORIES(${qlibc_SOURCE_DIR}/include/qlibc)
+INCLUDE_DIRECTORIES(${qlibc_SOURCE_DIR}/src/internal)
+
+FILE(GLOB_RECURSE SRC_LIB 
+		src/containers/*.c 
+		src/utilities/*.c 
+		src/ipc/*.c 
+		src/internal/*.c)
+
+FILE(GLOB_RECURSE SRC_LIB_EXT 
+		src/extensions/*.c)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+
+ADD_LIBRARY(qlibc-static STATIC ${SRC_LIB})
+ADD_LIBRARY(qlibc SHARED ${SRC_LIB})
+
+ADD_LIBRARY(qlibcext-static STATIC ${SRC_LIB_EXT})
+ADD_LIBRARY(qlibcext SHARED ${SRC_LIB_EXT})
+TARGET_LINK_LIBRARIES(qlibcext qlibc)
