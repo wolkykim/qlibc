@@ -4,17 +4,47 @@ PROJECT(qlibc C)
 INCLUDE_DIRECTORIES(${qlibc_SOURCE_DIR}/include/qlibc)
 INCLUDE_DIRECTORIES(${qlibc_SOURCE_DIR}/src/internal)
 
+SET(SRC_SUBPATHS
+		containers/*.c 
+		utilities/*.c 
+		ipc/*.c 
+		internal/*.c)
+
+SET(SRC_SUBPATHS_EXT
+		extensions/*.c)
+
+SET(SRC_PATHS src)
+
+IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	SET(SRC_PATHS ${SRC_PATHS} src/os/linux src/os/nix)
+ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	SET(SRC_PATHS ${SRC_PATHS} src/os/windows)
+ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+	SET(SRC_PATHS ${SRC_PATHS} src/os/nix)
+ENDIF()
+
+FOREACH(TMP_path IN LISTS SRC_PATHS)
+	FOREACH(TMP_subpath IN LISTS SRC_SUBPATHS)
+		SET(TMP_search_path "${TMP_path}/${TMP_subpath}")
+		SET(SRC_SEARCH_PATHS ${SRC_SEARCH_PATHS} ${TMP_search_path})
+	ENDFOREACH(TMP_subpath)
+ENDFOREACH(TMP_elem)
+
+FOREACH(TMP_path IN LISTS SRC_PATHS)
+	FOREACH(TMP_subpath IN LISTS SRC_SUBPATHS_EXT)
+		SET(TMP_search_path "${TMP_path}/${TMP_subpath}")
+		SET(SRC_SEARCH_PATHS_EXT ${SRC_SEARCH_PATHS_EXT} ${TMP_search_path})
+	ENDFOREACH(TMP_subpath)
+ENDFOREACH(TMP_elem)
+
 FILE(GLOB_RECURSE SRC_LIB 
-		src/containers/*.c 
-		src/utilities/*.c 
-		src/ipc/*.c 
-		src/internal/*.c)
+		${SRC_SEARCH_PATHS})
 
 FILE(GLOB_RECURSE SRC_LIB_EXT 
-		src/extensions/*.c)
+		${SRC_SEARCH_PATHS_EXT})
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${qlibc_SOURCE_DIR}/lib)
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${qlibc_SOURCE_DIR}/lib)
 
 ADD_LIBRARY(qlibc-static STATIC ${SRC_LIB})
 ADD_LIBRARY(qlibc SHARED ${SRC_LIB})
