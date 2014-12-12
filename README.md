@@ -104,6 +104,7 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 
 * Cesar
 * Colin
+* Dmitry Vorobiev
 * HyoSup Woo
 * Krishna
 * Luis Jimenez
