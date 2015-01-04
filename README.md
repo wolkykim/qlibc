@@ -112,5 +112,6 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * RQ
 * Umesh
 * Seungyoung Kim
+* Zhongchao Liu
 
 If we have forgotten your name or spelled not in the way you want, please let us know.
