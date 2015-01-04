@@ -93,7 +93,6 @@ struct qhasharr_data_s {
     int maxslots;       /*!< number of maximum slots */
     int usedslots;      /*!< number of used slots */
     int num;            /*!< number of stored keys */
-    qhasharr_slot_t *slots;  /*!< data area pointer */
 };
 
 /**
