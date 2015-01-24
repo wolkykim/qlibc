@@ -36,7 +36,7 @@ All of the deliverable code in qLibc has been dedicated to the public domain by 
   * Database(MySQL) interface.
   * Token-Bucket.
 
-## Consistant API Look
+## Consistent API Look
 
 All container APIs have a consistent look and feel. Basically, it provides a creator function which usually returns a pointer of a container structure. And **all functions related to the container can be accessed through function pointers inside of the container**.
 
