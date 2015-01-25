@@ -13,12 +13,4 @@ TEST("qcount_read()") {
     ASSERT_EQUAL_INT(result, expected);
 }
 
-/*
-TEST("qstrtrim()") {
-    ASSERT_EQUAL_STR(qstrtrim(strdup("")), "");
-    ASSERT_EQUAL_STR(qstrtrim(strdup(" ab c")), "ab c");
-    ASSERT_EQUAL_STR(qstrtrim(strdup(" ab c ")), "ab c");
-}
-*/
-
 QUNIT_END();

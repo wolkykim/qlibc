@@ -1,11 +1,11 @@
 What's qLibc?
 =============
 
-qLibc is currently one of the most functionally complete public licensed C/C++ libraries. The goal of qLibc project is to provide a **simple and powerful general purpose C/C++ library** which includes all kinds of containers and general library routines. It provides ready-made set of common container APIs with consistant API look.
+qLibc is currently one of the most functionally-complete public licensed C/C++ libraries. The goal of qLibc project is to provide a **simple and powerful general purpose C/C++ library**, which includes all kinds of containers and general library routines. It provides ready-made set of common container APIs with a consistent API look.
 
 ## qLibc Copyright
 
-All of the deliverable code in qLibc has been dedicated to the public domain by the authors. Anyone is free to copy, modify, publish, use, compile, sell, or distribute the original qLibc code, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means. 
+All of the deliverable code in qLibc has been dedicated to the public domain by the authors. Anyone is free to copy, modify, publish, use, compile, sell, or distribute the original qLibc code, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.
 
 ## API Reference
 
@@ -13,7 +13,7 @@ All of the deliverable code in qLibc has been dedicated to the public domain by 
   * Containers
     * List --- Doubly Linked List.
     * List Table --- KEY/VALUE paired table implemented on linked-list.
-    * Hash Table --- Hash based KEY/VALUE paired table.
+    * Hash Table --- Hash-based KEY/VALUE paired table.
     * Static Hash Table --- Static(array/mmapped/shared) memory based KEY/VALUE paired table.
     * Vector --- implements a growable array of elements.
     * Queue --- FIFO(First In First Out) implementation.
@@ -36,15 +36,15 @@ All of the deliverable code in qLibc has been dedicated to the public domain by 
   * Database(MySQL) interface.
   * Token-Bucket.
 
-## Consistant API Look
+## Consistent API Look
 
-All container APIs have constant look, basically it provides a creator function which usually returns a pointer of a container structure. And **every functions related to the container can be accessed through function pointers inside of the container**.
+All container APIs have a consistent look and feel. Basically, it provides a creator function which usually returns a pointer of a container structure. And **all functions related to the container can be accessed through function pointers inside of the container**.
 
-So regardless of what container you use, you can simple put elements into list like pContainer->put(pContainer, ...). It looks like C++ class but it's pure C implementation. Of course it works with both of your C and C++ codes**.
+So, regardless of which container you use, you can simply put elements into list like pContainer->put(pContainer, ...). It looks like C++ class but it's pure C implementation. Of course it works with both of your C and C++ code**.
 
-We used this concept as much as possible because it simplifies the thinking way and helps to improve readability. Consequently it helps people to write bugless codes more easily.
- 
-See the example below to see how it works.
+We used this concept as much as possible because it is a simplified way of thinking and helps to improve readability. Consequently, it helps people to write bug-free code more easily.
+
+The example below illustrates qlibc in action:
 
 ```
   // create a hash-table.
@@ -65,9 +65,9 @@ See the example below to see how it works.
   tbl->free(tbl);
 ```
 
-Here is an identical implementation with Linked-List-Table container.
-You might noticed that there's no code change entirely except of 1 line for the table creation.
-This is why qLibc encapsulates corresponding function pointers inside the container object.
+Here is an identical implementation with a Linked-List-Table container.
+You may notice that there isn't any code change at all, except for 1 line in the table creation.
+This is why qLibc encapsulates corresponding function pointers inside of the container object.
 
 ```
   // create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.
@@ -90,7 +90,7 @@ This is why qLibc encapsulates corresponding function pointers inside the contai
 
 ## Looking for people to work with.
 
-We're looking for people who want to work together developing and improving qLibc.
+We're looking for people who want to work together to develop and improve qLibc.
 Currently, we have high demands on following areas.
 
 * Automated testing
@@ -114,4 +114,4 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * Seungyoung Kim
 * Zhongchao Liu
 
-If we have forgotten your name or spelled not in the way you want, please let us know.
+If we have forgotten or misspelled your name, please let us know.
