@@ -4,6 +4,12 @@ PROJECT(qlibc C)
 INCLUDE_DIRECTORIES(${qlibc_SOURCE_DIR}/include/qlibc)
 INCLUDE_DIRECTORIES(${qlibc_SOURCE_DIR}/src/internal)
 
+# Tell CMake we will use CTest
+ENABLE_TESTING()
+
+# Tell CMake there is a CMakeLists.txt in the tests/ directory
+ADD_SUBDIRECTORY(tests)
+
 SET(SRC_SUBPATHS
 		containers/*.c 
 		utilities/*.c 
@@ -28,14 +34,14 @@ FOREACH(TMP_path IN LISTS SRC_PATHS)
 		SET(TMP_search_path "${TMP_path}/${TMP_subpath}")
 		SET(SRC_SEARCH_PATHS ${SRC_SEARCH_PATHS} ${TMP_search_path})
 	ENDFOREACH(TMP_subpath)
-ENDFOREACH(TMP_elem)
+ENDFOREACH()
 
 FOREACH(TMP_path IN LISTS SRC_PATHS)
 	FOREACH(TMP_subpath IN LISTS SRC_SUBPATHS_EXT)
 		SET(TMP_search_path "${TMP_path}/${TMP_subpath}")
 		SET(SRC_SEARCH_PATHS_EXT ${SRC_SEARCH_PATHS_EXT} ${TMP_search_path})
 	ENDFOREACH(TMP_subpath)
-ENDFOREACH(TMP_elem)
+ENDFOREACH()
 
 FILE(GLOB_RECURSE SRC_LIB 
 		${SRC_SEARCH_PATHS})
