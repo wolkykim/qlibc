@@ -6,6 +6,7 @@ The newer build system uses CMake, and can be built like so, assuming you have c
 ```
 git clone git@github.com:wolkykim/qlibc.git
 mkdir qlibc-build
+cd glibc-build
 cmake ../qlibc && make && ctest --output-on-failure
 ```
 This will create static and shared libraries in your source/lib folder as well as generate them in the build directory:
