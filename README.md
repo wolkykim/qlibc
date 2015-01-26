@@ -110,8 +110,8 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * Luis Jimenez
 * Maik Beckmann
 * RQ
-* Umesh
 * Seungyoung Kim
+* Umesh
 * Zhongchao Liu
 
 If we have forgotten or misspelled your name, please let us know.
