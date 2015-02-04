@@ -76,9 +76,7 @@
         int _ret = pthread_mutex_init(&(x->mutex), &_mutexattr);        \
         pthread_mutexattr_destroy(&_mutexattr);                         \
         if(_ret != 0) {                                                 \
-            char _errmsg[64];                                           \
-            strerror_r(_ret, _errmsg, sizeof(_errmsg));                 \
-            DEBUG("Q_MUTEX: can't initialize mutex. [%d:%s]", _ret, _errmsg); \
+            DEBUG("Q_MUTEX: can't initialize mutex. [%d]", _ret);       \
             free(x);                                                    \
             x = NULL;                                                   \
         }                                                               \
@@ -106,10 +104,8 @@
                 usleep(1);                                              \
             }                                                           \
             if(_ret == 0) break;                                        \
-            char _errmsg[64];                                           \
-            strerror_r(_ret, _errmsg, sizeof(_errmsg));                 \
-            DEBUG("Q_MUTEX: can't get lock - force to unlock. [%d:%s]", \
-                  _ret, _errmsg);                                       \
+            DEBUG("Q_MUTEX: can't get lock - force to unlock. [%d]",    \
+                  _ret);                                                \
             Q_MUTEX_LEAVE(x);                                           \
         }                                                               \
         x->count++;                                                     \
@@ -121,9 +117,7 @@
         if(x->count != 0) DEBUG("Q_MUTEX: mutex counter is not 0.");    \
         int _ret;                                                       \
         while((_ret = pthread_mutex_destroy(&(x->mutex))) != 0) {       \
-            char _errmsg[64];                                           \
-            strerror_r(_ret, _errmsg, sizeof(_errmsg));                 \
-            DEBUG("Q_MUTEX: force to unlock mutex. [%d:%s]", _ret, _errmsg); \
+            DEBUG("Q_MUTEX: force to unlock mutex. [%d]", _ret);        \
             Q_MUTEX_LEAVE(x);                                           \
         }                                                               \
         free(x);                                                        \

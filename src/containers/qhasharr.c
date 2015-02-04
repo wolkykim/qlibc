@@ -755,7 +755,7 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
         return false;
     }
 
-    qhasharr_data_t *data = tbl->data;
+    //qhasharr_data_t *data = tbl->data;
     qhasharr_slot_t *tblslots = _get_slots(tbl);
 
     int idx = 0;
@@ -908,7 +908,7 @@ static void *_get_data(qhasharr_t *tbl, int idx, size_t *size) {
         return NULL;
     }
 
-    qhasharr_data_t *data = tbl->data;
+    //qhasharr_data_t *data = tbl->data;
     qhasharr_slot_t *tblslots = _get_slots(tbl);
 
     int newidx;
