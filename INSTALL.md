@@ -1,10 +1,13 @@
 Installing qLibc
 ================
 
+qLibc supports POSIX-compliant operating systems, including Linux, MacOS X and most of Unix systems. Windows OS is supported with most of features.
+
 ## Configure
 
+### Linux and most of Unix systems.
 
-Configure compile option by executing included "configure" script:
+Run "configure" command.
 
 ```
 $ ./configure
@@ -34,6 +37,17 @@ To see detailed configure options, use `--help` option:
 $ ./configure --help
 ```
 
+### MacOS X and Windows systems
+
+Run "cmake" command.
+
+```
+$ cmake .
+```
+
+In many systems, CMake needs to be installed separately. qlibc requires CMake version 2.8.12 or above.
+Currently, we're focusing on getting the library compiled on those machines using cmake thus it doesn't provide the full configure options as we provide in configure command.
+
 ## Compile
 
 Run `make` in your terminal to compile the source code:
@@ -44,14 +58,13 @@ $ make
 
 ## Install
 
-This command will install `qLibc` on your system. By default, the directory prefix is "/usr/local" so it will be installed in `/usr/local/include` and `/usr/local/lib`:
+This command will install `qLibc` on your system. By default, the directory prefix is "/usr/local" so header files will be installed into `/usr/local/include` and library files will be installed into `/usr/local/lib`:
 
 ```
 $ make install
 ```
 
-This will only install header files and library(archive; static and dynamic) files.
-The documentation in the "doc" directory will not be installed, so make a copy of it yourself if you want to keep it.
+This will only install header files and library(archive; static and dynamic) files. The document files in the "doc" directory will not be installed, so please make a copy of it by yourself if you want to keep it in the system.
 
 ## Uninstall
 
@@ -61,10 +74,31 @@ The documentation in the "doc" directory will not be installed, so make a copy o
 $ make uninstall
 ```
 
-## Test
+## Examples and Unit Tests.
 
-Sample source and API documents are provided with the package in the "examples" and "doc" directories.
+Analyzing the example code is probably a best starting point to being familiar with qlibc, but please note that the examples were written as simply as possible just to show the sample usages.
 
-The examples also can be compiled by typing "make" command in the "examples" directory.
+As a reminder, example codes and API documents are provided with the package in the "examples" and "doc" directories.
 
-Analyzing the example code is probably best starting point, but be aware that the examples were written as simply as possible just to give you straight-forward ideas. So, please refer included API document for more details.
+### Run Examples
+
+The examples also can be compiled by running "make" command in the "examples" directory.
+
+```
+$ cd examples
+$ make
+```
+
+If you're using cmake to configure the qlibc package, it will not generate Makefile for codes in examples.
+
+### Run Unit Tests
+
+Currently Unit Tests cover only small portion of codes. This part is in-progress area that we're looking for contributors to enrich this area. 
+
+Unit tests can be compiled and run as following.
+
+```
+$ cd tests
+$ make
+$ make run
+```
