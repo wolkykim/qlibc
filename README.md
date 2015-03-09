@@ -46,7 +46,7 @@ We used this concept as much as possible because it is a simplified way of think
 
 The example below illustrates qlibc in action:
 
-```
+```C
   // create a hash-table.
   qhashtbl_t *tbl = qhashtbl(0, QHASHTBL_OPT_THREADSAFE);
   
@@ -69,7 +69,7 @@ Here is an identical implementation with a Linked-List-Table container.
 You may notice that there isn't any code change at all, except for 1 line in the table creation.
 This is why qLibc encapsulates corresponding function pointers inside of the container object.
 
-```
+```C
   // create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.
   qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
   
