@@ -755,9 +755,6 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
         return false;
     }
 
-#ifdef BUILD_DEBUG
-    qhasharr_data_t *data = tbl->data;
-#endif
     qhasharr_slot_t *tblslots = _get_slots(tbl);
 
     int idx = 0;
@@ -774,6 +771,7 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
     }
 
 #ifdef BUILD_DEBUG
+    qhasharr_data_t *data = tbl->data;
     fprintf(out, "%d elements (slot %d used/%d total)\n",
             data->num, data->usedslots, data->maxslots);
     for (idx = 0; idx < data->maxslots; idx++) {
