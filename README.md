@@ -102,6 +102,7 @@ Currently, we have high demands on following areas.
 The following people have helped with suggestions, ideas, code or fixing bugs:
 (in alphabetical order by first name)
 
+* Anthony Tseng
 * Cesar
 * Colin
 * Dmitry Vorobiev
