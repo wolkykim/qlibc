@@ -100,18 +100,21 @@ struct qhasharr_data_s {
  */
 struct qhasharr_s {
     /* encapsulated member functions */
-    bool (*put) (qhasharr_t *tbl, const char *key, const void *value,
-                 size_t size);
+    bool (*put) (qhasharr_t *tbl, const void *key, size_t key_size, 
+            const void *value, size_t size);
     bool (*putstr) (qhasharr_t *tbl, const char *key, const char *str);
     bool (*putstrf) (qhasharr_t *tbl, const char *key, const char *format, ...);
     bool (*putint) (qhasharr_t *tbl, const char *key, int64_t num);
 
-    void *(*get) (qhasharr_t *tbl, const char *key, size_t *size);
+    void *(*get) (qhasharr_t *tbl, const void *key, size_t key_size, 
+            size_t *size);
     char *(*getstr) (qhasharr_t *tbl, const char *key);
     int64_t (*getint) (qhasharr_t *tbl, const char *key);
     bool (*getnext) (qhasharr_t *tbl, qnobj_t *obj, int *idx);
 
-    bool (*remove) (qhasharr_t *tbl, const char *key);
+    char *(*printobj) (const void *object, size_t object_size);
+
+    bool (*remove) (qhasharr_t *tbl, const void *key, size_t key_size);
 
     int  (*size) (qhasharr_t *tbl, int *maxslots, int *usedslots);
     void (*clear) (qhasharr_t *tbl);
@@ -121,6 +124,10 @@ struct qhasharr_s {
 
     /* private variables */
     qhasharr_data_t *data;
+
+#ifdef BUILD_DEBUG
+    char debug_key_msg[_Q_HASHARR_KEYSIZE*2+2+1]; // "0x" + '\0'
+#endif
 };
 
 #ifdef __cplusplus
