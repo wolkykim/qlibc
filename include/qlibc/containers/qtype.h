@@ -75,6 +75,7 @@ struct qobj_s {
  */
 struct qnobj_s {
     char *name;         /*!< object name */
+    size_t name_size;   /*!< object name size */
     void *data;         /*!< data */
     size_t size;        /*!< data size */
 };

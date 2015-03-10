@@ -41,8 +41,8 @@ RM		= @RM@
 DEPLIBS		= @DEPLIBS@
 
 TARGETS1	= test_qstring
-TARGETS2	= ${TARGETS1}
-TARGETS		= ${@EXAMPLES_TARGETS@}
+TARGETS2	= test_qhasharr
+TARGETS		= ${TARGETS1} ${TARGETS2}
 LIBQLIBC	= ${QLIBC_LIBDIR}/libqlibc.a ${DEPLIBS}
 LIBQLIBCEXT	= ${QLIBC_LIBDIR}/libqlibcext.a
 
@@ -51,9 +51,13 @@ all:	${TARGETS}
 
 run:	${TARGETS}
 	@./test_qstring
+	@./test_qhasharr
 
 test_qstring: test_qstring.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qstring.o ${LIBQLIBC}
+
+test_qhasharr: test_qhasharr.o
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhasharr.o ${LIBQLIBC}
 
 ## Clear Module
 clean:
