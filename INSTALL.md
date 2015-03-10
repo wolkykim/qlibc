@@ -100,5 +100,5 @@ Unit tests can be compiled and run as following.
 ```
 $ cd tests
 $ make
-$ make run
+$ make test
 ```
