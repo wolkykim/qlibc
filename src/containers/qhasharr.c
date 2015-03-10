@@ -755,7 +755,9 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
         return false;
     }
 
-    //qhasharr_data_t *data = tbl->data;
+#ifdef BUILD_DEBUG
+    qhasharr_data_t *data = tbl->data;
+#endif
     qhasharr_slot_t *tblslots = _get_slots(tbl);
 
     int idx = 0;
