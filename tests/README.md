@@ -16,7 +16,7 @@ PASS - 3/3 tests passed.
 Test qhashtbl.c
 ======================================================================
 * TEST : Test basic but complete ......... OK (9 assertions)
-* TEST : Test thousands of keys insertion and removal .............................. OK (40002 assertions)
+* TEST : Test thousands of keys insertion and removal ..... OK (40002 assertions)
 ======================================================================
 PASS - 2/2 tests passed.
 ```
