@@ -40,7 +40,9 @@ CPPFLAGS	= @CPPFLAGS@ -I${QLIBC_INCDIR}
 RM		= @RM@
 DEPLIBS		= @DEPLIBS@
 
-TARGETS1	= test_qstring
+TARGETS1	= \
+			test_qstring 		\
+			test_qhashtbl
 TARGETS2	= ${TARGETS1}
 TARGETS		= ${@EXAMPLES_TARGETS@}
 LIBQLIBC	= ${QLIBC_LIBDIR}/libqlibc.a ${DEPLIBS}
@@ -51,10 +53,16 @@ all:	${TARGETS}
 
 run:	test
 test:	all
-	@./test_qstring
+	@for EXECUTABLE in ${TARGETS}; do		\
+		./$${EXECUTABLE};					\
+		echo "";							\
+	done
 
 test_qstring: test_qstring.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qstring.o ${LIBQLIBC}
+
+test_qhashtbl: test_qhashtbl.o
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhashtbl.o ${LIBQLIBC}
 
 ## Clear Module
 clean:
@@ -63,4 +71,3 @@ clean:
 ## Compile Module
 .c.o:
 	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
-

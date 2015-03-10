@@ -57,6 +57,8 @@ int _q_tot_tests = 0;                                                       \
 int _q_tot_failed = 0;                                                      \
 int _q_this_failed = 0;                                                     \
 int _q_errcnt = 0;                                                          \
+int _q_assert_cnt = 0;  /* number of assert test in a test */               \
+int _q_assert_dot_cnt = 0;  /* number of dots printed out in a test. */     \
 int main(int argc, char **argv) {                                           \
     PRINTLN("%s", _q_title);                                                \
     PRINTLN("======================================================================");  \
@@ -73,23 +75,28 @@ int main(int argc, char **argv) {                                           \
 #define TEST(name)                                                          \
     _TEST_RESULT();                                                         \
     _q_tot_tests++;                                                         \
+    _q_assert_cnt = 0;                                                      \
+    _q_assert_dot_cnt = 0;                                                  \
     PRINT("* TEST : %s ", name);
 
 #define _TEST_RESULT()                                                      \
-    if (_q_tot_tests ) PRINTLN(" %s", (_q_this_failed) ? "FAIL" : "OK");    \
+    if (_q_tot_tests ) PRINTLN(" %s (%d assertions)", (_q_this_failed) ? "FAIL" : "OK", _q_assert_cnt); \
     _q_tot_failed += (_q_this_failed) ? 1 : 0;                              \
     _q_this_failed = 0;
 
 #define ASSERT(expr)                                                        \
+    _q_assert_cnt++;                                                        \
     if (! (expr))  {                                                        \
         _q_this_failed++;                                                   \
         PRINTLN("\nAssertion '%s' failed (%s:%d)", #expr, __FILE__, __LINE__); \
-    } else {                                                                \
+    } else if (_q_assert_dot_cnt < 30) {                                    \
         PRINT(".");                                                         \
+        _q_assert_dot_cnt++;                                                \
     }
 
 #define ASSERT_EQUAL_STR(s1, s2) ASSERT(!strcmp(s1, s2))
 #define ASSERT_EQUAL_INT(d1, d2) ASSERT(d1 == d2)
+#define ASSERT_EQUAL_PT(p1, p2) ASSERT(p1 == p2)
 
 #ifdef __cplusplus
 }
