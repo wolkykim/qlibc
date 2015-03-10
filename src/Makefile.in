@@ -196,6 +196,9 @@ doc:
 cleandoc:
 	${RM} -rf ../doc/html
 
+test:
+	(cd ../tests; make clean test)
+
 ## Compile
 .c.o:
 	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
