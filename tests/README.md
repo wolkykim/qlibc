@@ -32,15 +32,12 @@ We need your help to write unit tests. Please refer test_qstring.c and qunit.h f
 QUNIT_START("Test title");
 
 TEST("Test name1") {
-    ASSERT(NULL == NULL);
+    ASSERT_EQUAL_STR("abc", "abc");
+    ASSERT_EQUAL_INT(8, 8);
 }
 
 TEST("Test name2") {
-    ASSERT_EQUAL_STR("abc", "abc");
-}
-
-TEST("Test name3") {
-    ASSERT_EQUAL_INT(8, 8);
+    ASSERT_EQUAL_PT(NULL == NULL);
 }
 
 QUNIT_END();
