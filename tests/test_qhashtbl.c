@@ -54,7 +54,7 @@ TEST("Test basic but complete") {
 
     tbl->remove(tbl, KEYS[0]);
     ASSERT_EQUAL_INT(1, tbl->size(tbl));
-    ASSERT_EQUAL_PT(NULL, tbl->getstr(tbl, KEYS[0], false));
+    ASSERT_NULL(tbl->getstr(tbl, KEYS[0], false));
     ASSERT_EQUAL_STR(VALUES[1], tbl->getstr(tbl, KEYS[1], false));
 
     tbl->clear(tbl);
@@ -84,7 +84,7 @@ void test_thousands_of_keys(int num_keys, char *key_postfix, char *value_postfix
         char *key = qstrdupf("key%d%s", i, key_postfix);
         tbl->remove(tbl, key);
         ASSERT_EQUAL_INT(i, tbl->size(tbl));
-        ASSERT_EQUAL_PT(NULL, tbl->getstr(tbl, key, false));
+        ASSERT_NULL(tbl->getstr(tbl, key, false));
         free(key);
     }
 
