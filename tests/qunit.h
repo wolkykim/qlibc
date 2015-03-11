@@ -96,6 +96,7 @@ int main(int argc, char **argv) {                                           \
 
 #define ASSERT_EQUAL_STR(s1, s2) ASSERT(!strcmp(s1, s2))
 #define ASSERT_EQUAL_INT(d1, d2) ASSERT(d1 == d2)
+#define ASSERT_EQUAL_BOOL(d1, d2) ASSERT(d1 == d2)
 #define ASSERT_EQUAL_PT(p1, p2) ASSERT(p1 == p2)
 
 #ifdef __cplusplus

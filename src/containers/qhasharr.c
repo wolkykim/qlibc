@@ -44,14 +44,13 @@
  * both md5 and key comparison(only stored size) to verify that the key is same.
  * So please be aware of that, theoretically there is a possibility we pick
  * wrong element in case a key exceeds the limit, has same length and MD5 hash
- * with lookup key. But this possibility is extreamly low and almost never
- * happen in practice. If you happpen to want to make sure everything,
- * you set _Q_HASHARR_KEYSIZE big enough at compile time to make sure all keys
- * fits in it.
+ * with lookup key. But this possibility is very low and almost zero in practice.
  *
- * qhasharr hash-table does not support thread-safe. So users should handle
- * race conditions on application side by raising user lock before calling
- * functions which modify the table data.
+ * qhasharr hash-table does not provide thread-safe handling intentionally and
+ * let users determine whether to provide locking mechanism or not, depending on
+ * the use cases. When there's race conditions expected, you should provide a
+ * shared resource control using mutex or semaphore to make sure data gets
+ * updated by one instance at a time.
  *
  * @code
  *  [Data Structure Diagram]
@@ -162,6 +161,7 @@ static int64_t getint(qhasharr_t *tbl, const char *key);
 static bool getnext(qhasharr_t *tbl, qnobj_t *obj, int *idx);
 
 static bool remove_(qhasharr_t *tbl, const char *key);
+static bool remove_by_idx(qhasharr_t *tbl, int idx);
 
 static int size(qhasharr_t *tbl, int *maxslots, int *usedslots);
 static void clear(qhasharr_t *tbl);
@@ -262,6 +262,7 @@ qhasharr_t *qhasharr(void *memory, size_t memsize) {
     tbl->getnext = getnext;
 
     tbl->remove = remove_;
+    tbl->remove_by_idx = remove_by_idx;
 
     tbl->size = size;
     tbl->clear = clear;
@@ -350,7 +351,7 @@ static bool put(qhasharr_t *tbl, const char *key, const void *value,
         }
     } else {
         // in case of -1 or -2, move it. -1 used for collision resolution,
-        // -2 used for oversized value data.
+        // -2 used for extended value data.
 
         // find empty slot
         int idx = _find_empty(tbl, hash + 1);
@@ -363,7 +364,7 @@ static bool put(qhasharr_t *tbl, const char *key, const void *value,
         _copy_slot(tbl, idx, hash);
         _remove_slot(tbl, hash);
 
-        // in case of -2, adjust link of mother
+        // if moved slot is extended data slot, adjust the link chain from the mother.
         if (tblslots[idx].count == -2) {
             tblslots[tblslots[idx].hash].link = idx;
             if (tblslots[idx].link != -1) {
@@ -611,7 +612,7 @@ static bool getnext(qhasharr_t *tbl, qnobj_t *obj, int *idx) {
  * @retval errno will be set in error condition.
  *  - ENOENT    : No such key found.
  *  - EINVAL    : Invald argument.
- *  - EFAULT        : Unexpected error. Data structure is not constant.
+ *  - EFAULT    : Unexpected error. Data structure is not constant.
  */
 static bool remove_(qhasharr_t *tbl, const char *key) {
     if (tbl == NULL || key == NULL) {
@@ -620,24 +621,72 @@ static bool remove_(qhasharr_t *tbl, const char *key) {
     }
 
     qhasharr_data_t *data = tbl->data;
-    qhasharr_slot_t *tblslots = _get_slots(tbl);
 
     // get hash integer
     unsigned int hash = qhashmurmur3_32(key, strlen(key)) % data->maxslots;
-
     int idx = _get_idx(tbl, key, hash);
     if (idx < 0) {
-        DEBUG("not found %s", key);
+        DEBUG("key(%s) not found %s", key);
         errno = ENOENT;
         return false;
     }
+
+    return remove_by_idx(tbl, idx);
+}
+
+/**
+ * qhasharr->remove_by_idx(): Remove an object from this table by index number.
+ *
+ * @param tbl       qhasharr_t container pointer.
+ * @param key       key string
+ *
+ * @return true if successful, otherwise(not found) returns false
+ * @retval errno will be set in error condition.
+ *  - ENOENT    : Index is not pointing a valid object.
+ *  - EINVAL    : Invald argument.
+ *  - EFAULT    : Unexpected error. Data structure is not constant.
+ *
+ * @code
+ *  int idx = 0;
+ *  qnobj_t obj;
+ *  while(tbl->getnext(tbl, &obj, &idx) == true) {
+ *    if (condition_to_remove) {
+ *      idx--;  // adjust index by -1
+ *      remove_by_idx(idx);
+ *    }
+ *    free(obj.name);
+ *    free(obj.data);
+ *  }
+ * @endcode
+ *
+ * @note
+ * This function is to remove an object in getnext() traversal loop without
+ * knowing the object name but index value. When key names are longer than
+ * defined size, the keys are stored with truncation with their fingerprint,
+ * so this method provides a way to remove those keys.
+ * getnext() returns actual index + 1(pointing next slot of current finding),
+ * so you need to adjust it by -1 for the valid index number. And once you
+ * remove object by this method, rewind idx by -1 before calling getnext()
+ * because collision objects can be moved back to removed index again, so
+ * by adjusting index by -1, getnext() can continue search from the removed
+ * slot index again. Please refer an example code.
+ */
+static bool remove_by_idx(qhasharr_t *tbl, int idx) {
+    if (idx < 0) {
+        DEBUG("Invalid index range, %d", idx);
+        errno = EINVAL;;
+        return false;
+    }
+
+    qhasharr_data_t *data = tbl->data;
+    qhasharr_slot_t *tblslots = _get_slots(tbl);
 
     if (tblslots[idx].count == 1) {
         // just remove
         _remove_data(tbl, idx);
         DEBUG("hasharr: rem %s (idx=%d,tot=%d)", key, idx, data->usedslots);
-    } else if (tblslots[idx].count > 1) {  // leading slot and has dup
-        // find dup
+    } else if (tblslots[idx].count > 1) {  // leading slot and has collision
+        // find the collision key
         int idx2;
         for (idx2 = idx + 1;; idx2++) {
             if (idx2 >= data->maxslots)
@@ -648,7 +697,7 @@ static bool remove_(qhasharr_t *tbl, const char *key) {
                 return false;
             }
             if (tblslots[idx2].count == -1
-                    && tblslots[idx2].hash == hash) {
+                    && tblslots[idx2].hash == tblslots[idx].hash) {
                 break;
             }
         }
@@ -666,7 +715,7 @@ static bool remove_(qhasharr_t *tbl, const char *key) {
 
         DEBUG("hasharr: rem(lead) %s (idx=%d,tot=%d)",
                 key, idx, data->usedslots);
-    } else {  // in case of -1. used for collision resolution
+    } else if (tblslots[idx].count == -1) {  // collision key
         // decrease counter from leading slot
         if (tblslots[tblslots[idx].hash].count <= 1) {
             DEBUG("hasharr: [BUG] failed to remove  %s. "
@@ -679,6 +728,10 @@ static bool remove_(qhasharr_t *tbl, const char *key) {
         // remove data
         _remove_data(tbl, idx);
         DEBUG("hasharr: rem(dup) %s (idx=%d,tot=%d)", key, idx, data->usedslots);
+    } else {
+        DEBUG("Index(%d) is not pointing a valid object", idx);
+        errno = ENOENT;;
+        return false;
     }
 
     return true;

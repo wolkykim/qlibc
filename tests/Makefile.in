@@ -42,7 +42,8 @@ DEPLIBS		= @DEPLIBS@
 
 TARGETS1	= \
 			test_qstring 		\
-			test_qhashtbl
+			test_qhashtbl		\
+			test_qhasharr
 TARGETS2	= ${TARGETS1}
 TARGETS		= ${@EXAMPLES_TARGETS@}
 LIBQLIBC	= ${QLIBC_LIBDIR}/libqlibc.a ${DEPLIBS}
@@ -63,6 +64,9 @@ test_qstring: test_qstring.o
 
 test_qhashtbl: test_qhashtbl.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhashtbl.o ${LIBQLIBC}
+
+test_qhasharr: test_qhasharr.o
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhasharr.o ${LIBQLIBC}
 
 ## Clear Module
 clean:
