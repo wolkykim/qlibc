@@ -97,12 +97,13 @@ int main(int argc, char **argv) {                                           \
 
 #define ASSERT_EQUAL_STR(s1, s2) ASSERT(!strcmp(s1, s2))
 #define ASSERT_EQUAL_INT(d1, d2) ASSERT(d1 == d2)
+#define ASSERT_EQUAL_BOOL(d1, d2) ASSERT(d1 == d2)
 #define ASSERT_EQUAL_PT(p1, p2) ASSERT(p1 == p2)
-#define ASSERT_NULL(p) ASSERT(p == NULL)
-#define ASSERT_NOT_NULL(p) ASSERT(p != NULL)
 #define ASSERT_EQUAL_MEM(p1, p2, n) ASSERT(!memcmp(p1, p2, n))
-#define ASSERT_TRUE(b) ASSERT(b == true)
-#define ASSERT_FALSE(b) ASSERT(b == false)
+#define ASSERT_NULL(p) ASSERT(NULL == p)
+#define ASSERT_NOT_NULL(p) ASSERT(NULL != p)
+#define ASSERT_TRUE(b) ASSERT(b)
+#define ASSERT_FALSE(b) ASSERT(!(b))
 
 #ifdef __cplusplus
 }

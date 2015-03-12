@@ -112,6 +112,7 @@ struct qhasharr_s {
     bool (*getnext) (qhasharr_t *tbl, qnobj_t *obj, int *idx);
 
     bool (*remove) (qhasharr_t *tbl, const char *key);
+    bool (*remove_by_idx) (qhasharr_t *tbl, int idx);
 
     int  (*size) (qhasharr_t *tbl, int *maxslots, int *usedslots);
     void (*clear) (qhasharr_t *tbl);

@@ -42,8 +42,9 @@ DEPLIBS		= @DEPLIBS@
 
 TARGETS1	= \
 			test_qstring 		\
-			test_qhashtbl       \
-            test_qhasharr
+			test_qhashtbl		\
+			test_qhasharr		\
+
 TARGETS2	= ${TARGETS1}
 TARGETS		= ${@EXAMPLES_TARGETS@}
 LIBQLIBC	= ${QLIBC_LIBDIR}/libqlibc.a ${DEPLIBS}
