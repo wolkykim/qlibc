@@ -33,10 +33,12 @@
 QUNIT_START("Test qhasharr.c by darkdh");
 
 qhasharr_t *tbl;
-char memory[512];
+char *memory;
 
 TEST("qhasharr()") {
-    tbl = qhasharr(memory, sizeof(memory));
+    int memsize = qhasharr_calculate_memsize(5);
+    memory = (char *) malloc(memsize * sizeof(char));
+    tbl = qhasharr(memory, memsize);
     ASSERT_NOT_NULL(tbl);
     int maxslots, usedslots;
     tbl->size(tbl, &maxslots, &usedslots);
@@ -135,5 +137,7 @@ TEST("getnext()") {
 
 // free table reference object.
 tbl->free(tbl);
+
+free(memory);
 
 QUNIT_END();
