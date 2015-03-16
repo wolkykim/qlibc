@@ -34,7 +34,8 @@
 
 int main(void) {
     // initialize hash-table
-    char memory[1000 * 10];
+    int memsize = qhasharr_calculate_memsize(10);
+    char memory[memsize];
     qhasharr_t *tbl = qhasharr(memory, sizeof(memory));
     if (tbl == NULL) {
         return -1;
