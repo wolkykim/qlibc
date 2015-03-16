@@ -43,8 +43,7 @@ TEST("Test basic but complete") {
             "value1_long_value-1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
     };
 
-    int memsize = qhasharr_calculate_memsize(10000);
-    char memory[memsize];
+    char memory[qhasharr_calculate_memsize(10)];
     qhasharr_t *tbl = qhasharr(memory, sizeof(memory));
     ASSERT_EQUAL_INT(0, tbl->size(tbl, NULL, NULL));
 
@@ -101,28 +100,43 @@ void test_thousands_of_keys(size_t memsize, int num_keys, char *key_postfix, cha
 }
 
 TEST("Test thousands of keys insertion and removal: short key + short value") {
-    int memsize = qhasharr_calculate_memsize(10000);
-    test_thousands_of_keys(memsize, 10000, "", "");
+    test_thousands_of_keys(
+        qhasharr_calculate_memsize(10000),
+        10000,
+        "",
+        ""
+    );
 }
 
 TEST("Test thousands of keys insertion and removal: short key + long value") {
-    int memsize = qhasharr_calculate_memsize(10000);
-    test_thousands_of_keys(memsize, 10000, "", "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
+    test_thousands_of_keys(
+        qhasharr_calculate_memsize(10000),
+        10000,
+        "",
+        "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866"
+    );
 }
 
 TEST("Test thousands of keys insertion and removal: long key + short value") {
-    int memsize = qhasharr_calculate_memsize(10000);
-    test_thousands_of_keys(memsize, 10000, "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866", "");
+    test_thousands_of_keys(
+        qhasharr_calculate_memsize(10000),
+        10000,
+        "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
+        ""
+    );
 }
 
 TEST("Test thousands of keys insertion and removal: long key + long value") {
-    int memsize = qhasharr_calculate_memsize(10000);
-    test_thousands_of_keys(memsize, 10000, "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866", "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
+    test_thousands_of_keys(
+        qhasharr_calculate_memsize(10000),
+        10000,
+        "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
+        "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866"
+    );
 }
 
 TEST("Test remove_by_idx()") {
-    int memsize = qhasharr_calculate_memsize(10000);
-    char memory[memsize];
+    char memory[qhasharr_calculate_memsize(10)];
     qhasharr_t *tbl = qhasharr(memory, sizeof(memory));
 
     tbl->putstr(tbl, "key1", "");
