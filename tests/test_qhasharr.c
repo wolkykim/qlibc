@@ -95,8 +95,8 @@ void test_thousands_of_keys(size_t memsize, int num_keys, char *key_postfix, cha
     }
 
     ASSERT_EQUAL_INT(0, tbl->size(tbl, NULL, NULL));
-    tbl->free(tbl);
 
+    tbl->free(tbl);
 }
 
 TEST("Test thousands of keys insertion and removal: short key + short value") {
