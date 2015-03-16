@@ -5,9 +5,9 @@ INCLUDE_DIRECTORIES(${qlibc_SOURCE_DIR}/include/qlibc)
 INCLUDE_DIRECTORIES(${qlibc_SOURCE_DIR}/src/internal)
 
 SET(SRC_SUBPATHS
-		containers/*.c 
-		utilities/*.c 
-		ipc/*.c 
+		containers/*.c
+		utilities/*.c
+		ipc/*.c
 		internal/*.c)
 
 SET(SRC_SUBPATHS_EXT
@@ -28,19 +28,19 @@ FOREACH(TMP_path IN LISTS SRC_PATHS)
 		SET(TMP_search_path "${TMP_path}/${TMP_subpath}")
 		SET(SRC_SEARCH_PATHS ${SRC_SEARCH_PATHS} ${TMP_search_path})
 	ENDFOREACH(TMP_subpath)
-ENDFOREACH(TMP_elem)
+ENDFOREACH(TMP_path)
 
 FOREACH(TMP_path IN LISTS SRC_PATHS)
 	FOREACH(TMP_subpath IN LISTS SRC_SUBPATHS_EXT)
 		SET(TMP_search_path "${TMP_path}/${TMP_subpath}")
 		SET(SRC_SEARCH_PATHS_EXT ${SRC_SEARCH_PATHS_EXT} ${TMP_search_path})
 	ENDFOREACH(TMP_subpath)
-ENDFOREACH(TMP_elem)
+ENDFOREACH(TMP_path)
 
-FILE(GLOB_RECURSE SRC_LIB 
+FILE(GLOB_RECURSE SRC_LIB
 		${SRC_SEARCH_PATHS})
 
-FILE(GLOB_RECURSE SRC_LIB_EXT 
+FILE(GLOB_RECURSE SRC_LIB_EXT
 		${SRC_SEARCH_PATHS_EXT})
 
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${qlibc_SOURCE_DIR}/lib)
