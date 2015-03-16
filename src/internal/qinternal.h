@@ -130,7 +130,11 @@
 #define DEBUG(fmt, args...) fprintf(stderr, "[DEBUG] " fmt " (%s:%d)\n", \
                                     ##args, __FILE__, __LINE__);
 #else
-#define DEBUG(fms, args...)
+#ifdef __cplusplus
+#define DEBUG(fmt, args...) static_cast<void>(0)
+#else
+#define DEBUG(fmt, args...) (void)(0)
+#endif
 #endif  /* BUILD_DEBUG */
 
 // debug timer

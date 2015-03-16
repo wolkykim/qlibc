@@ -174,7 +174,7 @@ enum qaconf_otype {
 struct qaconf_s {
     /* capsulated member functions */
     int (*addoptions) (qaconf_t *qaconf, const qaconf_option_t *options);
-    void (*setdefhandler) (qaconf_t *qaconf, const qaconf_cb_t *callback);
+    void (*setdefhandler) (qaconf_t *qaconf, qaconf_cb_t *callback);
     void (*setuserdata) (qaconf_t *qaconf, const void *userdata);
     int (*parse) (qaconf_t *qaconf, const char *filepath, uint8_t flags);
     const char *(*errmsg) (qaconf_t *qaconf);
