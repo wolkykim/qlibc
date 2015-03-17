@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -21,7 +21,7 @@
       <div class="inner">
         <h1>qLibc Project</h1>
         <h2>The goal of qLibc project is to provide a simple but powerful general purpose C/C++ library.</h2>
-        <a href="https://github.com/wolkykim/qlibc" class="button"><small>View project on</small>GitHub</a>
+        <a href="https://github.com/wolkykim/qlibc" class="button"><small>View project on</small> GitHub</a>
       </div>
     </header>
 
@@ -29,17 +29,28 @@
       <div class="inner clearfix">
         <section id="main-content">
           <h1>
-<a name="whats-qlibc" class="anchor" href="#whats-qlibc"><span class="octicon octicon-link"></span></a>What's qLibc?</h1>
+<a id="whats-qlibc" class="anchor" href="#whats-qlibc" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's qLibc?</h1>
 
-<p>qLibc is currently one of the most functionally complete public licensed C/C++ libraries. The goal of qLibc project is to provide a <strong>simple and powerful general purpose C/C++ library</strong> which includes all kinds of containers and general library routines. It provides ready-made set of common container APIs with consistant API look.</p>
-
-<h2>
-<a name="qlibc-copyright" class="anchor" href="#qlibc-copyright"><span class="octicon octicon-link"></span></a>qLibc Copyright</h2>
-
-<p>All of the deliverable code in qLibc has been dedicated to the public domain by the authors. Anyone is free to copy, modify, publish, use, compile, sell, or distribute the original qLibc code, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means. </p>
+<p>qLibc is currently one of the most functionally-complete, publicly-licensed C/C++ libraries. The goal of the qLibc project is to provide a <strong>simple and powerful general purpose C/C++ library</strong> that includes all kinds of containers and general library routines. It provides a ready-made set of common container APIs with a consistent API look.</p>
 
 <h2>
-<a name="api-reference" class="anchor" href="#api-reference"><span class="octicon octicon-link"></span></a>API Reference</h2>
+<a id="qlibc-copyright" class="anchor" href="#qlibc-copyright" aria-hidden="true"><span class="octicon octicon-link"></span></a>qLibc Copyright</h2>
+
+<p>Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:</p>
+
+<ol>
+<li><p>Redistributions of source code must retain the above copyright notice,
+this list of conditions and the following disclaimer.</p></li>
+<li><p>Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.</p></li>
+</ol>
+
+<p>Please refer LICENSE file included in the package to retain the full version.</p>
+
+<h2>
+<a id="api-reference" class="anchor" href="#api-reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>API Reference</h2>
 
 <ul>
 <li>
@@ -51,7 +62,7 @@
 <ul>
 <li>List --- Doubly Linked List.</li>
 <li>List Table --- KEY/VALUE paired table implemented on linked-list.</li>
-<li>Hash Table --- Hash based KEY/VALUE paired table.</li>
+<li>Hash Table --- Hash-based KEY/VALUE paired table.</li>
 <li>Static Hash Table --- Static(array/mmapped/shared) memory based KEY/VALUE paired table.</li>
 <li>Vector --- implements a growable array of elements.</li>
 <li>Queue --- FIFO(First In First Out) implementation.</li>
@@ -82,87 +93,96 @@
 <li>Rotating File Logger.</li>
 <li>HTTP client.</li>
 <li>Database(MySQL) interface.</li>
-<li>Token-Bucket.</li>
+<li><a href="http://en.wikipedia.org/wiki/Token_bucket">Token-Bucket</a></li>
 </ul>
 </li>
-</ul><h2>
-<a name="consistant-api-look" class="anchor" href="#consistant-api-look"><span class="octicon octicon-link"></span></a>Consistant API Look</h2>
-
-<p>All container APIs have constant look, basically it provides a creator function which usually returns a pointer of a container structure. And <strong>every functions related to the container can be accessed through function pointers inside of the container</strong>.</p>
-
-<p>So regardless of what container you use, you can simple put elements into list like pContainer-&gt;put(pContainer, ...). It looks like C++ class but it's pure C implementation. Of course it works with both of your C and C++ codes**.</p>
-
-<p>We used this concept as much as possible because it simplifies the thinking way and helps to improve readability. Consequently it helps people to write bugless codes more easily.</p>
-
-<p>See the example below to see how it works.</p>
-
-<pre><code>  // create a hash-table.
-  qhashtbl_t *tbl = qhashtbl(0, QHASHTBL_OPT_THREADSAFE);
-
-  // add an element which key name is "score".
-  int x = 12345;
-  tbl-&gt;put(tbl, "score", &amp;x, sizeof(int));
-
-  // get the value of the element.
-  int *px = tbl-&gt;get(tbl, "score");
-  if(px != NULL) {
-    printf("%d\n", *px);
-    free(px);
-  }
-
-  // release table
-  tbl-&gt;free(tbl);
-</code></pre>
-
-<p>Here is an identical implementation with Linked-List-Table container.
-You might noticed that there's no code change entirely except of 1 line for the table creation.
-This is why qLibc encapsulates corresponding function pointers inside the container object.</p>
-
-<pre><code>  // create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.
-  qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
-
-  // add an element which key name is "score".
-  int x = 12345;
-  tbl-&gt;put(tbl, "score", &amp;x, sizeof(int));
-
-  // get the value of the element.
-  int *px = tbl-&gt;get(tbl, "score");
-  if(px != NULL) {
-    printf("%d\n", *px);             
-    free(px);
-  }
-
-  // release table
-  tbl-&gt;free(tbl);
-</code></pre>
+</ul>
 
 <h2>
-<a name="looking-for-people-to-work-with" class="anchor" href="#looking-for-people-to-work-with"><span class="octicon octicon-link"></span></a>Looking for people to work with.</h2>
+<a id="consistent-api-look" class="anchor" href="#consistent-api-look" aria-hidden="true"><span class="octicon octicon-link"></span></a>Consistent API Look</h2>
 
-<p>We're looking for people who want to work together developing and improving qLibc.
+<p>All container APIs have a consistent look and feel. It basically provides a creator function which usually returns a pointer to a container structure. Also, <strong>all functions related to the container can be accessed through function pointers inside of the container</strong>.</p>
+
+<p>So, regardless of which container you use, you can simply put elements into a list with <code>pContainer-&gt;put(pContainer, ...)</code>. It looks like C++ classes, but it's a pure C implementation. Of course, it works with both C and C++ code**.</p>
+
+<p>We use this concept as much as possible because it is a simplified way of thinking and helps to improve readability. Consequently, it helps people to write bug-free code more easily.</p>
+
+<p>The example below illustrates qlibc in action:</p>
+
+<div class="highlight highlight-C"><pre>  <span class="pl-c">// create a hash-table.</span>
+  <span class="pl-s3">qhashtbl_t</span> *tbl = qhashtbl(<span class="pl-c1">0</span>, QHASHTBL_OPT_THREADSAFE);
+
+  <span class="pl-c">// add an element which key name is "score".</span>
+  <span class="pl-st">int</span> x = <span class="pl-c1">12345</span>;
+  tbl-&gt;<span class="pl-en">put</span>(tbl, <span class="pl-s1"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>, &amp;x, <span class="pl-k">sizeof</span>(<span class="pl-st">int</span>));
+
+  <span class="pl-c">// get the value of the element.</span>
+  <span class="pl-st">int</span> *px = tbl-&gt;<span class="pl-en">get</span>(tbl, <span class="pl-s1"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>);
+  <span class="pl-k">if</span>(px != <span class="pl-c1">NULL</span>) {
+    <span class="pl-s3">printf</span>(<span class="pl-s1"><span class="pl-pds">"</span><span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, *px);
+    <span class="pl-s3">free</span>(px);
+  }
+
+  <span class="pl-c">// release table</span>
+  tbl-&gt;<span class="pl-en">free</span>(tbl);</pre></div>
+
+<p>Here is an identical implementation with a Linked-List-Table container.
+You may notice that there aren't any code changes at all, except for 1 line in the table creation.
+This is why qLibc encapsulates corresponding function pointers inside of the container object.</p>
+
+<div class="highlight highlight-C"><pre>  <span class="pl-c">// create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.</span>
+  <span class="pl-s3">qlisttbl_t</span> *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
+
+  <span class="pl-c">// add an element which key name is "score".</span>
+  <span class="pl-st">int</span> x = <span class="pl-c1">12345</span>;
+  tbl-&gt;<span class="pl-en">put</span>(tbl, <span class="pl-s1"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>, &amp;x, <span class="pl-k">sizeof</span>(<span class="pl-st">int</span>));
+
+  <span class="pl-c">// get the value of the element.</span>
+  <span class="pl-st">int</span> *px = tbl-&gt;<span class="pl-en">get</span>(tbl, <span class="pl-s1"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>);
+  <span class="pl-k">if</span>(px != <span class="pl-c1">NULL</span>) {
+    <span class="pl-s3">printf</span>(<span class="pl-s1"><span class="pl-pds">"</span><span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, *px);             
+    <span class="pl-s3">free</span>(px);
+  }
+
+  <span class="pl-c">// release table</span>
+  tbl-&gt;<span class="pl-en">free</span>(tbl);</pre></div>
+
+<h2>
+<a id="looking-for-people-to-work-with" class="anchor" href="#looking-for-people-to-work-with" aria-hidden="true"><span class="octicon octicon-link"></span></a>Looking for people to work with.</h2>
+
+<p>We're looking for people who want to work together to develop and improve qLibc.
 Currently, we have high demands on following areas.</p>
 
 <ul>
 <li>Automated testing</li>
 <li>Documentation.</li>
 <li>New feature implementation.</li>
-</ul><h2>
-<a name="contributors" class="anchor" href="#contributors"><span class="octicon octicon-link"></span></a>Contributors</h2>
+</ul>
+
+<h2>
+<a id="contributors" class="anchor" href="#contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributors</h2>
 
 <p>The following people have helped with suggestions, ideas, code or fixing bugs:
 (in alphabetical order by first name)</p>
 
 <ul>
+<li>Anthony Tseng</li>
 <li>Cesar</li>
 <li>Colin</li>
+<li>Dmitry Vorobiev</li>
 <li>HyoSup Woo</li>
+<li>Keith Rosenberg</li>
 <li>Krishna</li>
 <li>Luis Jimenez</li>
 <li>Maik Beckmann</li>
 <li>RQ</li>
-<li>Umesh</li>
+<li>Ryan Gonzalez</li>
 <li>Seungyoung Kim</li>
-</ul><p>If your name is forgotten or spelled not in the way you want, please let us know.</p>
+<li>Umesh</li>
+<li>Zhongchao Liu</li>
+</ul>
+
+<p>If we have forgotten or misspelled your name, please let us know.</p>
         </section>
 
         <aside id="sidebar">
@@ -182,6 +202,16 @@ Currently, we have high demands on following areas.</p>
       </div>
     </div>
 
-  
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-8949829-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
   </body>
 </html>
