@@ -122,6 +122,7 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * Luis Jimenez
 * Maik Beckmann
 * RQ
+* Ryan Gonzalez
 * Seungyoung Kim
 * Umesh
 * Zhongchao Liu
