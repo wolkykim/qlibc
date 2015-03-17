@@ -1,7 +1,7 @@
 What's qLibc?
 =============
 
-qLibc is currently one of the most functionally-complete public licensed C/C++ libraries. The goal of qLibc project is to provide a **simple and powerful general purpose C/C++ library**, which includes all kinds of containers and general library routines. It provides ready-made set of common container APIs with a consistent API look.
+qLibc is currently one of the most functionally-complete, publicly-licensed C/C++ libraries. The goal of the qLibc project is to provide a **simple and powerful general purpose C/C++ library** that includes all kinds of containers and general library routines. It provides a ready-made set of common container APIs with a consistent API look.
 
 ## qLibc Copyright
 
@@ -48,11 +48,11 @@ Please refer COPYING file included in the package to retain the full version.
 
 ## Consistent API Look
 
-All container APIs have a consistent look and feel. Basically, it provides a creator function which usually returns a pointer of a container structure. And **all functions related to the container can be accessed through function pointers inside of the container**.
+All container APIs have a consistent look and feel. It basically provides a creator function which usually returns a pointer to a container structure. Also, **all functions related to the container can be accessed through function pointers inside of the container**.
 
-So, regardless of which container you use, you can simply put elements into list like pContainer->put(pContainer, ...). It looks like C++ class but it's pure C implementation. Of course it works with both of your C and C++ code**.
+So, regardless of which container you use, you can simply put elements into a list with `pContainer->put(pContainer, ...)`. It looks like C++ classes, but it's a pure C implementation. Of course, it works with both C and C++ code**.
 
-We used this concept as much as possible because it is a simplified way of thinking and helps to improve readability. Consequently, it helps people to write bug-free code more easily.
+We use this concept as much as possible because it is a simplified way of thinking and helps to improve readability. Consequently, it helps people to write bug-free code more easily.
 
 The example below illustrates qlibc in action:
 
@@ -76,7 +76,7 @@ The example below illustrates qlibc in action:
 ```
 
 Here is an identical implementation with a Linked-List-Table container.
-You may notice that there isn't any code change at all, except for 1 line in the table creation.
+You may notice that there aren't any code changes at all, except for 1 line in the table creation.
 This is why qLibc encapsulates corresponding function pointers inside of the container object.
 
 ```C
