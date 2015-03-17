@@ -15,7 +15,7 @@ this list of conditions and the following disclaimer.
 this list of conditions and the following disclaimer in the documentation
 and/or other materials provided with the distribution.
 
-Please refer COPYRIGHT file included in the package to retain the full version.
+Please refer COPYING file included in the package to retain the full version.
 
 ## API Reference
 
