@@ -789,9 +789,6 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
             if (recvsize == 0) {
                 // end of transfer
                 completed = true;
-            } else if (recvsize < 0) {
-                // parsing failure
-                break;
             }
 
             // save chunk
