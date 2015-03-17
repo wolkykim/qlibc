@@ -5,7 +5,17 @@ qLibc is currently one of the most functionally-complete public licensed C/C++ l
 
 ## qLibc Copyright
 
-All of the deliverable code in qLibc has been dedicated to the public domain by the authors. Anyone is free to copy, modify, publish, use, compile, sell, or distribute the original qLibc code, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice,
+this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+Please refer COPYRIGHT file included in the package to retain the full version.
 
 ## API Reference
 
