@@ -3,6 +3,11 @@ What's qLibc?
 
 qLibc is currently one of the most functionally-complete, publicly-licensed C/C++ libraries. The goal of the qLibc project is to provide a **simple and powerful general purpose C/C++ library** that includes all kinds of containers and general library routines. It provides a ready-made set of common container APIs with a consistent API look.
 
+## qLibc Copyright
+
+qLibc is published under 2-clause BSD license known as Simplified BSD License.
+Please refer the LICENSE document included in the package for more details.
+
 ## API Reference
 
 * [qlibc Core API Reference](http://wolkykim.github.io/qlibc/doc/html/files.html)
