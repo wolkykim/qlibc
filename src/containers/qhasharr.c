@@ -158,7 +158,7 @@ static bool putint(qhasharr_t *tbl, const char *key, int64_t num);
 static void *get(qhasharr_t *tbl, const char *key, size_t *size);
 static char *getstr(qhasharr_t *tbl, const char *key);
 static int64_t getint(qhasharr_t *tbl, const char *key);
-static bool getnext(qhasharr_t *tbl, qnobj_t *obj, int *idx);
+static bool getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx);
 
 static bool remove_(qhasharr_t *tbl, const char *key);
 static bool remove_by_idx(qhasharr_t *tbl, int idx);
@@ -547,7 +547,7 @@ static int64_t getint(qhasharr_t *tbl, const char *key) {
  *
  * @code
  *  int idx = 0;
- *  qnobj_t obj;
+ *  qhasharr_obj_t obj;
  *  while(tbl->getnext(tbl, &obj, &idx) == true) {
  *    printf("NAME=%s, DATA=%s, SIZE=%zu\n",
  *           obj.name, (char*)obj.data, obj.size);
@@ -561,7 +561,7 @@ static int64_t getint(qhasharr_t *tbl, const char *key) {
  *  because key name is truncated when it put into the table if it's length is
  *  longer than _Q_HASHARR_KEYSIZE.
  */
-static bool getnext(qhasharr_t *tbl, qnobj_t *obj, int *idx) {
+static bool getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx) {
     if (tbl == NULL || obj == NULL || idx == NULL) {
         errno = EINVAL;
         return NULL;
@@ -648,7 +648,7 @@ static bool remove_(qhasharr_t *tbl, const char *key) {
  *
  * @code
  *  int idx = 0;
- *  qnobj_t obj;
+ *  qhasharr_obj_t obj;
  *  while(tbl->getnext(tbl, &obj, &idx) == true) {
  *    if (condition_to_remove) {
  *      idx--;  // adjust index by -1
@@ -811,7 +811,7 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
     qhasharr_slot_t *tblslots = _get_slots(tbl);
 
     int idx = 0;
-    qnobj_t obj;
+    qhasharr_obj_t obj;
     while (tbl->getnext(tbl, &obj, &idx) == true) {
         uint16_t keylen = tblslots[idx - 1].data.pair.keylen;
         fprintf(out, "%s%s(%d)=", obj.name,

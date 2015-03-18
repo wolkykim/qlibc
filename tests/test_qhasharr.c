@@ -148,7 +148,7 @@ TEST("Test remove_by_idx()") {
     ASSERT_EQUAL_INT(6, tbl->size(tbl, NULL, NULL));
 
     int idx = 0;
-    qnobj_t obj;
+    qhasharr_obj_t obj;
     while(tbl->getnext(tbl, &obj, &idx) == true) {
         ASSERT_EQUAL_BOOL(true, tbl->remove_by_idx(tbl, --idx));
         free(obj.name);

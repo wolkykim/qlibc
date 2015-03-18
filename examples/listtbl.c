@@ -36,7 +36,7 @@
 int main(void) {
     // create a list-table.
     qlisttbl_t *tbl = qlisttbl(0);
-    qdlnobj_t obj;
+    qlisttbl_obj_t obj;
     int i;
 
     //
@@ -72,7 +72,7 @@ int main(void) {
 
     printf("\n--[Test 3 : getmulti() - fetch all duplicated 'e2' keys]--\n");
     size_t numobjs = 0;
-    qobj_t *objs = tbl->getmulti(tbl, "e2", true, &numobjs);
+    qlisttbl_data_t *objs = tbl->getmulti(tbl, "e2", true, &numobjs);
     printf("getmulti('e2') : %d objects found.\n", (int) numobjs);
     for (i = 0; objs[i].data != NULL; i++) {
         printf("getmulti('e2')[%d]=%s (%zu)\n", i, (char *) objs[i].data,

@@ -77,7 +77,7 @@ int main(void) {
     printf("\n--[Test 3 : travesal table]--\n");
     printf("table size : %d elements\n", tbl->size(tbl, NULL, NULL));
     int idx = 0;
-    qnobj_t obj;
+    qhasharr_obj_t obj;
     while (tbl->getnext(tbl, &obj, &idx) == true) {
         printf("NAME=%s, DATA=%s, SIZE=%zu\n", obj.name, (char *) obj.data,
                obj.size);

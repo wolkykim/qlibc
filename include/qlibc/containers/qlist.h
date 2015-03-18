@@ -47,6 +47,7 @@ extern "C" {
 
 /* types */
 typedef struct qlist_s qlist_t;
+typedef struct qlist_obj_s qlist_obj_t;
 
 /* public functions */
 enum {
@@ -69,7 +70,7 @@ struct qlist_s {
     void *(*getfirst)(qlist_t *list, size_t *size, bool newmem);
     void *(*getlast)(qlist_t *list, size_t *size, bool newmem);
     void *(*getat)(qlist_t *list, int index, size_t *size, bool newmem);
-    bool (*getnext)(qlist_t *list, qdlobj_t *obj, bool newmem);
+    bool (*getnext)(qlist_t *list, qlist_obj_t *obj, bool newmem);
 
     void *(*popfirst)(qlist_t *list, size_t *size);
     void *(*poplast)(qlist_t *list, size_t *size);
@@ -95,13 +96,24 @@ struct qlist_s {
     void (*free)(qlist_t *list);
 
     /* private variables - do not access directly */
-    qmutex_t *qmutex;  /*!< initialized when QLIST_OPT_THREADSAFE is given */
-    size_t num;        /*!< number of elements */
-    size_t max;        /*!< maximum number of elements. 0 means no limit */
-    size_t datasum;    /*!< total sum of data size, does not include name size */
+    qmutex_t *qmutex;     /*!< initialized when QLIST_OPT_THREADSAFE is given */
+    size_t num;           /*!< number of elements */
+    size_t max;           /*!< maximum number of elements. 0 means no limit */
+    size_t datasum;       /*!< total sum of data size, does not include name size */
 
-    qdlobj_t *first;   /*!< first object pointer */
-    qdlobj_t *last;    /*!< last object pointer */
+    qlist_obj_t *first;   /*!< first object pointer */
+    qlist_obj_t *last;    /*!< last object pointer */
+};
+
+/**
+ * qlist node data structure.
+ */
+struct qlist_obj_s {
+    void *data;          /*!< data */
+    size_t size;         /*!< data size */
+
+    qlist_obj_t *prev;   /*!< previous link */
+    qlist_obj_t *next;   /*!< next link */
 };
 
 #ifdef __cplusplus

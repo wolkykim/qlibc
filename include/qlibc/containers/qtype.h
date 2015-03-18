@@ -35,9 +35,6 @@
 #ifndef _QTYPE_H
 #define _QTYPE_H
 
-#include <stdlib.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include <pthread.h>
 
 #ifdef __cplusplus
@@ -46,11 +43,6 @@ extern "C" {
 
 /* types */
 typedef struct qmutex_s qmutex_t;    /*!< qlibc pthread mutex type*/
-typedef struct qobj_s qobj_t;        /*!< object type*/
-typedef struct qnobj_s qnobj_t;      /*!< named-object type*/
-typedef struct qdlobj_s qdlobj_t;    /*!< doubly-linked-object type*/
-typedef struct qdlnobj_s qdlnobj_t;  /*!< doubly-linked-named-object type*/
-typedef struct qhnobj_s qhnobj_t;    /*!< hashed-named-object type*/
 
 /**
  * qlibc pthread mutex data structure.
@@ -61,63 +53,8 @@ struct qmutex_s {
     int count;              /*!< recursive lock counter */
 };
 
-/**
- * object data structure.
- */
-struct qobj_s {
-    void *data;         /*!< data */
-    size_t size;        /*!< data size */
-    uint8_t type;       /*!< data type */
-};
-
-/**
- * named-object data structure.
- */
-struct qnobj_s {
-    char *name;         /*!< object name */
-    void *data;         /*!< data */
-    size_t size;        /*!< data size */
-};
-
-/**
- * doubly-linked-object data structure.
- */
-struct qdlobj_s {
-    void *data;         /*!< data */
-    size_t size;        /*!< data size */
-
-    qdlobj_t *prev;     /*!< previous link */
-    qdlobj_t *next;     /*!< next link */
-};
-
-/**
- * doubly-linked-named-object data structure.
- */
-struct qdlnobj_s {
-    uint32_t hash;      /*!< 32bit-hash value of object name */
-    char *name;         /*!< object name */
-    void *data;         /*!< data */
-    size_t size;        /*!< data size */
-
-    qdlnobj_t *prev;    /*!< previous link */
-    qdlnobj_t *next;    /*!< next link */
-};
-
-/**
- * hashed-named-object data structure.
- */
-struct qhnobj_s {
-    uint32_t hash;      /*!< 32bit-hash value of object name */
-    char *name;         /*!< object name */
-    void *data;         /*!< data */
-    size_t size;        /*!< data size */
-
-    qhnobj_t *next;     /*!< for chaining next collision object */
-};
-
 #ifdef __cplusplus
 }
 #endif
 
 #endif /*_QTYPE_H */
-

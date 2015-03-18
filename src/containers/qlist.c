@@ -75,7 +75,7 @@
  *  list->debug(list, stdout, true);
  *
  *  // traversal
- *  qdlobj_t obj;
+ *  qlist_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  list->lock(list);
  *  while (list->getnext(list, &obj, false) == true) {
@@ -109,7 +109,7 @@ static bool addat(qlist_t *list, int index, const void *data, size_t size);
 static void *getfirst(qlist_t *list, size_t *size, bool newmem);
 static void *getlast(qlist_t *list, size_t *size, bool newmem);
 static void *getat(qlist_t *list, int index, size_t *size, bool newmem);
-static bool getnext(qlist_t *list, qdlobj_t *obj, bool newmem);
+static bool getnext(qlist_t *list, qlist_obj_t *obj, bool newmem);
 
 static void *popfirst(qlist_t *list, size_t *size);
 static void *poplast(qlist_t *list, size_t *size);
@@ -135,9 +135,9 @@ static void free_(qlist_t *list);
 
 /* internal functions */
 static void *_get_at(qlist_t *list, int index, size_t *size, bool newmem,
-                     bool remove);
-static qdlobj_t *_get_obj(qlist_t *list, int index);
-static bool _remove_obj(qlist_t *list, qdlobj_t *obj);
+bool remove);
+static qlist_obj_t *_get_obj(qlist_t *list, int index);
+static bool _remove_obj(qlist_t *list, qlist_obj_t *obj);
 #endif
 
 /**
@@ -345,7 +345,7 @@ static bool addat(qlist_t *list, int index, const void *data, size_t size) {
     memcpy(dup_data, data, size);
 
     // make new object list
-    qdlobj_t *obj = (qdlobj_t *) malloc(sizeof(qdlobj_t));
+    qlist_obj_t *obj = (qlist_obj_t *) malloc(sizeof(qlist_obj_t));
     if (obj == NULL) {
         free(dup_data);
         unlock(list);
@@ -376,7 +376,7 @@ static bool addat(qlist_t *list, int index, const void *data, size_t size) {
             list->first = obj;
     } else {
         // add at the middle of list
-        qdlobj_t *tgt = _get_obj(list, index);
+        qlist_obj_t *tgt = _get_obj(list, index);
         if (tgt == NULL) {
             // should not be happened.
             free(dup_data);
@@ -494,7 +494,7 @@ static void *getat(qlist_t *list, int index, size_t *size, bool newmem) {
  *  qlist_t *list = qlist();
  *  (...add data into list...)
  *
- *  qdlobj_t obj;
+ *  qlist_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  list->lock(list);   // can be omitted in single thread model.
  *  while (list->getnext(list, &obj, false) == true) {
@@ -503,13 +503,13 @@ static void *getat(qlist_t *list, int index, size_t *size, bool newmem) {
  *  list->unlock(list); // release lock.
  * @endcode
  */
-static bool getnext(qlist_t *list, qdlobj_t *obj, bool newmem) {
+static bool getnext(qlist_t *list, qlist_obj_t *obj, bool newmem) {
     if (obj == NULL)
         return NULL;
 
     lock(list);
 
-    qdlobj_t *cont = NULL;
+    qlist_obj_t *cont = NULL;
     if (obj->size == 0)
         cont = list->first;
     else
@@ -644,7 +644,7 @@ static bool removeat(qlist_t *list, int index) {
     lock(list);
 
     // get object pointer
-    qdlobj_t *obj = _get_obj(list, index);
+    qlist_obj_t *obj = _get_obj(list, index);
     if (obj == NULL) {
         unlock(list);
         return false;
@@ -686,9 +686,9 @@ static size_t datasize(qlist_t *list) {
  */
 static void reverse(qlist_t *list) {
     lock(list);
-    qdlobj_t *obj;
+    qlist_obj_t *obj;
     for (obj = list->first; obj;) {
-        qdlobj_t *next = obj->next;
+        qlist_obj_t *next = obj->next;
         obj->next = obj->prev;
         obj->prev = next;
         obj = next;
@@ -708,9 +708,9 @@ static void reverse(qlist_t *list) {
  */
 static void clear(qlist_t *list) {
     lock(list);
-    qdlobj_t *obj;
+    qlist_obj_t *obj;
     for (obj = list->first; obj;) {
-        qdlobj_t *next = obj->next;
+        qlist_obj_t *next = obj->next;
         free(obj->data);
         free(obj);
         obj = next;
@@ -754,7 +754,7 @@ static void *toarray(qlist_t *list, size_t *size) {
     }
     void *dp = chunk;
 
-    qdlobj_t *obj;
+    qlist_obj_t *obj;
     for (obj = list->first; obj; obj = obj->next) {
         memcpy(dp, obj->data, obj->size);
         dp += obj->size;
@@ -797,7 +797,7 @@ static char *tostring(qlist_t *list) {
     }
     void *dp = chunk;
 
-    qdlobj_t *obj;
+    qlist_obj_t *obj;
     for (obj = list->first; obj; obj = obj->next) {
         size_t size = obj->size;
         // do not copy tailing '\0'
@@ -829,7 +829,7 @@ static bool debug(qlist_t *list, FILE *out) {
     }
 
     lock(list);
-    qdlobj_t *obj;
+    qlist_obj_t *obj;
     int i;
     for (i = 0, obj = list->first; obj; obj = obj->next, i++) {
         fprintf(out, "%d=", i);
@@ -878,11 +878,11 @@ static void free_(qlist_t *list) {
 #ifndef _DOXYGEN_SKIP
 
 static void *_get_at(qlist_t *list, int index, size_t *size, bool newmem,
-                     bool remove) {
+bool remove) {
     lock(list);
 
     // get object pointer
-    qdlobj_t *obj = _get_obj(list, index);
+    qlist_obj_t *obj = _get_obj(list, index);
     if (obj == NULL) {
         unlock(list);
         return false;
@@ -918,7 +918,7 @@ static void *_get_at(qlist_t *list, int index, size_t *size, bool newmem,
     return data;
 }
 
-static qdlobj_t *_get_obj(qlist_t *list, int index) {
+static qlist_obj_t *_get_obj(qlist_t *list, int index) {
     // index adjustment
     if (index < 0)
         index = list->num + index;
@@ -929,7 +929,7 @@ static qdlobj_t *_get_obj(qlist_t *list, int index) {
 
     // detect faster scan direction
     bool backward;
-    qdlobj_t *obj;
+    qlist_obj_t *obj;
     int listidx;
     if (index < list->num / 2) {
         backward = false;
@@ -960,7 +960,7 @@ static qdlobj_t *_get_obj(qlist_t *list, int index) {
     return NULL;
 }
 
-static bool _remove_obj(qlist_t *list, qdlobj_t *obj) {
+static bool _remove_obj(qlist_t *list, qlist_obj_t *obj) {
     if (obj == NULL)
         return false;
 

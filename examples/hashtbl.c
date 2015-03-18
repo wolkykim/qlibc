@@ -70,7 +70,7 @@ int main(void) {
 
     printf("\n--[Test 3 : travesal a table]--\n");
     printf("list size : %zu elements\n", tbl->size(tbl));
-    qhnobj_t obj;
+    qhashtbl_obj_t obj;
     memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     tbl->lock(tbl);
     while (tbl->getnext(tbl, &obj, true) == true) {

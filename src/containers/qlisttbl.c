@@ -72,7 +72,7 @@
  *  printf("getstr('e2') : %s\n", tbl->getstr(tbl, "e2", false));
  *
  *  // get all matching elements
- *  qobj_t *objs = tbl->getmulti(tbl, "e2", true, NULL);
+ *  qlisttbl_data_t *objs = tbl->getmulti(tbl, "e2", true, NULL);
  *  for (i = 0; objs[i].data != NULL; i++) {
  *      printf("getmulti('e2')[%d] : %s (size=%d)\n",
  *              i, (char *)objs[i].data, (int)objs[i].size);
@@ -80,7 +80,7 @@
  *  tbl->freemulti(objs);
  *
  *  // find every 'e2' elements
- *  qdlnobj_t obj;
+ *  qlisttbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  while(tbl->getnext(tbl, &obj, "e2", false) == true) {
  *    printf("NAME=%s, DATA=%s, SIZE=%zu\n",
@@ -126,12 +126,12 @@ static void *get(qlisttbl_t *tbl, const char *name, size_t *size, bool newmem);
 static char *getstr(qlisttbl_t *tbl, const char *name, bool newmem);
 static int64_t getint(qlisttbl_t *tbl, const char *name);
 
-static qobj_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem, size_t *numobjs);
-static void freemulti(qobj_t *objs);
-static bool getnext(qlisttbl_t *tbl, qdlnobj_t *obj, const char *name, bool newmem);
+static qlisttbl_data_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem, size_t *numobjs);
+static void freemulti(qlisttbl_data_t *objs);
+static bool getnext(qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name, bool newmem);
 
 static size_t remove_(qlisttbl_t *tbl, const char *name);
-static bool removeobj(qlisttbl_t *tbl, const qdlnobj_t *obj);
+static bool removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj);
 
 static size_t size(qlisttbl_t *tbl);
 static void sort_(qlisttbl_t *tbl);
@@ -147,12 +147,12 @@ static void unlock(qlisttbl_t *tbl);
 static void free_(qlisttbl_t *tbl);
 
 /* internal functions */
-static qdlnobj_t *_createobj(const char *name, const void *data, size_t size);
-static bool _insertobj(qlisttbl_t *tbl, qdlnobj_t *obj);
-static qdlnobj_t *_findobj(qlisttbl_t *tbl, const char *name, qdlnobj_t *retobj);
+static qlisttbl_obj_t *_createobj(const char *name, const void *data, size_t size);
+static bool _insertobj(qlisttbl_t *tbl, qlisttbl_obj_t *obj);
+static qlisttbl_obj_t *_findobj(qlisttbl_t *tbl, const char *name, qlisttbl_obj_t *retobj);
 
-static bool _namematch(qdlnobj_t *obj, const char *name, uint32_t hash);
-static bool _namecasematch(qdlnobj_t *obj, const char *name, uint32_t hash);
+static bool _namematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash);
+static bool _namecasematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash);
 #endif
 
 /**
@@ -281,7 +281,7 @@ qlisttbl_t *qlisttbl(int options)
 static bool put(qlisttbl_t *tbl, const char *name, const void *data, size_t size)
 {
     // make new object table
-    qdlnobj_t *obj = _createobj(name, data, size);
+    qlisttbl_obj_t *obj = _createobj(name, data, size);
     if (obj == NULL) {
         return false;
     }
@@ -429,7 +429,7 @@ static void *get(qlisttbl_t *tbl, const char *name, size_t *size, bool newmem)
 
     lock(tbl);
     void *data = NULL;
-    qdlnobj_t *obj = _findobj(tbl, name, NULL);
+    qlisttbl_obj_t *obj = _findobj(tbl, name, NULL);
     if (obj != NULL) {
         // get data
         if (newmem == true) {
@@ -517,27 +517,27 @@ static int64_t getint(qlisttbl_t *tbl, const char *name)
  *  - ENOMEM : Memory allocation failure.
  *
  * @note
- *  The returned array of qobj_t should be released by freemulti() call after
- *  use. Even you call getmulti() with newmem set false, freemulti() should
+ *  The returned array of qlisttbl_data_t should be released by freemulti() call
+ *  after use. Even you call getmulti() with newmem set false, freemulti() should
  *  be called all the times, so the object array itself can be released.
  *
  * @code
  *  size_t numobjs = 0;
- *  qobj_t *objs = tbl->getmulti(tbl, "e2", true, &numobjs);
+ *  qlisttbl_data_t *objs = tbl->getmulti(tbl, "e2", true, &numobjs);
  *  for (i = 0; objs[i].data != NULL; i++) {
  *      printf("DATA=%s, SIZE=%zu\n", i, (char *)objs[i].data, objs[i].size);
  *  }
  *  tbl->freemulti(objs);
  * @endcode
  */
-static qobj_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
+static qlisttbl_data_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
                         size_t *numobjs)
 {
-    qobj_t *objs = NULL;  // objects container
+    qlisttbl_data_t *objs = NULL;  // objects container
     size_t allocobjs = 0;  // allocated number of objs
     size_t numfound = 0;  // number of keys found
 
-    qdlnobj_t obj;
+    qlisttbl_obj_t obj;
     memset((void *)&obj, 0, sizeof(obj)); // must be cleared before call
     lock(tbl);
     while (tbl->getnext(tbl, &obj, name, newmem) == true) {
@@ -547,7 +547,7 @@ static qobj_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
         if (numfound >= allocobjs) {
             if (allocobjs == 0) allocobjs = 10;  // start from 10
             else allocobjs *= 2;  // double size
-            objs = (qobj_t *)realloc(objs, sizeof(qobj_t) * allocobjs);
+            objs = (qlisttbl_data_t *)realloc(objs, sizeof(qlisttbl_data_t) * allocobjs);
             if (objs == NULL) {
                 DEBUG("qlisttbl->getmulti(): Memory reallocation failure.");
                 errno = ENOMEM;
@@ -556,7 +556,7 @@ static qobj_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
         }
 
         // copy reference
-        qobj_t *newobj = &objs[numfound - 1];
+        qlisttbl_data_t *newobj = &objs[numfound - 1];
         newobj->data = obj.data;
         newobj->size = obj.size;
         newobj->type = (newmem == false) ? 1 : 2;
@@ -568,7 +568,7 @@ static qobj_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
 
         // clear next block
         newobj = &objs[numfound];
-        memset((void *)newobj, '\0', sizeof(qobj_t));
+        memset((void *)newobj, '\0', sizeof(qlisttbl_data_t));
         newobj->type = 0;  // mark, end of objects
     }
     unlock(tbl);
@@ -588,22 +588,22 @@ static qobj_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
 /**
  * qlisttbl->freemulti(): Deallocate object array returned by getmulti().
  *
- * @param objs      pointer of array of qobj_t.
+ * @param objs      pointer of array of qlisttbl_data_t.
  *
  * @code
- *  qobj_t *objs = tbl->getmulti(tbl, "newmem is true", true, &numobjs);
+ *  qlisttbl_data_t *objs = tbl->getmulti(tbl, "newmem is true", true, &numobjs);
  *  tbl->freemulti(objs);  // frees allocated objects and object array itself.
  *
- *  qobj_t *objs = tbl->getmulti(tbl, "even newmem is false", false, &numobjs);
+ *  qlisttbl_data_t *objs = tbl->getmulti(tbl, "even newmem is false", false, &numobjs);
  *  tbl->freemulti(objs);  // frees object array itself.
  *
  * @endcode
  */
-static void freemulti(qobj_t *objs)
+static void freemulti(qlisttbl_data_t *objs)
 {
     if (objs == NULL) return;
 
-    qobj_t *obj;
+    qlisttbl_data_t *obj;
     for (obj = &objs[0]; obj->type == 2; obj++) {
         if (obj->data != NULL) free(obj->data);
     }
@@ -637,7 +637,7 @@ static void freemulti(qobj_t *objs)
  *  (...add data into table...)
  *
  *  // non-thread usages
- *  qdlnobj_t obj;
+ *  qlisttbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  while(tbl->getnext(tbl, &obj, NULL, false) == true) {
  *    printf("NAME=%s, DATA=%s, SIZE=%zu\n",
@@ -645,7 +645,7 @@ static void freemulti(qobj_t *objs)
  *  }
  *
  *  // thread model with particular key search
- *  qdlnobj_t obj;
+ *  qlisttbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  tbl->lock(tbl);
  *  while(tbl->getnext(tbl, &obj, "key_name", true) == true) {
@@ -657,14 +657,14 @@ static void freemulti(qobj_t *objs)
  *  tbl->unlock(tbl);
  * @endcode
  */
-static bool getnext(qlisttbl_t *tbl, qdlnobj_t *obj, const char *name,
+static bool getnext(qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name,
                     bool newmem)
 {
     if (obj == NULL) return NULL;
 
     lock(tbl);
 
-    qdlnobj_t *cont = NULL;
+    qlisttbl_obj_t *cont = NULL;
     if (obj->size == 0) {  // first time call
         if (name == NULL) {  // full scan
             cont = (tbl->lookupforward) ? tbl->first : tbl->last;
@@ -736,7 +736,7 @@ static size_t remove_(qlisttbl_t *tbl, const char *name)
 
     size_t numremoved = 0;
 
-    qdlnobj_t obj;
+    qlisttbl_obj_t obj;
     memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
     lock(tbl);
     while(getnext(tbl, &obj, name, false) == true) {
@@ -764,7 +764,7 @@ static size_t remove_(qlisttbl_t *tbl, const char *name)
  *  - ENOENT : No such key found.
  *
  * @code
- *  qdlnobj_t obj;
+ *  qlisttbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  tbl->lock(tbl);
  *  while(tbl->getnext(tbl, &obj, NULL, true) == true) {
@@ -773,18 +773,18 @@ static size_t remove_(qlisttbl_t *tbl, const char *name)
  *  tbl->unlock(tbl);
  * @endcode
  */
-static bool removeobj(qlisttbl_t *tbl, const qdlnobj_t *obj)
+static bool removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj)
 {
     if (obj == NULL) return false;
 
     lock(tbl);
 
     // copy chains
-    qdlnobj_t *prev = obj->prev;
-    qdlnobj_t *next = obj->next;
+    qlisttbl_obj_t *prev = obj->prev;
+    qlisttbl_obj_t *next = obj->next;
 
     // find this object
-    qdlnobj_t *this = NULL;
+    qlisttbl_obj_t *this = NULL;
     if (prev != NULL) this = prev->next;
     else if (next != NULL) this = next->prev;
     else this = tbl->first;  // table has only one object.
@@ -855,8 +855,8 @@ static void sort_(qlisttbl_t *tbl)
 {
     // run bubble sort
     lock(tbl);
-    qdlnobj_t *obj1, *obj2;
-    qdlnobj_t tmpobj;
+    qlisttbl_obj_t *obj1, *obj2;
+    qlisttbl_obj_t tmpobj;
     int n, n2, i;
     for (n = tbl->num; n > 0;) {
         n2 = 0;
@@ -890,9 +890,9 @@ static void sort_(qlisttbl_t *tbl)
 static void clear(qlisttbl_t *tbl)
 {
     lock(tbl);
-    qdlnobj_t *obj;
+    qlisttbl_obj_t *obj;
     for (obj = tbl->first; obj != NULL;) {
-        qdlnobj_t *next = obj->next;
+        qlisttbl_obj_t *next = obj->next;
         free(obj->name);
         free(obj->data);
         free(obj);
@@ -939,7 +939,7 @@ static bool save(qlisttbl_t *tbl, const char *filepath, char sepchar,
     free(gmtstr);
 
     lock(tbl);
-    qdlnobj_t *obj;
+    qlisttbl_obj_t *obj;
     for (obj = tbl->first; obj; obj = obj->next) {
         char *encval;
         if (encode == true) encval = qurl_encode(obj->data, obj->size);
@@ -1026,7 +1026,7 @@ static bool debug(qlisttbl_t *tbl, FILE *out)
     }
 
     lock(tbl);
-    qdlnobj_t *obj;
+    qlisttbl_obj_t *obj;
     for (obj = tbl->first; obj; obj = obj->next) {
         fprintf(out, "%s=" , obj->name);
         _q_humanOut(out, obj->data, obj->size, MAX_HUMANOUT);
@@ -1076,7 +1076,7 @@ static void free_(qlisttbl_t *tbl)
 #ifndef _DOXYGEN_SKIP
 
 // lock must be obtained from caller
-static qdlnobj_t *_createobj(const char *name, const void *data, size_t size)
+static qlisttbl_obj_t *_createobj(const char *name, const void *data, size_t size)
 {
     if (name == NULL || data == NULL || size <= 0) {
         errno = EINVAL;
@@ -1086,7 +1086,7 @@ static qdlnobj_t *_createobj(const char *name, const void *data, size_t size)
     // make a new object
     char *dup_name = strdup(name);
     void *dup_data = malloc(size);
-    qdlnobj_t *obj = (qdlnobj_t *)malloc(sizeof(qdlnobj_t));
+    qlisttbl_obj_t *obj = (qlisttbl_obj_t *)malloc(sizeof(qlisttbl_obj_t));
     if (dup_name == NULL || dup_data == NULL || obj == NULL) {
         if (dup_name != NULL) free(dup_name);
         if (dup_data != NULL) free(dup_data);
@@ -1095,7 +1095,7 @@ static qdlnobj_t *_createobj(const char *name, const void *data, size_t size)
         return NULL;
     }
     memcpy(dup_data, data, size);
-    memset((void *)obj, '\0', sizeof(qdlnobj_t));
+    memset((void *)obj, '\0', sizeof(qlisttbl_obj_t));
 
     // obj->hash = qhashmurmur3_32(dup_name);
     obj->name = dup_name;
@@ -1106,13 +1106,13 @@ static qdlnobj_t *_createobj(const char *name, const void *data, size_t size)
 }
 
 // lock must be obtained from caller
-static bool _insertobj(qlisttbl_t *tbl, qdlnobj_t *obj)
+static bool _insertobj(qlisttbl_t *tbl, qlisttbl_obj_t *obj)
 {
     // update hash
     obj->hash = qhashmurmur3_32(obj->name, strlen(obj->name));
 
-    qdlnobj_t *prev = obj->prev;
-    qdlnobj_t *next = obj->next;
+    qlisttbl_obj_t *prev = obj->prev;
+    qlisttbl_obj_t *next = obj->next;
 
     if (prev == NULL) tbl->first = obj;
     else prev->next = obj;
@@ -1127,10 +1127,10 @@ static bool _insertobj(qlisttbl_t *tbl, qdlnobj_t *obj)
 }
 
 // lock must be obtained from caller
-static qdlnobj_t *_findobj(qlisttbl_t *tbl, const char *name, qdlnobj_t *retobj)
+static qlisttbl_obj_t *_findobj(qlisttbl_t *tbl, const char *name, qlisttbl_obj_t *retobj)
 {
     if (retobj != NULL) {
-        memset((void *)retobj, '\0', sizeof(qdlnobj_t));
+        memset((void *)retobj, '\0', sizeof(qlisttbl_obj_t));
     }
 
     if (name == NULL || tbl->num == 0) {
@@ -1139,7 +1139,7 @@ static qdlnobj_t *_findobj(qlisttbl_t *tbl, const char *name, qdlnobj_t *retobj)
     }
 
     uint32_t hash = qhashmurmur3_32(name, strlen(name));
-    qdlnobj_t *obj = (tbl->lookupforward) ? tbl->first : tbl->last;
+    qlisttbl_obj_t *obj = (tbl->lookupforward) ? tbl->first : tbl->last;
     while (obj != NULL) {
         // name string will be compared only if the hash matches.
         if (tbl->namematch(obj, name, hash) == true) {
@@ -1167,7 +1167,7 @@ static qdlnobj_t *_findobj(qlisttbl_t *tbl, const char *name, qdlnobj_t *retobj)
 }
 
 // key comp
-static bool _namematch(qdlnobj_t *obj, const char *name, uint32_t hash)
+static bool _namematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash)
 {
     if ((obj->hash == hash) && !strcmp(obj->name, name)) {
         return true;
@@ -1175,7 +1175,7 @@ static bool _namematch(qdlnobj_t *obj, const char *name, uint32_t hash)
     return false;
 }
 
-static bool _namecasematch(qdlnobj_t *obj, const char *name, uint32_t hash)
+static bool _namecasematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash)
 {
     if (!strcasecmp(obj->name, name)) {
         return true;

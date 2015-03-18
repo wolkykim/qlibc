@@ -113,7 +113,7 @@ static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem);
 static char *getstr(qhashtbl_t *tbl, const char *name, bool newmem);
 static int64_t getint(qhashtbl_t *tbl, const char *name);
 
-static bool getnext(qhashtbl_t *tbl, qhnobj_t *obj, bool newmem);
+static bool getnext(qhashtbl_t *tbl, qhashtbl_obj_t *obj, bool newmem);
 
 static bool remove_(qhashtbl_t *tbl, const char *name);
 
@@ -134,16 +134,16 @@ static void free_(qhashtbl_t *tbl);
  * @param range     initial size of index range. Value of 0 will use default value, DEFAULT_INDEX_RANGE;
  * @param options   combination of initialization options.
  *
- * @return a pointer of malloced qhashtbl_t, otherwise returns false
+ * @return a pointer of malloced qhashtbl_t, otherwise returns NULL.
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *
  * @code
  *  // create a hash-table.
- *  qhashtbl_t *basic_hashtbl = qHashtbl(0, 0);
+ *  qhashtbl_t *basic_hashtbl = qhashtbl(0, 0);
  *
  *  // create a large hash-table for millions of keys with thread-safe option.
- *  qhashtbl_t *small_hashtbl = qHashtbl(1000000, QHASHTBL_THREADSAFE);
+ *  qhashtbl_t *small_hashtbl = qhashtbl(1000000, QHASHTBL_THREADSAFE);
  * @endcode
  *
  * @note
@@ -162,7 +162,7 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
         goto malloc_failure;
 
     // allocate table space
-    tbl->slots = (qhnobj_t **) calloc(range, sizeof(qhnobj_t *));
+    tbl->slots = (qhashtbl_obj_t **) calloc(range, sizeof(qhashtbl_obj_t *));
     if (tbl->slots == NULL)
         goto malloc_failure;
 
@@ -239,7 +239,7 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
     lock(tbl);
 
     // find existence key
-    qhnobj_t *obj;
+    qhashtbl_obj_t *obj;
     for (obj = tbl->slots[idx]; obj != NULL; obj = obj->next) {
         if (obj->hash == hash && !strcmp(obj->name, name)) {
             break;
@@ -263,7 +263,7 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
     // put into table
     if (obj == NULL) {
         // insert
-        obj = (qhnobj_t *) calloc(1, sizeof(qhnobj_t));
+        obj = (qhashtbl_obj_t *) calloc(1, sizeof(qhashtbl_obj_t));
         if (obj == NULL) {
             free(dupname);
             free(dupdata);
@@ -405,7 +405,7 @@ static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem) {
     lock(tbl);
 
     // find key
-    qhnobj_t *obj;
+    qhashtbl_obj_t *obj;
     for (obj = tbl->slots[idx]; obj != NULL; obj = obj->next) {
         if (obj->hash == hash && !strcmp(obj->name, name)) {
             break;
@@ -499,7 +499,7 @@ static int64_t getint(qhashtbl_t *tbl, const char *name) {
  *  (...add data into list...)
  *
  *  // non-thread usages
- *  qhnobj_t obj;
+ *  qhashtbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  tbl->lock(tbl);
  *  while(tbl->getnext(tbl, &obj, false) == true) {
@@ -509,7 +509,7 @@ static int64_t getint(qhashtbl_t *tbl, const char *name) {
  *  tbl->unlock(tbl);
  *
  *  // thread model with newmem flag
- *  qhnobj_t obj;
+ *  qhashtbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  tbl->lock(tbl);
  *  while(tbl->getnext(tbl, &obj, true) == true) {
@@ -526,7 +526,7 @@ static int64_t getint(qhashtbl_t *tbl, const char *name) {
  *  If newmem flag is true, user should de-allocate obj.name and obj.data
  *  resources.
  */
-static bool getnext(qhashtbl_t *tbl, qhnobj_t *obj, const bool newmem) {
+static bool getnext(qhashtbl_t *tbl, qhashtbl_obj_t *obj, const bool newmem) {
     if (obj == NULL) {
         errno = EINVAL;
         return NULL;
@@ -536,7 +536,7 @@ static bool getnext(qhashtbl_t *tbl, qhnobj_t *obj, const bool newmem) {
 
     bool found = false;
 
-    qhnobj_t *cursor = NULL;
+    qhashtbl_obj_t *cursor = NULL;
     int idx = 0;
     if (obj->name != NULL) {
         idx = (obj->hash % tbl->range) + 1;
@@ -615,8 +615,8 @@ static bool remove_(qhashtbl_t *tbl, const char *name) {
 
     // find key
     bool found = false;
-    qhnobj_t *prev = NULL;
-    qhnobj_t *obj;
+    qhashtbl_obj_t *prev = NULL;
+    qhashtbl_obj_t *obj;
     for (obj = tbl->slots[idx]; obj != NULL; obj = obj->next) {
         if (obj->hash == hash && !strcmp(obj->name, name)) {
             // adjust link
@@ -668,10 +668,10 @@ void clear(qhashtbl_t *tbl) {
     for (idx = 0; idx < tbl->range && tbl->num > 0; idx++) {
         if (tbl->slots[idx] == NULL)
             continue;
-        qhnobj_t *obj = tbl->slots[idx];
+        qhashtbl_obj_t *obj = tbl->slots[idx];
         tbl->slots[idx] = NULL;
         while (obj != NULL) {
-            qhnobj_t *next = obj->next;
+            qhashtbl_obj_t *next = obj->next;
             free(obj->name);
             free(obj->data);
             free(obj);
@@ -700,7 +700,7 @@ bool debug(qhashtbl_t *tbl, FILE *out) {
         return false;
     }
 
-    qhnobj_t obj;
+    qhashtbl_obj_t obj;
     memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     lock(tbl);
     while (tbl->getnext(tbl, &obj, false) == true) {

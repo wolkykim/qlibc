@@ -1223,7 +1223,7 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
     HTTP_PROTOCOL_11);
 
     // buffer out headers
-    qdlnobj_t obj;
+    qlisttbl_obj_t obj;
     memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     reqheaders->lock(reqheaders);
     while (reqheaders->getnext(reqheaders, &obj, NULL, false) == true) {

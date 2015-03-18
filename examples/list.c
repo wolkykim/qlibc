@@ -83,7 +83,7 @@ int main(void) {
 
     printf("\n--[Test 4 : travesal list]--\n");
     printf("list size : %zu elements\n", list->size(list));
-    qdlobj_t obj;
+    qlist_obj_t obj;
     memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     list->lock(list);
     while (list->getnext(list, &obj, false) == true) {

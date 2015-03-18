@@ -117,7 +117,7 @@ TEST("getnext()") {
     }
     ASSERT_EQUAL_INT(tbl->size(tbl, NULL, NULL), TARGET_NUM);
     int idx = 0;
-    qnobj_t obj;
+    qhasharr_obj_t obj;
     for(i = 0;i < TARGET_NUM; i++) {
         ASSERT_TRUE(tbl->getnext(tbl, &obj, &idx));
         for (j = 0; j< TARGET_NUM; j++) {

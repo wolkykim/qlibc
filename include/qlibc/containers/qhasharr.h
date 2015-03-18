@@ -49,13 +49,43 @@ extern "C" {
 #define _Q_HASHARR_VALUESIZE (32)  /*!< knob for maximum data size in a slot. */
 
 /* types */
+typedef struct qhasharr_s qhasharr_t;
 typedef struct qhasharr_slot_s qhasharr_slot_t;
 typedef struct qhasharr_data_s qhasharr_data_t;
-typedef struct qhasharr_s qhasharr_t;
+typedef struct qhasharr_obj_s qhasharr_obj_t;
 
 /* public functions */
 extern qhasharr_t *qhasharr(void *memory, size_t memsize);
 extern size_t qhasharr_calculate_memsize(int max);
+
+/**
+ * qhasharr container object
+ */
+struct qhasharr_s {
+    /* encapsulated member functions */
+    bool (*put) (qhasharr_t *tbl, const char *key, const void *value,
+                 size_t size);
+    bool (*putstr) (qhasharr_t *tbl, const char *key, const char *str);
+    bool (*putstrf) (qhasharr_t *tbl, const char *key, const char *format, ...);
+    bool (*putint) (qhasharr_t *tbl, const char *key, int64_t num);
+
+    void *(*get) (qhasharr_t *tbl, const char *key, size_t *size);
+    char *(*getstr) (qhasharr_t *tbl, const char *key);
+    int64_t (*getint) (qhasharr_t *tbl, const char *key);
+    bool (*getnext) (qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx);
+
+    bool (*remove) (qhasharr_t *tbl, const char *key);
+    bool (*remove_by_idx) (qhasharr_t *tbl, int idx);
+
+    int  (*size) (qhasharr_t *tbl, int *maxslots, int *usedslots);
+    void (*clear) (qhasharr_t *tbl);
+    bool (*debug) (qhasharr_t *tbl, FILE *out);
+
+    void (*free) (qhasharr_t *tbl);
+
+    /* private variables */
+    qhasharr_data_t *data;
+};
 
 /**
  * qhasharr internal data slot structure
@@ -96,32 +126,12 @@ struct qhasharr_data_s {
 };
 
 /**
- * qhasharr container object
+ * qhasharr named-object data structure for user return
  */
-struct qhasharr_s {
-    /* encapsulated member functions */
-    bool (*put) (qhasharr_t *tbl, const char *key, const void *value,
-                 size_t size);
-    bool (*putstr) (qhasharr_t *tbl, const char *key, const char *str);
-    bool (*putstrf) (qhasharr_t *tbl, const char *key, const char *format, ...);
-    bool (*putint) (qhasharr_t *tbl, const char *key, int64_t num);
-
-    void *(*get) (qhasharr_t *tbl, const char *key, size_t *size);
-    char *(*getstr) (qhasharr_t *tbl, const char *key);
-    int64_t (*getint) (qhasharr_t *tbl, const char *key);
-    bool (*getnext) (qhasharr_t *tbl, qnobj_t *obj, int *idx);
-
-    bool (*remove) (qhasharr_t *tbl, const char *key);
-    bool (*remove_by_idx) (qhasharr_t *tbl, int idx);
-
-    int  (*size) (qhasharr_t *tbl, int *maxslots, int *usedslots);
-    void (*clear) (qhasharr_t *tbl);
-    bool (*debug) (qhasharr_t *tbl, FILE *out);
-
-    void (*free) (qhasharr_t *tbl);
-
-    /* private variables */
-    qhasharr_data_t *data;
+struct qhasharr_obj_s {
+    char *name;         /*!< object name */
+    void *data;         /*!< data */
+    size_t size;        /*!< data size */
 };
 
 #ifdef __cplusplus

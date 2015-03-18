@@ -46,6 +46,7 @@ extern "C" {
 
 /* types */
 typedef struct qhashtbl_s qhashtbl_t;
+typedef struct qhashtbl_obj_s qhashtbl_obj_t;
 
 /* public functions */
 enum {
@@ -68,7 +69,7 @@ struct qhashtbl_s {
     char *(*getstr) (qhashtbl_t *tbl, const char *name, bool newmem);
     int64_t (*getint) (qhashtbl_t *tbl, const char *name);
 
-    bool (*getnext) (qhashtbl_t *tbl, qhnobj_t *obj, bool newmem);
+    bool (*getnext) (qhashtbl_t *tbl, qhashtbl_obj_t *obj, bool newmem);
 
     bool (*remove) (qhashtbl_t *tbl, const char *name);
 
@@ -85,8 +86,21 @@ struct qhashtbl_s {
     qmutex_t *qmutex;   /*!< initialized when QHASHTBL_THREADSAFE is given */
     size_t num;         /*!< number of objects in this table */
     size_t range;       /*!< hash range, vertical number of slots */
-    qhnobj_t **slots;   /*!< slot pointer container */
+    qhashtbl_obj_t **slots;   /*!< slot pointer container */
 };
+
+/**
+ * qhashtbl object data structure
+ */
+struct qhashtbl_obj_s {
+    uint32_t hash;      /*!< 32bit-hash value of object name */
+    char *name;         /*!< object name */
+    void *data;         /*!< data */
+    size_t size;        /*!< data size */
+
+    qhashtbl_obj_t *next;     /*!< for chaining next collision object */
+};
+
 
 #ifdef __cplusplus
 }
