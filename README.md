@@ -5,17 +5,8 @@ qLibc is currently one of the most functionally-complete, publicly-licensed C/C+
 
 ## qLibc Copyright
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice,
-this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.
-
-Please refer LICENSE file included in the package to retain the full version.
+qLibc is published under 2-clause BSD license known as Simplified BSD License.
+Please refer the LICENSE document included in the package for more details.
 
 ## API Reference
 
@@ -122,6 +113,7 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * Luis Jimenez
 * Maik Beckmann
 * RQ
+* Ryan Gonzalez
 * Seungyoung Kim
 * Umesh
 * Zhongchao Liu
