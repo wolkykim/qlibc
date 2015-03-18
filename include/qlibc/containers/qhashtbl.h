@@ -82,7 +82,7 @@ struct qhashtbl_s {
     void (*free) (qhashtbl_t *tbl);
 
     /* private variables - do not access directly */
-    qmutex_t *qmutex;   /*!< initialized when QHASHTBL_OPT_THREADSAFE is given */
+    qmutex_t *qmutex;   /*!< initialized when QHASHTBL_THREADSAFE is given */
     size_t num;         /*!< number of objects in this table */
     size_t range;       /*!< hash range, vertical number of slots */
     qhnobj_t **slots;   /*!< slot pointer container */
