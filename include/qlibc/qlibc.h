@@ -36,7 +36,6 @@
 #define _QLIBC_H
 
 /* containers */
-#include "containers/qtype.h"
 #include "containers/qlist.h"
 #include "containers/qlisttbl.h"
 #include "containers/qhashtbl.h"

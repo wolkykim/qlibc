@@ -119,12 +119,10 @@ qlibcext: ${QLIBCEXT_OBJS}
 
 install: ${INSTALL_TARGETS}
 
-HEADERS = containers/qtype.h
 install-qlibc: qlibc
 	${MKDIR_P} ${INST_INCDIR}/qlibc
 	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibc.h ${INST_INCDIR}/qlibc/qlibc.h
 	${MKDIR_P} ${INST_INCDIR}/qlibc/containers/
-	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qtype.h ${INST_INCDIR}/qlibc/containers/qtype.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qhasharr.h ${INST_INCDIR}/qlibc/containers/qhasharr.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qhashtbl.h ${INST_INCDIR}/qlibc/containers/qhashtbl.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qlist.h ${INST_INCDIR}/qlibc/containers/qlist.h

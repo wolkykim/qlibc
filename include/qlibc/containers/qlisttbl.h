@@ -38,7 +38,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "qtype.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -108,10 +107,10 @@ struct qlisttbl_s {
     bool inserttop;        /*!< add new key at the top. (default: bottom) */
     bool lookupforward;    /*!< find keys from the top. (default: backward) */
 
-    qmutex_t *qmutex;   /*!< initialized when QLISTTBL_OPT_THREADSAFE is given */
-    size_t num;         /*!< number of elements */
-    qlisttbl_obj_t *first;   /*!< first object pointer */
-    qlisttbl_obj_t *last;    /*!< last object pointer */
+    void *qmutex;          /*!< initialized when QLISTTBL_OPT_THREADSAFE is given */
+    size_t num;            /*!< number of elements */
+    qlisttbl_obj_t *first; /*!< first object pointer */
+    qlisttbl_obj_t *last;  /*!< last object pointer */
 };
 
 /**

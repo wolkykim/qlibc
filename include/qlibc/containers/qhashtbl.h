@@ -38,7 +38,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "qtype.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -83,7 +82,7 @@ struct qhashtbl_s {
     void (*free) (qhashtbl_t *tbl);
 
     /* private variables - do not access directly */
-    qmutex_t *qmutex;   /*!< initialized when QHASHTBL_THREADSAFE is given */
+    void *qmutex;       /*!< initialized when QHASHTBL_THREADSAFE is given */
     size_t num;         /*!< number of objects in this table */
     size_t range;       /*!< hash range, vertical number of slots */
     qhashtbl_obj_t **slots;   /*!< slot pointer container */

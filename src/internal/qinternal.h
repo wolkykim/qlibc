@@ -64,10 +64,17 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define Q_MUTEX_NEW(x,r) do {                                           \
-        x = (qmutex_t *)calloc(1, sizeof(qmutex_t));                    \
-        if(x == NULL) break;                                            \
-        memset((void*)x, 0, sizeof(qmutex_t));                          \
+typedef struct qmutex_s qmutex_t;    /*!< qlibc pthread mutex type*/
+
+struct qmutex_s {
+    pthread_mutex_t mutex;  /*!< pthread mutex */
+    pthread_t owner;        /*!< mutex owner thread id */
+    int count;              /*!< recursive lock counter */
+};
+
+#define Q_MUTEX_NEW(m,r) do {                                           \
+        if(m == NULL) break;                                            \
+        qmutex_t *x = (qmutex_t *)calloc(1, sizeof(qmutex_t));          \
         pthread_mutexattr_t _mutexattr;                                 \
         pthread_mutexattr_init(&_mutexattr);                            \
         if(r == true) {                                                 \
@@ -75,15 +82,18 @@
         }                                                               \
         int _ret = pthread_mutex_init(&(x->mutex), &_mutexattr);        \
         pthread_mutexattr_destroy(&_mutexattr);                         \
-        if(_ret != 0) {                                                 \
+        if(_ret == 0) {                                                 \
+            m = x;                                                      \
+        } else {                                                        \
             DEBUG("Q_MUTEX: can't initialize mutex. [%d]", _ret);       \
             free(x);                                                    \
-            x = NULL;                                                   \
+            m = NULL;                                                   \
         }                                                               \
     } while(0)
 
-#define Q_MUTEX_LEAVE(x) do {                                           \
-        if(x == NULL) break;                                            \
+#define Q_MUTEX_LEAVE(m) do {                                           \
+        if(m == NULL) break;                                            \
+        qmutex_t *x = (qmutex_t *)m;                                    \
         if(!pthread_equal(x->owner, pthread_self())) {                  \
             DEBUG("Q_MUTEX: unlock - owner mismatch.");                 \
         }                                                               \
@@ -92,8 +102,9 @@
     } while(0)
 
 #define MAX_MUTEX_LOCK_WAIT (5000)
-#define Q_MUTEX_ENTER(x) do {                                           \
-        if(x == NULL) break;                                            \
+#define Q_MUTEX_ENTER(m) do {                                           \
+        if(m == NULL) break;                                            \
+        qmutex_t *x = (qmutex_t *)m;                                    \
         while(true) {                                                   \
             int _ret, i;                                                \
             for(i = 0; (_ret = pthread_mutex_trylock(&(x->mutex))) != 0 \
@@ -112,8 +123,9 @@
         x->owner = pthread_self();                                      \
     } while(0)
 
-#define Q_MUTEX_DESTROY(x) do {                                         \
-        if(x == NULL) break;                                            \
+#define Q_MUTEX_DESTROY(m) do {                                         \
+        if(m == NULL) break;                                            \
+        qmutex_t *x = (qmutex_t *)m;                                    \
         if(x->count != 0) DEBUG("Q_MUTEX: mutex counter is not 0.");    \
         int _ret;                                                       \
         while((_ret = pthread_mutex_destroy(&(x->mutex))) != 0) {       \

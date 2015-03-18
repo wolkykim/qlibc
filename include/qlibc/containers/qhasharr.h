@@ -38,7 +38,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "qtype.h"
 
 #ifdef __cplusplus
 extern "C" {

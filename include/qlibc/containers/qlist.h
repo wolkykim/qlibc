@@ -39,7 +39,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "qtype.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -96,7 +95,7 @@ struct qlist_s {
     void (*free)(qlist_t *list);
 
     /* private variables - do not access directly */
-    qmutex_t *qmutex;     /*!< initialized when QLIST_OPT_THREADSAFE is given */
+    void *qmutex;     /*!< initialized when QLIST_OPT_THREADSAFE is given */
     size_t num;           /*!< number of elements */
     size_t max;           /*!< maximum number of elements. 0 means no limit */
     size_t datasum;       /*!< total sum of data size, does not include name size */

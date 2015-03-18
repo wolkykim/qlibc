@@ -42,7 +42,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <limits.h>
-#include "containers/qtype.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,7 +69,7 @@ struct qlog_s {
     void (*free) (qlog_t *log);
 
     /* private variables - do not access directly */
-    qmutex_t *qmutex;  /*!< activated if compiled with --enable-threadsafe */
+    void *qmutex;  /*!< activated if compiled with --enable-threadsafe */
 
     char filepathfmt[PATH_MAX]; /*!< file file naming format like
                                      /somepath/daily-%Y%m%d.log */

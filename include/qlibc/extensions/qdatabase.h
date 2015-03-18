@@ -112,7 +112,7 @@ struct qdb_s {
     void (*free) (qdb_t *db);
 
     /* private variables - do not access directly */
-    qmutex_t *qmutex;
+    void *qmutex;
 
     bool connected;   /*!< if opened true, if closed false */
 
