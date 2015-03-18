@@ -105,9 +105,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a67c1789f38a8ce6f44cfcf2b323ce99e"><td class="memItemLeft" align="right" valign="top">static int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhashtbl_8c.html#a67c1789f38a8ce6f44cfcf2b323ce99e">getint</a> (qhashtbl_t *tbl, const char *name)</td></tr>
 <tr class="memdesc:a67c1789f38a8ce6f44cfcf2b323ce99e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a67c1789f38a8ce6f44cfcf2b323ce99e" title="qhashtbl-&gt;getint(): Finds an object with given name and returns as integer type. ">getint()</a>: Finds an object with given name and returns as integer type.  <a href="#a67c1789f38a8ce6f44cfcf2b323ce99e">More...</a><br/></td></tr>
 <tr class="separator:a67c1789f38a8ce6f44cfcf2b323ce99e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08a0546a583711e148887d0234924ce9"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhashtbl_8c.html#a08a0546a583711e148887d0234924ce9">getnext</a> (qhashtbl_t *tbl, qhnobj_t *obj, const bool newmem)</td></tr>
-<tr class="memdesc:a08a0546a583711e148887d0234924ce9"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a08a0546a583711e148887d0234924ce9" title="qhashtbl-&gt;getnext(): Get next element. ">getnext()</a>: Get next element.  <a href="#a08a0546a583711e148887d0234924ce9">More...</a><br/></td></tr>
-<tr class="separator:a08a0546a583711e148887d0234924ce9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a538e35227fc3e827ee3048b699d1d615"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhashtbl_8c.html#a538e35227fc3e827ee3048b699d1d615">getnext</a> (qhashtbl_t *tbl, qhashtbl_obj_t *obj, const bool newmem)</td></tr>
+<tr class="memdesc:a538e35227fc3e827ee3048b699d1d615"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a538e35227fc3e827ee3048b699d1d615" title="qhashtbl-&gt;getnext(): Get next element. ">getnext()</a>: Get next element.  <a href="#a538e35227fc3e827ee3048b699d1d615">More...</a><br/></td></tr>
+<tr class="separator:a538e35227fc3e827ee3048b699d1d615"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25a30dcbde72e0b59cb15b8dda34093a"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhashtbl_8c.html#a25a30dcbde72e0b59cb15b8dda34093a">remove_</a> (qhashtbl_t *tbl, const char *name)</td></tr>
 <tr class="memdesc:a25a30dcbde72e0b59cb15b8dda34093a"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhashtbl-&gt;remove(): Remove an object from this table.  <a href="#a25a30dcbde72e0b59cb15b8dda34093a">More...</a><br/></td></tr>
 <tr class="separator:a25a30dcbde72e0b59cb15b8dda34093a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,7 +223,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a pointer of malloced qhashtbl_t, otherwise returns false </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of malloced qhashtbl_t, otherwise returns NULL. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
@@ -234,10 +234,10 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <div class="fragment"><div class="line"><span class="comment">// create a hash-table.</span></div>
-<div class="line">qhashtbl_t *basic_hashtbl = qHashtbl(0, 0);</div>
+<div class="line">qhashtbl_t *basic_hashtbl = <a class="code" href="qhashtbl_8c.html#acce512d557a3c776d474bfc977f34045">qhashtbl</a>(0, 0);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// create a large hash-table for millions of keys with thread-safe option.</span></div>
-<div class="line">qhashtbl_t *small_hashtbl = qHashtbl(1000000, QHASHTBL_THREADSAFE);</div>
+<div class="line">qhashtbl_t *small_hashtbl = <a class="code" href="qhashtbl_8c.html#acce512d557a3c776d474bfc977f34045">qhashtbl</a>(1000000, QHASHTBL_THREADSAFE);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Setting the right range is a magic. In practice, pick a value between (total keys / 3) ~ (total keys * 2). Available options:<ul>
 <li>QHASHTBL_THREADSAFE - make it thread-safe. </li>
 </ul>
@@ -718,7 +718,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a08a0546a583711e148887d0234924ce9"></a>
+<a class="anchor" id="a538e35227fc3e827ee3048b699d1d615"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -734,7 +734,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">qhnobj_t *&#160;</td>
+          <td class="paramtype">qhashtbl_obj_t *&#160;</td>
           <td class="paramname"><em>obj</em>, </td>
         </tr>
         <tr>
@@ -756,7 +756,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a08a0546a583711e148887d0234924ce9" title="qhashtbl-&gt;getnext(): Get next element. ">getnext()</a>: Get next element. </p>
+<p>qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a538e35227fc3e827ee3048b699d1d615" title="qhashtbl-&gt;getnext(): Get next element. ">getnext()</a>: Get next element. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qhashtbl_t container pointer. </td></tr>
@@ -781,7 +781,7 @@ Functions</h2></td></tr>
 <div class="line">(...add data into list...)</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// non-thread usages</span></div>
-<div class="line">qhnobj_t obj;</div>
+<div class="line">qhashtbl_obj_t obj;</div>
 <div class="line">memset((<span class="keywordtype">void</span>*)&amp;obj, 0, <span class="keyword">sizeof</span>(obj)); <span class="comment">// must be cleared before call</span></div>
 <div class="line">tbl-&gt;lock(tbl);</div>
 <div class="line"><span class="keywordflow">while</span>(tbl-&gt;getnext(tbl, &amp;obj, <span class="keyword">false</span>) == <span class="keyword">true</span>) {</div>
@@ -791,7 +791,7 @@ Functions</h2></td></tr>
 <div class="line">tbl-&gt;unlock(tbl);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// thread model with newmem flag</span></div>
-<div class="line">qhnobj_t obj;</div>
+<div class="line">qhashtbl_obj_t obj;</div>
 <div class="line">memset((<span class="keywordtype">void</span>*)&amp;obj, 0, <span class="keyword">sizeof</span>(obj)); <span class="comment">// must be cleared before call</span></div>
 <div class="line">tbl-&gt;lock(tbl);</div>
 <div class="line"><span class="keywordflow">while</span>(tbl-&gt;getnext(tbl, &amp;obj, <span class="keyword">true</span>) == <span class="keyword">true</span>) {</div>
@@ -1000,7 +1000,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>From user side, normally locking operation is only needed when traverse all elements using qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a08a0546a583711e148887d0234924ce9" title="qhashtbl-&gt;getnext(): Get next element. ">getnext()</a>.</dd>
+<dl class="section note"><dt>Note</dt><dd>From user side, normally locking operation is only needed when traverse all elements using qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a538e35227fc3e827ee3048b699d1d615" title="qhashtbl-&gt;getnext(): Get next element. ">getnext()</a>.</dd>
 <dd>
 This operation will do nothing if QHASHTBL_THREADSAFE option was not given at the initialization time. </dd></dl>
 

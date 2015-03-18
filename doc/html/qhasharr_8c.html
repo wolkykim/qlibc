@@ -105,9 +105,9 @@ static qhasharr_slot_t *&#160;</td><td class="memItemRight" valign="bottom"><b>_
 <tr class="memitem:a961458184356c316430ac23acfba72aa"><td class="memItemLeft" align="right" valign="top">static int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a961458184356c316430ac23acfba72aa">getint</a> (qhasharr_t *tbl, const char *key)</td></tr>
 <tr class="memdesc:a961458184356c316430ac23acfba72aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;<a class="el" href="qhasharr_8c.html#a961458184356c316430ac23acfba72aa" title="qhasharr-&gt;getint(): Finds an object with given name and returns as integer type. ">getint()</a>: Finds an object with given name and returns as integer type.  <a href="#a961458184356c316430ac23acfba72aa">More...</a><br/></td></tr>
 <tr class="separator:a961458184356c316430ac23acfba72aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6bde08b6165e069f32d8ab880b947f2"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#ae6bde08b6165e069f32d8ab880b947f2">getnext</a> (qhasharr_t *tbl, qnobj_t *obj, int *idx)</td></tr>
-<tr class="memdesc:ae6bde08b6165e069f32d8ab880b947f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;<a class="el" href="qhasharr_8c.html#ae6bde08b6165e069f32d8ab880b947f2" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a>: Get next element.  <a href="#ae6bde08b6165e069f32d8ab880b947f2">More...</a><br/></td></tr>
-<tr class="separator:ae6bde08b6165e069f32d8ab880b947f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1e806a4039a660c9b5dab44ad03110d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#af1e806a4039a660c9b5dab44ad03110d">getnext</a> (qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx)</td></tr>
+<tr class="memdesc:af1e806a4039a660c9b5dab44ad03110d"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;<a class="el" href="qhasharr_8c.html#af1e806a4039a660c9b5dab44ad03110d" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a>: Get next element.  <a href="#af1e806a4039a660c9b5dab44ad03110d">More...</a><br/></td></tr>
+<tr class="separator:af1e806a4039a660c9b5dab44ad03110d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4653c4040f193c6620deb7fc41fbdbdd"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a4653c4040f193c6620deb7fc41fbdbdd">remove_</a> (qhasharr_t *tbl, const char *key)</td></tr>
 <tr class="memdesc:a4653c4040f193c6620deb7fc41fbdbdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;remove(): Remove an object from this table.  <a href="#a4653c4040f193c6620deb7fc41fbdbdd">More...</a><br/></td></tr>
 <tr class="separator:a4653c4040f193c6620deb7fc41fbdbdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -741,7 +741,7 @@ static qhasharr_slot_t *&#160;</td><td class="memItemRight" valign="bottom"><b>_
 
 </div>
 </div>
-<a class="anchor" id="ae6bde08b6165e069f32d8ab880b947f2"></a>
+<a class="anchor" id="af1e806a4039a660c9b5dab44ad03110d"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -757,7 +757,7 @@ static qhasharr_slot_t *&#160;</td><td class="memItemRight" valign="bottom"><b>_
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">qnobj_t *&#160;</td>
+          <td class="paramtype">qhasharr_obj_t *&#160;</td>
           <td class="paramname"><em>obj</em>, </td>
         </tr>
         <tr>
@@ -779,7 +779,7 @@ static qhasharr_slot_t *&#160;</td><td class="memItemRight" valign="bottom"><b>_
 </table>
 </div><div class="memdoc">
 
-<p>qhasharr-&gt;<a class="el" href="qhasharr_8c.html#ae6bde08b6165e069f32d8ab880b947f2" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a>: Get next element. </p>
+<p>qhasharr-&gt;<a class="el" href="qhasharr_8c.html#af1e806a4039a660c9b5dab44ad03110d" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a>: Get next element. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
@@ -800,7 +800,7 @@ static qhasharr_slot_t *&#160;</td><td class="memItemRight" valign="bottom"><b>_
   </dd>
 </dl>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> idx = 0;</div>
-<div class="line">qnobj_t obj;</div>
+<div class="line">qhasharr_obj_t obj;</div>
 <div class="line"><span class="keywordflow">while</span>(tbl-&gt;getnext(tbl, &amp;obj, &amp;idx) == <span class="keyword">true</span>) {</div>
 <div class="line">  printf(<span class="stringliteral">&quot;NAME=%s, DATA=%s, SIZE=%zu\n&quot;</span>,</div>
 <div class="line">         obj.name, (<span class="keywordtype">char</span>*)obj.data, obj.size);</div>
@@ -923,7 +923,7 @@ static qhasharr_slot_t *&#160;</td><td class="memItemRight" valign="bottom"><b>_
   </dd>
 </dl>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> idx = 0;</div>
-<div class="line">qnobj_t obj;</div>
+<div class="line">qhasharr_obj_t obj;</div>
 <div class="line"><span class="keywordflow">while</span>(tbl-&gt;getnext(tbl, &amp;obj, &amp;idx) == <span class="keyword">true</span>) {</div>
 <div class="line">  <span class="keywordflow">if</span> (condition_to_remove) {</div>
 <div class="line">    idx--;  <span class="comment">// adjust index by -1</span></div>
@@ -932,7 +932,7 @@ static qhasharr_slot_t *&#160;</td><td class="memItemRight" valign="bottom"><b>_
 <div class="line">  free(obj.name);</div>
 <div class="line">  free(obj.data);</div>
 <div class="line">}</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>This function is to remove an object in <a class="el" href="qhasharr_8c.html#ae6bde08b6165e069f32d8ab880b947f2" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a> traversal loop without knowing the object name but index value. When key names are longer than defined size, the keys are stored with truncation with their fingerprint, so this method provides a way to remove those keys. <a class="el" href="qhasharr_8c.html#ae6bde08b6165e069f32d8ab880b947f2" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a> returns actual index + 1(pointing next slot of current finding), so you need to adjust it by -1 for the valid index number. And once you remove object by this method, rewind idx by -1 before calling <a class="el" href="qhasharr_8c.html#ae6bde08b6165e069f32d8ab880b947f2" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a> because collision objects can be moved back to removed index again, so by adjusting index by -1, <a class="el" href="qhasharr_8c.html#ae6bde08b6165e069f32d8ab880b947f2" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a> can continue search from the removed slot index again. Please refer an example code. </dd></dl>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>This function is to remove an object in <a class="el" href="qhasharr_8c.html#af1e806a4039a660c9b5dab44ad03110d" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a> traversal loop without knowing the object name but index value. When key names are longer than defined size, the keys are stored with truncation with their fingerprint, so this method provides a way to remove those keys. <a class="el" href="qhasharr_8c.html#af1e806a4039a660c9b5dab44ad03110d" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a> returns actual index + 1(pointing next slot of current finding), so you need to adjust it by -1 for the valid index number. And once you remove object by this method, rewind idx by -1 before calling <a class="el" href="qhasharr_8c.html#af1e806a4039a660c9b5dab44ad03110d" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a> because collision objects can be moved back to removed index again, so by adjusting index by -1, <a class="el" href="qhasharr_8c.html#af1e806a4039a660c9b5dab44ad03110d" title="qhasharr-&gt;getnext(): Get next element. ">getnext()</a> can continue search from the removed slot index again. Please refer an example code. </dd></dl>
 
 <p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00674">674</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
