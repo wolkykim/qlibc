@@ -1,5 +1,8 @@
 var qtime_8c =
 [
+    [ "__USE_XOPEN", "qtime_8c.html#a8773045a81f883f2ab00761f45e8642c", null ],
+    [ "_XOPEN_SOURCE", "qtime_8c.html#a78c99ffd76a7bb3c8c74db76207e9ab4", null ],
+    [ "_BSD_SOURCE", "qtime_8c.html#ad3d8a3bd0c0b677acef144f2c2ef6d73", null ],
     [ "qtime_current_milli", "qtime_8c.html#a689f608f871f45fb772266bf1f18cdd7", null ],
     [ "qtime_localtime_strf", "qtime_8c.html#a0feed44026ab24d9d366c5997a2173b4", null ],
     [ "qtime_localtime_str", "qtime_8c.html#a89b28885c2bb13906855cd6c34cfaed7", null ],
