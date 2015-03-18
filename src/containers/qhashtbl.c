@@ -662,7 +662,7 @@ static size_t size(qhashtbl_t *tbl) {
  *
  * @param tbl   qhashtbl_t container pointer.
  */
-void clear(qhashtbl_t *tbl) {
+static void clear(qhashtbl_t *tbl) {
     lock(tbl);
     int idx;
     for (idx = 0; idx < tbl->range && tbl->num > 0; idx++) {
@@ -694,7 +694,7 @@ void clear(qhashtbl_t *tbl) {
  * @retval errno will be set in error condition.
  *  - EIO : Invalid output stream.
  */
-bool debug(qhashtbl_t *tbl, FILE *out) {
+static bool debug(qhashtbl_t *tbl, FILE *out) {
     if (out == NULL) {
         errno = EIO;
         return false;
@@ -748,7 +748,7 @@ static void unlock(qhashtbl_t *tbl) {
  *
  * @param tbl   qhashtbl_t container pointer.
  */
-void free_(qhashtbl_t *tbl) {
+static void free_(qhashtbl_t *tbl) {
     lock(tbl);
     clear(tbl);
     if (tbl->slots != NULL)

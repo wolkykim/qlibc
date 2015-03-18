@@ -872,7 +872,7 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
  *  This does not de-allocate memory but only function reference object.
  *  Data memory such as shared memory must be de-allocated separately.
  */
-void free_(qhasharr_t *tbl) {
+static void free_(qhasharr_t *tbl) {
     free(tbl);
 }
 

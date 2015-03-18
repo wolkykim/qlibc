@@ -100,7 +100,6 @@ struct qhashtbl_obj_s {
     qhashtbl_obj_t *next;     /*!< for chaining next collision object */
 };
 
-
 #ifdef __cplusplus
 }
 #endif
