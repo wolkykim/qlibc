@@ -32,8 +32,8 @@
  * @file qlisttbl.h
  */
 
-#ifndef _QLISTTBL_H
-#define _QLISTTBL_H
+#ifndef QLISTTBL_H
+#define QLISTTBL_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -139,4 +139,4 @@ struct qlisttbl_data_s {
 }
 #endif
 
-#endif /*_QLISTTBL_H */
+#endif /* QLISTTBL_H */

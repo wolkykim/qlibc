@@ -32,8 +32,8 @@
  * @file qcount.h
  */
 
-#ifndef _QCOUNT_H
-#define _QCOUNT_H
+#ifndef QCOUNT_H
+#define QCOUNT_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -50,4 +50,4 @@ extern int64_t qcount_update(const char *filepath, int64_t number);
 }
 #endif
 
-#endif /*_QCOUNT_H */
+#endif /* QCOUNT_H */

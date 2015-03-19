@@ -32,8 +32,8 @@
  * @file qtime.h
  */
 
-#ifndef _QTIME_H
-#define _QTIME_H
+#ifndef QTIME_H
+#define QTIME_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -59,6 +59,4 @@ extern time_t qtime_parse_gmtstr(const char *gmtstr);
 }
 #endif
 
-#endif /*_QTIME_H */
-
-
+#endif /* QTIME_H */

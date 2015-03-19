@@ -32,8 +32,8 @@
  * @file qvector.h
  */
 
-#ifndef _QVECTOR_H
-#define _QVECTOR_H
+#ifndef QVECTOR_H
+#define QVECTOR_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -81,4 +81,4 @@ struct qvector_s {
 }
 #endif
 
-#endif /*_QVECTOR_H */
+#endif /* QVECTOR_H */

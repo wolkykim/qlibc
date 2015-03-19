@@ -32,8 +32,8 @@
  * qhasharr implements a hash-table which maps keys to values and stores into
  * fixed size static memory like shared-memory and memory-mapped file.
  * The creator qhasharr() initializes static memory to makes small slots in it.
- * The default slot size factors are defined in _Q_HASHARR_KEYSIZE and
- * _Q_HASHARR_VALUESIZE. And they are applied at compile time.
+ * The default slot size factors are defined in Q_HASHARR_KEYSIZE and
+ * Q_HASHARR_VALUESIZE. And they are applied at compile time.
  *
  * The value part of an element will be stored across several slots if it's size
  * exceeds the slot size. But the key part of an element will be truncated if
@@ -558,7 +558,7 @@ static int64_t getint(qhasharr_t *tbl, const char *key) {
  * @note
  *  Please be aware a key name will be returned with truncated length
  *  because key name is truncated when it put into the table if it's length is
- *  longer than _Q_HASHARR_KEYSIZE.
+ *  longer than Q_HASHARR_KEYSIZE.
  */
 static bool getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx) {
     if (tbl == NULL || obj == NULL || idx == NULL) {
@@ -575,8 +575,8 @@ static bool getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx) {
         }
 
         size_t keylen = tblslots[*idx].data.pair.keylen;
-        if (keylen > _Q_HASHARR_KEYSIZE)
-            keylen = _Q_HASHARR_KEYSIZE;
+        if (keylen > Q_HASHARR_KEYSIZE)
+            keylen = Q_HASHARR_KEYSIZE;
 
         obj->name = (char *) malloc(keylen + 1);
         if (obj->name == NULL) {
@@ -816,7 +816,7 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
     while (tbl->getnext(tbl, &obj, &idx) == true) {
         uint16_t keylen = tblslots[idx - 1].data.pair.keylen;
         fprintf(out, "%s%s(%d)=", obj.name,
-                (keylen > _Q_HASHARR_KEYSIZE) ? "..." : "", keylen);
+                (keylen > Q_HASHARR_KEYSIZE) ? "..." : "", keylen);
         _q_humanOut(out, obj.data, obj.size, MAX_HUMANOUT);
         fprintf(out, " (%zu)\n", obj.size);
 
@@ -846,8 +846,8 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
                     tblslots[idx].count, tblslots[idx].hash);
             _q_humanOut(out,
                     tblslots[idx].data.pair.key,
-                    (tblslots[idx].data.pair.keylen>_Q_HASHARR_KEYSIZE)
-                    ? _Q_HASHARR_KEYSIZE
+                    (tblslots[idx].data.pair.keylen>Q_HASHARR_KEYSIZE)
+                    ? Q_HASHARR_KEYSIZE
                     : tblslots[idx].data.pair.keylen,
                     MAX_HUMANOUT);
             fprintf(out, ",keylen=%d,data=", tblslots[idx].data.pair.keylen);
@@ -918,7 +918,7 @@ static int _get_idx(qhasharr_t *tbl, const char *key, unsigned int hash) {
                 size_t keylen = strlen(key);
                 // first check key length
                 if (keylen == tblslots[idx].data.pair.keylen) {
-                    if (keylen <= _Q_HASHARR_KEYSIZE) {
+                    if (keylen <= Q_HASHARR_KEYSIZE) {
                         // original key is stored
                         if (!memcmp(key, tblslots[idx].data.pair.key, keylen)) {
                             return idx;
@@ -928,7 +928,7 @@ static int _get_idx(qhasharr_t *tbl, const char *key, unsigned int hash) {
                         unsigned char keymd5[16];
                         qhashmd5(key, keylen, keymd5);
                         if (!memcmp(key, tblslots[idx].data.pair.key,
-                        _Q_HASHARR_KEYSIZE)
+                        Q_HASHARR_KEYSIZE)
                                 && !memcmp(keymd5,
                                            tblslots[idx].data.pair.keymd5,
                                            16)) {
@@ -1019,7 +1019,7 @@ static bool _put_data(qhasharr_t *tbl, int idx, unsigned int hash,
     // store key
     tblslots[idx].count = count;
     tblslots[idx].hash = hash;
-    strncpy(tblslots[idx].data.pair.key, key, _Q_HASHARR_KEYSIZE);
+    strncpy(tblslots[idx].data.pair.key, key, Q_HASHARR_KEYSIZE);
     memcpy((char *) tblslots[idx].data.pair.keymd5, (char *) keymd5, 16);
     tblslots[idx].data.pair.keylen = keylen;
     tblslots[idx].link = -1;
@@ -1057,14 +1057,14 @@ static bool _put_data(qhasharr_t *tbl, int idx, unsigned int hash,
 
         if (tblslots[newidx].count == -2) {
             // extended value
-            if (copysize > sizeof(struct _Q_HASHARR_SLOT_EXT)) {
-                copysize = sizeof(struct _Q_HASHARR_SLOT_EXT);
+            if (copysize > sizeof(struct Q_HASHARR_SLOT_EXT)) {
+                copysize = sizeof(struct Q_HASHARR_SLOT_EXT);
             }
             memcpy(tblslots[newidx].data.ext.value, value + savesize, copysize);
         } else {
             // first slot
-            if (copysize > _Q_HASHARR_VALUESIZE) {
-                copysize = _Q_HASHARR_VALUESIZE;
+            if (copysize > Q_HASHARR_VALUESIZE) {
+                copysize = Q_HASHARR_VALUESIZE;
             }
             memcpy(tblslots[newidx].data.pair.value, value + savesize,
                    copysize);

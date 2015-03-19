@@ -32,8 +32,8 @@
  * @file qshm.h
  */
 
-#ifndef _QSHM_H
-#define _QSHM_H
+#ifndef QSHM_H
+#define QSHM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,4 +49,4 @@ extern bool qshm_free(int shmid);
 }
 #endif
 
-#endif /*_QSHM_H */
+#endif /* QSHM_H */

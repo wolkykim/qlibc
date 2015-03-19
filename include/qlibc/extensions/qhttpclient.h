@@ -34,8 +34,8 @@
  * @file qhttpclient.h
  */
 
-#ifndef _QHTTPCLIENT_H
-#define _QHTTPCLIENT_H
+#ifndef QHTTPCLIENT_H
+#define QHTTPCLIENT_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -107,7 +107,7 @@ struct qhttpclient_s {
     char *hostname;
     int port;
 
-    int timeoutms;    /*< wait timeout miliseconds*/
+    int timeoutms;    /*< wait timeout milliseconds*/
     bool keepalive;   /*< keep-alive flag */
     char *useragent;  /*< user-agent name */
 
@@ -118,4 +118,4 @@ struct qhttpclient_s {
 }
 #endif
 
-#endif /*_QHTTPCLIENT_H */
+#endif /* QHTTPCLIENT_H */

@@ -32,8 +32,8 @@
  * @file qencode.h
  */
 
-#ifndef _QENCODE_H
-#define _QENCODE_H
+#ifndef QENCODE_H
+#define QENCODE_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -56,4 +56,4 @@ extern size_t qhex_decode(char *str);
 }
 #endif
 
-#endif /*_QENCODE_H */
+#endif /* QENCODE_H */

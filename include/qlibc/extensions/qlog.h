@@ -35,8 +35,8 @@
  * @file qlog.h
  */
 
-#ifndef _QLOG_H
-#define _QLOG_H
+#ifndef QLOG_H
+#define QLOG_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -88,4 +88,4 @@ struct qlog_s {
 }
 #endif
 
-#endif /*_QLOG_H */
+#endif /* QLOG_H */

@@ -34,8 +34,8 @@
  * @file qconfig.h
  */
 
-#ifndef _QCONFIG_H
-#define _QCONFIG_H
+#ifndef QCONFIG_H
+#define QCONFIG_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -54,4 +54,4 @@ extern qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepc
 }
 #endif
 
-#endif /*_QCONFIG_H */
+#endif /* QCONFIG_H */

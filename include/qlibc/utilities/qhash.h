@@ -32,8 +32,8 @@
  * @file qhash.h
  */
 
-#ifndef _QHASH_H
-#define _QHASH_H
+#ifndef QHASH_H
+#define QHASH_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -57,4 +57,4 @@ extern bool qhashmurmur3_128(const void *data, size_t nbytes, void *retbuf);
 }
 #endif
 
-#endif /*_QHASH_H */
+#endif /* QHASH_H */

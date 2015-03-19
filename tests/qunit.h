@@ -32,8 +32,8 @@
  * @file qunit.h
  */
 
-#ifndef _QUNIT_H
-#define _QUNIT_H
+#ifndef QUNIT_H
+#define QUNIT_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -109,4 +109,4 @@ int main(int argc, char **argv) {                                           \
 }
 #endif
 
-#endif /*_QUNIT_H */
+#endif /* QUNIT_H */

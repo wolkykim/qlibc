@@ -21,8 +21,8 @@
  * documentation and/or software.
  */
 
-#ifndef _Q_MD5_H_
-#define _Q_MD5_H_
+#ifndef Q_MD5_H
+#define Q_MD5_H
 
 #define MD5_BLOCK_LENGTH		64
 #define MD5_DIGEST_LENGTH		16
@@ -47,4 +47,4 @@ char * MD5FileChunk(const char *, char *, off_t, off_t);
 char * MD5Data(const unsigned char *, unsigned int, char *);
 __END_DECLS
 
-#endif /* _Q_MD5_H_ */
+#endif /* Q_MD5_H */

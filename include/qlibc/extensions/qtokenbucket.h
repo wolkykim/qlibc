@@ -35,8 +35,8 @@
  * @file qtokenbucket.h
  */
 
-#ifndef _QTOKENBUCKET_H
-#define _QTOKENBUCKET_H
+#ifndef QTOKENBUCKET_H
+#define QTOKENBUCKET_H
 
 #include <stdbool.h>
 
@@ -67,4 +67,4 @@ struct qtokenbucket_s {
 }
 #endif
 
-#endif /*_QTOKENBUCKET_H */
+#endif /* QTOKENBUCKET_H */
