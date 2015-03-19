@@ -201,7 +201,7 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
 
     return tbl;
 
-  malloc_failure:
+    malloc_failure:
     errno = ENOMEM;
     if (tbl) {
         if (tbl->slots)
@@ -213,7 +213,7 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
 }
 
 /**
- * qhashtbl->put(): Put a object into this table.
+ * qhashtbl->put(): Put an object into this table.
  *
  * @param tbl       qhashtbl_t container pointer.
  * @param name      key name
@@ -309,8 +309,7 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
  *  - ENOMEM : Memory allocation failure.
  */
 static bool putstr(qhashtbl_t *tbl, const char *name, const char *str) {
-    size_t size = (str != NULL) ? (strlen(str) + 1) : 0;
-    return put(tbl, name, str, size);
+    return put(tbl, name, str, (str != NULL) ? (strlen(str) + 1) : 0);
 }
 
 /**
