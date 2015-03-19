@@ -1,7 +1,7 @@
 /******************************************************************************
- * qunit
+ * qunit - C Unit Test Framework
  *
- * Copyright (c) 2014 Seungyoung Kim.
+ * Copyright (c) 2014-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@
  *****************************************************************************/
 
 /**
- * qunit C Unit Test framework.
+ * qunit C Unit Test Framework.
  *
  * @file qunit.h
  */
