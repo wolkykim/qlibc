@@ -1,7 +1,7 @@
 /******************************************************************************
- * qunit
+ * qunit - C Unit Test Framework
  *
- * Copyright (c) 2014 Seungyoung Kim.
+ * Copyright (c) 2014-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,13 +27,13 @@
  *****************************************************************************/
 
 /**
- * qunit C Unit Test framework.
+ * qunit C Unit Test Framework.
  *
  * @file qunit.h
  */
 
-#ifndef _QUNIT_H
-#define _QUNIT_H
+#ifndef QUNIT_H
+#define QUNIT_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -109,4 +109,4 @@ int main(int argc, char **argv) {                                           \
 }
 #endif
 
-#endif /*_QUNIT_H */
+#endif /* QUNIT_H */

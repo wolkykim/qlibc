@@ -32,8 +32,8 @@
  * @file qlibcext.h
  */
 
-#ifndef _QLIBCEXT_H
-#define _QLIBCEXT_H
+#ifndef QLIBCEXT_H
+#define QLIBCEXT_H
 
 #include "extensions/qconfig.h"
 #include "extensions/qaconf.h"
@@ -42,4 +42,4 @@
 #include "extensions/qdatabase.h"
 #include "extensions/qtokenbucket.h"
 
-#endif /*_QLIBCEXT_H */
+#endif /* QLIBCEXT_H */

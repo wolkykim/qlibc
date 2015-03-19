@@ -32,8 +32,8 @@
  * @file qhasharr.h
  */
 
-#ifndef _QHASHARR_H
-#define _QHASHARR_H
+#ifndef QHASHARR_H
+#define QHASHARR_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -44,8 +44,8 @@ extern "C" {
 #endif
 
 /* tunable knobs */
-#define _Q_HASHARR_KEYSIZE (16)    /*!< knob for maximum key size. */
-#define _Q_HASHARR_VALUESIZE (32)  /*!< knob for maximum data size in a slot. */
+#define Q_HASHARR_KEYSIZE (16)    /*!< knob for maximum key size. */
+#define Q_HASHARR_VALUESIZE (32)  /*!< knob for maximum data size in a slot. */
 
 /* types */
 typedef struct qhasharr_s qhasharr_t;
@@ -91,8 +91,8 @@ struct qhasharr_s {
  */
 struct qhasharr_slot_s {
     short  count;   /*!< hash collision counter. 0 indicates empty slot,
-                     -1 is used for collision resolution, -2 is used for
-                     indicating linked block */
+                         -1 is used for collision resolution, -2 is used for
+                         indicating linked block */
     uint32_t  hash; /*!< key hash. we use FNV32 */
 
     uint8_t size;   /*!< value size in this slot*/
@@ -100,17 +100,17 @@ struct qhasharr_slot_s {
 
     union {
         /*!< key/value data */
-        struct _Q_HASHARR_SLOT_KEYVAL {
-            unsigned char value[_Q_HASHARR_VALUESIZE];  /*!< value */
+        struct Q_HASHARR_SLOT_KEYVAL {
+            unsigned char value[Q_HASHARR_VALUESIZE];  /*!< value */
 
-            char key[_Q_HASHARR_KEYSIZE];  /*!< key string, can be cut */
+            char key[Q_HASHARR_KEYSIZE];  /*!< key string, can be cut */
             uint16_t  keylen;              /*!< original key length */
             unsigned char keymd5[16];      /*!< md5 hash of the key */
         } pair;
 
         /*!< extended data block, used only when the count value is -2 */
-        struct _Q_HASHARR_SLOT_EXT {
-            unsigned char value[sizeof(struct _Q_HASHARR_SLOT_KEYVAL)];
+        struct Q_HASHARR_SLOT_EXT {
+            unsigned char value[sizeof(struct Q_HASHARR_SLOT_KEYVAL)];
         } ext;
     } data;
 };
@@ -137,5 +137,4 @@ struct qhasharr_obj_s {
 }
 #endif
 
-#endif /*_QHASHARR_H */
-
+#endif /* QHASHARR_H */

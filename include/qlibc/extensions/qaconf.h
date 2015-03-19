@@ -35,8 +35,8 @@
  * @file qaconf.h
  */
 
-#ifndef _QACONF_H
-#define _QACONF_H
+#ifndef QACONF_H
+#define QACONF_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -226,4 +226,4 @@ struct qaconf_cbdata_s {
 }
 #endif
 
-#endif /*_QACONF_H */
+#endif /* QACONF_H */

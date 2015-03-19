@@ -32,9 +32,8 @@
  * @file qstring.h
  */
 
-#ifndef _QSTRING_H
-#define _QSTRING_H
-
+#ifndef QSTRING_H
+#define QSTRING_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -75,4 +74,4 @@ extern char *qstr_conv_encoding(const char *fromstr, const char *fromcode,
 }
 #endif
 
-#endif /*_QSTRING_H */
+#endif /* QSTRING_H */

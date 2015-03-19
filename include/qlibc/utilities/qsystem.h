@@ -32,8 +32,8 @@
  * @file qsystem.h
  */
 
-#ifndef _QSYSTEM_H
-#define _QSYSTEM_H
+#ifndef QSYSTEM_H
+#define QSYSTEM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,5 +46,4 @@ extern char *qsyscmd(const char *cmd);
 }
 #endif
 
-#endif /*_QSYSTEM_H */
-
+#endif /* QSYSTEM_H */

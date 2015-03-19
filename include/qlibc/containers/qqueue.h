@@ -32,8 +32,8 @@
  * @file qqueue.h
  */
 
-#ifndef _QQUEUE_H
-#define _QQUEUE_H
+#ifndef QQUEUE_H
+#define QQUEUE_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -88,4 +88,4 @@ struct qqueue_s {
 }
 #endif
 
-#endif /*_QQUEUE_H */
+#endif /* QQUEUE_H */

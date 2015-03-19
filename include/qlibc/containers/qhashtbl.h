@@ -32,8 +32,8 @@
  * @file qhashtbl.h
  */
 
-#ifndef _QHASHTBL_H
-#define _QHASHTBL_H
+#ifndef QHASHTBL_H
+#define QHASHTBL_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -104,4 +104,4 @@ struct qhashtbl_obj_s {
 }
 #endif
 
-#endif /*_QHASHTBL_H */
+#endif /* QHASHTBL_H */

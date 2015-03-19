@@ -32,8 +32,8 @@
  * @file qlist.h
  */
 
-#ifndef _QLIST_H
-#define _QLIST_H
+#ifndef QLIST_H
+#define QLIST_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -119,4 +119,4 @@ struct qlist_obj_s {
 }
 #endif
 
-#endif /*_QLIST_H */
+#endif /* QLIST_H */

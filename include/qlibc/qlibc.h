@@ -32,8 +32,8 @@
  * @file qlibc.h
  */
 
-#ifndef _QLIBC_H
-#define _QLIBC_H
+#ifndef QLIBC_H
+#define QLIBC_H
 
 /* containers */
 #include "containers/qlist.h"
@@ -59,5 +59,5 @@
 #include "ipc/qsem.h"
 #include "ipc/qshm.h"
 
-#endif /*_QLIBC_H */
+#endif /*QLIBC_H */
 
