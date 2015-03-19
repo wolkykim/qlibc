@@ -275,9 +275,8 @@ qhasharr_t *qhasharr(void *memory, size_t memsize) {
     return tbl;
 }
 
-static qhasharr_slot_t* _get_slots(qhasharr_t *tbl)
-{
-    return (qhasharr_slot_t*)((char*)(tbl->data) + sizeof(qhasharr_data_t));
+static qhasharr_slot_t* _get_slots(qhasharr_t *tbl) {
+    return (qhasharr_slot_t*) ((char*) (tbl->data) + sizeof(qhasharr_data_t));
 }
 
 /**
@@ -320,8 +319,8 @@ static bool put(qhasharr_t *tbl, const char *key, const void *value,
         if (_put_data(tbl, hash, hash, key, value, size, 1) == false) {
             DEBUG("hasharr: FAILED put(new) %s", key);
             return false;
-        } DEBUG("hasharr: put(new) %s (idx=%d,hash=%u,tot=%d)",
-                key, hash, hash, data->usedslots);
+        }DEBUG("hasharr: put(new) %s (idx=%d,hash=%u,tot=%d)", key, hash, hash,
+               data->usedslots);
     } else if (tblslots[hash].count > 0) {  // same key or hash collision
         // check same key;
         int idx = _get_idx(tbl, key, hash);
@@ -346,8 +345,8 @@ static bool put(qhasharr_t *tbl, const char *key, const void *value,
             // increase counter from leading slot
             tblslots[hash].count++;
 
-            DEBUG("hasharr: put(col) %s (idx=%d,hash=%u,tot=%d)",
-                    key, idx, hash, data->usedslots);
+            DEBUG("hasharr: put(col) %s (idx=%d,hash=%u,tot=%d)", key, idx,
+                  hash, data->usedslots);
         }
     } else {
         // in case of -1 or -2, move it. -1 used for collision resolution,
@@ -378,8 +377,8 @@ static bool put(qhasharr_t *tbl, const char *key, const void *value,
             return false;
         }
 
-        DEBUG("hasharr: put(swp) %s (idx=%u,hash=%u,tot=%d)",
-                key, hash, hash, data->usedslots);
+        DEBUG("hasharr: put(swp) %s (idx=%u,hash=%u,tot=%d)", key, hash, hash,
+              data->usedslots);
     }
 
     return true;
@@ -626,7 +625,7 @@ static bool remove_(qhasharr_t *tbl, const char *key) {
     unsigned int hash = qhashmurmur3_32(key, strlen(key)) % data->maxslots;
     int idx = _get_idx(tbl, key, hash);
     if (idx < 0) {
-        DEBUG("key(%s) not found %s", key);
+        DEBUG("key(%s) not found.", key);
         errno = ENOENT;
         return false;
     }
@@ -674,7 +673,8 @@ static bool remove_(qhasharr_t *tbl, const char *key) {
 static bool remove_by_idx(qhasharr_t *tbl, int idx) {
     if (idx < 0) {
         DEBUG("Invalid index range, %d", idx);
-        errno = EINVAL;;
+        errno = EINVAL;
+        ;
         return false;
     }
 
@@ -684,7 +684,7 @@ static bool remove_by_idx(qhasharr_t *tbl, int idx) {
     if (tblslots[idx].count == 1) {
         // just remove
         _remove_data(tbl, idx);
-        DEBUG("hasharr: rem %s (idx=%d,tot=%d)", key, idx, data->usedslots);
+        DEBUG("hasharr: remove_by_idx (idx=%d,tot=%d)", idx, data->usedslots);
     } else if (tblslots[idx].count > 1) {  // leading slot and has collision
         // find the collision key
         int idx2;
@@ -692,7 +692,7 @@ static bool remove_by_idx(qhasharr_t *tbl, int idx) {
             if (idx2 >= data->maxslots)
                 idx2 = 0;
             if (idx2 == idx) {
-                DEBUG("hasharr: [BUG] failed to remove dup key %s.", key);
+                DEBUG("hasharr: [BUG] failed to remove dup key at %d.", idx);
                 errno = EFAULT;
                 return false;
             }
@@ -713,13 +713,13 @@ static bool remove_by_idx(qhasharr_t *tbl, int idx) {
             tblslots[tblslots[idx].link].hash = idx;
         }
 
-        DEBUG("hasharr: rem(lead) %s (idx=%d,tot=%d)",
-                key, idx, data->usedslots);
+        DEBUG("hasharr: remove_by_idx(lead) (idx=%d,tot=%d)", idx,
+              data->usedslots);
     } else if (tblslots[idx].count == -1) {  // collision key
         // decrease counter from leading slot
         if (tblslots[tblslots[idx].hash].count <= 1) {
-            DEBUG("hasharr: [BUG] failed to remove  %s. "
-                    "counter of leading slot mismatch.", key);
+            DEBUG("hasharr: [BUG] failed to remove at %d. counter of leading slot mismatch.",
+                  idx);
             errno = EFAULT;
             return false;
         }
@@ -727,10 +727,12 @@ static bool remove_by_idx(qhasharr_t *tbl, int idx) {
 
         // remove data
         _remove_data(tbl, idx);
-        DEBUG("hasharr: rem(dup) %s (idx=%d,tot=%d)", key, idx, data->usedslots);
+        DEBUG("hasharr: remove_by_idx(dup) (idx=%d,tot=%d)", idx,
+              data->usedslots);
     } else {
         DEBUG("Index(%d) is not pointing a valid object", idx);
-        errno = ENOENT;;
+        errno = ENOENT;
+        ;
         return false;
     }
 
@@ -783,8 +785,7 @@ static void clear(qhasharr_t *tbl) {
     data->num = 0;
 
     // clear memory
-    memset((void *) tblslots, '\0',
-           (data->maxslots * sizeof(qhasharr_slot_t)));
+    memset((void *) tblslots, '\0', (data->maxslots * sizeof(qhasharr_slot_t)));
 }
 
 /**
@@ -909,8 +910,7 @@ static int _get_idx(qhasharr_t *tbl, const char *key, unsigned int hash) {
         int count, idx;
         for (count = 0, idx = hash; count < tblslots[hash].count;) {
             if (tblslots[idx].hash == hash
-                    && (tblslots[idx].count > 0
-                            || tblslots[idx].count == -1)) {
+                    && (tblslots[idx].count > 0 || tblslots[idx].count == -1)) {
                 // same hash
                 count++;
 
@@ -920,8 +920,7 @@ static int _get_idx(qhasharr_t *tbl, const char *key, unsigned int hash) {
                 if (keylen == tblslots[idx].data.pair.keylen) {
                     if (keylen <= _Q_HASHARR_KEYSIZE) {
                         // original key is stored
-                        if (!memcmp(key, tblslots[idx].data.pair.key,
-                                    keylen)) {
+                        if (!memcmp(key, tblslots[idx].data.pair.key, keylen)) {
                             return idx;
                         }
                     } else {
@@ -1039,8 +1038,7 @@ static bool _put_data(qhasharr_t *tbl, int idx, unsigned int hash,
             }
 
             // clear & set
-            memset((void *) (&tblslots[tmpidx]), '\0',
-                   sizeof(qhasharr_slot_t));
+            memset((void *) (&tblslots[tmpidx]), '\0', sizeof(qhasharr_slot_t));
 
             tblslots[tmpidx].count = -2;      // extended data block
             tblslots[tmpidx].hash = newidx;   // prev link
@@ -1049,8 +1047,8 @@ static bool _put_data(qhasharr_t *tbl, int idx, unsigned int hash,
 
             tblslots[newidx].link = tmpidx;   // link chain
 
-            DEBUG("hasharr: slot %d is linked to slot %d for key %s.",
-                    tmpidx, newidx, key);
+            DEBUG("hasharr: slot %d is linked to slot %d for key %s.", tmpidx,
+                  newidx, key);
             newidx = tmpidx;
         }
 
@@ -1062,8 +1060,7 @@ static bool _put_data(qhasharr_t *tbl, int idx, unsigned int hash,
             if (copysize > sizeof(struct _Q_HASHARR_SLOT_EXT)) {
                 copysize = sizeof(struct _Q_HASHARR_SLOT_EXT);
             }
-            memcpy(tblslots[newidx].data.ext.value, value + savesize,
-                   copysize);
+            memcpy(tblslots[newidx].data.ext.value, value + savesize, copysize);
         } else {
             // first slot
             if (copysize > _Q_HASHARR_VALUESIZE) {
