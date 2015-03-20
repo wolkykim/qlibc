@@ -9,6 +9,7 @@ var qstring_8c =
     [ "qstrncpy", "qstring_8c.html#ae656735491546fa512358935c381e19a", null ],
     [ "qstrdupf", "qstring_8c.html#afed8e04d6f83692b815251e9f76cc8fd", null ],
     [ "qstrdup_between", "qstring_8c.html#a6ad659c9b3a4f6b515368cb0fa098d32", null ],
+    [ "qmemdup", "qstring_8c.html#acc32dbf9f419ef637d0547211b7125b9", null ],
     [ "qstrcatf", "qstring_8c.html#a4ab535e3b8608f1ef81ed21a7d602cef", null ],
     [ "qstrgets", "qstring_8c.html#abd1fa48bffd427c7c3847eebc9681f3b", null ],
     [ "qstrrev", "qstring_8c.html#acc9b4062910be63934d6b1658359b9bd", null ],

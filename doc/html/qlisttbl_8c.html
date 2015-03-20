@@ -591,17 +591,17 @@ Functions</h2></td></tr>
 <div class="line">(...codes...)</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// with newmem flag unset</span></div>
-<div class="line"><span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#aa309538c94c6fb98c6cedf81df24f81e">size</a>;</div>
+<div class="line"><span class="keywordtype">size_t</span> <a class="code" href="qhashtbl_8c.html#a73fd7b0d59a449dee2f9b6702e1bae89">size</a>;</div>
 <div class="line"><span class="keywordtype">void</span> *data = tbl-&gt;get(tbl, <span class="stringliteral">&quot;key_name&quot;</span>, &amp;size, <span class="keyword">false</span>);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// with newmem flag set</span></div>
-<div class="line"><span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#aa309538c94c6fb98c6cedf81df24f81e">size</a>;</div>
+<div class="line"><span class="keywordtype">size_t</span> <a class="code" href="qhashtbl_8c.html#a73fd7b0d59a449dee2f9b6702e1bae89">size</a>;</div>
 <div class="line"><span class="keywordtype">void</span> *data = tbl-&gt;get(tbl, <span class="stringliteral">&quot;key_name&quot;</span>, &amp;size, <span class="keyword">true</span>);</div>
 <div class="line">(...does something with data...)</div>
 <div class="line"><span class="keywordflow">if</span>(data != NULL) free(data);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be malloced and should be deallocated by user. Otherwise returned pointer will point internal data buffer directly and should not be de-allocated by user. In thread-safe mode, always set newmem flag as true to make sure it works in race condition situation. </dd></dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00423">423</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00424">424</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -665,7 +665,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00473">473</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00474">474</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -722,7 +722,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00491">491</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00492">492</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -801,7 +801,7 @@ Functions</h2></td></tr>
 <div class="line">}</div>
 <div class="line">tbl-&gt;freemulti(objs);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00533">533</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00536">536</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -840,7 +840,7 @@ Functions</h2></td></tr>
 <div class="line">qlisttbl_data_t *objs = tbl-&gt;getmulti(tbl, <span class="stringliteral">&quot;even newmem is false&quot;</span>, <span class="keyword">false</span>, &amp;numobjs);</div>
 <div class="line">tbl-&gt;freemulti(objs);  <span class="comment">// frees object array itself.</span></div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00602">602</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00605">605</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -934,7 +934,7 @@ Functions</h2></td></tr>
 <div class="line">}</div>
 <div class="line">tbl-&gt;unlock(tbl);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00660">660</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00664">664</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -980,7 +980,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a number of removed objects. </dd></dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00733">733</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00737">737</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1043,7 +1043,7 @@ Functions</h2></td></tr>
 <div class="line">}</div>
 <div class="line">tbl-&gt;unlock(tbl);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00776">776</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00780">780</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1078,7 +1078,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of elements in this table. </dd></dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00827">827</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00831">831</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1123,7 +1123,7 @@ Functions</h2></td></tr>
 <div class="line">  c = 5          c = 5           b = 6</div>
 <div class="line">  b = 6          d = 1           a = 2</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00854">854</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00858">858</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1157,7 +1157,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00890">890</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00894">894</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1217,7 +1217,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false. </dd></dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00923">923</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00927">927</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1277,7 +1277,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of loaded entries, otherwise returns -1. </dd></dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00969">969</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l00973">973</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1332,7 +1332,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l01021">1021</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l01025">1025</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1367,7 +1367,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Normally explicit locking is only needed when traverse all the elements with qlisttbl-&gt;<a class="el" href="qlisttbl_8c.html#a8c320cbb4355e62b25089cf87fedda51" title="qlisttbl-&gt;getnext(): Get next element. ">getnext()</a>. </dd></dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l01049">1049</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l01053">1053</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1401,7 +1401,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l01059">1059</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l01063">1063</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1435,7 +1435,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l01069">1069</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qlisttbl_8c_source.html#l01073">1073</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
