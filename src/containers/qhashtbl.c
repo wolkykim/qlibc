@@ -29,9 +29,9 @@
 /**
  * @file qhashtbl.c Hash-table container implementation.
  *
- * qhashtbl implements a hashtable, which maps keys to values. Key is a unique
- * string and value is any non-null object. The creator qHashtbl() has one
- * parameters that affect its performance: initial hash range. The hash range
+ * qhashtbl implements a hash table, which maps keys to values. Key is a unique
+ * string and value is any non-null object. The creator qhashtbl() has a
+ * parameter that affect its performance: initial hash range. The hash range
  * is the number of slots(pointers) in the hash table. in the case of a hash
  * collision, a single slots stores multiple elements using linked-list
  * structure, which must be searched sequentially. So lower range than the
@@ -359,7 +359,7 @@ static bool putint(qhashtbl_t *tbl, const char *name, const int64_t num) {
 }
 
 /**
- * qhashtbl->get(): Get a object from this table.
+ * qhashtbl->get(): Get an object from this table.
  *
  * @param tbl       qhashtbl_t container pointer.
  * @param name      key name.
@@ -373,24 +373,24 @@ static bool putint(qhashtbl_t *tbl, const char *name, const int64_t num) {
  *  - ENOMEM : Memory allocation failure.
  *
  * @code
- *  qhashtbl_t *tbl = qHashtbl(1000);
+ *  qhashtbl_t *tbl = qhashtbl(0, 0);
  *  (...codes...)
  *
  *  // with newmem flag unset
  *  size_t size;
- *  struct myobj *obj = (struct myobj*)tbl->get(tbl, "key_name", &size, false);
+ *  void *data = (struct myobj*)tbl->get(tbl, "key_name", &size, false);
  *
  *  // with newmem flag set
  *  size_t size;
- *  struct myobj *obj = (struct myobj*)tbl->get(tbl, "key_name", &size, true);
- *  if(obj != NULL) free(obj);
+ *  void *data  = (struct myobj*)tbl->get(tbl, "key_name", &size, true);
+ *  free(data);
  * @endcode
  *
  * @note
  *  If newmem flag is set, returned data will be malloced and should be
  *  deallocated by user. Otherwise returned pointer will point internal buffer
  *  directly and should not be de-allocated by user. In thread-safe mode,
- *  newmem flag should be true always.
+ *  newmem flag must be set to true always.
  */
 static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem) {
     if (name == NULL) {
@@ -435,8 +435,7 @@ static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem) {
 }
 
 /**
- * qhashtbl->getstr(): Finds an object with given name and returns as
- * string type.
+ * qhashtbl->getstr(): Finds an object and returns as string type.
  *
  * @param tbl       qhashtbl_t container pointer.
  * @param name      key name
@@ -494,36 +493,29 @@ static int64_t getint(qhashtbl_t *tbl, const char *name) {
  *  - ENOMEM : Memory allocation failure.
  *
  * @code
- *  qhashtbl_t *tbl = qHashtbl(1000);
+ *  qhashtbl_t *tbl = qhashtbl(0, 0);
  *  (...add data into list...)
  *
- *  // non-thread usages
  *  qhashtbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
- *  tbl->lock(tbl);
- *  while(tbl->getnext(tbl, &obj, false) == true) {
+ *  tbl->lock(tbl);  // lock it when thread condition is expected
+ *  while(tbl->getnext(tbl, &obj, false) == true) {  // newmem is false
  *     printf("NAME=%s, DATA=%s, SIZE=%zu\n",
  *     obj.name, (char*)obj.data, obj.size);
- *  }
- *  tbl->unlock(tbl);
- *
- *  // thread model with newmem flag
- *  qhashtbl_obj_t obj;
- *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
- *  tbl->lock(tbl);
- *  while(tbl->getnext(tbl, &obj, true) == true) {
- *     printf("NAME=%s, DATA=%s, SIZE=%zu\n",
- *     obj.name, (char*)obj.data, obj.size);
- *     free(obj.name);
- *     free(obj.data);
+ *     // do free obj.name and obj.data if newmem was set to true;
  *  }
  *  tbl->unlock(tbl);
  * @endcode
  *
  * @note
- *  obj should be initialized with 0 by using memset() before first call.
- *  If newmem flag is true, user should de-allocate obj.name and obj.data
- *  resources.
+ *  locking must be provided on user code when all element scan must be
+ *  guaranteed where multiple threads concurrently update the table.
+ *  It's ok not to lock the table on the user code even in thread condition,
+ *  when concurreny is importand and all element scan in a path doesn't need
+ *  to be guaranteed. In this case, new data inserted during the traversal
+ *  will be show up in this scan or next scan. Make sure newmem flag is set
+ *  if deletion is expected during the scan.
+ *  Object obj should be initialized with 0 by using memset() before first call.
  */
 static bool getnext(qhashtbl_t *tbl, qhashtbl_obj_t *obj, const bool newmem) {
     if (obj == NULL) {
@@ -598,7 +590,7 @@ static bool getnext(qhashtbl_t *tbl, qhashtbl_obj_t *obj, const bool newmem) {
  *
  * @return true if successful, otherwise(not found) returns false
  * @retval errno will be set in error condition.
- *  - ENOENT : No next element.
+ *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
  */
 static bool remove_(qhashtbl_t *tbl, const char *name) {
@@ -704,7 +696,7 @@ static bool debug(qhashtbl_t *tbl, FILE *out) {
     lock(tbl);
     while (tbl->getnext(tbl, &obj, false) == true) {
         fprintf(out, "%s=", obj.name);
-        _q_humanOut(out, obj.data, obj.size, MAX_HUMANOUT);
+        _q_textout(out, obj.data, obj.size, MAX_HUMANOUT);
         fprintf(out, " (%zu, hash=%u)\n", obj.size, obj.hash);
     }
     unlock(tbl);

@@ -383,6 +383,7 @@ static bool putint(qlisttbl_t *tbl, const char *name, int64_t num)
 
 /**
  * qlisttbl->get(): Finds an object with given name.
+ *
  * If there are duplicate keys in the table, this will return the first matched
  * one from the bottom (or the top if QLISTTBL_LOOKUPFORWARD option was given).
  * So if there are duplicated keys, it'll return recently inserted one.
@@ -501,7 +502,9 @@ static int64_t getint(qlisttbl_t *tbl, const char *name)
 
 /**
  * qlisttbl->getmulti(): Finds all objects with given name and return a array
- * of objects. If there are duplicate keys in the table, this will return all
+ * of objects.
+ *
+ * If there are duplicate keys in the table, this will return all
  * the matched ones. The order of objects in return depends on setnextdir()
  * setting. By default, the order is same(forward) as listed in the table.
  *
@@ -613,6 +616,7 @@ static void freemulti(qlisttbl_data_t *objs)
 
 /**
  * qlisttbl->getnext(): Get next element.
+ *
  * Default searching direction is backward, from the bottom to top
  * unless QLISTTBL_LOOKUPFORWARD option was specified.
  *
@@ -1029,7 +1033,7 @@ static bool debug(qlisttbl_t *tbl, FILE *out)
     qlisttbl_obj_t *obj;
     for (obj = tbl->first; obj; obj = obj->next) {
         fprintf(out, "%s=" , obj->name);
-        _q_humanOut(out, obj->data, obj->size, MAX_HUMANOUT);
+        _q_textout(out, obj->data, obj->size, MAX_HUMANOUT);
         fprintf(out, " (%zu,%4x)\n" , obj->size, obj->hash);
     }
     unlock(tbl);

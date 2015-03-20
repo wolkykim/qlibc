@@ -69,7 +69,7 @@ char *_q_makeword(char *str, char stop) {
     return word;
 }
 
-void _q_humanOut(FILE *fp, void *data, size_t size, size_t max) {
+void _q_textout(FILE *fp, void *data, size_t size, size_t max) {
     size_t i;
     for (i = 0; i < size && i < max; i++) {
         int c = ((char *) data)[i];
