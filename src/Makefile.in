@@ -69,31 +69,31 @@ QLIBC_OBJS	= \
 		containers/qhashtbl.o		\
 		containers/qhasharr.o		\
 		containers/qlisttbl.o		\
-		containers/qlist.o			\
+		containers/qlist.o		\
 		containers/qvector.o		\
-		containers/qqueue.o			\
-		containers/qstack.o			\
-									\
-		utilities/qcount.o			\
-		utilities/qencode.o			\
-		utilities/qfile.o			\
-		utilities/qhash.o			\
-		utilities/qio.o				\
-		utilities/qsocket.o			\
-		utilities/qstring.o			\
-		utilities/qsystem.o			\
-		utilities/qtime.o			\
-									\
-		ipc/qsem.o					\
-		ipc/qshm.o					\
-									\
+		containers/qqueue.o		\
+		containers/qstack.o		\
+						\
+		utilities/qcount.o		\
+		utilities/qencode.o		\
+		utilities/qfile.o		\
+		utilities/qhash.o		\
+		utilities/qio.o			\
+		utilities/qsocket.o		\
+		utilities/qstring.o		\
+		utilities/qsystem.o		\
+		utilities/qtime.o		\
+						\
+		ipc/qsem.o			\
+		ipc/qshm.o			\
+						\
 		internal/qinternal.o		\
 		internal/md5/md5c.o
 
 QLIBCEXT_OBJS	= \
 		extensions/qconfig.o		\
-		extensions/qaconf.o			\
-		extensions/qlog.o			\
+		extensions/qaconf.o		\
+		extensions/qlog.o		\
 		extensions/qhttpclient.o	\
 		extensions/qdatabase.o		\
 		extensions/qtokenbucket.o
