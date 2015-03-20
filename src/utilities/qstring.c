@@ -235,8 +235,8 @@ char *qstrunchar(char *str, char head, char tail) {
  */
 char *qstrreplace(const char *mode, char *srcstr, const char *tokstr,
                   const char *word) {
-    if (mode == NULL || strlen(mode) != 2 || srcstr == NULL || tokstr == NULL
-            || word == NULL) {
+    if (mode == NULL || strlen(mode) != 2|| srcstr == NULL || tokstr == NULL
+    || word == NULL) {
         DEBUG("Unknown mode \"%s\".", mode);
         return NULL;
     }
@@ -393,6 +393,28 @@ char *qstrdup_between(const char *str, const char *start, const char *end) {
     buf[len] = '\0';
 
     return buf;
+}
+
+/**
+ * Duplicate a copy of memory data.
+ *
+ * @param data    source data
+ * @param size    data size
+ *
+ * @return a pointer of malloced data which's content is identical to source data.
+ */
+void *qmemdup(const void *data, size_t size) {
+    if (data == NULL || size == 0) {
+        return NULL;
+    }
+
+    void *newdata = malloc(size);
+    if (newdata == NULL) {
+        return NULL;
+    }
+
+    memcpy(newdata, data, size);
+    return newdata;
 }
 
 /**
@@ -629,20 +651,23 @@ qlist_t *qstrtokenizer(const char *str, const char *delimiters) {
  *  it uses rand().
  */
 char *qstrunique(const char *seed) {
-    long int usec;
+    int time1;
+    long time2;
 #ifdef _WIN32
     FILETIME ft;
     GetSystemTimeAsFileTime(&ft);
-    usec = ft.dwLowDateTime % 1000000;
+    time1 = (int)time(NULL);
+    time2 = (long)ft.dwLowDateTime;
 #else
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    usec = tv.tv_usec;
+    struct timespec tv;
+    clock_gettime(CLOCK_MONOTONIC, &tv);
+    time1 = (int) tv.tv_sec;
+    time2 = (long) tv.tv_nsec;
 #endif
 
     char uniquestr[128];
-    snprintf(uniquestr, sizeof(uniquestr), "%u%d%lu%ld%s", getpid(), rand(),
-             (unsigned long int) time(NULL), usec, (seed != NULL) ? seed : "");
+    snprintf(uniquestr, sizeof(uniquestr), "%u%d%d%ld%s", getpid(), rand(),
+             time1, time2, (seed != NULL) ? seed : "");
 
     unsigned char md5hash[16];
     qhashmd5(uniquestr, strlen(uniquestr), md5hash);
@@ -837,14 +862,16 @@ bool qstr_is_ip4addr(const char *str) {
 char *qstr_conv_encoding(const char *str, const char *fromcode,
                          const char *tocode, float mag) {
 #ifdef __linux__
-    if (str == NULL) return NULL;
+    if (str == NULL)
+        return NULL;
 
-    char *fromstr = (char *)str;
+    char *fromstr = (char *) str;
     size_t fromsize = strlen(fromstr) + 1;
 
     size_t tosize = sizeof(char) * ((mag * (fromsize - 1)) + 1);
-    char *tostr = (char *)malloc(tosize);
-    if (tostr == NULL) return NULL;
+    char *tostr = (char *) malloc(tosize);
+    if (tostr == NULL)
+        return NULL;
     char *tostr1 = tostr;
 
     iconv_t it = iconv_open(tocode, fromcode);
