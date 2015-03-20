@@ -65,34 +65,35 @@ QLIBCEXT_SLIBREALNAME	= ${QLIBCEXT_SLIBNAME}.${QLIBCEXT_SLIBVERSION}
 
 ## Objects List
 QLIBC_OBJS	= \
-		containers/qlist.o		\
-		containers/qlisttbl.o		\
+		containers/qtreetbl.o		\
 		containers/qhashtbl.o		\
 		containers/qhasharr.o		\
+		containers/qlisttbl.o		\
+		containers/qlist.o			\
 		containers/qvector.o		\
-		containers/qqueue.o		\
-		containers/qstack.o		\
-						\
-		utilities/qcount.o		\
-		utilities/qencode.o		\
-		utilities/qfile.o		\
-		utilities/qhash.o		\
-		utilities/qio.o			\
-		utilities/qsocket.o		\
-		utilities/qstring.o		\
-		utilities/qsystem.o		\
-		utilities/qtime.o		\
-						\
-		ipc/qsem.o			\
-		ipc/qshm.o			\
-						\
+		containers/qqueue.o			\
+		containers/qstack.o			\
+									\
+		utilities/qcount.o			\
+		utilities/qencode.o			\
+		utilities/qfile.o			\
+		utilities/qhash.o			\
+		utilities/qio.o				\
+		utilities/qsocket.o			\
+		utilities/qstring.o			\
+		utilities/qsystem.o			\
+		utilities/qtime.o			\
+									\
+		ipc/qsem.o					\
+		ipc/qshm.o					\
+									\
 		internal/qinternal.o		\
 		internal/md5/md5c.o
 
 QLIBCEXT_OBJS	= \
 		extensions/qconfig.o		\
-		extensions/qaconf.o		\
-		extensions/qlog.o		\
+		extensions/qaconf.o			\
+		extensions/qlog.o			\
 		extensions/qhttpclient.o	\
 		extensions/qdatabase.o		\
 		extensions/qtokenbucket.o
@@ -125,8 +126,8 @@ install-qlibc: qlibc
 	${MKDIR_P} ${INST_INCDIR}/qlibc/containers/
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qhasharr.h ${INST_INCDIR}/qlibc/containers/qhasharr.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qhashtbl.h ${INST_INCDIR}/qlibc/containers/qhashtbl.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qlist.h ${INST_INCDIR}/qlibc/containers/qlist.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qlisttbl.h ${INST_INCDIR}/qlibc/containers/qlisttbl.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qlist.h ${INST_INCDIR}/qlibc/containers/qlist.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qqueue.h ${INST_INCDIR}/qlibc/containers/qqueue.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qstack.h ${INST_INCDIR}/qlibc/containers/qstack.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qvector.h ${INST_INCDIR}/qlibc/containers/qvector.h

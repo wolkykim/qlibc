@@ -41,10 +41,11 @@ RM		= @RM@
 DEPLIBS		= @DEPLIBS@
 
 TARGETS1	= \
-			test_qstring 		\
 			test_qhashtbl		\
 			test_qhasharr		\
-			test_qhasharr_darkdh
+			test_qhasharr_darkdh \
+			test_qtreetbl		\
+			test_qstring
 
 TARGETS2	= ${TARGETS1}
 TARGETS		= ${@EXAMPLES_TARGETS@}
@@ -56,13 +57,13 @@ all:	${TARGETS}
 
 run:	test
 test:	all
-	@for EXECUTABLE in ${TARGETS}; do		\
+	@for EXECUTABLE in ${TARGETS}; do				\
 		./$${EXECUTABLE};					\
-		echo "";							\
+		echo "";						\
 	done
 
-test_qstring: test_qstring.o
-	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qstring.o ${LIBQLIBC}
+test_qtreetbl: test_qtreetbl.o
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qtreetbl.o ${LIBQLIBC} -lm
 
 test_qhashtbl: test_qhashtbl.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhashtbl.o ${LIBQLIBC}
@@ -72,6 +73,9 @@ test_qhasharr: test_qhasharr.o
 
 test_qhasharr_darkdh: test_qhasharr_darkdh.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhasharr_darkdh.o ${LIBQLIBC}
+
+test_qstring: test_qstring.o
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qstring.o ${LIBQLIBC}
 
 ## Clear Module
 clean:
