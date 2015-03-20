@@ -900,7 +900,7 @@ $(document).ready(function(){initNavTree('qlist_8c_source.html','');});
 <div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160;    <span class="keywordtype">int</span> i;</div>
 <div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;    <span class="keywordflow">for</span> (i = 0, obj = list-&gt;first; obj; obj = obj-&gt;next, i++) {</div>
 <div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;        fprintf(out, <span class="stringliteral">&quot;%d=&quot;</span>, i);</div>
-<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;        _q_humanOut(out, obj-&gt;data, obj-&gt;size, MAX_HUMANOUT);</div>
+<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;        _q_textout(out, obj-&gt;data, obj-&gt;size, MAX_HUMANOUT);</div>
 <div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;        fprintf(out, <span class="stringliteral">&quot; (%zu)\n&quot;</span>, obj-&gt;size);</div>
 <div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;    }</div>
 <div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;    <a class="code" href="qlist_8c.html#afa5006ac8f4f7da50405ac96c39ddd80">unlock</a>(list);</div>

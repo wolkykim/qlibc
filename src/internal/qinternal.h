@@ -149,30 +149,6 @@ struct qmutex_s {
 #endif
 #endif  /* BUILD_DEBUG */
 
-// debug timer
-#include <sys/time.h>
-#define TIMER_START()                                                   \
-    int _swno = 0;                                                      \
-    struct timeval _tv1, _tv2;                                          \
-    gettimeofday(&_tv1, NULL)
-
-#define TIMER_STOP(prefix)  {                                           \
-        gettimeofday(&_tv2, NULL);                                      \
-        _swno++;                                                        \
-        struct timeval _diff;                                           \
-        _diff.tv_sec = _tv2.tv_sec - _tv1.tv_sec;                       \
-        if(_tv2.tv_usec >= _tv1.tv_usec) {                              \
-            _diff.tv_usec = _tv2.tv_usec - _tv1.tv_usec;                \
-        } else {                                                        \
-            _diff.tv_sec -= 1;                                          \
-            _diff.tv_usec = 1000000 - _tv1.tv_usec + _tv2.tv_usec;      \
-        }                                                               \
-        printf("TIMER(%d,%s,%d): %zus %dus (%s:%d)\n",                  \
-               getpid(), prefix, _swno, _diff.tv_sec, (int)(_diff.tv_usec), \
-               __FILE__, __LINE__);                                     \
-        gettimeofday(&_tv1, NULL);                                      \
-    }
-
 /*
  * Other internal use
  */
@@ -184,6 +160,6 @@ struct qmutex_s {
 
 extern char _q_x2c(char hex_up, char hex_low);
 extern char *_q_makeword(char *str, char stop);
-extern void _q_humanOut(FILE *fp, void *data, size_t size, size_t max);
+extern void _q_textout(FILE *fp, void *data, size_t size, size_t max);
 
 #endif /* QINTERNAL_H */

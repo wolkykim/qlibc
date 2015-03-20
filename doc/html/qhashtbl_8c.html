@@ -97,10 +97,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:aeb3255d3a498522c2862d7bb35a50c2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#aeb3255d3a498522c2862d7bb35a50c2e" title="qhashtbl-&gt;putint(): Put a integer into this table as string type. ">putint()</a>: Put a integer into this table as string type.  <a href="#aeb3255d3a498522c2862d7bb35a50c2e">More...</a><br/></td></tr>
 <tr class="separator:aeb3255d3a498522c2862d7bb35a50c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae35d16686e115fcc2c612674583ddec3"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhashtbl_8c.html#ae35d16686e115fcc2c612674583ddec3">get</a> (qhashtbl_t *tbl, const char *name, size_t *<a class="el" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361">size</a>, bool newmem)</td></tr>
-<tr class="memdesc:ae35d16686e115fcc2c612674583ddec3"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#ae35d16686e115fcc2c612674583ddec3" title="qhashtbl-&gt;get(): Get a object from this table. ">get()</a>: Get a object from this table.  <a href="#ae35d16686e115fcc2c612674583ddec3">More...</a><br/></td></tr>
+<tr class="memdesc:ae35d16686e115fcc2c612674583ddec3"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#ae35d16686e115fcc2c612674583ddec3" title="qhashtbl-&gt;get(): Get an object from this table. ">get()</a>: Get an object from this table.  <a href="#ae35d16686e115fcc2c612674583ddec3">More...</a><br/></td></tr>
 <tr class="separator:ae35d16686e115fcc2c612674583ddec3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c70ef7cf17f5a4346ecadbe229779e1"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhashtbl_8c.html#a4c70ef7cf17f5a4346ecadbe229779e1">getstr</a> (qhashtbl_t *tbl, const char *name, const bool newmem)</td></tr>
-<tr class="memdesc:a4c70ef7cf17f5a4346ecadbe229779e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a4c70ef7cf17f5a4346ecadbe229779e1" title="qhashtbl-&gt;getstr(): Finds an object with given name and returns as string type. ">getstr()</a>: Finds an object with given name and returns as string type.  <a href="#a4c70ef7cf17f5a4346ecadbe229779e1">More...</a><br/></td></tr>
+<tr class="memdesc:a4c70ef7cf17f5a4346ecadbe229779e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a4c70ef7cf17f5a4346ecadbe229779e1" title="qhashtbl-&gt;getstr(): Finds an object and returns as string type. ">getstr()</a>: Finds an object and returns as string type.  <a href="#a4c70ef7cf17f5a4346ecadbe229779e1">More...</a><br/></td></tr>
 <tr class="separator:a4c70ef7cf17f5a4346ecadbe229779e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67c1789f38a8ce6f44cfcf2b323ce99e"><td class="memItemLeft" align="right" valign="top">static int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhashtbl_8c.html#a67c1789f38a8ce6f44cfcf2b323ce99e">getint</a> (qhashtbl_t *tbl, const char *name)</td></tr>
 <tr class="memdesc:a67c1789f38a8ce6f44cfcf2b323ce99e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a67c1789f38a8ce6f44cfcf2b323ce99e" title="qhashtbl-&gt;getint(): Finds an object with given name and returns as integer type. ">getint()</a>: Finds an object with given name and returns as integer type.  <a href="#a67c1789f38a8ce6f44cfcf2b323ce99e">More...</a><br/></td></tr>
@@ -132,7 +132,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Hash-table container implementation. </p>
-<p>qhashtbl implements a hashtable, which maps keys to values. Key is a unique string and value is any non-null object. The creator qHashtbl() has one parameters that affect its performance: initial hash range. The hash range is the number of slots(pointers) in the hash table. in the case of a hash collision, a single slots stores multiple elements using linked-list structure, which must be searched sequentially. So lower range than the number of elements decreases the space overhead but increases the number of hash collisions and consequently it increases the time cost to look up an element.</p>
+<p>qhashtbl implements a hash table, which maps keys to values. Key is a unique string and value is any non-null object. The creator <a class="el" href="qhashtbl_8c.html#acce512d557a3c776d474bfc977f34045" title="Initialize hash table. ">qhashtbl()</a> has a parameter that affect its performance: initial hash range. The hash range is the number of slots(pointers) in the hash table. in the case of a hash collision, a single slots stores multiple elements using linked-list structure, which must be searched sequentially. So lower range than the number of elements decreases the space overhead but increases the number of hash collisions and consequently it increases the time cost to look up an element.</p>
 <div class="fragment"><div class="line">[Internal Structure Example <span class="keywordflow">for</span> 10-slot hash table]</div>
 <div class="line"></div>
 <div class="line">RANGE    NAMED-OBJECT-LIST</div>
@@ -163,7 +163,7 @@ Functions</h2></td></tr>
 <div class="line">tbl-&gt;debug(tbl, stdout, <span class="keyword">true</span>);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// get objects</span></div>
-<div class="line"><span class="keywordtype">void</span> *sample1 = tbl-&gt;get(tbl, <span class="stringliteral">&quot;sample1&quot;</span>, &amp;<a class="code" href="qlist_8c.html#aa309538c94c6fb98c6cedf81df24f81e">size</a>, <span class="keyword">true</span>);</div>
+<div class="line"><span class="keywordtype">void</span> *sample1 = tbl-&gt;get(tbl, <span class="stringliteral">&quot;sample1&quot;</span>, &amp;<a class="code" href="qhashtbl_8c.html#a73fd7b0d59a449dee2f9b6702e1bae89">size</a>, <span class="keyword">true</span>);</div>
 <div class="line"><span class="keywordtype">char</span> *sample2 = tbl-&gt;getstr(tbl, <span class="stringliteral">&quot;sample2&quot;</span>, <span class="keyword">false</span>);</div>
 <div class="line"><span class="keywordtype">int</span>  sample3  = tbl-&gt;getint(tbl, <span class="stringliteral">&quot;sample3&quot;</span>);</div>
 <div class="line"></div>
@@ -557,7 +557,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#ae35d16686e115fcc2c612674583ddec3" title="qhashtbl-&gt;get(): Get a object from this table. ">get()</a>: Get a object from this table. </p>
+<p>qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#ae35d16686e115fcc2c612674583ddec3" title="qhashtbl-&gt;get(): Get an object from this table. ">get()</a>: Get an object from this table. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qhashtbl_t container pointer. </td></tr>
@@ -579,18 +579,18 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<div class="fragment"><div class="line">qhashtbl_t *tbl = qHashtbl(1000);</div>
+<div class="fragment"><div class="line">qhashtbl_t *tbl = <a class="code" href="qhashtbl_8c.html#acce512d557a3c776d474bfc977f34045">qhashtbl</a>(0, 0);</div>
 <div class="line">(...codes...)</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// with newmem flag unset</span></div>
-<div class="line"><span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#aa309538c94c6fb98c6cedf81df24f81e">size</a>;</div>
-<div class="line"><span class="keyword">struct </span>myobj *obj = (<span class="keyword">struct </span>myobj*)tbl-&gt;get(tbl, <span class="stringliteral">&quot;key_name&quot;</span>, &amp;size, <span class="keyword">false</span>);</div>
+<div class="line"><span class="keywordtype">size_t</span> <a class="code" href="qhashtbl_8c.html#a73fd7b0d59a449dee2f9b6702e1bae89">size</a>;</div>
+<div class="line"><span class="keywordtype">void</span> *data = (<span class="keyword">struct </span>myobj*)tbl-&gt;get(tbl, <span class="stringliteral">&quot;key_name&quot;</span>, &amp;size, <span class="keyword">false</span>);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// with newmem flag set</span></div>
-<div class="line"><span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#aa309538c94c6fb98c6cedf81df24f81e">size</a>;</div>
-<div class="line"><span class="keyword">struct </span>myobj *obj = (<span class="keyword">struct </span>myobj*)tbl-&gt;get(tbl, <span class="stringliteral">&quot;key_name&quot;</span>, &amp;size, <span class="keyword">true</span>);</div>
-<div class="line"><span class="keywordflow">if</span>(obj != NULL) free(obj);</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be malloced and should be deallocated by user. Otherwise returned pointer will point internal buffer directly and should not be de-allocated by user. In thread-safe mode, newmem flag should be true always. </dd></dl>
+<div class="line"><span class="keywordtype">size_t</span> <a class="code" href="qhashtbl_8c.html#a73fd7b0d59a449dee2f9b6702e1bae89">size</a>;</div>
+<div class="line"><span class="keywordtype">void</span> *data  = (<span class="keyword">struct </span>myobj*)tbl-&gt;get(tbl, <span class="stringliteral">&quot;key_name&quot;</span>, &amp;size, <span class="keyword">true</span>);</div>
+<div class="line">free(data);</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be malloced and should be deallocated by user. Otherwise returned pointer will point internal buffer directly and should not be de-allocated by user. In thread-safe mode, newmem flag must be set to true always. </dd></dl>
 
 <p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00395">395</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
@@ -634,7 +634,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a4c70ef7cf17f5a4346ecadbe229779e1" title="qhashtbl-&gt;getstr(): Finds an object with given name and returns as string type. ">getstr()</a>: Finds an object with given name and returns as string type. </p>
+<p>qhashtbl-&gt;<a class="el" href="qhashtbl_8c.html#a4c70ef7cf17f5a4346ecadbe229779e1" title="qhashtbl-&gt;getstr(): Finds an object and returns as string type. ">getstr()</a>: Finds an object and returns as string type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qhashtbl_t container pointer. </td></tr>
@@ -657,7 +657,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be malloced and should be deallocated by user. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00455">455</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00454">454</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -714,7 +714,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00472">472</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00471">471</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -777,33 +777,21 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<div class="fragment"><div class="line">qhashtbl_t *tbl = qHashtbl(1000);</div>
+<div class="fragment"><div class="line">qhashtbl_t *tbl = <a class="code" href="qhashtbl_8c.html#acce512d557a3c776d474bfc977f34045">qhashtbl</a>(0, 0);</div>
 <div class="line">(...add data into list...)</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// non-thread usages</span></div>
 <div class="line">qhashtbl_obj_t obj;</div>
 <div class="line">memset((<span class="keywordtype">void</span>*)&amp;obj, 0, <span class="keyword">sizeof</span>(obj)); <span class="comment">// must be cleared before call</span></div>
-<div class="line">tbl-&gt;lock(tbl);</div>
-<div class="line"><span class="keywordflow">while</span>(tbl-&gt;getnext(tbl, &amp;obj, <span class="keyword">false</span>) == <span class="keyword">true</span>) {</div>
+<div class="line">tbl-&gt;lock(tbl);  <span class="comment">// lock it when thread condition is expected</span></div>
+<div class="line"><span class="keywordflow">while</span>(tbl-&gt;getnext(tbl, &amp;obj, <span class="keyword">false</span>) == <span class="keyword">true</span>) {  <span class="comment">// newmem is false</span></div>
 <div class="line">   printf(<span class="stringliteral">&quot;NAME=%s, DATA=%s, SIZE=%zu\n&quot;</span>,</div>
 <div class="line">   obj.name, (<span class="keywordtype">char</span>*)obj.data, obj.size);</div>
+<div class="line">   <span class="comment">// do free obj.name and obj.data if newmem was set to true;</span></div>
 <div class="line">}</div>
 <div class="line">tbl-&gt;unlock(tbl);</div>
-<div class="line"></div>
-<div class="line"><span class="comment">// thread model with newmem flag</span></div>
-<div class="line">qhashtbl_obj_t obj;</div>
-<div class="line">memset((<span class="keywordtype">void</span>*)&amp;obj, 0, <span class="keyword">sizeof</span>(obj)); <span class="comment">// must be cleared before call</span></div>
-<div class="line">tbl-&gt;lock(tbl);</div>
-<div class="line"><span class="keywordflow">while</span>(tbl-&gt;getnext(tbl, &amp;obj, <span class="keyword">true</span>) == <span class="keyword">true</span>) {</div>
-<div class="line">   printf(<span class="stringliteral">&quot;NAME=%s, DATA=%s, SIZE=%zu\n&quot;</span>,</div>
-<div class="line">   obj.name, (<span class="keywordtype">char</span>*)obj.data, obj.size);</div>
-<div class="line">   free(obj.name);</div>
-<div class="line">   free(obj.data);</div>
-<div class="line">}</div>
-<div class="line">tbl-&gt;unlock(tbl);</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>obj should be initialized with 0 by using memset() before first call. If newmem flag is true, user should de-allocate obj.name and obj.data resources. </dd></dl>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>locking must be provided on user code when all element scan must be guaranteed where multiple threads concurrently update the table. It's ok not to lock the table on the user code even in thread condition, when concurreny is importand and all element scan in a path doesn't need to be guaranteed. In this case, new data inserted during the traversal will be show up in this scan or next scan. Make sure newmem flag is set if deletion is expected during the scan. Object obj should be initialized with 0 by using memset() before first call. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00528">528</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00520">520</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -851,7 +839,7 @@ Functions</h2></td></tr>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
-<li>ENOENT : No next element.</li>
+<li>ENOENT : No such key found.</li>
 <li>EINVAL : Invalid argument. </li>
 </ul>
 </td></tr>
@@ -859,7 +847,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00604">604</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00596">596</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -894,7 +882,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of elements stored </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00655">655</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00647">647</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -928,7 +916,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00664">664</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00656">656</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -983,7 +971,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00696">696</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00688">688</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -1020,7 +1008,7 @@ Functions</h2></td></tr>
 <dd>
 This operation will do nothing if QHASHTBL_THREADSAFE option was not given at the initialization time. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00728">728</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00720">720</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -1055,7 +1043,7 @@ This operation will do nothing if QHASHTBL_THREADSAFE option was not given at th
 </dl>
 <dl class="section note"><dt>Note</dt><dd>This operation will do nothing if QHASHTBL_THREADSAFE option was not given at the initialization time. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00741">741</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00733">733</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -1089,7 +1077,7 @@ This operation will do nothing if QHASHTBL_THREADSAFE option was not given at th
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00750">750</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00742">742</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>

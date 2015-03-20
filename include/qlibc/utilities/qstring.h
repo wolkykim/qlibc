@@ -54,6 +54,7 @@ extern char *qstrncpy(char *dst, size_t size, const char *src, size_t nbytes);
 extern char *qstrdupf(const char *format, ...);
 extern char *qstrdup_between(const char *str, const char *start,
                              const char *end);
+extern void *qmemdup(const void *data, size_t size);
 extern char *qstrcatf(char *str, const char *format, ...);
 extern char *qstrgets(char *buf, size_t size, char **offset);
 extern char *qstrrev(char *str);

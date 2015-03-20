@@ -833,7 +833,7 @@ static bool debug(qlist_t *list, FILE *out) {
     int i;
     for (i = 0, obj = list->first; obj; obj = obj->next, i++) {
         fprintf(out, "%d=", i);
-        _q_humanOut(out, obj->data, obj->size, MAX_HUMANOUT);
+        _q_textout(out, obj->data, obj->size, MAX_HUMANOUT);
         fprintf(out, " (%zu)\n", obj->size);
     }
     unlock(list);

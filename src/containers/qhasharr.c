@@ -557,8 +557,8 @@ static int64_t getint(qhasharr_t *tbl, const char *key) {
  *
  * @note
  *  Please be aware a key name will be returned with truncated length
- *  because key name is truncated when it put into the table if it's length is
- *  longer than Q_HASHARR_KEYSIZE.
+ *  because key name gets truncated if it doesn't fit into slot size,
+ *  Q_HASHARR_KEYSIZE.
  */
 static bool getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx) {
     if (tbl == NULL || obj == NULL || idx == NULL) {
@@ -817,7 +817,7 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
         uint16_t keylen = tblslots[idx - 1].data.pair.keylen;
         fprintf(out, "%s%s(%d)=", obj.name,
                 (keylen > Q_HASHARR_KEYSIZE) ? "..." : "", keylen);
-        _q_humanOut(out, obj.data, obj.size, MAX_HUMANOUT);
+        _q_textout(out, obj.data, obj.size, MAX_HUMANOUT);
         fprintf(out, " (%zu)\n", obj.size);
 
         free(obj.name);
@@ -835,7 +835,7 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
         if (tblslots[idx].count == -2) {
             fprintf(out, "EXTEND,prev=%d,next=%d,data=",
                     tblslots[idx].hash, tblslots[idx].link);
-            _q_humanOut(out,
+            _q_textout(out,
                     tblslots[idx].data.ext.value,
                     tblslots[idx].size,
                     MAX_HUMANOUT);
@@ -844,14 +844,14 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
             fprintf(out, "%s", (tblslots[idx].count == -1)?"COLISN":"NORMAL");
             fprintf(out, ",count=%d,hash=%u,key=",
                     tblslots[idx].count, tblslots[idx].hash);
-            _q_humanOut(out,
+            _q_textout(out,
                     tblslots[idx].data.pair.key,
                     (tblslots[idx].data.pair.keylen>Q_HASHARR_KEYSIZE)
                     ? Q_HASHARR_KEYSIZE
                     : tblslots[idx].data.pair.keylen,
                     MAX_HUMANOUT);
             fprintf(out, ",keylen=%d,data=", tblslots[idx].data.pair.keylen);
-            _q_humanOut(out,
+            _q_textout(out,
                     tblslots[idx].data.pair.value,
                     tblslots[idx].size,
                     MAX_HUMANOUT);

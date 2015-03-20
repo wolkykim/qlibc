@@ -807,7 +807,7 @@ static qhasharr_slot_t *&#160;</td><td class="memItemRight" valign="bottom"><b>_
 <div class="line">  free(obj.name);</div>
 <div class="line">  free(obj.data);</div>
 <div class="line">}</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Please be aware a key name will be returned with truncated length because key name is truncated when it put into the table if it's length is longer than Q_HASHARR_KEYSIZE. </dd></dl>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Please be aware a key name will be returned with truncated length because key name gets truncated if it doesn't fit into slot size, Q_HASHARR_KEYSIZE. </dd></dl>
 
 <p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00563">563</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
