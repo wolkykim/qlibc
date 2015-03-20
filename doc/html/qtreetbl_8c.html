@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>qlibc: containers/qtreetbl.c File Reference</title>
+<title>qLibc: containers/qtreetbl.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -24,7 +24,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">qlibc
+   <div id="projectname">qLibc
    </div>
   </td>
  </tr>
@@ -152,7 +152,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>qtreetbl_byte_cmp</b> 
 <li><a href="http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf">http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Left-leaning_red-black_tree">http://en.wikipedia.org/wiki/Left-leaning_red-black_tree</a></li>
 </ul>
-<p>Following example code will construct the data structure shown in below diagram. This example is quoted from the inventor's presentation slide p24-p25, <a href="http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf">http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf</a> </p>
+<p>Following example code will construct the data structure shown in below diagram. This example is quoted from the inventor's presentation slide p24-p25, <a href="http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf">http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf</a> and used in unit tests for verification purpose. </p>
 <pre class="fragment">                           (E)
               ______________|______________
              /                             \
@@ -176,7 +176,7 @@ A*                              I*                S*
 Nodes A, I and S are nodes with RED upper link. Others are BLACK
 
        &lt;Left-Leaning Red-Black Tree Data Structure&gt;
-</pre><p>Red-Black BST algorithm has been one of the famous BST algorithm especially for in-memory operation. It's been using in all around the computing area. I was very impressed about this variant, Left-Leaning version of Red-Black about how it improves the performance and reduces the overall complexity. Since it relatively new algorithm, there's not many of practically functional working codes yet other than proof of concept kinds. Here's one of fully functional codes and I, Seungyoung Kim, would like to dedicate this code to the genius inventor Robert Sedgewick and to all the great qLibc users. Cheers!</p>
+</pre><p>Red-Black BST algorithm has been one of the famous BST algorithm especially for in-memory operation. It's been using in all around the computing area. I was very impressed about this variant, Left-Leaning version of Red-Black about how it improves the performance and reduces the overall complexity. Since it's relatively new algorithm, there's not many of practically functional working codes yet other than proof of concept kinds. Here's one of fully functional codes and I, Seungyoung Kim, would like to dedicate this code to the genius inventor Robert Sedgewick and to all the great qLibc users. Cheers!</p>
 <p>Unique features:</p>
 <ul>
 <li>iterator. (have you ever seen iterator implementation in LLRB tree?)</li>
@@ -244,7 +244,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 </ul>
 </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00169">169</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00170">170</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -282,7 +282,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 </dl>
 <dl class="section note"><dt>Note</dt><dd>By default, qtreetbl uses byte comparator that works for both binary type key and string type key. Please refer qtreetbl_byte_cmp() for your idea to make your own comparator, </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00237">237</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00238">238</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -344,7 +344,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00257">257</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00258">258</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -399,7 +399,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00276">276</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00277">277</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -460,7 +460,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00294">294</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00295">295</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -530,7 +530,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 </dl>
 <dl class="section note"><dt>Note</dt><dd>This is the underlying put function which all other put methods use. </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00325">325</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00326">326</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -605,7 +605,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 <div class="line">free(data);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be malloced and should be deallocated by user. Otherwise returned pointer will point internal buffer directly and should not be de-allocated by user. In thread-safe mode, newmem flag must be set to true always. </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00381">381</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00382">382</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -662,7 +662,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 </dl>
 <dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be malloced and should be deallocated by user. Otherwise returned pointer will point internal buffer directly and should not be de-allocated by user. In thread-safe mode, newmem flag must be set to true always. </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00407">407</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00408">408</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -733,7 +733,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 </dl>
 <dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be malloced and should be deallocated by user. Otherwise returned pointer will point internal buffer directly and should not be de-allocated by user. In thread-safe mode, newmem flag must be set to true always. </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00434">434</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00435">435</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -781,7 +781,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00465">465</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00466">466</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -836,7 +836,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00482">482</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00483">483</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -918,7 +918,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 <div class="line">Iteration sequence from nearest <span class="stringliteral">&quot;F&quot;</span> will be: E-&gt;G-&gt;I-&gt;A-&gt;C</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>locking must be provided on user code when thread condition is expected because entire traversal needs to be running under read-only mode. The only way to guarantee this read only mode during the traversal is wrapping user's traversal code with lock with <a class="el" href="qhashtbl_8c.html#aedbeacf77e104e64d65845705e79cdc2" title="qhashtbl-&gt;lock(): Enter critical section. ">lock()</a>/unlock() API. If any data insertion or deletion is made during the traversal, the traversal must start over. Object obj should be initialized with 0 by using memset() before first call. If newmem flag is true, user should de-allocate obj.name and obj.data resources. </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00550">550</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00551">551</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -957,7 +957,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 <dl class="section return"><dt>Returns</dt><dd>malloced memory copying the key name.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>It's user's responsibility to free the return. </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00603">603</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00604">604</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -996,7 +996,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 <dl class="section return"><dt>Returns</dt><dd>malloced memory copying the key name.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>It's user's responsibility to free the return. </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00631">631</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00632">632</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -1068,7 +1068,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 <div class="line">find_nearest(<span class="stringliteral">&quot;Z&quot;</span>) =&gt; <span class="stringliteral">&quot;X&quot;</span> <span class="comment">// &quot;X&quot; is nearest smaller key from &quot;Z&quot;</span></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>When there's no matching key it look for closest smaller key in the neighbors. The only exception when it returns bigger key than given search key is that when there's no smaller keys available in the table. In such case, it'll return the nearest bigger key. </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00683">683</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00684">684</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -1095,7 +1095,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of elements stored </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00748">748</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00749">749</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -1121,7 +1121,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00757">757</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00758">758</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -1150,7 +1150,7 @@ Nodes A, I and S are nodes with RED upper link. Others are BLACK
 <dd>
 This operation will do nothing if QTREETBL_THREADSAFE option was not given at the initialization time. </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00778">778</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00779">779</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -1177,7 +1177,7 @@ This operation will do nothing if QTREETBL_THREADSAFE option was not given at th
 </dl>
 <dl class="section note"><dt>Note</dt><dd>This operation will do nothing if QTREETBL_THREADSAFE option was not given at the initialization time. </dd></dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00791">791</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00792">792</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -1203,7 +1203,7 @@ This operation will do nothing if QTREETBL_THREADSAFE option was not given at th
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00800">800</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00801">801</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -1250,7 +1250,7 @@ This operation will do nothing if QTREETBL_THREADSAFE option was not given at th
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00825">825</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00826">826</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -1259,7 +1259,7 @@ This operation will do nothing if QTREETBL_THREADSAFE option was not given at th
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5aa2c741d78642de87e50b40b6f339a9.html">containers</a></li><li class="navelem"><a class="el" href="qtreetbl_8c.html">qtreetbl.c</a></li>
+    <li class="navelem"><a class="el" href="dir_0b61c55142250c0cc363383afd8075a4.html">containers</a></li><li class="navelem"><a class="el" href="qtreetbl_8c.html">qtreetbl.c</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

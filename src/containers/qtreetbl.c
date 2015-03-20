@@ -45,7 +45,8 @@
  *
  * Following example code will construct the data structure shown in below
  * diagram. This example is quoted from the inventor's presentation slide
- * p24-p25, http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf
+ * p24-p25, http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf and
+ * used in unit tests for verification purpose.
  *
  *                                (E)
  *                   ______________|______________
@@ -75,7 +76,7 @@
  * for in-memory operation. It's been using in all around the computing area.
  * I was very impressed about this variant, Left-Leaning version of Red-Black
  * about how it improves the performance and reduces the overall complexity.
- * Since it relatively new algorithm, there's not many of practically functional
+ * Since it's relatively new algorithm, there's not many of practically functional
  * working codes yet other than proof of concept kinds. Here's one of fully
  * functional codes and I, Seungyoung Kim, would like to dedicate this code to
  * the genius inventor Robert Sedgewick and to all the great qLibc users.

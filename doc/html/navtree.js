@@ -1,6 +1,6 @@
 var NAVTREE =
 [
-  [ "qlibc", "index.html", [
+  [ "qLibc", "index.html", [
     [ "Files", null, [
       [ "File List", "files.html", "files" ],
       [ "Globals", "globals.html", [
@@ -14,8 +14,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"dir_445263fafd9544f9ee19804b2b65121e.html",
-"qlisttbl_8c.html#a35cb588548d3a3e5b8b3ad27f389d36d"
+"dir_0b61c55142250c0cc363383afd8075a4.html",
+"qlist_8c_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
