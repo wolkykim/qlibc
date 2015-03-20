@@ -58,8 +58,8 @@ extern qtreetbl_t *qtreetbl(int options); /*!< qtreetbl constructor */
 /* member functions
  *
  * All the member functions can be accessed in both ways:
- *   tbl->put(tbl, ...);      // easier to switch the container type to other kinds.
- *   qtreetbl_put(tbl, ...);  // where avoiding pointer overhead is preferred.
+ *  - tbl->put(tbl, ...);      // easier to switch the container type to other kinds.
+ *  - qtreetbl_put(tbl, ...);  // where avoiding pointer overhead is preferred.
  */
 extern void qtreetbl_set_compare(
         qtreetbl_t *tbl,
@@ -136,7 +136,7 @@ struct qtreetbl_s {
     void *(*find_min)(qtreetbl_t *tbl, size_t *namesize);
     void *(*find_max)(qtreetbl_t *tbl, size_t *namesize);
     qtreetbl_obj_t (*find_nearest)(qtreetbl_t *tbl, const void *name,
-                                           size_t namesize, bool newmem);
+                                   size_t namesize, bool newmem);
 
     size_t (*size)(qtreetbl_t *tbl);
     void (*clear)(qtreetbl_t *tbl);
@@ -152,27 +152,27 @@ struct qtreetbl_s {
                    size_t namesize2);
 
     /* private variables - do not access directly */
-    void *qmutex; /*!< initialized when QTREETBL_THREADSAFE is given */
-    qtreetbl_obj_t *root; /*!< root node */
-    size_t num; /*!< number of objects */
-    uint8_t tid; /*!< travel id sequencer */
+    void *qmutex;           /*!< initialized when QTREETBL_THREADSAFE is given */
+    qtreetbl_obj_t *root;   /*!< root node */
+    size_t num;             /*!< number of objects */
+    uint8_t tid;            /*!< travel id sequencer */
 };
 
 /**
  * qtreetbl object data structure
  */
 struct qtreetbl_obj_s {
-    void *name; /*!< name of key */
-    size_t namesize; /*!< name size */
-    void *data; /*!< data */
-    size_t datasize; /*!< data size */
+    void *name;         /*!< name of key */
+    size_t namesize;    /*!< name size */
+    void *data;         /*!< data */
+    size_t datasize;    /*!< data size */
 
-    bool red; /*!< true if upper link is red */
-    qtreetbl_obj_t *left; /*!< left node */
-    qtreetbl_obj_t *right; /*!< right node */
+    bool red;           /*!< true if upper link is red */
+    qtreetbl_obj_t *left;   /*!< left node */
+    qtreetbl_obj_t *right;  /*!< right node */
 
-    qtreetbl_obj_t *next; /*!< temporary use for tree traversal */
-    uint8_t tid; /*!< temporary use for tree traversal */
+    qtreetbl_obj_t *next;   /*!< temporary use for tree traversal */
+    uint8_t tid;            /*!< temporary use for tree traversal */
 };
 
 #ifdef __cplusplus

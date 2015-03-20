@@ -64,10 +64,10 @@
  *         /               \               /               \
  *        B                 D             N                 X
  *      //                              //                //
- *    [A]                             [I]               [S]
+ *     A*                              I*                S*
  *
  *            Tree Info : tot=10, red=3, black=-7, root=E
- * (The nodes A, I and S are nodes with RED upper link. Others are BLACK)
+ *     Nodes A, I and S are nodes with RED upper link. Others are BLACK
  *
  *            <Left-Leaning Red-Black Tree Data Structure>
  *
@@ -88,13 +88,24 @@
  *   - find min/max key.
  *
  * @code
- *  const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
+ *  qtreetbl_t *tbl = qtreetbl(QTREETBL_THREADSAFE);
  *
- *  qtreetbl_t *tbl = qtreetbl(0);
- *  int i;
- *  for (i = 0; KEY[i][0] != '\0'; i++) {
- *      tbl->putstr(tbl, KEY[i], "DATA");  // use put_by_obj() for binary key.
+ *  tbl->put(tbl, "key", "DATA", 4);          // use put_by_obj() for binary keys.
+ *  void *data = tbl->get(tbl, "key", false); // use get_by_obj() for binary keys.
+ *  tbl->remove(tbl, "key");                  // use remove_by_key() for binary keys.
+ *
+ *  // iteration example
+ *  tbl->lock(tbl);
+ *  qtreetbl_obj_t obj = tbl->find_nearest(tbl, "k", 2, false);
+ *  while (tbl->getnext(tbl, &obj, false) == true) {
+ *    ...
  *  }
+ *  tbl->unlock(tbl);
+ *
+ *  tbl->set_compare(tbl, my_compare_func);
+ *  size_t num = tbl->size(tbl);
+ *  void *min = tbl->find_min(tbl, &keysize);
+ *  qtree_clean();
  *
  *  tbl->free(tbl);
  * @endcode
@@ -148,7 +159,6 @@ static void free_obj(qtreetbl_obj_t *obj);
  *  - ENOMEM : Memory allocation failure.
  *
  * @code
- *  // create a tree-table.
  *  qtreetbl_t *tbl = qtreetbl(0);
  * @endcode
  *
@@ -213,6 +223,17 @@ qtreetbl_t *qtreetbl(int options) {
     return NULL;
 }
 
+/**
+ * qtreetbl->set_compare(): Set user comparator.
+ *
+ * @param tbl       qtreetbl_t container pointer.
+ * @param cmp       a pointer to the user comparator function.
+ *
+ * @note
+ * By default, qtreetbl uses byte comparator that works for
+ * both binary type key and string type key. Please refer
+ * qtreetbl_byte_cmp() for your idea to make your own comparator,
+ */
 void qtreetbl_set_compare(
         qtreetbl_t *tbl,
         int (*cmp)(const void *name1, size_t namesize1, const void *name2,
@@ -493,7 +514,7 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
  *  qtreetbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  tbl->lock(tbl);  // lock it when thread condition is expected
- *  while(tbl->getnext(tbl, &obj, false) == true) {  // newmem is false
+ *  while(tbl->getnext(tbl, &obj, false) == true) {
  *     //
  *     // obj.name     : key data
  *     // obj.namesize : key size
@@ -662,7 +683,7 @@ void *qtreetbl_find_max(qtreetbl_t *tbl, size_t *namesize) {
 qtreetbl_obj_t qtreetbl_find_nearest(qtreetbl_t *tbl, const void *name,
                                      size_t namesize, bool newmem) {
     qtreetbl_obj_t retobj;
-    memset((void*)&retobj, 0, sizeof(retobj));
+    memset((void*) &retobj, 0, sizeof(retobj));
 
     if (name == NULL || namesize == 0) {
         errno = EINVAL;
@@ -678,16 +699,22 @@ qtreetbl_obj_t qtreetbl_find_nearest(qtreetbl_t *tbl, const void *name,
         }
         lastobj = obj;
         if (cmp < 0) {
-            if (obj->left) obj->left->next = obj;
+            if (obj->left)
+                obj->left->next = obj;
             obj = obj->left;
         } else {
-            if (obj->right) obj->right->next = obj;
+            if (obj->right)
+                obj->right->next = obj;
             obj = obj->right;
         }
     }
 
     if (obj == NULL) {
-        for(obj = lastobj;obj != NULL && (tbl->compare(name, namesize, obj->name, obj->namesize) < 0) ; obj = obj->next);
+        for (obj = lastobj;
+                obj != NULL
+                        && (tbl->compare(name, namesize, obj->name,
+                                         obj->namesize) < 0); obj = obj->next)
+            ;
         if (obj == NULL) {
             obj = lastobj;
         }
