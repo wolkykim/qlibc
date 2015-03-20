@@ -12,28 +12,28 @@ Please refer the LICENSE document included in the package for more details.
 
 * [qlibc Core API Reference](http://wolkykim.github.io/qlibc/doc/html/files.html)
   * Containers
+    * Tree Table --- Tree data structure Key/Value table which implements Left-Leaning Red-Black algirothm.
+    * Hash Table --- Hash-based data structure Key/Value pair table.
+    * Static Hash Table --- Fixed size memory structure(array/mmapped/shared) based Key/Value pair table.
+    * List Table --- Linked-list based Key/Value pair table.
     * List --- Doubly Linked List.
-    * List Table --- KEY/VALUE paired table implemented on linked-list.
-    * Hash Table --- Hash-based KEY/VALUE paired table.
-    * Static Hash Table --- Static(array/mmapped/shared) memory based KEY/VALUE paired table.
     * Vector --- implements a growable array of elements.
     * Queue --- FIFO(First In First Out) implementation.
     * Stack --- LIFO(Last In First Out) implementation.
   * General utilities.
-    * String
-    * I/O
-    * File
+    * String --- string trimmer, modifier, replacer, case converter, pattern detectors, ...
+    * I/O --- non-blcking I/O, stream reader/writer, ...
+    * File --- file locking, file/directory hander, path correctors, ...
     * IPC, Semaphore Shared-memory
-    * En/decoders
-    * Hashes
-    * System
-    * Time
+    * En/decoders --- Url en/decoder, Base64 en/decoder, Hex en/decoder, ...
+    * Hashes --- Murmur hases, FNV hases, MD5 hashes, ...
+    * Time --- time diff, time format converstion, ...
 
 * [qLibc Extension API Reference](http://wolkykim.github.io/qlibc/doc/html/files.html)
-  * INI-style Configuration File Parser.
   * Apache-style Configuration File Parser.
-  * Rotating File Logger.
+  * INI-style Configuration File Parser.
   * HTTP client.
+  * Rotating File Logger.
   * Database(MySQL) interface.
   * [Token-Bucket](http://en.wikipedia.org/wiki/Token_bucket)
 
