@@ -631,11 +631,6 @@ void *qtreetbl_find_max(qtreetbl_t *tbl, size_t *namesize) {
  * no keys in the table. It'll return empty qtreetbl_obj_t object
  * with errno ENOENT.
  *
- * When there's no matching key it look for closest smaller key
- * in the neighbors. The only exception when it returns bigger key
- * than given search key is that when there's no smaller keys available
- * in the table. In such case, it'll return the nearest bigger key.
- *
  * @param tbl       qtreetbl_t container pointer.
  * @param name      key name
  * @param namesize  key size
