@@ -57,10 +57,7 @@ all:	${TARGETS}
 
 run:	test
 test:	all
-	@for EXECUTABLE in ${TARGETS}; do				\
-		./$${EXECUTABLE};					\
-		echo "";						\
-	done
+	@./launcher.sh ${TARGETS}
 
 test_qtreetbl: test_qtreetbl.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qtreetbl.o ${LIBQLIBC} -lm
