@@ -168,7 +168,7 @@ Functions</h2></td></tr>
 <div class="line"><span class="keywordtype">int</span>  sample3  = tbl-&gt;getint(tbl, <span class="stringliteral">&quot;sample3&quot;</span>);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// sample1 is memalloced</span></div>
-<div class="line"><span class="keywordflow">if</span>(sample1 != NULL) free(sample1);</div>
+<div class="line">free(sample1);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// release table</span></div>
 <div class="line">tbl-&gt;free(tbl);</div>
@@ -313,7 +313,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00228">228</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00227">227</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -376,7 +376,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00311">311</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00308">308</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -445,7 +445,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00327">327</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00324">324</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -509,7 +509,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>The integer will be converted to a string object and stored as string object. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00355">355</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00352">352</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -592,7 +592,7 @@ Functions</h2></td></tr>
 <div class="line">free(data);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be malloced and should be deallocated by user. Otherwise returned pointer will point internal buffer directly and should not be de-allocated by user. In thread-safe mode, newmem flag must be set to true always. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00395">395</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00392">392</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -657,7 +657,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be malloced and should be deallocated by user. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00454">454</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00451">451</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -714,7 +714,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00471">471</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00468">468</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -791,7 +791,7 @@ Functions</h2></td></tr>
 <div class="line">tbl-&gt;unlock(tbl);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>locking must be provided on user code when all element scan must be guaranteed where multiple threads concurrently update the table. It's ok not to lock the table on the user code even in thread condition, when concurreny is importand and all element scan in a path doesn't need to be guaranteed. In this case, new data inserted during the traversal will be show up in this scan or next scan. Make sure newmem flag is set if deletion is expected during the scan. Object obj should be initialized with 0 by using memset() before first call. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00520">520</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00517">517</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -847,7 +847,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00596">596</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00591">591</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -882,7 +882,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of elements stored </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00647">647</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00642">642</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -916,7 +916,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00656">656</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00651">651</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -971,7 +971,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00688">688</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00683">683</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -1008,7 +1008,7 @@ Functions</h2></td></tr>
 <dd>
 This operation will do nothing if QHASHTBL_THREADSAFE option was not given at the initialization time. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00720">720</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00715">715</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -1043,7 +1043,7 @@ This operation will do nothing if QHASHTBL_THREADSAFE option was not given at th
 </dl>
 <dl class="section note"><dt>Note</dt><dd>This operation will do nothing if QHASHTBL_THREADSAFE option was not given at the initialization time. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00733">733</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00728">728</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
@@ -1077,7 +1077,7 @@ This operation will do nothing if QHASHTBL_THREADSAFE option was not given at th
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00742">742</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
+<p>Definition at line <a class="el" href="qhashtbl_8c_source.html#l00737">737</a> of file <a class="el" href="qhashtbl_8c_source.html">qhashtbl.c</a>.</p>
 
 </div>
 </div>
