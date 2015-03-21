@@ -61,32 +61,34 @@
  */
 qlisttbl_t *qparse_queries(qlisttbl_t *tbl, const char *query, char equalchar,
                            char sepchar, int *count) {
-    if (tbl == NULL) {
-        tbl = qlisttbl(0);
-        if (tbl == NULL)
-            return NULL;
+    if (tbl == NULL && (tbl = qlisttbl(0)) == NULL) {
+        return NULL;
     }
 
-    char *newquery = NULL;
-    int cnt = 0;
+    if (query == NULL) {
+        return tbl;
+    }
 
-    if (query != NULL)
-        newquery = strdup(query);
+    int cnt = 0;
+    char *newquery = strdup(query);
     while (newquery && *newquery) {
         char *value = _q_makeword(newquery, sepchar);
         char *name = qstrtrim(_q_makeword(value, equalchar));
         qurl_decode(name);
         qurl_decode(value);
 
-        if (tbl->putstr(tbl, name, value) == true)
+        if (tbl->putstr(tbl, name, value) == true) {
             cnt++;
+        }
+
         free(name);
         free(value);
     }
-    if (newquery != NULL)
-        free(newquery);
-    if (count != NULL)
+
+    if (count != NULL) {
         *count = cnt;
+    }
+    free(newquery);
 
     return tbl;
 }

@@ -78,7 +78,7 @@
  *  int  sample3  = tbl->getint(tbl, "sample3");
  *
  *  // sample1 is memalloced
- *  if(sample1 != NULL) free(sample1);
+ *  free(sample1);
  *
  *  // release table
  *  tbl->free(tbl);
@@ -204,8 +204,7 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
     malloc_failure:
     errno = ENOMEM;
     if (tbl) {
-        if (tbl->slots)
-            free(tbl->slots);
+        free(tbl->slots);
         assert(tbl->qmutex == NULL);
         free_(tbl);
     }
@@ -250,10 +249,8 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
     char *dupname = strdup(name);
     void *dupdata = malloc(size);
     if (dupname == NULL || dupdata == NULL) {
-        if (dupname != NULL)
-            free(dupname);
-        if (dupdata != NULL)
-            free(dupdata);
+        free(dupname);
+        free(dupdata);
         unlock(tbl);
         errno = ENOMEM;
         return false;
@@ -554,10 +551,8 @@ static bool getnext(qhashtbl_t *tbl, qhashtbl_obj_t *obj, const bool newmem) {
             obj->data = malloc(cursor->size);
             if (obj->name == NULL || obj->data == NULL) {
                 DEBUG("getnext(): Unable to allocate memory.");
-                if (obj->name != NULL)
-                    free(obj->name);
-                if (obj->data != NULL)
-                    free(obj->data);
+                free(obj->name);
+                free(obj->data);
                 unlock(tbl);
                 errno = ENOMEM;
                 return false;
@@ -742,8 +737,7 @@ static void unlock(qhashtbl_t *tbl) {
 static void free_(qhashtbl_t *tbl) {
     lock(tbl);
     clear(tbl);
-    if (tbl->slots != NULL)
-        free(tbl->slots);
+    free(tbl->slots);
     unlock(tbl);
     Q_MUTEX_DESTROY(tbl->qmutex);
     free(tbl);
