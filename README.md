@@ -46,7 +46,7 @@ Please refer the LICENSE document included in the package for more details.
 
 | Characteristics   | Tree Table  | Hash Table  |Static Hash Table| List Table  |
 |:------------------|:-----------:|:-----------:|:---------------:|:-----------:|
-| Data structure    |Red-Black Tree| Hash Slot  | Fixed size slot | Linked-list |
+| Data structure    |Red-Black Tree| Slot Index | Block Index     | Linked-List |
 | Search complexity | O(log n)    | O(1)        | O(1)            | O(n)        |
 | Insert complexity | O(log n)    | O(1)        | O(1)            | O(1)        |
 | Delete complexity | O(log n)    | O(1)        | O(1)            | O(n)        |
@@ -56,7 +56,8 @@ Please refer the LICENSE document included in the package for more details.
 | User comparator   | Supported   | -           | -               | Supported   |
 | Allow multi-keys  | No          | No          | No              | Yes (option)|
 | Case-insensitive key| No        | No          | No              | Yes (option)|
-| Search Nearest Key| Yes         | No          | Nos             | No          |
+| Key stored digested| No         | No          | Yes             | No          |
+| Search Nearest Key| Yes         | No          | No              | No          |
 | Iterator support  | Yes         | Yes         | Yes             | Yes         |
 | Thread-safe option| Supported   | Suported    | No              | Supported   |
 | Runs on shared mem| No          | No          | Yes             | No          |
