@@ -44,23 +44,23 @@ Please refer the LICENSE document included in the package for more details.
 
 ## qLibc Tables at a Glance
 
-| Characteristics   | Tree Table  | Hash Table  |Static Hash Table| List Table  |
-|:------------------|:-----------:|:-----------:|:---------------:|:-----------:|
-| Data structure    |Red-Black Tree| Slot Index | Block Index     | Linked-List |
-| Search complexity | O(log n)    | O(1)        | O(1)            | O(n)        |
-| Insert complexity | O(log n)    | O(1)        | O(1)            | O(1)        |
-| Delete complexity | O(log n)    | O(1)        | O(1)            | O(n)        |
-| Space complexity  | O(n)        | O(n)        | -               | O(n)        |
-| Space allocation  | Dynamic     | Dynamic     | Pre-allocation  | Dynamic     |
-| Data Stored Sorted| Yes         | No          | No              | Yes (option)|
-| User comparator   | Supported   | -           | -               | Supported   |
-| Allow multi-keys  | No          | No          | No              | Yes (option)|
-| Case-insensitive key| No        | No          | No              | Yes (option)|
-| Key stored digested| No         | No          | Yes             | No          |
-| Search Nearest Key| Yes         | No          | No              | No          |
-| Iterator support  | Yes         | Yes         | Yes             | Yes         |
-| Thread-safe option| Supported   | Suported    | No              | Supported   |
-| Runs on shared mem| No          | No          | Yes             | No          |
+| Characteristics     | Tree Table   | Hash Table   |Static Hash Table| List Table   |
+|:--------------------|:------------:|:------------:|:---------------:|:------------:|
+| Data structure      |Red-Black Tree| Slot Index   | Block Index     | Linked-List  |
+| Search complexity   | O(log n)     | O(1) / O(n)  | O(1) / O(n)     | O(n)         |
+| Insert complexity   | O(log n)     | O(1) / O(n)  | O(1) / O(n)     | O(1)         |
+| Delete complexity   | O(log n)     | O(1) / O(n)  | O(1) / O(n)     | O(n)         |
+| Space complexity    | O(n)         | O(n)         | -               | O(n)         |
+| Space allocation    | Dynamic      | Dynamic      | Pre-allocation  | Dynamic      |
+| Data Stored Sorted  | Yes          | No           | No              | Yes (option) |
+| User comparator     | Supported    | -            | -               | Supported    |
+| Allow multi-keys    | No           | No           | No              | Yes (option) |
+| Case-insensitive key| No           | No           | No              | Yes (option) |
+| Key stored digested | No           | No           | Yes             | No           |
+| Search Nearest Key  | Yes          | No           | No              | No           |
+| Iterator support    | Yes          | Yes          | Yes             | Yes          |
+| Thread-safe option  | Supported    | Suported     | No              | Supported    |
+| Runs on shared mem  | No           | No           | Yes             | No           |
 
 ## Consistent API Look
 
