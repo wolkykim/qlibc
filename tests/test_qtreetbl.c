@@ -238,6 +238,54 @@ TEST("Test getnext() from find_nearest(N)")
     tbl->free(tbl);
 }
 
+TEST("Test deletion in getnext() loop")
+{
+    const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
+    qtreetbl_t *tbl = qtreetbl(0);
+    int i;
+    for (i = 0; KEY[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, KEY[i], KEY[i]);
+    }
+
+    char buf[1024] = "";
+
+    // set iterator
+    qtreetbl_obj_t obj;
+    memset((void*) &obj, 0, sizeof(obj));
+
+    tbl->lock(tbl);  // lock it when thread condition is expected
+    while (tbl->getnext(tbl, &obj, false) == true) {
+        printf(">%s", (char*) obj.name);
+        if (!memcmp(obj.data, "B", 2) || !memcmp(obj.data, "S", 2)) {
+            printf("*");
+            qstrcatf(buf, "%s", (char*) obj.name);
+
+            // 1. Keep the key name
+            char *name = qmemdup(obj.name, obj.namesize);
+            size_t namesize = obj.namesize;
+
+            // 2. Remove the object
+            tbl->remove_by_obj(tbl, obj.name, obj.namesize);  // remove
+
+            // 3. Rewind iterator one step back.
+            // Note that this allows the iterator to continue traveling but
+            // it doesn't guarantee it will visit all the nodes. Depends on the location
+            // of removed node in the tree and due to tree rotations, iterator might
+            // move to next branch recognizing it finished that branch. So, in real practice,
+            // you'd prefer to run the scan again once this iteration finishes until
+            // there's no objects in condition left to ensure
+            obj = tbl->find_nearest(tbl, name, namesize, false);
+
+            // clean up
+            free(name);
+        }
+    }
+    tbl->unlock(tbl);
+    ASSERT_EQUAL_STR("BS", buf);
+
+    tbl->free(tbl);
+}
+
 TEST("Test thousands of keys put/delete: short key + short value")
 {
     test_thousands_of_keys(10000, "", "");

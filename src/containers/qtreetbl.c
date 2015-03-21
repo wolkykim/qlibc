@@ -147,11 +147,12 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
                                   const void *name, size_t namesize);
 static void free_objs(qtreetbl_obj_t *obj);
 static void free_obj(qtreetbl_obj_t *obj);
+static uint8_t reset_iterator(qtreetbl_t *tbl);
 
 #endif
 
 /**
- * Initialize tree table.
+ * Initialize a tree table.
  *
  * @param options   combination of initialization options.
  *
@@ -212,6 +213,7 @@ qtreetbl_t *qtreetbl(int options) {
 
     // Set default comparison function.
     qtreetbl_set_compare(tbl, qtreetbl_byte_cmp);
+    reset_iterator(tbl);
 
     return tbl;
 
@@ -525,27 +527,52 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
  *     // Do free obj.name and obj.data if newmem is set to true;
  *  }
  *  tbl->unlock(tbl);
+ * @endcode
  *
+ * @code
  *  [Iteration example from given point]
+ *
+ *  qtreetbl_obj_t obj;
+ *  memset((void*)&obj, 0, sizeof(obj));
  *  tbl->lock(tbl);  // lock must be raised before find_nearest() call.
- *  qtreetbl_obj_t obj = tbl->find_nearest(tbl, "F", 2, false);
+ *  qtreetbl_obj_t obj = tbl->find_nearest(tbl, "F", 2, false); // here we go!
  *  while (tbl->getnext(tbl, &obj, false) == true) {  // newmem is false
- *    ...
+ *      //If tree has 5 objects, A, C, E, G and I.
+ *      //Iteration sequence from nearest "F" will be: E->G->I->A->C
  *  }
  *  tbl->unlock(tbl);
  *
- *  If tree has 5 objects, A, C, E, G and I.
- *  Iteration sequence from nearest "F" will be: E->G->I->A->C
  * @endcode
  *
+ * @code
+ * [Removal example in iteration loop]
+ *   qtreetbl_obj_t obj;
+ *   memset((void*) &obj, 0, sizeof(obj));  // start from the minimum.
+ *   tbl->lock(tbl);
+ *   while (tbl->getnext(tbl, &obj, false) == true) {
+ *       if (...condition...) {
+ *           char *name = qmemdup(obj.name, obj.namesize);  // keep the name
+ *           size_t namesize = obj.namesize;                // for removal argument
+ *
+ *           tbl->remove_by_obj(tbl, obj.name, obj.namesize);  // remove
+ *
+ *           obj = tbl->find_nearest(tbl, name, namesize, false); // rewind one step back
+ *
+ *           free(name);  // clean up
+ *       }
+ *   }
+ *   tbl->unlock(tbl);
+ *  @endcode
+ *
  * @note
- *  locking must be provided on user code when thread condition is expected
+ *  - locking must be provided on user code when thread condition is expected
  *  because entire traversal needs to be running under read-only mode.
- *  The only way to guarantee this read only mode during the traversal is wrapping
- *  user's traversal code with lock with lock()/unlock() API. If any data insertion
- *  or deletion is made during the traversal, the traversal must start over.
- *  Object obj should be initialized with 0 by using memset() before first call.
- *  If newmem flag is true, user should de-allocate obj.name and obj.data
+ *  - Data insertion or deletion can be made during the traversal, but in that
+ *  case iterator doesn't guarantee full sweep and possibly skip some visits.
+ *  When deletion happens in getnext() loop, use find_nearest() to rewind the
+ *  iterator one step back.
+ *  - Object obj should be initialized with 0 by using memset() before first call.
+ *  - If newmem flag is true, user should de-allocate obj.name and obj.data
  *  resources.
  */
 bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem) {
@@ -559,8 +586,8 @@ bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem) {
         if (tbl->root == NULL) {
             return false;
         }
-        // generate a travel id
-        tid = ++tbl->tid;
+        // get a new iterator id
+        tid = reset_iterator(tbl);;
     }
 
     qtreetbl_obj_t *cursor = ((obj->next != NULL) ? obj->next : tbl->root);
@@ -587,6 +614,7 @@ bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem) {
     }
 
     // end of travel
+    reset_iterator(tbl);  // to allow iteration start over directly from find_nearest()
     return false;
 }
 
@@ -728,7 +756,7 @@ qtreetbl_obj_t qtreetbl_find_nearest(qtreetbl_t *tbl, const void *name,
             retobj.data = qmemdup(obj->data, obj->datasize);
         }
         // set travel info to be used for iteration in getnext()
-        retobj.tid = tbl->tid + 1;
+        retobj.tid = tbl->tid;
         retobj.next = obj;
 
     } else {
@@ -1106,6 +1134,10 @@ static void free_obj(qtreetbl_obj_t *obj) {
     free(obj->name);
     free(obj->data);
     free(obj);
+}
+
+static uint8_t reset_iterator(qtreetbl_t *tbl) {
+    return (++tbl->tid);
 }
 
 #endif
