@@ -15,11 +15,12 @@ Please refer the LICENSE document included in the package for more details.
 ## API Reference
 
 * [qlibc Core API Reference](http://wolkykim.github.io/qlibc/doc/html/files.html)
-  * Containers
+  * Containers for Key/Value pairs
     * Tree Table --- Tree data structure Key/Value table which implements Left-Leaning Red-Black algirothm.
-    * Hash Table --- Hash-based data structure Key/Value pair table.
-    * Static Hash Table --- Fixed size memory structure(array/mmapped/shared) based Key/Value pair table.
-    * List Table --- Linked-list based Key/Value pair table.
+    * Hash Table --- Hash-based data structure Key/Value table.
+    * Static Hash Table --- Fixed size memory structure(array/mmapped/shared) based Key/Value table.
+    * List Table --- Linked-list based Key/Value table.
+  * Containers for Objects
     * List --- Doubly Linked List.
     * Vector --- implements a growable array of elements.
     * Queue --- FIFO(First In First Out) implementation.
