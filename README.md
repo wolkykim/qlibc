@@ -42,6 +42,25 @@ Please refer the LICENSE document included in the package for more details.
   * Database(MySQL) interface.
   * [Token-Bucket](http://en.wikipedia.org/wiki/Token_bucket)
 
+## qLibc Tables at a Glance
+
+| Characteristics   | Tree Table  | Hash Table  |Static Hash Table| List Table  |
+|:------------------|:-----------:|:-----------:|:---------------:|:-----------:|
+| Data structure    |Red-Black Tree| Hash Slot  | Fixed size slot | Linked-list |
+| Search complexity | O(log n)    | O(1)        | O(1)            | O(n)        |
+| Insert complexity | O(log n)    | O(1)        | O(1)            | O(1)        |
+| Delete complexity | O(log n)    | O(1)        | O(1)            | O(n)        |
+| Space complexity  | O(n)        | O(n)        | -               | O(n)        |
+| Space allocation  | Dynamic     | Dynamic     | Pre-allocation  | Dynamic     |
+| Data Stored Sorted| Yes         | No          | No              | Yes (option)|
+| User comparator   | Supported   | -           | -               | Supported   |
+| Allow multi-keys  | No          | No          | No              | Yes (option)|
+| Case-insensitive key| No        | No          | No              | Yes (option)|
+| Search Nearest Key| Yes         | No          | Nos             | No          |
+| Iterator support  | Yes         | Yes         | Yes             | Yes         |
+| Thread-safe option| Supported   | Suported    | No              | Supported   |
+| Runs on shared mem| No          | No          | Yes             | No          |
+
 ## Consistent API Look
 
 All container APIs have a consistent look and feel. It basically provides
