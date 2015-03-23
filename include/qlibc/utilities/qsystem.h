@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,8 @@
  * @file qsystem.h
  */
 
-#ifndef _QSYSTEM_H
-#define _QSYSTEM_H
+#ifndef QSYSTEM_H
+#define QSYSTEM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,5 +46,4 @@ extern char *qsyscmd(const char *cmd);
 }
 #endif
 
-#endif /*_QSYSTEM_H */
-
+#endif /* QSYSTEM_H */

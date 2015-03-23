@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2010-2014 Seungyoung Kim.
+# Copyright (c) 2010-2015 Seungyoung Kim.
 # All rights reserved.
 
 ARGC=$#
@@ -48,7 +48,7 @@ for ((i = 0; i < $ARGC; i++)); do
         exit
     fi
     DIR[${i}]=$1
-    LS[${i}]=`ls -a --full-time ${DIR[${i}]}/*.c ${DIR[${i}]}/*.h Makefile`;
+    LS[${i}]=`ls -a --full-time ${DIR[${i}]}/*.c ${DIR[${i}]}/*.h Makefile 2> /dev/null`
     shift
 done
 
@@ -58,7 +58,7 @@ print_msg "Watching ${ARGV} ('m':compile, 'r':recompile)\r"
 for ((loop=0; ; loop++)); do
     for ((i = 0; i < $ARGC; i++)); do
         WATCHLIST="${DIR[${i}]}/*.[c,h] Makefile"
-        LS_NOW=`ls -a --full-time ${WATCHLIST}`;
+        LS_NOW=`ls -a --full-time ${WATCHLIST} 2> /dev/null`
         if [ "$LS_NOW" != "${LS[${i}]}" ]; then
             print_msg "File change detected in '${DIR[${i}]}' at `date`\n"
             run_cmd "make"

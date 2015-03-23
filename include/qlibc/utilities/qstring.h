@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,9 +32,8 @@
  * @file qstring.h
  */
 
-#ifndef _QSTRING_H
-#define _QSTRING_H
-
+#ifndef QSTRING_H
+#define QSTRING_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -55,6 +54,7 @@ extern char *qstrncpy(char *dst, size_t size, const char *src, size_t nbytes);
 extern char *qstrdupf(const char *format, ...);
 extern char *qstrdup_between(const char *str, const char *start,
                              const char *end);
+extern void *qmemdup(const void *data, size_t size);
 extern char *qstrcatf(char *str, const char *format, ...);
 extern char *qstrgets(char *buf, size_t size, char **offset);
 extern char *qstrrev(char *str);
@@ -75,4 +75,4 @@ extern char *qstr_conv_encoding(const char *fromstr, const char *fromcode,
 }
 #endif
 
-#endif /*_QSTRING_H */
+#endif /* QSTRING_H */

@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,8 @@
  * @file qstack.h
  */
 
-#ifndef _QSTACK_H
-#define _QSTACK_H
+#ifndef QSTACK_H
+#define QSTACK_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -88,4 +88,4 @@ struct qstack_s {
 }
 #endif
 
-#endif /*_QSTACK_H */
+#endif /* QSTACK_H */

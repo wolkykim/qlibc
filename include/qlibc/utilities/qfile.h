@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,8 @@
  * @file qfile.h
  */
 
-#ifndef _QFILE_H
-#define _QFILE_H
+#ifndef QFILE_H
+#define QFILE_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -64,4 +64,4 @@ extern char *qfile_abspath(char *buf, size_t bufsize, const char *path);
 }
 #endif
 
-#endif /*_QFILE_H */
+#endif /* QFILE_H */

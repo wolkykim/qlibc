@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,8 @@
  * @file qtime.h
  */
 
-#ifndef _QTIME_H
-#define _QTIME_H
+#ifndef QTIME_H
+#define QTIME_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -42,6 +42,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+extern void qtime_timespec_diff(struct timespec t1, struct timespec t2,
+                                struct timespec *diff);
+extern void qtime_timeval_diff(struct timeval t1, struct timeval t2,
+                               struct timeval *diff);
 
 extern long qtime_current_milli(void);
 
@@ -59,6 +64,4 @@ extern time_t qtime_parse_gmtstr(const char *gmtstr);
 }
 #endif
 
-#endif /*_QTIME_H */
-
-
+#endif /* QTIME_H */

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>qlibc: containers/qlist.c File Reference</title>
+<title>qLibc: containers/qlist.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -24,7 +24,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">qlibc
+   <div id="projectname">qLibc
    </div>
   </td>
  </tr>
@@ -99,9 +99,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a8bb604389aaa0ff7af8b4f8de0b94d6a"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlist_8c.html#a8bb604389aaa0ff7af8b4f8de0b94d6a">getat</a> (qlist_t *list, int index, size_t *<a class="el" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361">size</a>, bool newmem)</td></tr>
 <tr class="memdesc:a8bb604389aaa0ff7af8b4f8de0b94d6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;<a class="el" href="qlist_8c.html#a8bb604389aaa0ff7af8b4f8de0b94d6a" title="qlist-&gt;getat(): Returns the element at the specified position in this list. ">getat()</a>: Returns the element at the specified position in this list.  <a href="#a8bb604389aaa0ff7af8b4f8de0b94d6a">More...</a><br/></td></tr>
 <tr class="separator:a8bb604389aaa0ff7af8b4f8de0b94d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4dfa2ad46ad7064702c0f23a6747059c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlist_8c.html#a4dfa2ad46ad7064702c0f23a6747059c">getnext</a> (qlist_t *list, qdlobj_t *obj, bool newmem)</td></tr>
-<tr class="memdesc:a4dfa2ad46ad7064702c0f23a6747059c"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;<a class="el" href="qlist_8c.html#a4dfa2ad46ad7064702c0f23a6747059c" title="qlist-&gt;getnext(): Get next element in this list. ">getnext()</a>: Get next element in this list.  <a href="#a4dfa2ad46ad7064702c0f23a6747059c">More...</a><br/></td></tr>
-<tr class="separator:a4dfa2ad46ad7064702c0f23a6747059c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a202602473e6d5bd8ed4db5515480b222"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlist_8c.html#a202602473e6d5bd8ed4db5515480b222">getnext</a> (qlist_t *list, qlist_obj_t *obj, bool newmem)</td></tr>
+<tr class="memdesc:a202602473e6d5bd8ed4db5515480b222"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;<a class="el" href="qlist_8c.html#a202602473e6d5bd8ed4db5515480b222" title="qlist-&gt;getnext(): Get next element in this list. ">getnext()</a>: Get next element in this list.  <a href="#a202602473e6d5bd8ed4db5515480b222">More...</a><br/></td></tr>
+<tr class="separator:a202602473e6d5bd8ed4db5515480b222"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdc31381c6d11a4a1faae6afcdd4a5e7"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qlist_8c.html#abdc31381c6d11a4a1faae6afcdd4a5e7">popfirst</a> (qlist_t *list, size_t *<a class="el" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361">size</a>)</td></tr>
 <tr class="memdesc:abdc31381c6d11a4a1faae6afcdd4a5e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;<a class="el" href="qlist_8c.html#abdc31381c6d11a4a1faae6afcdd4a5e7" title="qlist-&gt;popfirst(): Returns and remove the first element in this list. ">popfirst()</a>: Returns and remove the first element in this list.  <a href="#abdc31381c6d11a4a1faae6afcdd4a5e7">More...</a><br/></td></tr>
 <tr class="separator:abdc31381c6d11a4a1faae6afcdd4a5e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -191,7 +191,7 @@ Functions</h2></td></tr>
 <div class="line">list-&gt;debug(list, stdout, <span class="keyword">true</span>);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// traversal</span></div>
-<div class="line">qdlobj_t obj;</div>
+<div class="line">qlist_obj_t obj;</div>
 <div class="line">memset((<span class="keywordtype">void</span>*)&amp;obj, 0, <span class="keyword">sizeof</span>(obj)); <span class="comment">// must be cleared before call</span></div>
 <div class="line">list-&gt;lock(list);</div>
 <div class="line"><span class="keywordflow">while</span> (list-&gt;getnext(list, &amp;obj, <span class="keyword">false</span>) == <span class="keyword">true</span>) {</div>
@@ -561,7 +561,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<div class="fragment"><div class="line"><span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#aa309538c94c6fb98c6cedf81df24f81e">size</a>;</div>
+<div class="fragment"><div class="line"><span class="keywordtype">size_t</span> <a class="code" href="qhashtbl_8c.html#a73fd7b0d59a449dee2f9b6702e1bae89">size</a>;</div>
 <div class="line"><span class="keywordtype">void</span> *data = list-&gt;getfirst(list, &amp;size, <span class="keyword">true</span>);</div>
 <div class="line"><span class="keywordflow">if</span> (data != NULL) {</div>
 <div class="line">  (...omit...)</div>
@@ -703,7 +703,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a4dfa2ad46ad7064702c0f23a6747059c"></a>
+<a class="anchor" id="a202602473e6d5bd8ed4db5515480b222"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -719,7 +719,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">qdlobj_t *&#160;</td>
+          <td class="paramtype">qlist_obj_t *&#160;</td>
           <td class="paramname"><em>obj</em>, </td>
         </tr>
         <tr>
@@ -741,7 +741,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>qlist-&gt;<a class="el" href="qlist_8c.html#a4dfa2ad46ad7064702c0f23a6747059c" title="qlist-&gt;getnext(): Get next element in this list. ">getnext()</a>: Get next element in this list. </p>
+<p>qlist-&gt;<a class="el" href="qlist_8c.html#a202602473e6d5bd8ed4db5515480b222" title="qlist-&gt;getnext(): Get next element in this list. ">getnext()</a>: Get next element in this list. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">list</td><td>qlist_t container pointer. </td></tr>
@@ -761,7 +761,7 @@ Functions</h2></td></tr>
 <div class="fragment"><div class="line">qlist_t *list = <a class="code" href="qlist_8c.html#a171f1b505417b5a936e198993c9cb372">qlist</a>();</div>
 <div class="line">(...add data into list...)</div>
 <div class="line"></div>
-<div class="line">qdlobj_t obj;</div>
+<div class="line">qlist_obj_t obj;</div>
 <div class="line">memset((<span class="keywordtype">void</span>*)&amp;obj, 0, <span class="keyword">sizeof</span>(obj)); <span class="comment">// must be cleared before call</span></div>
 <div class="line">list-&gt;lock(list);   <span class="comment">// can be omitted in single thread model.</span></div>
 <div class="line"><span class="keywordflow">while</span> (list-&gt;getnext(list, &amp;obj, <span class="keyword">false</span>) == <span class="keyword">true</span>) {</div>
@@ -1388,7 +1388,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>From user side, normally locking operation is only needed when traverse all elements using qlist-&gt;<a class="el" href="qlist_8c.html#a4dfa2ad46ad7064702c0f23a6747059c" title="qlist-&gt;getnext(): Get next element in this list. ">getnext()</a>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>From user side, normally locking operation is only needed when traverse all elements using qlist-&gt;<a class="el" href="qlist_8c.html#a202602473e6d5bd8ed4db5515480b222" title="qlist-&gt;getnext(): Get next element in this list. ">getnext()</a>. </dd></dl>
 
 <p>Definition at line <a class="el" href="qlist_8c_source.html#l00853">853</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
 
@@ -1467,7 +1467,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5aa2c741d78642de87e50b40b6f339a9.html">containers</a></li><li class="navelem"><a class="el" href="qlist_8c.html">qlist.c</a></li>
+    <li class="navelem"><a class="el" href="dir_0b61c55142250c0cc363383afd8075a4.html">containers</a></li><li class="navelem"><a class="el" href="qlist_8c.html">qlist.c</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

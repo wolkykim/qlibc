@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,8 +34,8 @@
  * @file qconfig.h
  */
 
-#ifndef _QCONFIG_H
-#define _QCONFIG_H
+#ifndef QCONFIG_H
+#define QCONFIG_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -54,4 +54,4 @@ extern qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepc
 }
 #endif
 
-#endif /*_QCONFIG_H */
+#endif /* QCONFIG_H */

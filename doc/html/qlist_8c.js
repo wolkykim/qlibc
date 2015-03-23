@@ -8,7 +8,7 @@ var qlist_8c =
     [ "getfirst", "qlist_8c.html#ad95d0a27df70dd8cb2e7e61e6369a2f0", null ],
     [ "getlast", "qlist_8c.html#a21d4358f0a8e8a38db9dfb5318bee9e0", null ],
     [ "getat", "qlist_8c.html#a8bb604389aaa0ff7af8b4f8de0b94d6a", null ],
-    [ "getnext", "qlist_8c.html#a4dfa2ad46ad7064702c0f23a6747059c", null ],
+    [ "getnext", "qlist_8c.html#a202602473e6d5bd8ed4db5515480b222", null ],
     [ "popfirst", "qlist_8c.html#abdc31381c6d11a4a1faae6afcdd4a5e7", null ],
     [ "poplast", "qlist_8c.html#a68f2677b2103b3f3f1c27e562ccdc587", null ],
     [ "popat", "qlist_8c.html#a7fab0a42f44e54bb2111ef583c8c2310", null ],

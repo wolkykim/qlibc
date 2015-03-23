@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,8 +35,8 @@
  * @file qtokenbucket.h
  */
 
-#ifndef _QTOKENBUCKET_H
-#define _QTOKENBUCKET_H
+#ifndef QTOKENBUCKET_H
+#define QTOKENBUCKET_H
 
 #include <stdbool.h>
 
@@ -67,4 +67,4 @@ struct qtokenbucket_s {
 }
 #endif
 
-#endif /*_QTOKENBUCKET_H */
+#endif /* QTOKENBUCKET_H */

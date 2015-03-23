@@ -1,7 +1,7 @@
 /******************************************************************************
- * qunit
+ * qunit - C Unit Test Framework
  *
- * Copyright (c) 2014 Seungyoung Kim.
+ * Copyright (c) 2014-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,17 +27,19 @@
  *****************************************************************************/
 
 /**
- * qunit C Unit Test framework.
+ * qunit C Unit Test Framework.
  *
  * @file qunit.h
  */
 
-#ifndef _QUNIT_H
-#define _QUNIT_H
+#ifndef QUNIT_H
+#define QUNIT_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <sys/time.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -57,6 +59,9 @@ int _q_tot_tests = 0;                                                       \
 int _q_tot_failed = 0;                                                      \
 int _q_this_failed = 0;                                                     \
 int _q_errcnt = 0;                                                          \
+int _q_assert_cnt = 0;  /* number of assert test in a test */               \
+int _q_assert_dot_cnt = 0;  /* number of dots printed out in a test. */     \
+struct timespec _q_timer;                                                   \
 int main(int argc, char **argv) {                                           \
     PRINTLN("%s", _q_title);                                                \
     PRINTLN("======================================================================");  \
@@ -73,26 +78,51 @@ int main(int argc, char **argv) {                                           \
 #define TEST(name)                                                          \
     _TEST_RESULT();                                                         \
     _q_tot_tests++;                                                         \
-    PRINT("* TEST : %s ", name);
+    _q_assert_cnt = 0;                                                      \
+    _q_assert_dot_cnt = 0;                                                  \
+    PRINT("* TEST : %s ", name);                                            \
+    TIMER_START(_q_timer);
 
 #define _TEST_RESULT()                                                      \
-    if (_q_tot_tests ) PRINTLN(" %s", (_q_this_failed) ? "FAIL" : "OK");    \
+    TIMER_STOP(_q_timer);                                                   \
+    if (_q_tot_tests ) PRINTLN(" %s (%d assertions, %ldus)",                \
+        (_q_this_failed) ? "FAIL" : "OK", _q_assert_cnt,                    \
+        ((_q_timer.tv_sec * 1000000000) + _q_timer.tv_nsec) / 1000);        \
     _q_tot_failed += (_q_this_failed) ? 1 : 0;                              \
     _q_this_failed = 0;
 
 #define ASSERT(expr)                                                        \
+    _q_assert_cnt++;                                                        \
     if (! (expr))  {                                                        \
         _q_this_failed++;                                                   \
         PRINTLN("\nAssertion '%s' failed (%s:%d)", #expr, __FILE__, __LINE__); \
-    } else {                                                                \
+    } else if (_q_assert_dot_cnt < 30) {                                    \
         PRINT(".");                                                         \
+        _q_assert_dot_cnt++;                                                \
     }
 
 #define ASSERT_EQUAL_STR(s1, s2) ASSERT(!strcmp(s1, s2))
 #define ASSERT_EQUAL_INT(d1, d2) ASSERT(d1 == d2)
+#define ASSERT_EQUAL_BOOL(d1, d2) ASSERT(d1 == d2)
+#define ASSERT_EQUAL_PT(p1, p2) ASSERT(p1 == p2)
+#define ASSERT_EQUAL_MEM(p1, p2, n) ASSERT(!memcmp(p1, p2, n))
+#define ASSERT_NULL(p) ASSERT(NULL == p)
+#define ASSERT_NOT_NULL(p) ASSERT(NULL != p)
+#define ASSERT_TRUE(b) ASSERT(b)
+#define ASSERT_FALSE(b) ASSERT(!(b))
+
+#define TIMER_START(x) do {                                                 \
+        clock_gettime(CLOCK_MONOTONIC, &x);                                 \
+    } while(0)
+
+#define TIMER_STOP(x) do {                                                  \
+        struct timespec _tp1 = x, _tp2;                                     \
+        clock_gettime(CLOCK_MONOTONIC, &_tp2);                              \
+        qtime_timespec_diff(_tp1, _tp2, &x);                                \
+    } while(0)
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /*_QUNIT_H */
+#endif /* QUNIT_H */

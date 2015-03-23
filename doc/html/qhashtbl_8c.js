@@ -9,12 +9,12 @@ var qhashtbl_8c =
     [ "get", "qhashtbl_8c.html#ae35d16686e115fcc2c612674583ddec3", null ],
     [ "getstr", "qhashtbl_8c.html#a4c70ef7cf17f5a4346ecadbe229779e1", null ],
     [ "getint", "qhashtbl_8c.html#a67c1789f38a8ce6f44cfcf2b323ce99e", null ],
-    [ "getnext", "qhashtbl_8c.html#a08a0546a583711e148887d0234924ce9", null ],
+    [ "getnext", "qhashtbl_8c.html#a538e35227fc3e827ee3048b699d1d615", null ],
     [ "remove_", "qhashtbl_8c.html#a25a30dcbde72e0b59cb15b8dda34093a", null ],
     [ "size", "qhashtbl_8c.html#a73fd7b0d59a449dee2f9b6702e1bae89", null ],
-    [ "clear", "qhashtbl_8c.html#a581c8903636e97707361c799f83cca84", null ],
-    [ "debug", "qhashtbl_8c.html#a6b2865ae97b6336be9ff5ef5404266b2", null ],
+    [ "clear", "qhashtbl_8c.html#ac33e1b0f9b0e726353cde86849d7be83", null ],
+    [ "debug", "qhashtbl_8c.html#a80a2c42cce8d8fd0e51f86fa9bd740c7", null ],
     [ "lock", "qhashtbl_8c.html#aedbeacf77e104e64d65845705e79cdc2", null ],
     [ "unlock", "qhashtbl_8c.html#aa4ca3d13c11ad1aaa7f135e736e65933", null ],
-    [ "free_", "qhashtbl_8c.html#aeaf3b8deacf57b0d474c8584df30c26c", null ]
+    [ "free_", "qhashtbl_8c.html#a88308eb965356926d8d98e8603d4e848", null ]
 ];

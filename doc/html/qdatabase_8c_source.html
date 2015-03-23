@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>qlibc: extensions/qdatabase.c Source File</title>
+<title>qLibc: extensions/qdatabase.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -24,7 +24,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">qlibc
+   <div id="projectname">qLibc
    </div>
   </td>
  </tr>
@@ -68,7 +68,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <a href="qdatabase_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/******************************************************************************</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * qLibc</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright (c) 2010-2014 Seungyoung Kim.</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright (c) 2010-2015 Seungyoung Kim.</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * All rights reserved.</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * Redistribution and use in source and binary forms, with or without</span></div>
@@ -148,11 +148,11 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#ifdef ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &quot;mysql.h&quot;</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">/* mysql specific connector option */</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#define _Q_MYSQL_OPT_RECONNECT          (1)</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _Q_MYSQL_OPT_CONNECT_TIMEOUT        (10)</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _Q_MYSQL_OPT_READ_TIMEOUT       (30)</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _Q_MYSQL_OPT_WRITE_TIMEOUT      (30)</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">/* mysql specific connector options */</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#define Q_MYSQL_OPT_RECONNECT          (1)</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define Q_MYSQL_OPT_CONNECT_TIMEOUT    (10)</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define Q_MYSQL_OPT_READ_TIMEOUT       (30)</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define Q_MYSQL_OPT_WRITE_TIMEOUT      (30)</span></div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
@@ -230,7 +230,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span> *password, <span class="keyword">const</span> <span class="keywordtype">char</span> *database, <span class="keywordtype">bool</span> autocommit)</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;{</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="comment">// check db type</span></div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (strcmp(dbtype, <span class="stringliteral">&quot;MYSQL&quot;</span>)) <span class="keywordflow">return</span> NULL;</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="preprocessor">#else</span></div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">return</span> NULL;</div>
@@ -260,7 +260,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    db-&gt;info.fetchtype = <span class="keyword">false</span>;<span class="comment">// store mode</span></div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;</div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="comment">// set db handler</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="preprocessor"></span>    db-&gt;mysql = NULL;</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="preprocessor"></span></div>
@@ -305,7 +305,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;        <a class="code" href="qdatabase_8c.html#a89fc888110ad23e6358d155e2c9b6a3b">close_</a>(db);</div>
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    }</div>
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="preprocessor"></span>    Q_MUTEX_ENTER(db-&gt;qmutex);</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;</div>
 <div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <span class="comment">// initialize handler</span></div>
@@ -322,10 +322,10 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    }</div>
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <span class="comment">// set options</span></div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    my_bool reconnect = _Q_MYSQL_OPT_RECONNECT;</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> connect_timeout = _Q_MYSQL_OPT_CONNECT_TIMEOUT;</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> read_timeout = _Q_MYSQL_OPT_READ_TIMEOUT;</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> write_timeout = _Q_MYSQL_OPT_WRITE_TIMEOUT;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    my_bool reconnect = Q_MYSQL_OPT_RECONNECT;</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> connect_timeout = Q_MYSQL_OPT_CONNECT_TIMEOUT;</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> read_timeout = Q_MYSQL_OPT_READ_TIMEOUT;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> write_timeout = Q_MYSQL_OPT_WRITE_TIMEOUT;</div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <span class="keywordflow">if</span> (reconnect != <span class="keyword">false</span>) {</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        mysql_options(db-&gt;mysql,</div>
@@ -391,7 +391,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;{</div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    <span class="keywordflow">if</span> (db == NULL) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;<span class="preprocessor"></span>    Q_MUTEX_ENTER(db-&gt;qmutex);</div>
 <div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;</div>
 <div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keywordflow">if</span> (db-&gt;mysql != NULL) {</div>
@@ -420,7 +420,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;{</div>
 <div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    <span class="keywordflow">if</span> (db == NULL || db-&gt;connected == <span class="keyword">false</span>) <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;<span class="preprocessor"></span>    Q_MUTEX_ENTER(db-&gt;qmutex);</div>
 <div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;</div>
 <div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    <span class="keywordtype">int</span> affected = -1;</div>
@@ -471,7 +471,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;{</div>
 <div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;    <span class="keywordflow">if</span> (db == NULL || db-&gt;connected == <span class="keyword">false</span>) <span class="keywordflow">return</span> NULL;</div>
 <div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;<span class="preprocessor"></span>    <span class="comment">// query</span></div>
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;    DEBUG(<span class="stringliteral">&quot;%s&quot;</span>, query);</div>
 <div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;    <span class="keywordflow">if</span> (mysql_query(db-&gt;mysql, query)) <span class="keywordflow">return</span> NULL;</div>
@@ -552,7 +552,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;{</div>
 <div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;    <span class="keywordflow">if</span> (db == NULL) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;<span class="preprocessor"></span>    Q_MUTEX_ENTER(db-&gt;qmutex);</div>
 <div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;    <span class="keywordflow">if</span> (db-&gt;qmutex.count != 1) {</div>
 <div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;        Q_MUTEX_LEAVE(db-&gt;qmutex);</div>
@@ -583,7 +583,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;{</div>
 <div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;    <span class="keywordflow">if</span> (db == NULL) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;</div>
-<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;<span class="preprocessor"></span>    <span class="keywordtype">bool</span> ret = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;    <span class="keywordflow">if</span> (mysql_commit(db-&gt;mysql) == 0) {</div>
 <div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;        ret = <span class="keyword">true</span>;</div>
@@ -609,7 +609,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;{</div>
 <div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;    <span class="keywordflow">if</span> (db == NULL) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;</div>
-<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;<span class="preprocessor"></span>    <span class="keywordtype">bool</span> ret = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;    <span class="keywordflow">if</span> (mysql_rollback(db-&gt;mysql) == 0) {</div>
 <div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;        ret = <span class="keyword">true</span>;</div>
@@ -680,7 +680,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;{</div>
 <div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;    <span class="keywordflow">if</span> (db == NULL) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;</div>
-<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (db-&gt;connected == <span class="keyword">true</span> &amp;&amp; mysql_ping(db-&gt;mysql) == 0) {</div>
 <div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;    } <span class="keywordflow">else</span> {  <span class="comment">// ping test failed</span></div>
@@ -713,7 +713,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;</div>
 <div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> eno = 0;</div>
 <div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *emsg;</div>
-<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;<span class="preprocessor"></span>    eno = mysql_errno(db-&gt;mysql);</div>
 <div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;    <span class="keywordflow">if</span> (eno == 0) emsg = <span class="stringliteral">&quot;(no error)&quot;</span>;</div>
 <div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;    <span class="keywordflow">else</span> emsg = mysql_error(db-&gt;mysql);</div>
@@ -764,7 +764,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00698"></a><span class="lineno"><a class="line" href="qdatabase_8c.html#a3c32ab62afb92fb6a55cfaff7c92bf42">  698</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="qdatabase_8c.html#a3c32ab62afb92fb6a55cfaff7c92bf42">_resultGetStr</a>(qdbresult_t *result, <span class="keyword">const</span> <span class="keywordtype">char</span> *field)</div>
 <div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;{</div>
-<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (result == NULL || result-&gt;rs == NULL || result-&gt;cols &lt;= 0) <span class="keywordflow">return</span> NULL;</div>
 <div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;</div>
 <div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;    <span class="keywordflow">if</span> (result-&gt;fields == NULL) result-&gt;fields = mysql_fetch_fields(result-&gt;rs);</div>
@@ -792,7 +792,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00726"></a><span class="lineno"><a class="line" href="qdatabase_8c.html#ae3559441aaa0ae5f19965612dccca8d5">  726</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="qdatabase_8c.html#ae3559441aaa0ae5f19965612dccca8d5">_resultGetStrAt</a>(qdbresult_t *result, <span class="keywordtype">int</span> idx)</div>
 <div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;{</div>
-<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (result == NULL</div>
 <div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;            || result-&gt;rs == NULL</div>
 <div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;            || result-&gt;cursor == 0</div>
@@ -845,7 +845,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00779"></a><span class="lineno"><a class="line" href="qdatabase_8c.html#aeb86d8858bb8ea5dd06e052f8f3e9a09">  779</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="qdatabase_8c.html#aeb86d8858bb8ea5dd06e052f8f3e9a09">_resultGetNext</a>(qdbresult_t *result)</div>
 <div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160;{</div>
-<div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (result == NULL || result-&gt;rs == NULL) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;</div>
 <div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;    <span class="keywordflow">if</span> ((result-&gt;row = mysql_fetch_row(result-&gt;rs)) == NULL) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
@@ -866,7 +866,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00800"></a><span class="lineno"><a class="line" href="qdatabase_8c.html#a95d88451db51492ae6122701ce56b94d">  800</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="qdatabase_8c.html#a95d88451db51492ae6122701ce56b94d">result_get_cols</a>(qdbresult_t *result)</div>
 <div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;{</div>
-<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (result == NULL || result-&gt;rs == NULL) <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;    <span class="keywordflow">return</span> result-&gt;cols;</div>
 <div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;<span class="preprocessor">#else</span></div>
@@ -883,7 +883,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00817"></a><span class="lineno"><a class="line" href="qdatabase_8c.html#a26f8b55348c57f467d64c002ab306ff6">  817</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="qdatabase_8c.html#a26f8b55348c57f467d64c002ab306ff6">result_get_rows</a>(qdbresult_t *result)</div>
 <div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;{</div>
-<div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (result == NULL || result-&gt;rs == NULL) <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160;    <span class="keywordflow">return</span> mysql_num_rows(result-&gt;rs);</div>
 <div class="line"><a name="l00822"></a><span class="lineno">  822</span>&#160;<span class="preprocessor">#else</span></div>
@@ -903,7 +903,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00837"></a><span class="lineno"><a class="line" href="qdatabase_8c.html#a396a7328f7fb499f89c2652598185dc8">  837</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="qdatabase_8c.html#a396a7328f7fb499f89c2652598185dc8">result_get_row</a>(qdbresult_t *result)</div>
 <div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;{</div>
-<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (result == NULL || result-&gt;rs == NULL) <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;    <span class="keywordflow">return</span> result-&gt;cursor;</div>
 <div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;<span class="preprocessor">#else</span></div>
@@ -918,7 +918,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00852"></a><span class="lineno"><a class="line" href="qdatabase_8c.html#a4ab66a07fa82b706895e1b2c19fcd501">  852</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="qdatabase_8c.html#a4ab66a07fa82b706895e1b2c19fcd501">result_free</a>(qdbresult_t *result)</div>
 <div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;{</div>
-<div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;<span class="preprocessor">#ifdef _Q_ENABLE_MYSQL</span></div>
+<div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;<span class="preprocessor">#ifdef Q_ENABLE_MYSQL</span></div>
 <div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (result == NULL) <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;    <span class="keywordflow">if</span> (result-&gt;rs != NULL) {</div>
 <div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;        <span class="keywordflow">if</span> (result-&gt;fetchtype == <span class="keyword">true</span>) {</div>
@@ -966,7 +966,7 @@ $(document).ready(function(){initNavTree('qdatabase_8c_source.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_445263fafd9544f9ee19804b2b65121e.html">extensions</a></li><li class="navelem"><a class="el" href="qdatabase_8c.html">qdatabase.c</a></li>
+    <li class="navelem"><a class="el" href="dir_40c73bf2095fd0473b1b85ccdcac2768.html">extensions</a></li><li class="navelem"><a class="el" href="qdatabase_8c.html">qdatabase.c</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

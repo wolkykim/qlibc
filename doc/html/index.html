@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>qlibc: Main Page</title>
+<title>qLibc: Main Page</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -24,7 +24,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">qlibc
+   <div id="projectname">qLibc
    </div>
   </td>
  </tr>
@@ -56,10 +56,113 @@ $(document).ready(function(){initNavTree('index.html','');});
 <div id="doc-content">
 <div class="header">
   <div class="headertitle">
-<div class="title">qlibc Documentation</div>  </div>
+<div class="title">qLibc Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-</div><!-- contents -->
+<div class="textblock"><p>qLibc is currently one of the most functionally-complete, publicly-licensed C/C++ libraries. The goal of the qLibc project is to provide a <b>simple and powerful general purpose C/C++ library</b> that includes all kinds of containers and general library routines. It provides a ready-made set of common container APIs with a consistent API look.</p>
+<h2>qLibc Copyright</h2>
+<p>qLibc is published under 2-clause BSD license known as Simplified BSD License. Please refer the LICENSE document included in the package for more details.</p>
+<h2>API Reference</h2>
+<ul>
+<li><a href="http://wolkykim.github.io/qlibc/doc/html/files.html">qlibc Core API Reference</a><ul>
+<li>Containers<ul>
+<li>Tree Table &mdash; Tree data structure Key/Value table which implements Left-Leaning Red-Black algirothm.</li>
+<li>Hash Table &mdash; Hash-based data structure Key/Value pair table.</li>
+<li>Static Hash Table &mdash; Fixed size memory structure(array/mmapped/shared) based Key/Value pair table.</li>
+<li>List Table &mdash; Linked-list based Key/Value pair table.</li>
+<li>List &mdash; Doubly Linked List.</li>
+<li>Vector &mdash; implements a growable array of elements.</li>
+<li>Queue &mdash; FIFO(First In First Out) implementation.</li>
+<li>Stack &mdash; LIFO(Last In First Out) implementation.</li>
+</ul>
+</li>
+<li>General utilities.<ul>
+<li>String &mdash; string trimmer, modifier, replacer, case converter, pattern detectors, ...</li>
+<li>I/O &mdash; non-blcking I/O, stream reader/writer, ...</li>
+<li>File &mdash; file locking, file/directory hander, path correctors, ...</li>
+<li>IPC, Semaphore Shared-memory</li>
+<li>En/decoders &mdash; Url en/decoder, Base64 en/decoder, Hex en/decoder, ...</li>
+<li>Hashes &mdash; Murmur hases, FNV hases, MD5 hashes, ...</li>
+<li>Time &mdash; time diff, time format converstion, ...</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://wolkykim.github.io/qlibc/doc/html/files.html">qLibc Extension API Reference</a><ul>
+<li>Apache-style Configuration File Parser.</li>
+<li>INI-style Configuration File Parser.</li>
+<li>HTTP client.</li>
+<li>Rotating File Logger.</li>
+<li>Database(MySQL) interface.</li>
+<li><a href="http://en.wikipedia.org/wiki/Token_bucket">Token-Bucket</a></li>
+</ul>
+</li>
+</ul>
+<h2>Consistent API Look</h2>
+<p>All container APIs have a consistent look and feel. It basically provides a creator function which usually returns a pointer to a container structure. Also, <b>all functions related to the container can be accessed through function pointers inside of the container</b>.</p>
+<p>So, regardless of which container you use, you can simply put elements into a list with <code>pContainer-&gt;put(pContainer, ...)</code>. It looks like C++ classes, but it's a pure C implementation. Of course, it works with both C and C++ code**.</p>
+<p>We use this concept as much as possible because it is a simplified way of thinking and helps to improve readability. Consequently, it helps people to write bug-free code more easily.</p>
+<p>The examples below illustrates how qlibc looks like at a glance.</p>
+<div class="fragment"><div class="line"><span class="comment">// create a hash-table.</span></div>
+<div class="line">qhashtbl_t *tbl = <a class="code" href="qhashtbl_8c.html#acce512d557a3c776d474bfc977f34045">qhashtbl</a>(0, QHASHTBL_OPT_THREADSAFE);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// add an element which key name is &quot;score&quot;.</span></div>
+<div class="line"><span class="keywordtype">int</span> x = 12345;</div>
+<div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;score&quot;</span>, &amp;x, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// get the value of the element.</span></div>
+<div class="line"><span class="keywordtype">int</span> *px = tbl-&gt;get(tbl, <span class="stringliteral">&quot;score&quot;</span>);</div>
+<div class="line"><span class="keywordflow">if</span>(px != NULL) {</div>
+<div class="line">  printf(<span class="stringliteral">&quot;%d\n&quot;</span>, *px);</div>
+<div class="line">  free(px);</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// release table</span></div>
+<div class="line">tbl-&gt;free(tbl);</div>
+</div><!-- fragment --><p>Here is an identical implementation with a Linked-List-Table container. You may notice that there aren't any code changes at all, except for 1 line in the table creation. This is why qLibc encapsulates corresponding function pointers inside of the container object.</p>
+<div class="fragment"><div class="line"><span class="comment">// create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.</span></div>
+<div class="line">qlisttbl_t *tbl = <a class="code" href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7">qlisttbl</a>(QLISTTBL_OPT_THREADSAFE);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// add an element which key name is &quot;score&quot;.</span></div>
+<div class="line"><span class="keywordtype">int</span> x = 12345;</div>
+<div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;score&quot;</span>, &amp;x, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// get the value of the element.</span></div>
+<div class="line"><span class="keywordtype">int</span> *px = tbl-&gt;get(tbl, <span class="stringliteral">&quot;score&quot;</span>);</div>
+<div class="line"><span class="keywordflow">if</span>(px != NULL) {</div>
+<div class="line">  printf(<span class="stringliteral">&quot;%d\n&quot;</span>, *px);             </div>
+<div class="line">  free(px);</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// release table</span></div>
+<div class="line">tbl-&gt;free(tbl);</div>
+</div><!-- fragment --><h2>Looking for people to work with.</h2>
+<p>We're looking for people who want to work together to develop and improve qLibc. Currently, we have high demands on following areas.</p>
+<ul>
+<li>Automated testing</li>
+<li>Documentation.</li>
+<li>New feature implementation.</li>
+</ul>
+<h2>Contributors</h2>
+<p>The following people have helped with suggestions, ideas, code or fixing bugs: (in alphabetical order by first name)</p>
+<ul>
+<li>Anthony Tseng</li>
+<li>Cesar</li>
+<li>Colin</li>
+<li>Dmitry Vorobiev</li>
+<li>HyoSup Woo</li>
+<li>Keith Rosenberg</li>
+<li>Krishna</li>
+<li>Luis Jimenez</li>
+<li>Maik Beckmann</li>
+<li>RQ</li>
+<li>Ryan Gonzalez</li>
+<li>Seungyoung Kim</li>
+<li>Umesh</li>
+<li>Zhongchao Liu</li>
+</ul>
+<p>If we have forgotten or misspelled your name, please let us know. </p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

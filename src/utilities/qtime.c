@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,9 @@
  * @file qtime.c Time handling APIs.
  */
 
+#define __USE_XOPEN
+#define _XOPEN_SOURCE
+#define _BSD_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -39,14 +42,52 @@
 #include "utilities/qtime.h"
 
 /**
+ * Calculate time difference between 2 timespec structures.
+ *
+ * @param t1        start time
+ * @param t2        end time
+ * @param diff      a pointer of timespec structure for storing the time difference.
+ */
+void qtime_timespec_diff(struct timespec t1, struct timespec t2,
+                         struct timespec *diff) {
+    diff->tv_sec = t2.tv_sec - t1.tv_sec;
+    if (t2.tv_nsec >= t1.tv_nsec) {
+        diff->tv_sec = t2.tv_sec - t1.tv_sec;
+        diff->tv_nsec = t2.tv_nsec - t1.tv_nsec;
+    } else {
+        diff->tv_sec = t2.tv_sec - t1.tv_sec - 1;
+        diff->tv_nsec = 1000000000 + t2.tv_nsec - t1.tv_nsec;
+    }
+}
+
+/**
+ * Calculate time difference between 2 timeval structures.
+ *
+ * @param t1        start time
+ * @param t2        end time
+ * @param diff      a pointer of timeval structure for storing the time difference.
+ */
+void qtime_timeval_diff(struct timeval t1, struct timeval t2,
+                        struct timeval *diff) {
+    diff->tv_sec = t2.tv_sec - t1.tv_sec;
+    if (t2.tv_usec >= t1.tv_usec) {
+        diff->tv_sec = t2.tv_sec - t1.tv_sec;
+        diff->tv_usec = t2.tv_usec - t1.tv_usec;
+    } else {
+        diff->tv_sec = t2.tv_sec - t1.tv_sec - 1;
+        diff->tv_usec = 1000000 + t2.tv_usec - t1.tv_usec;
+    }
+}
+
+/**
  * Returns the current time in milliseconds.
  *
  * @return current time in milliseconds.
  */
 long qtime_current_milli(void) {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    long time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+    struct timespec tv;
+    clock_gettime(CLOCK_REALTIME, &tv);
+    long time = (tv.tv_sec * 1000) + (tv.tv_nsec / 1000000);
     return time;
 }
 
@@ -219,7 +260,7 @@ time_t qtime_parse_gmtstr(const char *gmtstr) {
     if (utc < 0)
         return -1;
 
-    // parse timezone
+// parse timezone
     char *p;
     if ((p = strstr(gmtstr, "+")) != NULL) {
         utc -= ((atoi(p + 1) / 100) * 60 * 60);

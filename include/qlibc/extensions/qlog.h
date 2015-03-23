@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,14 +35,13 @@
  * @file qlog.h
  */
 
-#ifndef _QLOG_H
-#define _QLOG_H
+#ifndef QLOG_H
+#define QLOG_H
 
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <limits.h>
-#include "containers/qtype.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,7 +69,7 @@ struct qlog_s {
     void (*free) (qlog_t *log);
 
     /* private variables - do not access directly */
-    qmutex_t *qmutex;  /*!< activated if compiled with --enable-threadsafe */
+    void *qmutex;  /*!< activated if compiled with --enable-threadsafe */
 
     char filepathfmt[PATH_MAX]; /*!< file file naming format like
                                      /somepath/daily-%Y%m%d.log */
@@ -89,4 +88,4 @@ struct qlog_s {
 }
 #endif
 
-#endif /*_QLOG_H */
+#endif /* QLOG_H */

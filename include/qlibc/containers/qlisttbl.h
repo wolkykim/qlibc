@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,13 +32,12 @@
  * @file qlisttbl.h
  */
 
-#ifndef _QLISTTBL_H
-#define _QLISTTBL_H
+#ifndef QLISTTBL_H
+#define QLISTTBL_H
 
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "qtype.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,6 +45,8 @@ extern "C" {
 
 /* types */
 typedef struct qlisttbl_s qlisttbl_t;
+typedef struct qlisttbl_obj_s qlisttbl_obj_t;
+typedef struct qlisttbl_data_s qlisttbl_data_t;
 
 /* public functions */
 enum {
@@ -72,13 +73,13 @@ struct qlisttbl_s {
     char *(*getstr) (qlisttbl_t *tbl, const char *name, bool newmem);
     int64_t (*getint) (qlisttbl_t *tbl, const char *name);
 
-    qobj_t *(*getmulti) (qlisttbl_t *tbl, const char *name, bool newmem, size_t *numobjs);
-    void (*freemulti) (qobj_t *objs);
+    qlisttbl_data_t *(*getmulti) (qlisttbl_t *tbl, const char *name, bool newmem, size_t *numobjs);
+    void (*freemulti) (qlisttbl_data_t *objs);
 
-    bool (*getnext) (qlisttbl_t *tbl, qdlnobj_t *obj, const char *name, bool newmem);
+    bool (*getnext) (qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name, bool newmem);
 
     size_t (*remove) (qlisttbl_t *tbl, const char *name);
-    bool (*removeobj) (qlisttbl_t *tbl, const qdlnobj_t *obj);
+    bool (*removeobj) (qlisttbl_t *tbl, const qlisttbl_obj_t *obj);
 
     size_t (*size) (qlisttbl_t *tbl);
     void (*sort) (qlisttbl_t *tbl);
@@ -96,7 +97,7 @@ struct qlisttbl_s {
     void (*free) (qlisttbl_t *tbl);
 
     /* private methods */
-    bool (*namematch) (qdlnobj_t *obj, const char *name, uint32_t hash);
+    bool (*namematch) (qlisttbl_obj_t *obj, const char *name, uint32_t hash);
     int (*namecmp) (const char *s1, const char *s2);
 
     /* private variables - do not access directly */
@@ -106,14 +107,36 @@ struct qlisttbl_s {
     bool inserttop;        /*!< add new key at the top. (default: bottom) */
     bool lookupforward;    /*!< find keys from the top. (default: backward) */
 
-    qmutex_t *qmutex;   /*!< initialized when QLISTTBL_OPT_THREADSAFE is given */
-    size_t num;         /*!< number of elements */
-    qdlnobj_t *first;   /*!< first object pointer */
-    qdlnobj_t *last;    /*!< last object pointer */
+    void *qmutex;          /*!< initialized when QLISTTBL_OPT_THREADSAFE is given */
+    size_t num;            /*!< number of elements */
+    qlisttbl_obj_t *first; /*!< first object pointer */
+    qlisttbl_obj_t *last;  /*!< last object pointer */
+};
+
+/**
+ * qlisttbl node object data structure
+ */
+struct qlisttbl_obj_s {
+    uint32_t hash;      /*!< 32bit-hash value of object name */
+    char *name;         /*!< object name */
+    void *data;         /*!< data */
+    size_t size;        /*!< data size */
+
+    qlisttbl_obj_t *prev;    /*!< previous link */
+    qlisttbl_obj_t *next;    /*!< next link */
+};
+
+/**
+ * qlisttbl value data structure for user return
+ */
+struct qlisttbl_data_s {
+    void *data;         /*!< data */
+    size_t size;        /*!< data size */
+    uint8_t type;       /*!< data type, internal use */
 };
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /*_QLISTTBL_H */
+#endif /* QLISTTBL_H */
