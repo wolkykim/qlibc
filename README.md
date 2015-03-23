@@ -68,16 +68,13 @@ All container APIs have a consistent look and feel. It basically provides
 a creator function which usually returns a pointer to a container structure.
 Also, **all functions related to the container can be accessed through function
 pointers inside of the container** or traditional style direct access APIs.
+For an example, 
 
 So, regardless of which container you use, you can simply put elements into
-a list with `pContainer->put(pContainer, ...)`. It looks like C++ classes,
-but it's a pure C implementation. Of course, it works with both C and C++ code**.
+a list with `container->put(container, ...)` or you can call them using
+direct API like qtreetbl_pub(container, ...).
 
-We use this concept as much as possible because it is a simplified way of
-thinking and helps to improve readability. Consequently, it helps people to
-write bug-free code more easily.
-
-The examples below illustrates how qlibc looks like at a glance.
+An examples below illustrates how it looks like.
 
 ~~~{.c}
   // create a hash-table.
