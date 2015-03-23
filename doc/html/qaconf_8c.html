@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>qlibc: extensions/qaconf.c File Reference</title>
+<title>qLibc: extensions/qaconf.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -24,7 +24,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">qlibc
+   <div id="projectname">qLibc
    </div>
   </td>
  </tr>
@@ -81,9 +81,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a4b7d9693f31e326b134f03f8ee4bca09"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qaconf_8c.html#a4b7d9693f31e326b134f03f8ee4bca09">addoptions</a> (qaconf_t *<a class="el" href="qaconf_8c.html#ac28c668ae735bb483d2c61c59f54cae0">qaconf</a>, const qaconf_option_t *options)</td></tr>
 <tr class="memdesc:a4b7d9693f31e326b134f03f8ee4bca09"><td class="mdescLeft">&#160;</td><td class="mdescRight">qaconf_t-&gt;<a class="el" href="qaconf_8c.html#a4b7d9693f31e326b134f03f8ee4bca09" title="qaconf_t-&gt;addoptions(): Register option directives. ">addoptions()</a>: Register option directives.  <a href="#a4b7d9693f31e326b134f03f8ee4bca09">More...</a><br/></td></tr>
 <tr class="separator:a4b7d9693f31e326b134f03f8ee4bca09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b3550a34ca912712a7ee45bf2d1d032"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qaconf_8c.html#a8b3550a34ca912712a7ee45bf2d1d032">setdefhandler</a> (qaconf_t *<a class="el" href="qaconf_8c.html#ac28c668ae735bb483d2c61c59f54cae0">qaconf</a>, const qaconf_cb_t *callback)</td></tr>
-<tr class="memdesc:a8b3550a34ca912712a7ee45bf2d1d032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set default callback function.  <a href="#a8b3550a34ca912712a7ee45bf2d1d032">More...</a><br/></td></tr>
-<tr class="separator:a8b3550a34ca912712a7ee45bf2d1d032"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a440db32385534bf03f08de253737623b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qaconf_8c.html#a440db32385534bf03f08de253737623b">setdefhandler</a> (qaconf_t *<a class="el" href="qaconf_8c.html#ac28c668ae735bb483d2c61c59f54cae0">qaconf</a>, qaconf_cb_t *callback)</td></tr>
+<tr class="memdesc:a440db32385534bf03f08de253737623b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set default callback function.  <a href="#a440db32385534bf03f08de253737623b">More...</a><br/></td></tr>
+<tr class="separator:a440db32385534bf03f08de253737623b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab68c8ab80781fbca3aeaf7e3d16a9cc2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qaconf_8c.html#ab68c8ab80781fbca3aeaf7e3d16a9cc2">setuserdata</a> (qaconf_t *<a class="el" href="qaconf_8c.html#ac28c668ae735bb483d2c61c59f54cae0">qaconf</a>, const void *userdata)</td></tr>
 <tr class="memdesc:ab68c8ab80781fbca3aeaf7e3d16a9cc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">qaconf_t-&gt;<a class="el" href="qaconf_8c.html#ab68c8ab80781fbca3aeaf7e3d16a9cc2" title="qaconf_t-&gt;setuserdata(): Set userdata which will be provided on callback. ">setuserdata()</a>: Set userdata which will be provided on callback.  <a href="#ab68c8ab80781fbca3aeaf7e3d16a9cc2">More...</a><br/></td></tr>
 <tr class="separator:ab68c8ab80781fbca3aeaf7e3d16a9cc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -425,7 +425,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a8b3550a34ca912712a7ee45bf2d1d032"></a>
+<a class="anchor" id="a440db32385534bf03f08de253737623b"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -441,7 +441,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const qaconf_cb_t *&#160;</td>
+          <td class="paramtype">qaconf_cb_t *&#160;</td>
           <td class="paramname"><em>callback</em>&#160;</td>
         </tr>
         <tr>
@@ -589,7 +589,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>A number of option directives parsed. -1 will be returned in case of error.</dd></dl>
 <p>Here is a list of flags. Multiple flags can be ORed.</p>
 <p>QAC_CASEINSENSITIVE: Option name is case-insensitive.</p>
-<p>QAC_IGNOREUNKNOWN : Ignore unknown option directives. This flag will be ignored if <a class="el" href="qaconf_8c.html#a8b3550a34ca912712a7ee45bf2d1d032" title="Set default callback function. ">setdefhandler()</a> has set.</p>
+<p>QAC_IGNOREUNKNOWN : Ignore unknown option directives. This flag will be ignored if <a class="el" href="qaconf_8c.html#a440db32385534bf03f08de253737623b" title="Set default callback function. ">setdefhandler()</a> has set.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> c;</div>
 <div class="line">c = conf-&gt;parse(conf, <span class="stringliteral">&quot;sm1.conf&quot;</span>, 0);</div>
 <div class="line">c = conf-&gt;parse(conf, <span class="stringliteral">&quot;sm2.conf&quot;</span>, QAC_CASEINSENSITIVE);</div>
@@ -718,7 +718,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_445263fafd9544f9ee19804b2b65121e.html">extensions</a></li><li class="navelem"><a class="el" href="qaconf_8c.html">qaconf.c</a></li>
+    <li class="navelem"><a class="el" href="dir_40c73bf2095fd0473b1b85ccdcac2768.html">extensions</a></li><li class="navelem"><a class="el" href="qaconf_8c.html">qaconf.c</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

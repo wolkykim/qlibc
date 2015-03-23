@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,8 @@
  * @file qqueue.h
  */
 
-#ifndef _QQUEUE_H
-#define _QQUEUE_H
+#ifndef QQUEUE_H
+#define QQUEUE_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -88,4 +88,4 @@ struct qqueue_s {
 }
 #endif
 
-#endif /*_QQUEUE_H */
+#endif /* QQUEUE_H */

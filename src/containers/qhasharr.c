@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,8 @@
  * qhasharr implements a hash-table which maps keys to values and stores into
  * fixed size static memory like shared-memory and memory-mapped file.
  * The creator qhasharr() initializes static memory to makes small slots in it.
- * The default slot size factors are defined in _Q_HASHARR_KEYSIZE and
- * _Q_HASHARR_VALUESIZE. And they are applied at compile time.
+ * The default slot size factors are defined in Q_HASHARR_KEYSIZE and
+ * Q_HASHARR_VALUESIZE. And they are applied at compile time.
  *
  * The value part of an element will be stored across several slots if it's size
  * exceeds the slot size. But the key part of an element will be truncated if
@@ -163,7 +163,7 @@ static void *get_by_obj(qhasharr_t *tbl, const void *key, size_t key_size,
 static void *get(qhasharr_t *tbl, const char *key, size_t *size);
 static char *getstr(qhasharr_t *tbl, const char *key);
 static int64_t getint(qhasharr_t *tbl, const char *key);
-static bool getnext(qhasharr_t *tbl, qnobj_t *obj, int *idx);
+static bool getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx);
 
 static char *_print_object(const void *data, size_t data_size);
 
@@ -292,9 +292,8 @@ qhasharr_t *qhasharr(void *memory, size_t memsize) {
     return tbl;
 }
 
-static qhasharr_slot_t* _get_slots(qhasharr_t *tbl)
-{
-    return (qhasharr_slot_t*)((char*)(tbl->data) + sizeof(qhasharr_data_t));
+static qhasharr_slot_t* _get_slots(qhasharr_t *tbl) {
+    return (qhasharr_slot_t*) ((char*) (tbl->data) + sizeof(qhasharr_data_t));
 }
 
 /**
@@ -622,10 +621,10 @@ static int64_t getint(qhasharr_t *tbl, const char *key) {
  *
  * @note
  *  Please be aware a key name will be returned with truncated length
- *  because key name is truncated when it put into the table if it's length is
- *  longer than _Q_HASHARR_KEYSIZE.
+ *  because key name gets truncated if it doesn't fit into slot size,
+ *  Q_HASHARR_KEYSIZE.
  */
-static bool getnext(qhasharr_t *tbl, qnobj_t *obj, int *idx) {
+static bool getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx) {
     if (tbl == NULL || obj == NULL || idx == NULL) {
         errno = EINVAL;
         return NULL;
@@ -640,8 +639,8 @@ static bool getnext(qhasharr_t *tbl, qnobj_t *obj, int *idx) {
         }
 
         size_t keylen = tblslots[*idx].data.pair.keylen;
-        if (keylen > _Q_HASHARR_KEYSIZE)
-            keylen = _Q_HASHARR_KEYSIZE;
+        if (keylen > Q_HASHARR_KEYSIZE)
+            keylen = Q_HASHARR_KEYSIZE;
 
         obj->name = (char *) malloc(keylen + 1);
         if (obj->name == NULL) {
@@ -717,8 +716,6 @@ static char *_print_object(const void *data, size_t data_size) {
             break;
         }
     }
-    if (str[i] != '\0')
-            is_printable = false;
     if (!is_printable) {
         char *key_string = (char *)data;
         str[0] = '0';
@@ -770,7 +767,7 @@ static bool remove_by_obj(qhasharr_t *tbl, const void *key, size_t key_size) {
     unsigned int hash = qhashmurmur3_32(key, key_size) % data->maxslots;
     int idx = _get_idx(tbl, key, key_size, hash);
     if (idx < 0) {
-        DEBUG("not found %s", _print_key(tbl, key, key_size));
+        DEBUG("key(%s) not found.", _print_key(tbl, key, key_size));
         errno = ENOENT;
         return false;
     }
@@ -792,7 +789,7 @@ static bool remove_by_obj(qhasharr_t *tbl, const void *key, size_t key_size) {
  *
  * @code
  *  int idx = 0;
- *  qnobj_t obj;
+ *  qhasharr_obj_t obj;
  *  while(tbl->getnext(tbl, &obj, &idx) == true) {
  *    if (condition_to_remove) {
  *      idx--;  // adjust index by -1
@@ -818,7 +815,8 @@ static bool remove_by_obj(qhasharr_t *tbl, const void *key, size_t key_size) {
 static bool remove_by_idx(qhasharr_t *tbl, int idx) {
     if (idx < 0) {
         DEBUG("Invalid index range, %d", idx);
-        errno = EINVAL;;
+        errno = EINVAL;
+        ;
         return false;
     }
 
@@ -828,7 +826,7 @@ static bool remove_by_idx(qhasharr_t *tbl, int idx) {
     if (tblslots[idx].count == 1) {
         // just remove
         _remove_data(tbl, idx);
-        DEBUG("hasharr: rem %s (idx=%d,tot=%d)", _print_key(tbl, key, key_size), idx, data->usedslots);
+        DEBUG("hasharr: remove_by_idx (idx=%d,tot=%d)", idx, data->usedslots);
     } else if (tblslots[idx].count > 1) {  // leading slot and has collision
         // find the collision key
         int idx2;
@@ -836,8 +834,7 @@ static bool remove_by_idx(qhasharr_t *tbl, int idx) {
             if (idx2 >= data->maxslots)
                 idx2 = 0;
             if (idx2 == idx) {
-                DEBUG("hasharr: [BUG] failed to remove dup key %s.",
-                        _print_key(tbl, key, key_size));
+                DEBUG("hasharr: [BUG] failed to remove dup key at %d.", idx);
                 errno = EFAULT;
                 return false;
             }
@@ -858,14 +855,13 @@ static bool remove_by_idx(qhasharr_t *tbl, int idx) {
             tblslots[tblslots[idx].link].hash = idx;
         }
 
-        DEBUG("hasharr: rem(lead) %s (idx=%d,tot=%d)",
-                _print_key(tbl, key, key_size), idx, data->usedslots);
+        DEBUG("hasharr: remove_by_idx(lead) (idx=%d,tot=%d)", idx,
+              data->usedslots);
     } else if (tblslots[idx].count == -1) {  // collision key
         // decrease counter from leading slot
         if (tblslots[tblslots[idx].hash].count <= 1) {
-            DEBUG("hasharr: [BUG] failed to remove  %s. "
-                    "counter of leading slot mismatch.", 
-                    _print_key(tbl, key, key_size));
+            DEBUG("hasharr: [BUG] failed to remove at %d. counter of leading slot mismatch.",
+                  idx);
             errno = EFAULT;
             return false;
         }
@@ -873,10 +869,12 @@ static bool remove_by_idx(qhasharr_t *tbl, int idx) {
 
         // remove data
         _remove_data(tbl, idx);
-        DEBUG("hasharr: rem(dup) %s (idx=%d,tot=%d)", _print_key(tbl, key, key_size), idx, data->usedslots);
+        DEBUG("hasharr: remove_by_idx(dup) (idx=%d,tot=%d)", idx,
+              data->usedslots);
     } else {
         DEBUG("Index(%d) is not pointing a valid object", idx);
-        errno = ENOENT;;
+        errno = ENOENT;
+        ;
         return false;
     }
 
@@ -929,8 +927,7 @@ static void clear(qhasharr_t *tbl) {
     data->num = 0;
 
     // clear memory
-    memset((void *) tblslots, '\0',
-           (data->maxslots * sizeof(qhasharr_slot_t)));
+    memset((void *) tblslots, '\0', (data->maxslots * sizeof(qhasharr_slot_t)));
 }
 
 /**
@@ -957,13 +954,13 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
     qhasharr_slot_t *tblslots = _get_slots(tbl);
 
     int idx = 0;
-    qnobj_t obj;
+    qhasharr_obj_t obj;
     while (tbl->getnext(tbl, &obj, &idx) == true) {
         uint16_t keylen = tblslots[idx - 1].data.pair.keylen;
         char *obj_name = tbl->printobj(obj.name, obj.name_size);
         fprintf(out, "%s%s(%d)=", obj_name,
-                (keylen > _Q_HASHARR_KEYSIZE) ? "..." : "", keylen);
-        _q_humanOut(out, obj.data, obj.size, MAX_HUMANOUT);
+                (keylen > Q_HASHARR_KEYSIZE) ? "..." : "", keylen);
+        _q_textout(out, obj.data, obj.size, MAX_HUMANOUT);
         fprintf(out, " (%zu)\n", obj.size);
 
         free(obj_name);
@@ -982,7 +979,7 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
         if (tblslots[idx].count == -2) {
             fprintf(out, "EXTEND,prev=%d,next=%d,data=",
                     tblslots[idx].hash, tblslots[idx].link);
-            _q_humanOut(out,
+            _q_textout(out,
                     tblslots[idx].data.ext.value,
                     tblslots[idx].size,
                     MAX_HUMANOUT);
@@ -991,18 +988,10 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
             fprintf(out, "%s", (tblslots[idx].count == -1)?"COLISN":"NORMAL");
             fprintf(out, ",count=%d,hash=%u,key=",
                     tblslots[idx].count, tblslots[idx].hash);
-#if 0
-            _q_humanOut(out,
-                    tblslots[idx].data.pair.key,
-                    (tblslots[idx].data.pair.keylen>_Q_HASHARR_KEYSIZE)
-                    ? _Q_HASHARR_KEYSIZE
-                    : tblslots[idx].data.pair.keylen,
-                    MAX_HUMANOUT);
-#endif
             fprintf(out, "%s", _print_key(tbl, tblslots[idx].data.pair.key,
                         tblslots[idx].data.pair.keylen));
             fprintf(out, ",keylen=%d,data=", tblslots[idx].data.pair.keylen);
-            _q_humanOut(out,
+            _q_textout(out,
                     tblslots[idx].data.pair.value,
                     tblslots[idx].size,
                     MAX_HUMANOUT);
@@ -1024,7 +1013,7 @@ static bool debug(qhasharr_t *tbl, FILE *out) {
  *  This does not de-allocate memory but only function reference object.
  *  Data memory such as shared memory must be de-allocated separately.
  */
-void free_(qhasharr_t *tbl) {
+static void free_(qhasharr_t *tbl) {
     free(tbl);
 }
 
@@ -1062,8 +1051,7 @@ static int _get_idx(qhasharr_t *tbl, const void *key, size_t key_size,
         int count, idx;
         for (count = 0, idx = hash; count < tblslots[hash].count;) {
             if (tblslots[idx].hash == hash
-                    && (tblslots[idx].count > 0
-                            || tblslots[idx].count == -1)) {
+                    && (tblslots[idx].count > 0 || tblslots[idx].count == -1)) {
                 // same hash
                 count++;
 
@@ -1071,10 +1059,9 @@ static int _get_idx(qhasharr_t *tbl, const void *key, size_t key_size,
                 size_t keylen = key_size;
                 // first check key length
                 if (keylen == tblslots[idx].data.pair.keylen) {
-                    if (keylen <= _Q_HASHARR_KEYSIZE) {
+                    if (keylen <= Q_HASHARR_KEYSIZE) {
                         // original key is stored
-                        if (!memcmp(key, tblslots[idx].data.pair.key,
-                                    keylen)) {
+                        if (!memcmp(key, tblslots[idx].data.pair.key, keylen)) {
                             return idx;
                         }
                     } else {
@@ -1082,7 +1069,7 @@ static int _get_idx(qhasharr_t *tbl, const void *key, size_t key_size,
                         unsigned char keymd5[16];
                         qhashmd5(key, keylen, keymd5);
                         if (!memcmp(key, tblslots[idx].data.pair.key,
-                        _Q_HASHARR_KEYSIZE)
+                        Q_HASHARR_KEYSIZE)
                                 && !memcmp(keymd5,
                                            tblslots[idx].data.pair.keymd5,
                                            16)) {
@@ -1174,7 +1161,7 @@ static bool _put_data(qhasharr_t *tbl, int idx, unsigned int hash,
     // store key
     tblslots[idx].count = count;
     tblslots[idx].hash = hash;
-    strncpy(tblslots[idx].data.pair.key, key, _Q_HASHARR_KEYSIZE);
+    strncpy(tblslots[idx].data.pair.key, key, Q_HASHARR_KEYSIZE);
     memcpy((char *) tblslots[idx].data.pair.keymd5, (char *) keymd5, 16);
     tblslots[idx].data.pair.keylen = keylen;
     tblslots[idx].link = -1;
@@ -1194,8 +1181,7 @@ static bool _put_data(qhasharr_t *tbl, int idx, unsigned int hash,
             }
 
             // clear & set
-            memset((void *) (&tblslots[tmpidx]), '\0',
-                   sizeof(qhasharr_slot_t));
+            memset((void *) (&tblslots[tmpidx]), '\0', sizeof(qhasharr_slot_t));
 
             tblslots[tmpidx].count = -2;      // extended data block
             tblslots[tmpidx].hash = newidx;   // prev link
@@ -1214,15 +1200,14 @@ static bool _put_data(qhasharr_t *tbl, int idx, unsigned int hash,
 
         if (tblslots[newidx].count == -2) {
             // extended value
-            if (copysize > sizeof(struct _Q_HASHARR_SLOT_EXT)) {
-                copysize = sizeof(struct _Q_HASHARR_SLOT_EXT);
+            if (copysize > sizeof(struct Q_HASHARR_SLOT_EXT)) {
+                copysize = sizeof(struct Q_HASHARR_SLOT_EXT);
             }
-            memcpy(tblslots[newidx].data.ext.value, value + savesize,
-                   copysize);
+            memcpy(tblslots[newidx].data.ext.value, value + savesize, copysize);
         } else {
             // first slot
-            if (copysize > _Q_HASHARR_VALUESIZE) {
-                copysize = _Q_HASHARR_VALUESIZE;
+            if (copysize > Q_HASHARR_VALUESIZE) {
+                copysize = Q_HASHARR_VALUESIZE;
             }
             memcpy(tblslots[newidx].data.pair.value, value + savesize,
                    copysize);
@@ -1306,7 +1291,7 @@ static bool _remove_data(qhasharr_t *tbl, int idx) {
 #ifdef BUILD_DEBUG
 static const char *_print_key(qhasharr_t *tbl, const void *key, size_t key_size) {
     int i;
-    size_t len = (key_size > _Q_HASHARR_KEYSIZE)?_Q_HASHARR_KEYSIZE:key_size;
+    size_t len = (key_size > Q_HASHARR_KEYSIZE)?Q_HASHARR_KEYSIZE:key_size;
     char *str = (char *)key;
     bool is_printable = true;
     for (i = 0; i < len; i++) {
@@ -1315,12 +1300,10 @@ static const char *_print_key(qhasharr_t *tbl, const void *key, size_t key_size)
             break;
         }
     }
-    if (str[i] != '\0')
-            is_printable = false;
     if (!is_printable) {
         str = tbl->debug_key_msg;
         char *key_string = (char *)key;
-        memset(str, 0, _Q_HASHARR_KEYSIZE*2+2+1);
+        memset(str, 0, Q_HASHARR_KEYSIZE*2+2+1);
         str[0] = '0';
         str[1] = 'x';
         for (i = 0; i < len; i++)

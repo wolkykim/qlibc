@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,8 @@
 
 int main(void) {
     // initialize hash-table
-    char memory[1000 * 10];
+    int memsize = qhasharr_calculate_memsize(20);
+    char memory[memsize];
     qhasharr_t *tbl = qhasharr(memory, sizeof(memory));
     if (tbl == NULL) {
         return -1;
@@ -84,7 +85,7 @@ int main(void) {
     printf("\n--[Test 3 : travesal table]--\n");
     printf("table size : %d elements\n", tbl->size(tbl, NULL, NULL));
     int idx = 0;
-    qnobj_t obj;
+    qhasharr_obj_t obj;
     while (tbl->getnext(tbl, &obj, &idx) == true) {
         char *obj_name = tbl->printobj(obj.name, obj.name_size);
         char *obj_data = tbl->printobj(obj.data, obj.size);

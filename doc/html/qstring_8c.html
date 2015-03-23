@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>qlibc: utilities/qstring.c File Reference</title>
+<title>qLibc: utilities/qstring.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -24,7 +24,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">qlibc
+   <div id="projectname">qLibc
    </div>
   </td>
  </tr>
@@ -102,6 +102,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a6ad659c9b3a4f6b515368cb0fa098d32"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qstring_8c.html#a6ad659c9b3a4f6b515368cb0fa098d32">qstrdup_between</a> (const char *str, const char *start, const char *end)</td></tr>
 <tr class="memdesc:a6ad659c9b3a4f6b515368cb0fa098d32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Duplicate a substing set.  <a href="#a6ad659c9b3a4f6b515368cb0fa098d32">More...</a><br/></td></tr>
 <tr class="separator:a6ad659c9b3a4f6b515368cb0fa098d32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc32dbf9f419ef637d0547211b7125b9"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qstring_8c.html#acc32dbf9f419ef637d0547211b7125b9">qmemdup</a> (const void *data, size_t <a class="el" href="qstack_8c.html#a47e1fcd7f30a2bff4b9ad661f8eea361">size</a>)</td></tr>
+<tr class="memdesc:acc32dbf9f419ef637d0547211b7125b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Duplicate a copy of memory data.  <a href="#acc32dbf9f419ef637d0547211b7125b9">More...</a><br/></td></tr>
+<tr class="separator:acc32dbf9f419ef637d0547211b7125b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ab535e3b8608f1ef81ed21a7d602cef"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qstring_8c.html#a4ab535e3b8608f1ef81ed21a7d602cef">qstrcatf</a> (char *str, const char *format,...)</td></tr>
 <tr class="memdesc:a4ab535e3b8608f1ef81ed21a7d602cef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append formatted string to the end of the source str.  <a href="#a4ab535e3b8608f1ef81ed21a7d602cef">More...</a><br/></td></tr>
 <tr class="separator:a4ab535e3b8608f1ef81ed21a7d602cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -549,6 +552,44 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="acc32dbf9f419ef637d0547211b7125b9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* qmemdup </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Duplicate a copy of memory data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>source data </td></tr>
+    <tr><td class="paramname">size</td><td>data size</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of malloced data which's content is identical to source data. </dd></dl>
+
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00406">406</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a4ab535e3b8608f1ef81ed21a7d602cef"></a>
 <div class="memitem">
 <div class="memproto">
@@ -589,7 +630,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a pointer of str if successful, otherwise returns NULL </dd></dl>
 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00406">406</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00428">428</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -642,7 +683,7 @@ Functions</h2></td></tr>
 <div class="line">  printf(<span class="stringliteral">&quot;%s\n&quot;</span>, buf);</div>
 <div class="line">}</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00439">439</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00461">461</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -670,7 +711,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>always returns a pointer of str</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This modify str directly. </dd></dl>
 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00471">471</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00493">493</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -698,7 +739,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>always returns a pointer of str</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This modify str directly. </dd></dl>
 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00494">494</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00516">516</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -726,7 +767,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>always returns a pointer of str</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This modify str directly. </dd></dl>
 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00514">514</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00536">536</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -785,7 +826,7 @@ Functions</h2></td></tr>
 <div class="line">}</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>This may modify str argument. The major difference between <a class="el" href="qstring_8c.html#a6183cbf7350c2373915feac84b5ec25c" title="Split string into tokens. ">qstrtok()</a> and standard strtok() is that <a class="el" href="qstring_8c.html#a6183cbf7350c2373915feac84b5ec25c" title="Split string into tokens. ">qstrtok()</a> can returns empty string tokens. If the str is "a:b::d", <a class="el" href="qstring_8c.html#a6183cbf7350c2373915feac84b5ec25c" title="Split string into tokens. ">qstrtok()</a> returns "a", "b", "", "d". But strtok() returns "a","b","d". </dd></dl>
 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00554">554</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00576">576</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -829,7 +870,7 @@ Functions</h2></td></tr>
 <div class="line">}</div>
 <div class="line">tokens-&gt;free(tokens);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00600">600</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00622">622</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -857,7 +898,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>a pointer of malloced string</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The length of returned string is 32+1 bytes long including terminating NULL character. It's a good idea to call srand() once before calling this because it uses rand(). </dd></dl>
 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00631">631</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00653">653</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -884,7 +925,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a pointer of malloced string which contains comma separated number if successful, otherwise returns NULL </dd></dl>
 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00662">662</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00687">687</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -930,7 +971,7 @@ Functions</h2></td></tr>
 <div class="line">}</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Basically you can use below test functios without creating your own version. Make sure &lt;ctype.h&gt; header should be included before using any of these functions. isalnum - checks for an alphanumeric character. isalpha - checks for an alphabetic character. isascii - checks whether c is a 7-bit unsigned char value that fits into the ASCII character set. isblank - checks for a blank character; that is, a space or a tab. iscntrl - checks for a control character. isdigit - checks for a digit (0 through 9). isgraph - checks for any printable character except space. islower - checks for a lower-case character. isprint - checks for any printable character including space. ispunct - checks for any printable character which is not a space or an alphanumeric character. isspace - checks for white-space characters. isupper - checks for an uppercase letter. isxdigit - checks for a hexadecimal digits. Please refer "man isalnum" for more details about these functions. </dd></dl>
 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00723">723</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00748">748</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -957,7 +998,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false </dd></dl>
 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00738">738</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00763">763</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -987,7 +1028,7 @@ Functions</h2></td></tr>
 <div class="line">  printf(<span class="stringliteral">&quot;It is IPv4 address string.&quot;</span>);</div>
 <div class="line">}</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00796">796</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00821">821</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -1040,7 +1081,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>a pointer of malloced converted string if successful, otherwise returns NULL</dd></dl>
 <div class="fragment"><div class="line">qCharEncode(<span class="stringliteral">&quot;KOREAN_EUCKR_STRING&quot;</span>, <span class="stringliteral">&quot;EUC-KR&quot;</span>, <span class="stringliteral">&quot;UTF-8&quot;</span>, 1.5);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qstring_8c_source.html#l00837">837</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
+<p>Definition at line <a class="el" href="qstring_8c_source.html#l00862">862</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
 
 </div>
 </div>
@@ -1049,7 +1090,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_df38b2a5d584e0f6066b4518b95c638b.html">utilities</a></li><li class="navelem"><a class="el" href="qstring_8c.html">qstring.c</a></li>
+    <li class="navelem"><a class="el" href="dir_7b5d38f1875f1b693f62ca6a108a1129.html">utilities</a></li><li class="navelem"><a class="el" href="qstring_8c.html">qstring.c</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,11 +81,11 @@
 
 #ifdef ENABLE_MYSQL
 #include "mysql.h"
-/* mysql specific connector option */
-#define _Q_MYSQL_OPT_RECONNECT          (1)
-#define _Q_MYSQL_OPT_CONNECT_TIMEOUT        (10)
-#define _Q_MYSQL_OPT_READ_TIMEOUT       (30)
-#define _Q_MYSQL_OPT_WRITE_TIMEOUT      (30)
+/* mysql specific connector options */
+#define Q_MYSQL_OPT_RECONNECT          (1)
+#define Q_MYSQL_OPT_CONNECT_TIMEOUT    (10)
+#define Q_MYSQL_OPT_READ_TIMEOUT       (30)
+#define Q_MYSQL_OPT_WRITE_TIMEOUT      (30)
 #endif
 
 #include <stdio.h>
@@ -163,7 +163,7 @@ qdb_t *qdb(const char *dbtype, const char *addr, int port, const char *username,
         const char *password, const char *database, bool autocommit)
 {
     // check db type
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     if (strcmp(dbtype, "MYSQL")) return NULL;
 #else
     return NULL;
@@ -193,7 +193,7 @@ qdb_t *qdb(const char *dbtype, const char *addr, int port, const char *username,
     db->info.fetchtype = false;// store mode
 
     // set db handler
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     db->mysql = NULL;
 #endif
 
@@ -238,7 +238,7 @@ static bool open_(qdb_t *db)
         close_(db);
     }
 
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     Q_MUTEX_ENTER(db->qmutex);
 
     // initialize handler
@@ -255,10 +255,10 @@ static bool open_(qdb_t *db)
     }
 
     // set options
-    my_bool reconnect = _Q_MYSQL_OPT_RECONNECT;
-    unsigned int connect_timeout = _Q_MYSQL_OPT_CONNECT_TIMEOUT;
-    unsigned int read_timeout = _Q_MYSQL_OPT_READ_TIMEOUT;
-    unsigned int write_timeout = _Q_MYSQL_OPT_WRITE_TIMEOUT;
+    my_bool reconnect = Q_MYSQL_OPT_RECONNECT;
+    unsigned int connect_timeout = Q_MYSQL_OPT_CONNECT_TIMEOUT;
+    unsigned int read_timeout = Q_MYSQL_OPT_READ_TIMEOUT;
+    unsigned int write_timeout = Q_MYSQL_OPT_WRITE_TIMEOUT;
 
     if (reconnect != false) {
         mysql_options(db->mysql,
@@ -324,7 +324,7 @@ static bool close_(qdb_t *db)
 {
     if (db == NULL) return false;
 
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     Q_MUTEX_ENTER(db->qmutex);
 
     if (db->mysql != NULL) {
@@ -353,7 +353,7 @@ static int execute_update(qdb_t *db, const char *query)
 {
     if (db == NULL || db->connected == false) return -1;
 
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     Q_MUTEX_ENTER(db->qmutex);
 
     int affected = -1;
@@ -404,7 +404,7 @@ static qdbresult_t *execute_query(qdb_t *db, const char *query)
 {
     if (db == NULL || db->connected == false) return NULL;
 
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     // query
     DEBUG("%s", query);
     if (mysql_query(db->mysql, query)) return NULL;
@@ -485,7 +485,7 @@ static bool begin_tran(qdb_t *db)
 {
     if (db == NULL) return false;
 
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     Q_MUTEX_ENTER(db->qmutex);
     if (db->qmutex.count != 1) {
         Q_MUTEX_LEAVE(db->qmutex);
@@ -516,7 +516,7 @@ static bool commit(qdb_t *db)
 {
     if (db == NULL) return false;
 
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     bool ret = false;
     if (mysql_commit(db->mysql) == 0) {
         ret = true;
@@ -542,7 +542,7 @@ static bool rollback(qdb_t *db)
 {
     if (db == NULL) return false;
 
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     bool ret = false;
     if (mysql_rollback(db->mysql) == 0) {
         ret = true;
@@ -613,7 +613,7 @@ static bool ping(qdb_t *db)
 {
     if (db == NULL) return false;
 
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     if (db->connected == true && mysql_ping(db->mysql) == 0) {
         return true;
     } else {  // ping test failed
@@ -646,7 +646,7 @@ static const char *get_error(qdb_t *db, unsigned int *errorno)
 
     unsigned int eno = 0;
     const char *emsg;
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     eno = mysql_errno(db->mysql);
     if (eno == 0) emsg = "(no error)";
     else emsg = mysql_error(db->mysql);
@@ -697,7 +697,7 @@ static void free_(qdb_t *db)
  */
 static const char *_resultGetStr(qdbresult_t *result, const char *field)
 {
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     if (result == NULL || result->rs == NULL || result->cols <= 0) return NULL;
 
     if (result->fields == NULL) result->fields = mysql_fetch_fields(result->rs);
@@ -725,7 +725,7 @@ static const char *_resultGetStr(qdbresult_t *result, const char *field)
  */
 static const char *_resultGetStrAt(qdbresult_t *result, int idx)
 {
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     if (result == NULL
             || result->rs == NULL
             || result->cursor == 0
@@ -778,7 +778,7 @@ static int _resultGetIntAt(qdbresult_t *result, int idx)
  */
 static bool _resultGetNext(qdbresult_t *result)
 {
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     if (result == NULL || result->rs == NULL) return false;
 
     if ((result->row = mysql_fetch_row(result->rs)) == NULL) return false;
@@ -799,7 +799,7 @@ static bool _resultGetNext(qdbresult_t *result)
  */
 static int result_get_cols(qdbresult_t *result)
 {
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     if (result == NULL || result->rs == NULL) return 0;
     return result->cols;
 #else
@@ -816,7 +816,7 @@ static int result_get_cols(qdbresult_t *result)
  */
 static int result_get_rows(qdbresult_t *result)
 {
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     if (result == NULL || result->rs == NULL) return 0;
     return mysql_num_rows(result->rs);
 #else
@@ -836,7 +836,7 @@ static int result_get_rows(qdbresult_t *result)
  */
 static int result_get_row(qdbresult_t *result)
 {
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     if (result == NULL || result->rs == NULL) return 0;
     return result->cursor;
 #else
@@ -851,7 +851,7 @@ static int result_get_row(qdbresult_t *result)
  */
 static void result_free(qdbresult_t *result)
 {
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     if (result == NULL) return;
     if (result->rs != NULL) {
         if (result->fetchtype == true) {

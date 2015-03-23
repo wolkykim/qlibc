@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,10 +33,12 @@
 QUNIT_START("Test qhasharr.c by darkdh");
 
 qhasharr_t *tbl;
-char memory[512];
+char *memory;
 
 TEST("qhasharr()") {
-    tbl = qhasharr(memory, sizeof(memory));
+    int memsize = qhasharr_calculate_memsize(5);
+    memory = (char *) malloc(memsize * sizeof(char));
+    tbl = qhasharr(memory, memsize);
     ASSERT_NOT_NULL(tbl);
     int maxslots, usedslots;
     tbl->size(tbl, &maxslots, &usedslots);
@@ -115,7 +117,7 @@ TEST("getnext()") {
     }
     ASSERT_EQUAL_INT(tbl->size(tbl, NULL, NULL), TARGET_NUM);
     int idx = 0;
-    qnobj_t obj;
+    qhasharr_obj_t obj;
     for(i = 0;i < TARGET_NUM; i++) {
         ASSERT_TRUE(tbl->getnext(tbl, &obj, &idx));
         for (j = 0; j< TARGET_NUM; j++) {
@@ -135,5 +137,7 @@ TEST("getnext()") {
 
 // free table reference object.
 tbl->free(tbl);
+
+free(memory);
 
 QUNIT_END();

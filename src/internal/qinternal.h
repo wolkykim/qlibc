@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef _QINTERNAL_H
-#define _QINTERNAL_H
+#ifndef QINTERNAL_H
+#define QINTERNAL_H
 
 /*
  * Macro Functions
@@ -64,10 +64,17 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define Q_MUTEX_NEW(x,r) do {                                           \
-        x = (qmutex_t *)calloc(1, sizeof(qmutex_t));                    \
-        if(x == NULL) break;                                            \
-        memset((void*)x, 0, sizeof(qmutex_t));                          \
+typedef struct qmutex_s qmutex_t;    /*!< qlibc pthread mutex type*/
+
+struct qmutex_s {
+    pthread_mutex_t mutex;  /*!< pthread mutex */
+    pthread_t owner;        /*!< mutex owner thread id */
+    int count;              /*!< recursive lock counter */
+};
+
+#define Q_MUTEX_NEW(m,r) do {                                           \
+        if(m == NULL) break;                                            \
+        qmutex_t *x = (qmutex_t *)calloc(1, sizeof(qmutex_t));          \
         pthread_mutexattr_t _mutexattr;                                 \
         pthread_mutexattr_init(&_mutexattr);                            \
         if(r == true) {                                                 \
@@ -75,15 +82,18 @@
         }                                                               \
         int _ret = pthread_mutex_init(&(x->mutex), &_mutexattr);        \
         pthread_mutexattr_destroy(&_mutexattr);                         \
-        if(_ret != 0) {                                                 \
+        if(_ret == 0) {                                                 \
+            m = x;                                                      \
+        } else {                                                        \
             DEBUG("Q_MUTEX: can't initialize mutex. [%d]", _ret);       \
             free(x);                                                    \
-            x = NULL;                                                   \
+            m = NULL;                                                   \
         }                                                               \
     } while(0)
 
-#define Q_MUTEX_LEAVE(x) do {                                           \
-        if(x == NULL) break;                                            \
+#define Q_MUTEX_LEAVE(m) do {                                           \
+        if(m == NULL) break;                                            \
+        qmutex_t *x = (qmutex_t *)m;                                    \
         if(!pthread_equal(x->owner, pthread_self())) {                  \
             DEBUG("Q_MUTEX: unlock - owner mismatch.");                 \
         }                                                               \
@@ -92,8 +102,9 @@
     } while(0)
 
 #define MAX_MUTEX_LOCK_WAIT (5000)
-#define Q_MUTEX_ENTER(x) do {                                           \
-        if(x == NULL) break;                                            \
+#define Q_MUTEX_ENTER(m) do {                                           \
+        if(m == NULL) break;                                            \
+        qmutex_t *x = (qmutex_t *)m;                                    \
         while(true) {                                                   \
             int _ret, i;                                                \
             for(i = 0; (_ret = pthread_mutex_trylock(&(x->mutex))) != 0 \
@@ -112,8 +123,9 @@
         x->owner = pthread_self();                                      \
     } while(0)
 
-#define Q_MUTEX_DESTROY(x) do {                                         \
-        if(x == NULL) break;                                            \
+#define Q_MUTEX_DESTROY(m) do {                                         \
+        if(m == NULL) break;                                            \
+        qmutex_t *x = (qmutex_t *)m;                                    \
         if(x->count != 0) DEBUG("Q_MUTEX: mutex counter is not 0.");    \
         int _ret;                                                       \
         while((_ret = pthread_mutex_destroy(&(x->mutex))) != 0) {       \
@@ -130,32 +142,12 @@
 #define DEBUG(fmt, args...) fprintf(stderr, "[DEBUG] " fmt " (%s:%d)\n", \
                                     ##args, __FILE__, __LINE__);
 #else
-#define DEBUG(fms, args...)
+#ifdef __cplusplus
+#define DEBUG(fmt, args...) static_cast<void>(0)
+#else
+#define DEBUG(fmt, args...) (void)(0)
+#endif
 #endif  /* BUILD_DEBUG */
-
-// debug timer
-#include <sys/time.h>
-#define TIMER_START()                                                   \
-    int _swno = 0;                                                      \
-    struct timeval _tv1, _tv2;                                          \
-    gettimeofday(&_tv1, NULL)
-
-#define TIMER_STOP(prefix)  {                                           \
-        gettimeofday(&_tv2, NULL);                                      \
-        _swno++;                                                        \
-        struct timeval _diff;                                           \
-        _diff.tv_sec = _tv2.tv_sec - _tv1.tv_sec;                       \
-        if(_tv2.tv_usec >= _tv1.tv_usec) {                              \
-            _diff.tv_usec = _tv2.tv_usec - _tv1.tv_usec;                \
-        } else {                                                        \
-            _diff.tv_sec -= 1;                                          \
-            _diff.tv_usec = 1000000 - _tv1.tv_usec + _tv2.tv_usec;      \
-        }                                                               \
-        printf("TIMER(%d,%s,%d): %zus %dus (%s:%d)\n",                  \
-               getpid(), prefix, _swno, _diff.tv_sec, (int)(_diff.tv_usec), \
-               __FILE__, __LINE__);                                     \
-        gettimeofday(&_tv1, NULL);                                      \
-    }
 
 /*
  * Other internal use
@@ -168,6 +160,6 @@
 
 extern char _q_x2c(char hex_up, char hex_low);
 extern char *_q_makeword(char *str, char stop);
-extern void _q_humanOut(FILE *fp, void *data, size_t size, size_t max);
+extern void _q_textout(FILE *fp, void *data, size_t size, size_t max);
 
-#endif  /* _QINTERNAL_H */
+#endif /* QINTERNAL_H */

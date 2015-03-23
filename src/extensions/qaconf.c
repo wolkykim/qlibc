@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -210,7 +210,7 @@
 
 /* internal functions */
 static int addoptions(qaconf_t *qaconf, const qaconf_option_t *options);
-static void setdefhandler(qaconf_t *qaconf, const qaconf_cb_t *callback);
+static void setdefhandler(qaconf_t *qaconf, qaconf_cb_t *callback);
 static void setuserdata(qaconf_t *qaconf, const void *userdata);
 static int parse(qaconf_t *qaconf, const char *filepath, uint8_t flags);
 static const char *errmsg(qaconf_t *qaconf);
@@ -463,7 +463,7 @@ static int addoptions(qaconf_t *qaconf, const qaconf_option_t *options) {
  * @param qaconf qaconf_t object.
  * @param callback callback function pointer
  */
-static void setdefhandler(qaconf_t *qaconf, const qaconf_cb_t *callback) {
+static void setdefhandler(qaconf_t *qaconf, qaconf_cb_t *callback) {
     qaconf->defcb = callback;
 }
 

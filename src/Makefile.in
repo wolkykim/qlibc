@@ -1,7 +1,7 @@
 ################################################################################
 ## qLibc
 ##
-## Copyright (c) 2010-2014 Seungyoung Kim.
+## Copyright (c) 2010-2015 Seungyoung Kim.
 ## All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -65,10 +65,11 @@ QLIBCEXT_SLIBREALNAME	= ${QLIBCEXT_SLIBNAME}.${QLIBCEXT_SLIBVERSION}
 
 ## Objects List
 QLIBC_OBJS	= \
-		containers/qlist.o		\
-		containers/qlisttbl.o		\
+		containers/qtreetbl.o		\
 		containers/qhashtbl.o		\
 		containers/qhasharr.o		\
+		containers/qlisttbl.o		\
+		containers/qlist.o		\
 		containers/qvector.o		\
 		containers/qqueue.o		\
 		containers/qstack.o		\
@@ -119,16 +120,15 @@ qlibcext: ${QLIBCEXT_OBJS}
 
 install: ${INSTALL_TARGETS}
 
-HEADERS = containers/qtype.h
 install-qlibc: qlibc
 	${MKDIR_P} ${INST_INCDIR}/qlibc
 	${INSTALL_DATA} ${QLIBC_INCDIR}/qlibc.h ${INST_INCDIR}/qlibc/qlibc.h
 	${MKDIR_P} ${INST_INCDIR}/qlibc/containers/
-	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qtype.h ${INST_INCDIR}/qlibc/containers/qtype.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qhasharr.h ${INST_INCDIR}/qlibc/containers/qhasharr.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qtreetbl.h ${INST_INCDIR}/qlibc/containers/qtreetbl.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qhashtbl.h ${INST_INCDIR}/qlibc/containers/qhashtbl.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qlist.h ${INST_INCDIR}/qlibc/containers/qlist.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qhasharr.h ${INST_INCDIR}/qlibc/containers/qhasharr.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qlisttbl.h ${INST_INCDIR}/qlibc/containers/qlisttbl.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qlist.h ${INST_INCDIR}/qlibc/containers/qlist.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qqueue.h ${INST_INCDIR}/qlibc/containers/qqueue.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qstack.h ${INST_INCDIR}/qlibc/containers/qstack.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qvector.h ${INST_INCDIR}/qlibc/containers/qvector.h

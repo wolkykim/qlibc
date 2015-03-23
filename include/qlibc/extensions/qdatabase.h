@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,8 +35,8 @@
  * @file qdatabase.h
  */
 
-#ifndef _QDATABASE_H
-#define _QDATABASE_H
+#ifndef QDATABASE_H
+#define QDATABASE_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -48,7 +48,7 @@ extern "C" {
 
 /* database header files should be included before this header file. */
 #ifdef _mysql_h
-#define _Q_ENABLE_MYSQL  (1)
+#define Q_ENABLE_MYSQL  (1)
 #endif /* _mysql_h */
 
 /* types */
@@ -64,7 +64,7 @@ extern qdb_t *qdb(const char *dbtype,
  * qdbresult object structure
  */
 struct qdbresult_s {
-    /* capsulated member functions */
+    /* encapsulated member functions */
     const char *(*getstr) (qdbresult_t *result, const char *field);
     const char *(*get_str_at) (qdbresult_t *result, int idx);
     int (*getint) (qdbresult_t *result, const char *field);
@@ -77,7 +77,7 @@ struct qdbresult_s {
 
     void (*free) (qdbresult_t *result);
 
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     /* private variables for mysql database - do not access directly */
     bool fetchtype;
     MYSQL_RES  *rs;
@@ -90,7 +90,7 @@ struct qdbresult_s {
 
 /* qdb object structure */
 struct qdb_s {
-    /* capsulated member functions */
+    /* encapsulated member functions */
     bool (*open) (qdb_t *db);
     bool (*close) (qdb_t *db);
 
@@ -112,7 +112,7 @@ struct qdb_s {
     void (*free) (qdb_t *db);
 
     /* private variables - do not access directly */
-    qmutex_t *qmutex;
+    void *qmutex;
 
     bool connected;   /*!< if opened true, if closed false */
 
@@ -125,9 +125,9 @@ struct qdb_s {
         char *database;
         bool autocommit;
         bool fetchtype;
-    } info;   /*!< database connection infomation */
+    } info;   /*!< database connection information */
 
-#ifdef _Q_ENABLE_MYSQL
+#ifdef Q_ENABLE_MYSQL
     /* private variables for mysql database - do not access directly */
     MYSQL  *mysql;
 #endif
@@ -137,4 +137,4 @@ struct qdb_s {
 }
 #endif
 
-#endif /*_QDATABASE_H */
+#endif /* QDATABASE_H */

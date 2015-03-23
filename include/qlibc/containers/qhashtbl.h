@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,13 +32,12 @@
  * @file qhashtbl.h
  */
 
-#ifndef _QHASHTBL_H
-#define _QHASHTBL_H
+#ifndef QHASHTBL_H
+#define QHASHTBL_H
 
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "qtype.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,6 +45,7 @@ extern "C" {
 
 /* types */
 typedef struct qhashtbl_s qhashtbl_t;
+typedef struct qhashtbl_obj_s qhashtbl_obj_t;
 
 /* public functions */
 enum {
@@ -68,7 +68,7 @@ struct qhashtbl_s {
     char *(*getstr) (qhashtbl_t *tbl, const char *name, bool newmem);
     int64_t (*getint) (qhashtbl_t *tbl, const char *name);
 
-    bool (*getnext) (qhashtbl_t *tbl, qhnobj_t *obj, bool newmem);
+    bool (*getnext) (qhashtbl_t *tbl, qhashtbl_obj_t *obj, bool newmem);
 
     bool (*remove) (qhashtbl_t *tbl, const char *name);
 
@@ -82,14 +82,26 @@ struct qhashtbl_s {
     void (*free) (qhashtbl_t *tbl);
 
     /* private variables - do not access directly */
-    qmutex_t *qmutex;   /*!< initialized when QHASHTBL_OPT_THREADSAFE is given */
+    void *qmutex;       /*!< initialized when QHASHTBL_THREADSAFE is given */
     size_t num;         /*!< number of objects in this table */
     size_t range;       /*!< hash range, vertical number of slots */
-    qhnobj_t **slots;   /*!< slot pointer container */
+    qhashtbl_obj_t **slots;   /*!< slot pointer container */
+};
+
+/**
+ * qhashtbl object data structure
+ */
+struct qhashtbl_obj_s {
+    uint32_t hash;      /*!< 32bit-hash value of object name */
+    char *name;         /*!< object name */
+    void *data;         /*!< data */
+    size_t size;        /*!< data size */
+
+    qhashtbl_obj_t *next;     /*!< for chaining next collision object */
 };
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /*_QHASHTBL_H */
+#endif /* QHASHTBL_H */

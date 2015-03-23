@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,38 +32,77 @@
  * @file qhasharr.h
  */
 
-#ifndef _QHASHARR_H
-#define _QHASHARR_H
+#ifndef QHASHARR_H
+#define QHASHARR_H
 
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "qtype.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* tunable knobs */
-#define _Q_HASHARR_KEYSIZE (16)    /*!< knob for maximum key size. */
-#define _Q_HASHARR_VALUESIZE (32)  /*!< knob for maximum data size in a slot. */
+#define Q_HASHARR_KEYSIZE (16)    /*!< knob for maximum key size. */
+#define Q_HASHARR_VALUESIZE (32)  /*!< knob for maximum data size in a slot. */
 
 /* types */
+typedef struct qhasharr_s qhasharr_t;
 typedef struct qhasharr_slot_s qhasharr_slot_t;
 typedef struct qhasharr_data_s qhasharr_data_t;
-typedef struct qhasharr_s qhasharr_t;
+typedef struct qhasharr_obj_s qhasharr_obj_t;
 
 /* public functions */
 extern qhasharr_t *qhasharr(void *memory, size_t memsize);
 extern size_t qhasharr_calculate_memsize(int max);
 
 /**
+ * qhasharr container object
+ */
+struct qhasharr_s {
+    /* encapsulated member functions */
+    bool (*put_by_obj) (qhasharr_t *tbl, const void *key, size_t key_size,
+            const void *value, size_t size);
+    bool (*put) (qhasharr_t *tbl, const char *key, const void *value,
+                 size_t size);
+    bool (*putstr) (qhasharr_t *tbl, const char *key, const char *str);
+    bool (*putstrf) (qhasharr_t *tbl, const char *key, const char *format, ...);
+    bool (*putint) (qhasharr_t *tbl, const char *key, int64_t num);
+
+    void *(*get_by_obj) (qhasharr_t *tbl, const void *key, size_t key_size,
+            size_t *size);
+    void *(*get) (qhasharr_t *tbl, const char *key, size_t *size);
+    char *(*getstr) (qhasharr_t *tbl, const char *key);
+    int64_t (*getint) (qhasharr_t *tbl, const char *key);
+    bool (*getnext) (qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx);
+
+    bool (*remove_by_obj) (qhasharr_t *tbl, const void *key, size_t key_size);
+    bool (*remove) (qhasharr_t *tbl, const char *key);
+    bool (*remove_by_idx) (qhasharr_t *tbl, int idx);
+
+    int  (*size) (qhasharr_t *tbl, int *maxslots, int *usedslots);
+    void (*clear) (qhasharr_t *tbl);
+    bool (*debug) (qhasharr_t *tbl, FILE *out);
+    char *(*printobj) (const void *data, size_t data_size);
+
+    void (*free) (qhasharr_t *tbl);
+
+    /* private variables */
+    qhasharr_data_t *data;
+
+#ifdef BUILD_DEBUG
+    char debug_key_msg[Q_HASHARR_KEYSIZE*2+2+1]; // "0x" + '\0'
+#endif
+};
+
+/**
  * qhasharr internal data slot structure
  */
 struct qhasharr_slot_s {
     short  count;   /*!< hash collision counter. 0 indicates empty slot,
-                     -1 is used for collision resolution, -2 is used for
-                     indicating linked block */
+                         -1 is used for collision resolution, -2 is used for
+                         indicating linked block */
     uint32_t  hash; /*!< key hash. we use FNV32 */
 
     uint8_t size;   /*!< value size in this slot*/
@@ -71,17 +110,17 @@ struct qhasharr_slot_s {
 
     union {
         /*!< key/value data */
-        struct _Q_HASHARR_SLOT_KEYVAL {
-            unsigned char value[_Q_HASHARR_VALUESIZE];  /*!< value */
+        struct Q_HASHARR_SLOT_KEYVAL {
+            unsigned char value[Q_HASHARR_VALUESIZE];  /*!< value */
 
-            char key[_Q_HASHARR_KEYSIZE];  /*!< key string, can be cut */
+            char key[Q_HASHARR_KEYSIZE];  /*!< key string, can be cut */
             uint16_t  keylen;              /*!< original key length */
             unsigned char keymd5[16];      /*!< md5 hash of the key */
         } pair;
 
         /*!< extended data block, used only when the count value is -2 */
-        struct _Q_HASHARR_SLOT_EXT {
-            unsigned char value[sizeof(struct _Q_HASHARR_SLOT_KEYVAL)];
+        struct Q_HASHARR_SLOT_EXT {
+            unsigned char value[sizeof(struct Q_HASHARR_SLOT_KEYVAL)];
         } ext;
     } data;
 };
@@ -96,48 +135,17 @@ struct qhasharr_data_s {
 };
 
 /**
- * qhasharr container object
+ * qhasharr named-object data structure for user return
  */
-struct qhasharr_s {
-    /* encapsulated member functions */
-    bool (*put_by_obj) (qhasharr_t *tbl, const void *key, size_t key_size, 
-            const void *value, size_t size);
-    bool (*put) (qhasharr_t *tbl, const char *key, const void *value,
-                 size_t size);
-    bool (*putstr) (qhasharr_t *tbl, const char *key, const char *str);
-    bool (*putstrf) (qhasharr_t *tbl, const char *key, const char *format, ...);
-    bool (*putint) (qhasharr_t *tbl, const char *key, int64_t num);
-
-    void *(*get_by_obj) (qhasharr_t *tbl, const void *key, size_t key_size, 
-            size_t *size);
-    void *(*get) (qhasharr_t *tbl, const char *key, size_t *size);
-    char *(*getstr) (qhasharr_t *tbl, const char *key);
-    int64_t (*getint) (qhasharr_t *tbl, const char *key);
-    bool (*getnext) (qhasharr_t *tbl, qnobj_t *obj, int *idx);
-
-    char *(*printobj) (const void *object, size_t object_size);
-
-    bool (*remove_by_obj) (qhasharr_t *tbl, const void *key, size_t key_size);
-    bool (*remove) (qhasharr_t *tbl, const char *key);
-    bool (*remove_by_idx) (qhasharr_t *tbl, int idx);
-
-    int  (*size) (qhasharr_t *tbl, int *maxslots, int *usedslots);
-    void (*clear) (qhasharr_t *tbl);
-    bool (*debug) (qhasharr_t *tbl, FILE *out);
-
-    void (*free) (qhasharr_t *tbl);
-
-    /* private variables */
-    qhasharr_data_t *data;
-
-#ifdef BUILD_DEBUG
-    char debug_key_msg[_Q_HASHARR_KEYSIZE*2+2+1]; // "0x" + '\0'
-#endif
+struct qhasharr_obj_s {
+    char *name;         /*!< object name */
+    size_t name_size;   /*!< object name size */
+    void *data;         /*!< data */
+    size_t size;        /*!< data size */
 };
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /*_QHASHARR_H */
-
+#endif /* QHASHARR_H */

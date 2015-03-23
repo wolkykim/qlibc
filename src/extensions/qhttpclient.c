@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2014 Seungyoung Kim.
+ * Copyright (c) 2010-2015 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -789,9 +789,6 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
             if (recvsize == 0) {
                 // end of transfer
                 completed = true;
-            } else if (recvsize < 0) {
-                // parsing failure
-                break;
             }
 
             // save chunk
@@ -1226,7 +1223,7 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
     HTTP_PROTOCOL_11);
 
     // buffer out headers
-    qdlnobj_t obj;
+    qlisttbl_obj_t obj;
     memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     reqheaders->lock(reqheaders);
     while (reqheaders->getnext(reqheaders, &obj, NULL, false) == true) {
