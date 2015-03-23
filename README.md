@@ -67,7 +67,7 @@ Please refer the LICENSE document included in the package for more details.
 All container APIs have a consistent look and feel. It basically provides
 a creator function which usually returns a pointer to a container structure.
 Also, **all functions related to the container can be accessed through function
-pointers inside of the container**.
+pointers inside of the container** or traditional style direct access APIs.
 
 So, regardless of which container you use, you can simply put elements into
 a list with `pContainer->put(pContainer, ...)`. It looks like C++ classes,
