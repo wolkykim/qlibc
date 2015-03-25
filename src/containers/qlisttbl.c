@@ -117,42 +117,13 @@
  */
 #ifndef _DOXYGEN_SKIP
 
-static bool put(qlisttbl_t *tbl, const char *name, const void *data, size_t size);
-static bool putstr(qlisttbl_t *tbl, const char *name, const char *str);
-static bool putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...);
-static bool putint(qlisttbl_t *tbl, const char *name, int64_t num);
+static qlisttbl_obj_t *newobj(const char *name, const void *data, size_t size);
+static bool insertobj(qlisttbl_t *tbl, qlisttbl_obj_t *obj);
+static qlisttbl_obj_t *findobj(qlisttbl_t *tbl, const char *name, qlisttbl_obj_t *retobj);
 
-static void *get(qlisttbl_t *tbl, const char *name, size_t *size, bool newmem);
-static char *getstr(qlisttbl_t *tbl, const char *name, bool newmem);
-static int64_t getint(qlisttbl_t *tbl, const char *name);
+static bool namematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash);
+static bool namecasematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash);
 
-static qlisttbl_data_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem, size_t *numobjs);
-static void freemulti(qlisttbl_data_t *objs);
-static bool getnext(qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name, bool newmem);
-
-static size_t remove_(qlisttbl_t *tbl, const char *name);
-static bool removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj);
-
-static size_t size(qlisttbl_t *tbl);
-static void sort_(qlisttbl_t *tbl);
-static void clear(qlisttbl_t *tbl);
-
-static bool save(qlisttbl_t *tbl, const char *filepath, char sepchar, bool encode);
-static ssize_t load(qlisttbl_t *tbl, const char *filepath, char sepchar, bool decode);
-static bool debug(qlisttbl_t *tbl, FILE *out);
-
-static void lock(qlisttbl_t *tbl);
-static void unlock(qlisttbl_t *tbl);
-
-static void free_(qlisttbl_t *tbl);
-
-/* internal functions */
-static qlisttbl_obj_t *_createobj(const char *name, const void *data, size_t size);
-static bool _insertobj(qlisttbl_t *tbl, qlisttbl_obj_t *obj);
-static qlisttbl_obj_t *_findobj(qlisttbl_t *tbl, const char *name, qlisttbl_obj_t *retobj);
-
-static bool _namematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash);
-static bool _namecasematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash);
 #endif
 
 /**
@@ -187,39 +158,38 @@ qlisttbl_t *qlisttbl(int options)
     }
 
     // assign member methods.
-    tbl->put        = put;
-    tbl->putstr     = putstr;
-    tbl->putstrf    = putstrf;
-    tbl->putint     = putint;
+    tbl->put        = qlisttbl_put;
+    tbl->putstr     = qlisttbl_putstr;
+    tbl->putstrf    = qlisttbl_putstrf;
+    tbl->putint     = qlisttbl_putint;
 
-    tbl->get        = get;
-    tbl->getstr     = getstr;
-    tbl->getint     = getint;
+    tbl->get        = qlisttbl_get;
+    tbl->getstr     = qlisttbl_getstr;
+    tbl->getint     = qlisttbl_getint;
 
-    tbl->getmulti   = getmulti;
-    tbl->freemulti  = freemulti;
+    tbl->getmulti   = qlisttbl_getmulti;
+    tbl->freemulti  = qlisttbl_freemulti;
 
-    tbl->getnext    = getnext;
+    tbl->remove     = qlisttbl_remove;
+    tbl->removeobj  = qlisttbl_removeobj;
 
-    tbl->remove     = remove_;
-    tbl->removeobj  = removeobj;
+    tbl->getnext    = qlisttbl_getnext;
 
+    tbl->size       = qlisttbl_size;
+    tbl->sort       = qlisttbl_sort;
+    tbl->clear      = qlisttbl_clear;
+    tbl->save       = qlisttbl_save;
+    tbl->load       = qlisttbl_load;
 
-    tbl->size       = size;
-    tbl->sort       = sort_;
-    tbl->clear      = clear;
+    tbl->debug      = qlisttbl_debug;
 
-    tbl->save       = save;
-    tbl->load       = load;
-    tbl->debug      = debug;
+    tbl->lock       = qlisttbl_lock;
+    tbl->unlock     = qlisttbl_unlock;
 
-    tbl->lock       = lock;
-    tbl->unlock     = unlock;
-
-    tbl->free       = free_;
+    tbl->free       = qlisttbl_free;
 
     // assign private methods.
-    tbl->namematch  = _namematch;
+    tbl->namematch  = namematch;
     tbl->namecmp    = strcmp;
 
     // handle options.
@@ -235,7 +205,7 @@ qlisttbl_t *qlisttbl(int options)
         tbl->unique = true;
     }
     if (options & QLISTTBL_CASEINSENSITIVE) {
-        tbl->namematch = _namecasematch;
+        tbl->namematch = namecasematch;
         tbl->namecmp = strcasecmp;
     }
     if (options & QLISTTBL_INSERTTOP) {
@@ -278,19 +248,19 @@ qlisttbl_t *qlisttbl(int options)
  *  The default behavior is adding an object at the end of this table
  *  unless QLISTTBL_INSERTTOP option was given.
  */
-static bool put(qlisttbl_t *tbl, const char *name, const void *data, size_t size)
+bool qlisttbl_put(qlisttbl_t *tbl, const char *name, const void *data, size_t size)
 {
     // make new object table
-    qlisttbl_obj_t *obj = _createobj(name, data, size);
+    qlisttbl_obj_t *obj = newobj(name, data, size);
     if (obj == NULL) {
         return false;
     }
 
     // lock table
-    lock(tbl);
+    qlisttbl_lock(tbl);
 
     // if unique flag is set, remove same key
-    if (tbl->unique == true) remove_(tbl, name);
+    if (tbl->unique == true) qlisttbl_remove(tbl, name);
 
     // insert into table
     if (tbl->num == 0) {
@@ -305,10 +275,10 @@ static bool put(qlisttbl_t *tbl, const char *name, const void *data, size_t size
             obj->next = tbl->first;
         }
     }
-    _insertobj(tbl, obj);
+    insertobj(tbl, obj);
 
     // unlock table
-    unlock(tbl);
+    qlisttbl_unlock(tbl);
 
     return true;
 }
@@ -325,10 +295,10 @@ static bool put(qlisttbl_t *tbl, const char *name, const void *data, size_t size
  *  - ENOMEM : Memory allocation failure.
  *  - EINVAL : Invalid argument.
  */
-static bool putstr(qlisttbl_t *tbl, const char *name, const char *str)
+bool qlisttbl_putstr(qlisttbl_t *tbl, const char *name, const char *str)
 {
     size_t size = (str) ? (strlen(str) + 1) : 0;
-    return put(tbl, name, (const void *)str, size);
+    return qlisttbl_put(tbl, name, (const void *)str, size);
 }
 
 /**
@@ -343,7 +313,7 @@ static bool putstr(qlisttbl_t *tbl, const char *name, const char *str)
  *  - ENOMEM : Memory allocation failure.
  *  - EINVAL : Invalid argument.
  */
-static bool putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...)
+bool qlisttbl_putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...)
 {
     char *str;
     DYNAMIC_VSPRINTF(str, format);
@@ -352,7 +322,7 @@ static bool putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...)
         return false;
     }
 
-    bool ret = putstr(tbl, name, str);
+    bool ret = qlisttbl_putstr(tbl, name, str);
     free(str);
 
     return ret;
@@ -374,11 +344,11 @@ static bool putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...)
  *  The integer will be converted to a string object and stored as a string
  *  object.
  */
-static bool putint(qlisttbl_t *tbl, const char *name, int64_t num)
+bool qlisttbl_putint(qlisttbl_t *tbl, const char *name, int64_t num)
 {
     char str[20+1];
     snprintf(str, sizeof(str), "%"PRId64, num);
-    return putstr(tbl, name, str);
+    return qlisttbl_putstr(tbl, name, str);
 }
 
 /**
@@ -421,23 +391,23 @@ static bool putint(qlisttbl_t *tbl, const char *name, int64_t num)
  *  always set newmem flag as true to make sure it works in race condition
  *  situation.
  */
-static void *get(qlisttbl_t *tbl, const char *name, size_t *size, bool newmem)
+void *qlisttbl_get(qlisttbl_t *tbl, const char *name, size_t *size, bool newmem)
 {
     if (name == NULL) {
         errno = EINVAL;
         return NULL;
     }
 
-    lock(tbl);
+    qlisttbl_lock(tbl);
     void *data = NULL;
-    qlisttbl_obj_t *obj = _findobj(tbl, name, NULL);
+    qlisttbl_obj_t *obj = findobj(tbl, name, NULL);
     if (obj != NULL) {
         // get data
         if (newmem == true) {
             data = malloc(obj->size);
             if (data == NULL) {
                 errno = ENOMEM;
-                unlock(tbl);
+                qlisttbl_unlock(tbl);
                 return NULL;
             }
             memcpy(data, obj->data, obj->size);
@@ -448,7 +418,7 @@ static void *get(qlisttbl_t *tbl, const char *name, size_t *size, bool newmem)
         // set size
         if (size != NULL) *size = obj->size;
     }
-   unlock(tbl);
+   qlisttbl_unlock(tbl);
 
     if (data == NULL) {
         errno = ENOENT;
@@ -471,9 +441,9 @@ static void *get(qlisttbl_t *tbl, const char *name, size_t *size, bool newmem)
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
 */
-static char *getstr(qlisttbl_t *tbl, const char *name, bool newmem)
+char *qlisttbl_getstr(qlisttbl_t *tbl, const char *name, bool newmem)
 {
-    return (char *)get(tbl, name, NULL, newmem);
+    return (char *)qlisttbl_get(tbl, name, NULL, newmem);
 }
 
 /**
@@ -489,10 +459,10 @@ static char *getstr(qlisttbl_t *tbl, const char *name, bool newmem)
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  */
-static int64_t getint(qlisttbl_t *tbl, const char *name)
+int64_t qlisttbl_getint(qlisttbl_t *tbl, const char *name)
 {
     int64_t num = 0;
-    char *str = getstr(tbl, name, true);
+    char *str = qlisttbl_getstr(tbl, name, true);
     if (str != NULL) {
         num = atoll(str);
         free(str);
@@ -533,8 +503,8 @@ static int64_t getint(qlisttbl_t *tbl, const char *name)
  *  tbl->freemulti(objs);
  * @endcode
  */
-static qlisttbl_data_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
-                        size_t *numobjs)
+qlisttbl_data_t *qlisttbl_getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
+                                   size_t *numobjs)
 {
     qlisttbl_data_t *objs = NULL;  // objects container
     size_t allocobjs = 0;  // allocated number of objs
@@ -542,7 +512,7 @@ static qlisttbl_data_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
 
     qlisttbl_obj_t obj;
     memset((void *)&obj, 0, sizeof(obj)); // must be cleared before call
-    lock(tbl);
+    qlisttbl_lock(tbl);
     while (tbl->getnext(tbl, &obj, name, newmem) == true) {
         numfound++;
 
@@ -574,7 +544,7 @@ static qlisttbl_data_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
         memset((void *)newobj, '\0', sizeof(qlisttbl_data_t));
         newobj->type = 0;  // mark, end of objects
     }
-    unlock(tbl);
+    qlisttbl_unlock(tbl);
 
     // return found counter
     if (numobjs != NULL) {
@@ -602,7 +572,7 @@ static qlisttbl_data_t *getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
  *
  * @endcode
  */
-static void freemulti(qlisttbl_data_t *objs)
+void qlisttbl_freemulti(qlisttbl_data_t *objs)
 {
     if (objs == NULL) return;
 
@@ -612,6 +582,101 @@ static void freemulti(qlisttbl_data_t *objs)
     }
 
     free(objs);
+}
+
+/**
+ * qlisttbl->remove(): Remove matched objects with given name.
+ *
+ * @param tbl   qlisttbl container pointer.
+ * @param name  element name.
+ *
+ * @return a number of removed objects.
+ */
+size_t qlisttbl_remove(qlisttbl_t *tbl, const char *name)
+{
+    if (name == NULL) return false;
+
+    size_t numremoved = 0;
+
+    qlisttbl_obj_t obj;
+    memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
+    qlisttbl_lock(tbl);
+    while(qlisttbl_getnext(tbl, &obj, name, false) == true) {
+        qlisttbl_removeobj(tbl, &obj);
+        numremoved++;
+    }
+    qlisttbl_unlock(tbl);
+
+    return numremoved;
+}
+
+/**
+ * qlisttbl->removeobj(): Remove objects with given object pointer.
+ *
+ * This call is useful when you want to remove an element while traversing a
+ * table using getnext(). So the address pointed by obj maybe different than
+ * the actual object in a table, but it's ok because we'll recalculate the
+ * actual object address by referring it's links.
+ *
+ * @param tbl   qlisttbl container pointer.
+ * @param name  element name.
+ *
+ * @return true if succeed on deletion, false if failed.
+ * @retval errno will be set in error condition.
+ *  - ENOENT : No such key found.
+ *
+ * @code
+ *  qlisttbl_obj_t obj;
+ *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
+ *  tbl->lock(tbl);
+ *  while(tbl->getnext(tbl, &obj, NULL, true) == true) {
+ *    tbl->removeobj(tbl, &obj);  // this will remove all entries in the table
+ *  }
+ *  tbl->unlock(tbl);
+ * @endcode
+ */
+bool qlisttbl_removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj)
+{
+    if (obj == NULL) return false;
+
+    qlisttbl_lock(tbl);
+
+    // copy chains
+    qlisttbl_obj_t *prev = obj->prev;
+    qlisttbl_obj_t *next = obj->next;
+
+    // find this object
+    qlisttbl_obj_t *this = NULL;
+    if (prev != NULL) this = prev->next;
+    else if (next != NULL) this = next->prev;
+    else this = tbl->first;  // table has only one object.
+
+    // double check
+    if (this == NULL) {
+        qlisttbl_unlock(tbl);
+        DEBUG("qlisttbl->removeobj(): Can't veryfy object.");
+        errno = ENOENT;
+        return false;
+    }
+
+    // adjust chain links
+    if (prev == NULL) tbl->first = next; // if the object is first one
+    else prev->next = next;  // not the first one
+
+    if (next == NULL) tbl->last = prev; // if the object is last one
+    else next->prev = prev;  // not the first one
+
+    // adjust counter
+    tbl->num--;
+
+    qlisttbl_unlock(tbl);
+
+    // free object
+    free(this->name);
+    free(this->data);
+    free(this);
+
+    return true;
 }
 
 /**
@@ -661,19 +726,19 @@ static void freemulti(qlisttbl_data_t *objs)
  *  tbl->unlock(tbl);
  * @endcode
  */
-static bool getnext(qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name,
-                    bool newmem)
+bool qlisttbl_getnext(qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name,
+                             bool newmem)
 {
     if (obj == NULL) return NULL;
 
-    lock(tbl);
+    qlisttbl_lock(tbl);
 
     qlisttbl_obj_t *cont = NULL;
     if (obj->size == 0) {  // first time call
         if (name == NULL) {  // full scan
             cont = (tbl->lookupforward) ? tbl->first : tbl->last;
         } else {  // name search
-            cont = _findobj(tbl, name, NULL);
+            cont = findobj(tbl, name, NULL);
         }
     } else {  // next call
         cont = (tbl->lookupforward) ? obj->next : obj->prev;
@@ -681,7 +746,7 @@ static bool getnext(qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name,
 
     if (cont == NULL) {
         errno = ENOENT;
-        unlock(tbl);
+        qlisttbl_unlock(tbl);
         return false;
     }
 
@@ -717,7 +782,7 @@ static bool getnext(qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name,
 
         cont = (tbl->lookupforward) ? cont->next : cont->prev;
     }
-    unlock(tbl);
+    qlisttbl_unlock(tbl);
 
     if (ret == false) {
         errno = ENOENT;
@@ -727,108 +792,13 @@ static bool getnext(qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name,
 }
 
 /**
- * qlisttbl->remove(): Remove matched objects with given name.
- *
- * @param tbl   qlisttbl container pointer.
- * @param name  element name.
- *
- * @return a number of removed objects.
- */
-static size_t remove_(qlisttbl_t *tbl, const char *name)
-{
-    if (name == NULL) return false;
-
-    size_t numremoved = 0;
-
-    qlisttbl_obj_t obj;
-    memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
-    lock(tbl);
-    while(getnext(tbl, &obj, name, false) == true) {
-        removeobj(tbl, &obj);
-        numremoved++;
-    }
-    unlock(tbl);
-
-    return numremoved;
-}
-
-/**
- * qlisttbl->removeobj(): Remove objects with given object pointer.
- *
- * This call is useful when you want to remove an element while traversing a
- * table using getnext(). So the address pointed by obj maybe different than
- * the actual object in a table, but it's ok because we'll recalculate the
- * actual object address by referring it's links.
- *
- * @param tbl   qlisttbl container pointer.
- * @param name  element name.
- *
- * @return true if succeed on deletion, false if failed.
- * @retval errno will be set in error condition.
- *  - ENOENT : No such key found.
- *
- * @code
- *  qlisttbl_obj_t obj;
- *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
- *  tbl->lock(tbl);
- *  while(tbl->getnext(tbl, &obj, NULL, true) == true) {
- *    tbl->removeobj(tbl, &obj);  // this will remove all entries in the table
- *  }
- *  tbl->unlock(tbl);
- * @endcode
- */
-static bool removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj)
-{
-    if (obj == NULL) return false;
-
-    lock(tbl);
-
-    // copy chains
-    qlisttbl_obj_t *prev = obj->prev;
-    qlisttbl_obj_t *next = obj->next;
-
-    // find this object
-    qlisttbl_obj_t *this = NULL;
-    if (prev != NULL) this = prev->next;
-    else if (next != NULL) this = next->prev;
-    else this = tbl->first;  // table has only one object.
-
-    // double check
-    if (this == NULL) {
-        unlock(tbl);
-        DEBUG("qlisttbl->removeobj(): Can't veryfy object.");
-        errno = ENOENT;
-        return false;
-    }
-
-    // adjust chain links
-    if (prev == NULL) tbl->first = next; // if the object is first one
-    else prev->next = next;  // not the first one
-
-    if (next == NULL) tbl->last = prev; // if the object is last one
-    else next->prev = prev;  // not the first one
-
-    // adjust counter
-    tbl->num--;
-
-    unlock(tbl);
-
-    // free object
-    free(this->name);
-    free(this->data);
-    free(this);
-
-    return true;
-}
-
-/**
  * qlisttbl->size(): Returns the number of elements in this table.
  *
  * @param tbl qlisttbl container pointer.
  *
  * @return the number of elements in this table.
  */
-static size_t size(qlisttbl_t *tbl)
+size_t qlisttbl_size(qlisttbl_t *tbl)
 {
     return tbl->num;
 }
@@ -855,10 +825,10 @@ static size_t size(qlisttbl_t *tbl)
  *    b = 6          d = 1           a = 2
  * @endcode
  */
-static void sort_(qlisttbl_t *tbl)
+void qlisttbl_sort(qlisttbl_t *tbl)
 {
     // run bubble sort
-    lock(tbl);
+    qlisttbl_lock(tbl);
     qlisttbl_obj_t *obj1, *obj2;
     qlisttbl_obj_t tmpobj;
     int n, n2, i;
@@ -883,7 +853,7 @@ static void sort_(qlisttbl_t *tbl)
         }
         n = n2;  // skip sorted tailing elements
     }
-    unlock(tbl);
+    qlisttbl_unlock(tbl);
 }
 
 /**
@@ -891,9 +861,9 @@ static void sort_(qlisttbl_t *tbl)
  *
  * @param tbl qlisttbl container pointer.
  */
-static void clear(qlisttbl_t *tbl)
+void qlisttbl_clear(qlisttbl_t *tbl)
 {
-    lock(tbl);
+    qlisttbl_lock(tbl);
     qlisttbl_obj_t *obj;
     for (obj = tbl->first; obj != NULL;) {
         qlisttbl_obj_t *next = obj->next;
@@ -906,7 +876,7 @@ static void clear(qlisttbl_t *tbl)
     tbl->num = 0;
     tbl->first = NULL;
     tbl->last = NULL;
-    unlock(tbl);
+    qlisttbl_unlock(tbl);
 }
 
 /**
@@ -924,8 +894,8 @@ static void clear(qlisttbl_t *tbl)
  *
  * @return true if successful, otherwise returns false.
  */
-static bool save(qlisttbl_t *tbl, const char *filepath, char sepchar,
-                 bool encode)
+bool qlisttbl_save(qlisttbl_t *tbl, const char *filepath, char sepchar,
+                   bool encode)
 {
     if (filepath == NULL) {
         errno = EINVAL;
@@ -942,7 +912,7 @@ static bool save(qlisttbl_t *tbl, const char *filepath, char sepchar,
     qio_printf(fd, -1, "# %s %s\n", filepath, gmtstr);
     free(gmtstr);
 
-    lock(tbl);
+    qlisttbl_lock(tbl);
     qlisttbl_obj_t *obj;
     for (obj = tbl->first; obj; obj = obj->next) {
         char *encval;
@@ -951,7 +921,7 @@ static bool save(qlisttbl_t *tbl, const char *filepath, char sepchar,
         qio_printf(fd, -1, "%s%c%s\n", obj->name, sepchar, encval);
         if (encode == true) free(encval);
     }
-    unlock(tbl);
+    qlisttbl_unlock(tbl);
 
     close(fd);
     return true;
@@ -970,15 +940,15 @@ static bool save(qlisttbl_t *tbl, const char *filepath, char sepchar,
  *
  * @return the number of loaded entries, otherwise returns -1.
  */
-static ssize_t load(qlisttbl_t *tbl, const char *filepath, char sepchar,
-                    bool decode)
+ssize_t qlisttbl_load(qlisttbl_t *tbl, const char *filepath, char sepchar,
+                      bool decode)
 {
     // load file
     char *str = qfile_load(filepath, NULL);
     if (str == NULL) return -1;
 
     // parse
-    lock(tbl);
+    qlisttbl_lock(tbl);
     char *offset, *buf;
     int cnt = 0;
     for (offset = str; *offset != '\0'; ) {
@@ -1001,12 +971,12 @@ static ssize_t load(qlisttbl_t *tbl, const char *filepath, char sepchar,
         if (decode == true) qurl_decode(data);
 
         // add to the table.
-        put(tbl, name, data, strlen(data) + 1);
+        qlisttbl_put(tbl, name, data, strlen(data) + 1);
 
         free(name);
         free(data);
     }
-    unlock(tbl);
+    qlisttbl_unlock(tbl);
     free(str);
 
     return cnt;
@@ -1022,21 +992,21 @@ static ssize_t load(qlisttbl_t *tbl, const char *filepath, char sepchar,
  * @retval errno will be set in error condition.
  *  - EIO : Invalid output stream.
  */
-static bool debug(qlisttbl_t *tbl, FILE *out)
+bool qlisttbl_debug(qlisttbl_t *tbl, FILE *out)
 {
     if (out == NULL) {
         errno = EIO;
         return false;
     }
 
-    lock(tbl);
+    qlisttbl_lock(tbl);
     qlisttbl_obj_t *obj;
     for (obj = tbl->first; obj; obj = obj->next) {
         fprintf(out, "%s=" , obj->name);
         _q_textout(out, obj->data, obj->size, MAX_HUMANOUT);
         fprintf(out, " (%zu,%4x)\n" , obj->size, obj->hash);
     }
-    unlock(tbl);
+    qlisttbl_unlock(tbl);
 
     return true;
 }
@@ -1050,7 +1020,7 @@ static bool debug(qlisttbl_t *tbl, FILE *out)
  *  Normally explicit locking is only needed when traverse all the
  *  elements with qlisttbl->getnext().
  */
-static void lock(qlisttbl_t *tbl)
+void qlisttbl_lock(qlisttbl_t *tbl)
 {
     Q_MUTEX_ENTER(tbl->qmutex);
 }
@@ -1060,7 +1030,7 @@ static void lock(qlisttbl_t *tbl)
  *
  * @param tbl qlisttbl container pointer.
  */
-static void unlock(qlisttbl_t *tbl)
+void qlisttbl_unlock(qlisttbl_t *tbl)
 {
     Q_MUTEX_LEAVE(tbl->qmutex);
 }
@@ -1070,9 +1040,9 @@ static void unlock(qlisttbl_t *tbl)
  *
  * @param tbl qlisttbl container pointer.
  */
-static void free_(qlisttbl_t *tbl)
+void qlisttbl_free(qlisttbl_t *tbl)
 {
-    clear(tbl);
+    qlisttbl_clear(tbl);
     Q_MUTEX_DESTROY(tbl->qmutex);
     free(tbl);
 }
@@ -1080,7 +1050,7 @@ static void free_(qlisttbl_t *tbl)
 #ifndef _DOXYGEN_SKIP
 
 // lock must be obtained from caller
-static qlisttbl_obj_t *_createobj(const char *name, const void *data, size_t size)
+static qlisttbl_obj_t *newobj(const char *name, const void *data, size_t size)
 {
     if (name == NULL || data == NULL || size <= 0) {
         errno = EINVAL;
@@ -1110,7 +1080,7 @@ static qlisttbl_obj_t *_createobj(const char *name, const void *data, size_t siz
 }
 
 // lock must be obtained from caller
-static bool _insertobj(qlisttbl_t *tbl, qlisttbl_obj_t *obj)
+static bool insertobj(qlisttbl_t *tbl, qlisttbl_obj_t *obj)
 {
     // update hash
     obj->hash = qhashmurmur3_32(obj->name, strlen(obj->name));
@@ -1131,7 +1101,7 @@ static bool _insertobj(qlisttbl_t *tbl, qlisttbl_obj_t *obj)
 }
 
 // lock must be obtained from caller
-static qlisttbl_obj_t *_findobj(qlisttbl_t *tbl, const char *name, qlisttbl_obj_t *retobj)
+static qlisttbl_obj_t *findobj(qlisttbl_t *tbl, const char *name, qlisttbl_obj_t *retobj)
 {
     if (retobj != NULL) {
         memset((void *)retobj, '\0', sizeof(qlisttbl_obj_t));
@@ -1171,7 +1141,7 @@ static qlisttbl_obj_t *_findobj(qlisttbl_t *tbl, const char *name, qlisttbl_obj_
 }
 
 // key comp
-static bool _namematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash)
+static bool namematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash)
 {
     if ((obj->hash == hash) && !strcmp(obj->name, name)) {
         return true;
@@ -1179,7 +1149,7 @@ static bool _namematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash)
     return false;
 }
 
-static bool _namecasematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash)
+static bool namecasematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash)
 {
     if (!strcasecmp(obj->name, name)) {
         return true;
