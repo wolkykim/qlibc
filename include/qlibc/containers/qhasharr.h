@@ -53,7 +53,12 @@ typedef struct qhasharr_slot_s qhasharr_slot_t;
 typedef struct qhasharr_data_s qhasharr_data_t;
 typedef struct qhasharr_obj_s qhasharr_obj_t;
 
-/* public functions */
+/* member functions
+ *
+ * All the member functions can be accessed in both ways:
+ *  - tbl->put(tbl, ...);      // easier to switch the container type to other kinds.
+ *  - qhasharr_put(tbl, ...);  // where avoiding pointer overhead is preferred.
+ */
 extern qhasharr_t *qhasharr(void *memory, size_t memsize);
 extern size_t qhasharr_calculate_memsize(int max);
 
