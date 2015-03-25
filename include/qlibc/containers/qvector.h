@@ -54,6 +54,20 @@ enum {
 
 extern qvector_t *qvector(int options);
 
+extern bool qvector_add(qvector_t *vector, const void *object, size_t size);
+extern bool qvector_addstr(qvector_t *vector, const char *str);
+extern bool qvector_addstrf(qvector_t *vector, const char *format, ...);
+
+extern size_t qvector_size(qvector_t *vector);
+extern size_t qvector_datasize(qvector_t *vector);
+
+extern void *qvector_toarray(qvector_t *vector, size_t *size);
+extern char *qvector_tostring(qvector_t *vector);
+
+extern void qvector_clear(qvector_t *vector);
+extern bool qvector_debug(qvector_t *vector, FILE *out);
+extern void qvector_free(qvector_t *vector);
+
 /**
  * qvector container object
  */
@@ -63,11 +77,12 @@ struct qvector_s {
     bool (*addstr) (qvector_t *vector, const char *str);
     bool (*addstrf) (qvector_t *vector, const char *format, ...);
 
+    size_t (*size) (qvector_t *vector);
+    size_t (*datasize) (qvector_t *vector);
+
     void *(*toarray) (qvector_t *vector, size_t *size);
     char *(*tostring) (qvector_t *vector);
 
-    size_t (*size) (qvector_t *vector);
-    size_t (*datasize) (qvector_t *vector);
     void (*clear) (qvector_t *vector);
     bool (*debug) (qvector_t *vector, FILE *out);
 
