@@ -96,48 +96,12 @@
 #include "qinternal.h"
 #include "containers/qlist.h"
 
-/*
- * Member method protos
- */
 #ifndef _DOXYGEN_SKIP
-static size_t setsize(qlist_t *list, size_t max);
 
-static bool addfirst(qlist_t *list, const void *data, size_t size);
-static bool addlast(qlist_t *list, const void *data, size_t size);
-static bool addat(qlist_t *list, int index, const void *data, size_t size);
+static void *get_at(qlist_t *list, int index, size_t *size, bool newmem, bool remove);
+static qlist_obj_t *get_obj(qlist_t *list, int index);
+static bool remove_obj(qlist_t *list, qlist_obj_t *obj);
 
-static void *getfirst(qlist_t *list, size_t *size, bool newmem);
-static void *getlast(qlist_t *list, size_t *size, bool newmem);
-static void *getat(qlist_t *list, int index, size_t *size, bool newmem);
-static bool getnext(qlist_t *list, qlist_obj_t *obj, bool newmem);
-
-static void *popfirst(qlist_t *list, size_t *size);
-static void *poplast(qlist_t *list, size_t *size);
-static void *popat(qlist_t *list, int index, size_t *size);
-
-static bool removefirst(qlist_t *list);
-static bool removelast(qlist_t *list);
-static bool removeat(qlist_t *list, int index);
-
-static size_t size(qlist_t *list);
-static size_t datasize(qlist_t *list);
-static void reverse(qlist_t *list);
-static void clear(qlist_t *list);
-
-static void *toarray(qlist_t *list, size_t *size);
-static char *tostring(qlist_t *list);
-static bool debug(qlist_t *list, FILE *out);
-
-static void lock(qlist_t *list);
-static void unlock(qlist_t *list);
-
-static void free_(qlist_t *list);
-
-/* internal functions */
-static void *_get_at(qlist_t *list, int index, size_t *size, bool newmem,
-bool remove);
-static qlist_obj_t *_get_obj(qlist_t *list, int index);
-static bool _remove_obj(qlist_t *list, qlist_obj_t *obj);
 #endif
 
 /**
@@ -175,39 +139,39 @@ qlist_t *qlist(int options) {
     }
 
     // member methods
-    list->setsize = setsize;
+    list->setsize = qlist_setsize;
 
-    list->addfirst = addfirst;
-    list->addlast = addlast;
-    list->addat = addat;
+    list->addfirst = qlist_addfirst;
+    list->addlast = qlist_addlast;
+    list->addat = qlist_addat;
 
-    list->getfirst = getfirst;
-    list->getlast = getlast;
-    list->getat = getat;
-    list->getnext = getnext;
+    list->getfirst = qlist_getfirst;
+    list->getlast = qlist_getlast;
+    list->getat = qlist_getat;
+    list->getnext = qlist_getnext;
 
-    list->popfirst = popfirst;
-    list->poplast = poplast;
-    list->popat = popat;
+    list->popfirst = qlist_popfirst;
+    list->poplast = qlist_poplast;
+    list->popat = qlist_popat;
 
-    list->removefirst = removefirst;
-    list->removelast = removelast;
-    list->removeat = removeat;
+    list->removefirst = qlist_removefirst;
+    list->removelast = qlist_removelast;
+    list->removeat = qlist_removeat;
 
-    list->reverse = reverse;
-    list->clear = clear;
+    list->reverse = qlist_reverse;
+    list->clear = qlist_clear;
 
-    list->size = size;
-    list->datasize = datasize;
+    list->size = qlist_size;
+    list->datasize = qlist_datasize;
 
-    list->toarray = toarray;
-    list->tostring = tostring;
-    list->debug = debug;
+    list->toarray = qlist_toarray;
+    list->tostring = qlist_tostring;
+    list->debug = qlist_debug;
 
-    list->lock = lock;
-    list->unlock = unlock;
+    list->lock = qlist_lock;
+    list->unlock = qlist_unlock;
 
-    list->free = free_;
+    list->free = qlist_free;
 
     return list;
 }
@@ -223,11 +187,11 @@ qlist_t *qlist(int options) {
  * @note
  *  The default maximum number of elements is unlimited.
  */
-static size_t setsize(qlist_t *list, size_t max) {
-    lock(list);
+size_t qlist_setsize(qlist_t *list, size_t max) {
+    qlist_lock(list);
     size_t old = list->max;
     list->max = max;
-    unlock(list);
+    qlist_unlock(list);
     return old;
 }
 
@@ -254,8 +218,8 @@ static size_t setsize(qlist_t *list, size_t max) {
  *  list->addfirst(list, &obj, sizeof(struct my_obj));
  * @endcode
  */
-static bool addfirst(qlist_t *list, const void *data, size_t size) {
-    return addat(list, 0, data, size);
+bool qlist_addfirst(qlist_t *list, const void *data, size_t size) {
+    return qlist_addat(list, 0, data, size);
 }
 
 /**
@@ -272,8 +236,8 @@ static bool addfirst(qlist_t *list, const void *data, size_t size) {
  *  - EINVAL  : Invalid argument.
  *  - ENOMEM  : Memory allocation failure.
  */
-static bool addlast(qlist_t *list, const void *data, size_t size) {
-    return addat(list, -1, data, size);
+bool qlist_addlast(qlist_t *list, const void *data, size_t size) {
+    return qlist_addat(list, -1, data, size);
 }
 
 /**
@@ -309,19 +273,19 @@ static bool addlast(qlist_t *list, const void *data, size_t size) {
  * @note
  *  Index starts from 0.
  */
-static bool addat(qlist_t *list, int index, const void *data, size_t size) {
+bool qlist_addat(qlist_t *list, int index, const void *data, size_t size) {
     // check arguments
     if (data == NULL || size <= 0) {
         errno = EINVAL;
         return false;
     }
 
-    lock(list);
+    qlist_lock(list);
 
     // check maximum number of allowed elements if set
     if (list->max > 0 && list->num >= list->max) {
         errno = ENOBUFS;
-        unlock(list);
+        qlist_unlock(list);
         return false;
     }
 
@@ -330,7 +294,7 @@ static bool addat(qlist_t *list, int index, const void *data, size_t size) {
         index = (list->num + index) + 1;  // -1 is same as addlast()
     if (index < 0 || index > list->num) {
         // out of bound
-        unlock(list);
+        qlist_unlock(list);
         errno = ERANGE;
         return false;
     }
@@ -338,7 +302,7 @@ static bool addat(qlist_t *list, int index, const void *data, size_t size) {
     // duplicate object
     void *dup_data = malloc(size);
     if (dup_data == NULL) {
-        unlock(list);
+        qlist_unlock(list);
         errno = ENOMEM;
         return false;
     }
@@ -348,7 +312,7 @@ static bool addat(qlist_t *list, int index, const void *data, size_t size) {
     qlist_obj_t *obj = (qlist_obj_t *) malloc(sizeof(qlist_obj_t));
     if (obj == NULL) {
         free(dup_data);
-        unlock(list);
+        qlist_unlock(list);
         errno = ENOMEM;
         return false;
     }
@@ -376,12 +340,12 @@ static bool addat(qlist_t *list, int index, const void *data, size_t size) {
             list->first = obj;
     } else {
         // add at the middle of list
-        qlist_obj_t *tgt = _get_obj(list, index);
+        qlist_obj_t *tgt = get_obj(list, index);
         if (tgt == NULL) {
             // should not be happened.
             free(dup_data);
             free(obj);
-            unlock(list);
+            qlist_unlock(list);
             errno = EAGAIN;
             return false;
         }
@@ -396,7 +360,7 @@ static bool addat(qlist_t *list, int index, const void *data, size_t size) {
     list->datasum += size;
     list->num++;
 
-    unlock(list);
+    qlist_unlock(list);
 
     return true;
 }
@@ -422,8 +386,8 @@ static bool addat(qlist_t *list, int index, const void *data, size_t size) {
  *  }
  * @endcode
  */
-static void *getfirst(qlist_t *list, size_t *size, bool newmem) {
-    return getat(list, 0, size, newmem);
+void *qlist_getfirst(qlist_t *list, size_t *size, bool newmem) {
+    return qlist_getat(list, 0, size, newmem);
 }
 
 /**
@@ -438,8 +402,8 @@ static void *getfirst(qlist_t *list, size_t *size, bool newmem) {
  *        ENOENT : List is empty.
  *        ENOMEM : Memory allocation failure.
  */
-static void *getlast(qlist_t *list, size_t *size, bool newmem) {
-    return getat(list, -1, size, newmem);
+void *qlist_getlast(qlist_t *list, size_t *size, bool newmem) {
+    return qlist_getat(list, -1, size, newmem);
 }
 
 /**
@@ -469,8 +433,121 @@ static void *getlast(qlist_t *list, size_t *size, bool newmem) {
  *  stack. For example, index -1 is same as getlast() and index 0 is same as
  *  getfirst();
  */
-static void *getat(qlist_t *list, int index, size_t *size, bool newmem) {
-    return _get_at(list, index, size, newmem, false);
+void *qlist_getat(qlist_t *list, int index, size_t *size, bool newmem) {
+    return get_at(list, index, size, newmem, false);
+}
+
+/**
+ * qlist->popfirst(): Returns and remove the first element in this list.
+ *
+ * @param list  qlist_t container pointer.
+ * @param size  if size is not NULL, element size will be stored.
+ *
+ * @return a pointer of malloced element, otherwise returns NULL.
+ * @retval errno will be set in error condition.
+ *  -ENOENT : List is empty.
+ *  -ENOMEM : Memory allocation failure.
+ */
+void *qlist_popfirst(qlist_t *list, size_t *size) {
+    return qlist_popat(list, 0, size);
+}
+
+/**
+ * qlist->getlast(): Returns and remove the last element in this list.
+ *
+ * @param list  qlist_t container pointer.
+ * @param size  if size is not NULL, element size will be stored.
+ *
+ * @return a pointer of malloced element, otherwise returns NULL.
+ * @retval errno will be set in error condition.
+ *  -ENOENT : List is empty.
+ *  -ENOMEM : Memory allocation failure.
+ */
+void *qlist_poplast(qlist_t *list, size_t *size) {
+    return qlist_popat(list, -1, size);
+}
+
+/**
+ * qlist->popat(): Returns and remove the element at the specified
+ * position in this list.
+ *
+ * @param list   qlist_t container pointer.
+ * @param index  index at which the specified element is to be inserted
+ * @param size   if size is not NULL, element size will be stored.
+ *
+ * @return a pointer of malloced element, otherwise returns NULL.
+ * @retval errno will be set in error condition.
+ *  -ERANGE : Index out of range.
+ *  -ENOMEM : Memory allocation failure.
+ *
+ * @code
+ *                     first           last
+ *  Linked-list        [ A ]<=>[ B ]<=>[ C ]
+ *  (positive index)     0       1       2
+ *  (negative index)    -3      -2      -1
+ * @endcode
+ *
+ * @note
+ *  Negative index can be used for addressing a element from the end in this
+ *  stack. For example, index -1 is same as poplast() and index 0 is same as
+ *  popfirst();
+ */
+void *qlist_popat(qlist_t *list, int index, size_t *size) {
+    return get_at(list, index, size, true, true);
+}
+
+/**
+ * qlist->removefirst(): Removes the first element in this list.
+ *
+ * @param list  qlist_t container pointer.
+ *
+ * @return a number of removed objects.
+ * @retval errno will be set in error condition.
+ *  -ENOENT : List is empty.
+ */
+bool qlist_removefirst(qlist_t *list) {
+    return qlist_removeat(list, 0);
+}
+
+/**
+ * qlist->removelast(): Removes the last element in this list.
+ *
+ * @param list  qlist_t container pointer.
+ *
+ * @return a number of removed objects.
+ * @retval errno will be set in error condition.
+ *  -ENOENT : List is empty.
+ */
+bool qlist_removelast(qlist_t *list) {
+    return qlist_removeat(list, -1);
+}
+
+/**
+ * qlist->removeat(): Removes the element at the specified position in
+ * this list.
+ *
+ * @param list   qlist_t container pointer.
+ * @param index  index at which the specified element is to be removed.
+ *
+ * @return a number of removed objects.
+ * @retval errno will be set in error condition.
+ *  -ERANGE : Index out of range.
+ */
+bool qlist_removeat(qlist_t *list, int index) {
+    qlist_lock(list);
+
+    // get object pointer
+    qlist_obj_t *obj = get_obj(list, index);
+    if (obj == NULL) {
+        qlist_unlock(list);
+        return false;
+    }
+
+    bool ret = remove_obj(list, obj);
+
+    qlist_unlock(list);
+
+    return ret;
 }
 
 /**
@@ -503,11 +580,11 @@ static void *getat(qlist_t *list, int index, size_t *size, bool newmem) {
  *  list->unlock(list); // release lock.
  * @endcode
  */
-static bool getnext(qlist_t *list, qlist_obj_t *obj, bool newmem) {
+bool qlist_getnext(qlist_t *list, qlist_obj_t *obj, bool newmem) {
     if (obj == NULL)
         return NULL;
 
-    lock(list);
+    qlist_lock(list);
 
     qlist_obj_t *cont = NULL;
     if (obj->size == 0)
@@ -517,7 +594,7 @@ static bool getnext(qlist_t *list, qlist_obj_t *obj, bool newmem) {
 
     if (cont == NULL) {
         errno = ENOENT;
-        unlock(list);
+        qlist_unlock(list);
         return false;
     }
 
@@ -540,120 +617,7 @@ static bool getnext(qlist_t *list, qlist_obj_t *obj, bool newmem) {
         break;
     }
 
-    unlock(list);
-    return ret;
-}
-
-/**
- * qlist->popfirst(): Returns and remove the first element in this list.
- *
- * @param list  qlist_t container pointer.
- * @param size  if size is not NULL, element size will be stored.
- *
- * @return a pointer of malloced element, otherwise returns NULL.
- * @retval errno will be set in error condition.
- *  -ENOENT : List is empty.
- *  -ENOMEM : Memory allocation failure.
- */
-static void *popfirst(qlist_t *list, size_t *size) {
-    return popat(list, 0, size);
-}
-
-/**
- * qlist->getlast(): Returns and remove the last element in this list.
- *
- * @param list  qlist_t container pointer.
- * @param size  if size is not NULL, element size will be stored.
- *
- * @return a pointer of malloced element, otherwise returns NULL.
- * @retval errno will be set in error condition.
- *  -ENOENT : List is empty.
- *  -ENOMEM : Memory allocation failure.
- */
-static void *poplast(qlist_t *list, size_t *size) {
-    return popat(list, -1, size);
-}
-
-/**
- * qlist->popat(): Returns and remove the element at the specified
- * position in this list.
- *
- * @param list   qlist_t container pointer.
- * @param index  index at which the specified element is to be inserted
- * @param size   if size is not NULL, element size will be stored.
- *
- * @return a pointer of malloced element, otherwise returns NULL.
- * @retval errno will be set in error condition.
- *  -ERANGE : Index out of range.
- *  -ENOMEM : Memory allocation failure.
- *
- * @code
- *                     first           last
- *  Linked-list        [ A ]<=>[ B ]<=>[ C ]
- *  (positive index)     0       1       2
- *  (negative index)    -3      -2      -1
- * @endcode
- *
- * @note
- *  Negative index can be used for addressing a element from the end in this
- *  stack. For example, index -1 is same as poplast() and index 0 is same as
- *  popfirst();
- */
-static void *popat(qlist_t *list, int index, size_t *size) {
-    return _get_at(list, index, size, true, true);
-}
-
-/**
- * qlist->removefirst(): Removes the first element in this list.
- *
- * @param list  qlist_t container pointer.
- *
- * @return a number of removed objects.
- * @retval errno will be set in error condition.
- *  -ENOENT : List is empty.
- */
-static bool removefirst(qlist_t *list) {
-    return removeat(list, 0);
-}
-
-/**
- * qlist->removelast(): Removes the last element in this list.
- *
- * @param list  qlist_t container pointer.
- *
- * @return a number of removed objects.
- * @retval errno will be set in error condition.
- *  -ENOENT : List is empty.
- */
-static bool removelast(qlist_t *list) {
-    return removeat(list, -1);
-}
-
-/**
- * qlist->removeat(): Removes the element at the specified position in
- * this list.
- *
- * @param list   qlist_t container pointer.
- * @param index  index at which the specified element is to be removed.
- *
- * @return a number of removed objects.
- * @retval errno will be set in error condition.
- *  -ERANGE : Index out of range.
- */
-static bool removeat(qlist_t *list, int index) {
-    lock(list);
-
-    // get object pointer
-    qlist_obj_t *obj = _get_obj(list, index);
-    if (obj == NULL) {
-        unlock(list);
-        return false;
-    }
-
-    bool ret = _remove_obj(list, obj);
-
-    unlock(list);
-
+    qlist_unlock(list);
     return ret;
 }
 
@@ -664,7 +628,7 @@ static bool removeat(qlist_t *list, int index) {
  *
  * @return the number of elements in this list.
  */
-static size_t size(qlist_t *list) {
+size_t qlist_size(qlist_t *list) {
     return list->num;
 }
 
@@ -675,7 +639,7 @@ static size_t size(qlist_t *list) {
  *
  * @return the sum of total element size.
  */
-static size_t datasize(qlist_t *list) {
+size_t qlist_datasize(qlist_t *list) {
     return list->datasum;
 }
 
@@ -684,8 +648,8 @@ static size_t datasize(qlist_t *list) {
  *
  * @param list  qlist_t container pointer.
  */
-static void reverse(qlist_t *list) {
-    lock(list);
+void qlist_reverse(qlist_t *list) {
+    qlist_lock(list);
     qlist_obj_t *obj;
     for (obj = list->first; obj;) {
         qlist_obj_t *next = obj->next;
@@ -698,7 +662,7 @@ static void reverse(qlist_t *list) {
     list->first = list->last;
     list->last = obj;
 
-    unlock(list);
+    qlist_unlock(list);
 }
 
 /**
@@ -706,8 +670,8 @@ static void reverse(qlist_t *list) {
  *
  * @param list  qlist_t container pointer.
  */
-static void clear(qlist_t *list) {
-    lock(list);
+void qlist_clear(qlist_t *list) {
+    qlist_lock(list);
     qlist_obj_t *obj;
     for (obj = list->first; obj;) {
         qlist_obj_t *next = obj->next;
@@ -720,7 +684,7 @@ static void clear(qlist_t *list) {
     list->datasum = 0;
     list->first = NULL;
     list->last = NULL;
-    unlock(list);
+    qlist_unlock(list);
 }
 
 /**
@@ -736,7 +700,7 @@ static void clear(qlist_t *list) {
  *  -ENOENT : List is empty.
  *  -ENOMEM : Memory allocation failure.
  */
-static void *toarray(qlist_t *list, size_t *size) {
+void *qlist_toarray(qlist_t *list, size_t *size) {
     if (list->num <= 0) {
         if (size != NULL)
             *size = 0;
@@ -744,11 +708,11 @@ static void *toarray(qlist_t *list, size_t *size) {
         return NULL;
     }
 
-    lock(list);
+    qlist_lock(list);
 
     void *chunk = malloc(list->datasum);
     if (chunk == NULL) {
-        unlock(list);
+        qlist_unlock(list);
         errno = ENOMEM;
         return NULL;
     }
@@ -759,7 +723,7 @@ static void *toarray(qlist_t *list, size_t *size) {
         memcpy(dp, obj->data, obj->size);
         dp += obj->size;
     }
-    unlock(list);
+    qlist_unlock(list);
 
     if (size != NULL)
         *size = list->datasum;
@@ -781,17 +745,17 @@ static void *toarray(qlist_t *list, size_t *size) {
  * @note
  *  Return string is always terminated by '\0'.
  */
-static char *tostring(qlist_t *list) {
+char *qlist_tostring(qlist_t *list) {
     if (list->num <= 0) {
         errno = ENOENT;
         return NULL;
     }
 
-    lock(list);
+    qlist_lock(list);
 
     void *chunk = malloc(list->datasum + 1);
     if (chunk == NULL) {
-        unlock(list);
+        qlist_unlock(list);
         errno = ENOMEM;
         return NULL;
     }
@@ -807,7 +771,7 @@ static char *tostring(qlist_t *list) {
         dp += size;
     }
     *((char *) dp) = '\0';
-    unlock(list);
+    qlist_unlock(list);
 
     return (char *) chunk;
 }
@@ -822,13 +786,13 @@ static char *tostring(qlist_t *list) {
  * @retval errno will be set in error condition.
  *  -EIO  : Invalid output stream.
  */
-static bool debug(qlist_t *list, FILE *out) {
+bool qlist_debug(qlist_t *list, FILE *out) {
     if (out == NULL) {
         errno = EIO;
         return false;
     }
 
-    lock(list);
+    qlist_lock(list);
     qlist_obj_t *obj;
     int i;
     for (i = 0, obj = list->first; obj; obj = obj->next, i++) {
@@ -836,7 +800,7 @@ static bool debug(qlist_t *list, FILE *out) {
         _q_textout(out, obj->data, obj->size, MAX_HUMANOUT);
         fprintf(out, " (%zu)\n", obj->size);
     }
-    unlock(list);
+    qlist_unlock(list);
 
     return true;
 }
@@ -850,7 +814,7 @@ static bool debug(qlist_t *list, FILE *out) {
  *  From user side, normally locking operation is only needed when traverse all
  *  elements using qlist->getnext().
  */
-static void lock(qlist_t *list) {
+void qlist_lock(qlist_t *list) {
     Q_MUTEX_ENTER(list->qmutex);
 }
 
@@ -859,7 +823,7 @@ static void lock(qlist_t *list) {
  *
  * @param list  qlist_t container pointer.
  */
-static void unlock(qlist_t *list) {
+void qlist_unlock(qlist_t *list) {
     Q_MUTEX_LEAVE(list->qmutex);
 }
 
@@ -868,8 +832,8 @@ static void unlock(qlist_t *list) {
  *
  * @param list  qlist_t container pointer.
  */
-static void free_(qlist_t *list) {
-    clear(list);
+void qlist_free(qlist_t *list) {
+    qlist_clear(list);
     Q_MUTEX_DESTROY(list->qmutex);
 
     free(list);
@@ -877,14 +841,14 @@ static void free_(qlist_t *list) {
 
 #ifndef _DOXYGEN_SKIP
 
-static void *_get_at(qlist_t *list, int index, size_t *size, bool newmem,
+static void *get_at(qlist_t *list, int index, size_t *size, bool newmem,
 bool remove) {
-    lock(list);
+    qlist_lock(list);
 
     // get object pointer
-    qlist_obj_t *obj = _get_obj(list, index);
+    qlist_obj_t *obj = get_obj(list, index);
     if (obj == NULL) {
-        unlock(list);
+        qlist_unlock(list);
         return false;
     }
 
@@ -893,7 +857,7 @@ bool remove) {
     if (newmem == true) {
         data = malloc(obj->size);
         if (data == NULL) {
-            unlock(list);
+            qlist_unlock(list);
             errno = ENOMEM;
             return false;
         }
@@ -906,19 +870,19 @@ bool remove) {
 
     // remove if necessary
     if (remove == true) {
-        if (_remove_obj(list, obj) == false) {
+        if (remove_obj(list, obj) == false) {
             if (newmem == true)
                 free(data);
             data = NULL;
         }
     }
 
-    unlock(list);
+    qlist_unlock(list);
 
     return data;
 }
 
-static qlist_obj_t *_get_obj(qlist_t *list, int index) {
+static qlist_obj_t *get_obj(qlist_t *list, int index) {
     // index adjustment
     if (index < 0)
         index = list->num + index;
@@ -960,7 +924,7 @@ static qlist_obj_t *_get_obj(qlist_t *list, int index) {
     return NULL;
 }
 
-static bool _remove_obj(qlist_t *list, qlist_obj_t *obj) {
+static bool remove_obj(qlist_t *list, qlist_obj_t *obj) {
     if (obj == NULL)
         return false;
 

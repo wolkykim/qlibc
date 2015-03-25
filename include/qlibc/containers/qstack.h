@@ -47,12 +47,37 @@ extern "C" {
 /* types */
 typedef struct qstack_s qstack_t;
 
-/* public functions */
 enum {
     QSTACK_THREADSAFE = (QLIST_THREADSAFE)  /*!< make it thread-safe */
 };
 
+/* member functions
+ *
+ * All the member functions can be accessed in both ways:
+ *  - tbl->push(tbl, ...);    // easier to switch the container type to other kinds.
+ *  - qstack_push(tbl, ...);  // where avoiding pointer overhead is preferred.
+ */
 extern qstack_t *qstack(int options);
+extern size_t qstack_setsize(qstack_t *stack, size_t max);
+
+extern bool qstack_push(qstack_t *stack, const void *data, size_t size);
+extern bool qstack_pushstr(qstack_t *stack, const char *str);
+extern bool qstack_pushint(qstack_t *stack, int64_t num);
+
+extern void *qstack_pop(qstack_t *stack, size_t *size);
+extern char *qstack_popstr(qstack_t *stack);
+extern int64_t qstack_popint(qstack_t *stack);
+extern void *qstack_popat(qstack_t *stack, int index, size_t *size);
+
+extern void *qstack_get(qstack_t *stack, size_t *size, bool newmem);
+extern char *qstack_getstr(qstack_t *stack);
+extern int64_t qstack_getint(qstack_t *stack);
+extern void *qstack_getat(qstack_t *stack, int index, size_t *size, bool newmem);
+
+extern size_t qstack_size(qstack_t *stack);
+extern void qstack_clear(qstack_t *stack);
+extern bool qstack_debug(qstack_t *stack, FILE *out);
+extern void qstack_free(qstack_t *stack);
 
 /**
  * qstack container object structure

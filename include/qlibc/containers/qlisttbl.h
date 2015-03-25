@@ -48,7 +48,6 @@ typedef struct qlisttbl_s qlisttbl_t;
 typedef struct qlisttbl_obj_s qlisttbl_obj_t;
 typedef struct qlisttbl_data_s qlisttbl_data_t;
 
-/* public functions */
 enum {
     QLISTTBL_THREADSAFE      = (0x01),      /*!< make it thread-safe */
     QLISTTBL_UNIQUE          = (0x01 << 1), /*!< keys are unique */
@@ -57,7 +56,45 @@ enum {
     QLISTTBL_LOOKUPFORWARD   = (0x01 << 4), /*!< find key from the top (default: backward) */
 };
 
+/* member functions
+ *
+ * All the member functions can be accessed in both ways:
+ *  - tbl->put(tbl, ...);      // easier to switch the container type to other kinds.
+ *  - qlisttbl_put(tbl, ...);  // where avoiding pointer overhead is preferred.
+ */
 extern qlisttbl_t *qlisttbl(int options);  /*!< qlisttbl constructor */
+
+extern bool qlisttbl_put(qlisttbl_t *tbl, const char *name, const void *data, size_t size);
+extern bool qlisttbl_putstr(qlisttbl_t *tbl, const char *name, const char *str);
+extern bool qlisttbl_putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...);
+extern bool qlisttbl_putint(qlisttbl_t *tbl, const char *name, int64_t num);
+
+extern void *qlisttbl_get(qlisttbl_t *tbl, const char *name, size_t *size, bool newmem);
+extern char *qlisttbl_getstr(qlisttbl_t *tbl, const char *name, bool newmem);
+extern int64_t qlisttbl_getint(qlisttbl_t *tbl, const char *name);
+
+extern qlisttbl_data_t *qlisttbl_getmulti(qlisttbl_t *tbl, const char *name, bool newmem, size_t *numobjs);
+extern void qlisttbl_freemulti(qlisttbl_data_t *objs);
+
+extern size_t qlisttbl_remove(qlisttbl_t *tbl, const char *name);
+extern bool qlisttbl_removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj);
+
+extern bool qlisttbl_getnext(qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name, bool newmem);
+
+extern size_t qlisttbl_size(qlisttbl_t *tbl);
+extern void qlisttbl_sort(qlisttbl_t *tbl);
+extern void qlisttbl_clear(qlisttbl_t *tbl);
+extern bool qlisttbl_save(qlisttbl_t *tbl, const char *filepath, char sepchar, bool encode);
+extern ssize_t qlisttbl_load(qlisttbl_t *tbl, const char *filepath, char sepchar, bool decode);
+
+extern bool qlisttbl_debug(qlisttbl_t *tbl, FILE *out);
+
+extern void qlisttbl_lock(qlisttbl_t *tbl);
+extern void qlisttbl_unlock(qlisttbl_t *tbl);
+
+extern void qlisttbl_free(qlisttbl_t *tbl);
+
+
 
 /**
  *  qlisttbl container structure
@@ -76,10 +113,10 @@ struct qlisttbl_s {
     qlisttbl_data_t *(*getmulti) (qlisttbl_t *tbl, const char *name, bool newmem, size_t *numobjs);
     void (*freemulti) (qlisttbl_data_t *objs);
 
-    bool (*getnext) (qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name, bool newmem);
-
     size_t (*remove) (qlisttbl_t *tbl, const char *name);
     bool (*removeobj) (qlisttbl_t *tbl, const qlisttbl_obj_t *obj);
+
+    bool (*getnext) (qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name, bool newmem);
 
     size_t (*size) (qlisttbl_t *tbl);
     void (*sort) (qlisttbl_t *tbl);
