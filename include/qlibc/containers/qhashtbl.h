@@ -95,9 +95,9 @@ struct qhashtbl_s {
     char *(*getstr) (qhashtbl_t *tbl, const char *name, bool newmem);
     int64_t (*getint) (qhashtbl_t *tbl, const char *name);
 
-    bool (*getnext) (qhashtbl_t *tbl, qhashtbl_obj_t *obj, bool newmem);
-
     bool (*remove) (qhashtbl_t *tbl, const char *name);
+
+    bool (*getnext) (qhashtbl_t *tbl, qhashtbl_obj_t *obj, bool newmem);
 
     size_t (*size) (qhashtbl_t *tbl);
     void (*clear) (qhashtbl_t *tbl);

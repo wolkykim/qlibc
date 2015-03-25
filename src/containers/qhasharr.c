@@ -148,7 +148,6 @@
 
 #ifndef _DOXYGEN_SKIP
 
-// internal usages
 static qhasharr_slot_t* get_slots(qhasharr_t *tbl);
 static int find_avail(qhasharr_t *tbl, int startidx);
 static int get_idx(qhasharr_t *tbl, const char *key, unsigned int hash);

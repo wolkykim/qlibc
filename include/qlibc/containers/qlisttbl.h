@@ -113,10 +113,10 @@ struct qlisttbl_s {
     qlisttbl_data_t *(*getmulti) (qlisttbl_t *tbl, const char *name, bool newmem, size_t *numobjs);
     void (*freemulti) (qlisttbl_data_t *objs);
 
-    bool (*getnext) (qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name, bool newmem);
-
     size_t (*remove) (qlisttbl_t *tbl, const char *name);
     bool (*removeobj) (qlisttbl_t *tbl, const qlisttbl_obj_t *obj);
+
+    bool (*getnext) (qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name, bool newmem);
 
     size_t (*size) (qlisttbl_t *tbl);
     void (*sort) (qlisttbl_t *tbl);

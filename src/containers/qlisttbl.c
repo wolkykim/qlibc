@@ -112,9 +112,7 @@
 #include "utilities/qstring.h"
 #include "utilities/qtime.h"
 #include "containers/qlisttbl.h"
-/*
- * Member method protos
- */
+
 #ifndef _DOXYGEN_SKIP
 
 static qlisttbl_obj_t *newobj(const char *name, const void *data, size_t size);
