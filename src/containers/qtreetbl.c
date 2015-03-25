@@ -871,7 +871,6 @@ static bool is_red(qtreetbl_obj_t *obj) {
 }
 
 static qtreetbl_obj_t *flip_color(qtreetbl_obj_t *obj) {
-    DEBUG("flip_color");
     obj->red = !(obj->red);
     obj->left->red = !(obj->left->red);
     obj->right->red = !(obj->right->red);
@@ -879,7 +878,6 @@ static qtreetbl_obj_t *flip_color(qtreetbl_obj_t *obj) {
 }
 
 static qtreetbl_obj_t *rotate_left(qtreetbl_obj_t *obj) {
-    DEBUG("rotate_left");
     qtreetbl_obj_t *x = obj->right;
     obj->right = x->left;
     x->left = obj;
@@ -889,7 +887,6 @@ static qtreetbl_obj_t *rotate_left(qtreetbl_obj_t *obj) {
 }
 
 static qtreetbl_obj_t *rotate_right(qtreetbl_obj_t *obj) {
-    DEBUG("rotate_right");
     qtreetbl_obj_t *x = obj->left;
     obj->left = x->right;
     x->right = obj;
@@ -899,7 +896,6 @@ static qtreetbl_obj_t *rotate_right(qtreetbl_obj_t *obj) {
 }
 
 static qtreetbl_obj_t *move_red_left(qtreetbl_obj_t *obj) {
-    DEBUG("move_red_left");
     flip_color(obj);
     if (obj->right && is_red(obj->right->left)) {
         obj->right = rotate_right(obj->right);
@@ -910,7 +906,6 @@ static qtreetbl_obj_t *move_red_left(qtreetbl_obj_t *obj) {
 }
 
 static qtreetbl_obj_t *move_red_right(qtreetbl_obj_t *obj) {
-    DEBUG("move_red_right");
     flip_color(obj);
     if (obj->left && is_red(obj->left->left)) {
         obj = rotate_right(obj);

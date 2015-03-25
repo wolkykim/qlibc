@@ -62,6 +62,7 @@ $(document).ready(function(){initNavTree('qhasharr_8c.html','');});
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">qhasharr.c File Reference</div>  </div>
@@ -73,6 +74,15 @@ $(document).ready(function(){initNavTree('qhasharr_8c.html','');});
 
 <p><a href="qhasharr_8c_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:af6ff8340308b20e6f2e5c2f024313c5d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af6ff8340308b20e6f2e5c2f024313c5d"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>COLLISION_MARK</b>&#160;&#160;&#160;(-1)</td></tr>
+<tr class="separator:af6ff8340308b20e6f2e5c2f024313c5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab725ad48f24a45370685c02f0005a78d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab725ad48f24a45370685c02f0005a78d"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTBLOCK_MARK</b>&#160;&#160;&#160;(-2)</td></tr>
+<tr class="separator:ab725ad48f24a45370685c02f0005a78d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a83012ec9fea85ca5770529997306334d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a83012ec9fea85ca5770529997306334d">qhasharr_calculate_memsize</a> (int max)</td></tr>
@@ -81,36 +91,39 @@ Functions</h2></td></tr>
 <tr class="memitem:aa0f33578b50024a4a239472c52eee18c"><td class="memItemLeft" align="right" valign="top">qhasharr_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#aa0f33578b50024a4a239472c52eee18c">qhasharr</a> (void *memory, size_t memsize)</td></tr>
 <tr class="memdesc:aa0f33578b50024a4a239472c52eee18c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize static hash table.  <a href="#aa0f33578b50024a4a239472c52eee18c">More...</a><br/></td></tr>
 <tr class="separator:aa0f33578b50024a4a239472c52eee18c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9bcf347eaee0dba19c55a18500956928"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a9bcf347eaee0dba19c55a18500956928">qhasharr_put</a> (qhasharr_t *tbl, const char *key, const void *value, size_t size)</td></tr>
-<tr class="memdesc:a9bcf347eaee0dba19c55a18500956928"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;<a class="el" href="qhttpclient_8c.html#ae9ac3bd43c11509c0cbd8fb284bf13eb" title="qhttpclient-&gt;put(): Uploads a file to the remote host using PUT method. ">put()</a>: Put an object into this table.  <a href="#a9bcf347eaee0dba19c55a18500956928">More...</a><br/></td></tr>
-<tr class="separator:a9bcf347eaee0dba19c55a18500956928"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3355cfd308e783f2f08a7dfd3c5dc2df"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a3355cfd308e783f2f08a7dfd3c5dc2df">qhasharr_putstr</a> (qhasharr_t *tbl, const char *key, const char *str)</td></tr>
-<tr class="memdesc:a3355cfd308e783f2f08a7dfd3c5dc2df"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;putstr(): Put a string into this table  <a href="#a3355cfd308e783f2f08a7dfd3c5dc2df">More...</a><br/></td></tr>
-<tr class="separator:a3355cfd308e783f2f08a7dfd3c5dc2df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ead9a292dd55fe9f847f204f354f07e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a3ead9a292dd55fe9f847f204f354f07e">qhasharr_putstrf</a> (qhasharr_t *tbl, const char *key, const char *format,...)</td></tr>
-<tr class="memdesc:a3ead9a292dd55fe9f847f204f354f07e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;putstrf(): Put a formatted string into this table.  <a href="#a3ead9a292dd55fe9f847f204f354f07e">More...</a><br/></td></tr>
-<tr class="separator:a3ead9a292dd55fe9f847f204f354f07e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada4dcae8a5735c0e3fb14a1534e54fb6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#ada4dcae8a5735c0e3fb14a1534e54fb6">qhasharr_putint</a> (qhasharr_t *tbl, const char *key, int64_t num)</td></tr>
-<tr class="memdesc:ada4dcae8a5735c0e3fb14a1534e54fb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;putint(): Put an integer into this table as string type.  <a href="#ada4dcae8a5735c0e3fb14a1534e54fb6">More...</a><br/></td></tr>
-<tr class="separator:ada4dcae8a5735c0e3fb14a1534e54fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fada7056c2553debc6b9866dc02cfa3"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a1fada7056c2553debc6b9866dc02cfa3">qhasharr_get</a> (qhasharr_t *tbl, const char *key, size_t *size)</td></tr>
-<tr class="memdesc:a1fada7056c2553debc6b9866dc02cfa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;<a class="el" href="qhttpclient_8c.html#af16a3eb0912e8b5d4896466632d9c843" title="qhttpclient-&gt;get(): Downloads a file from the remote host using GET method. ">get()</a>: Get an object from this table  <a href="#a1fada7056c2553debc6b9866dc02cfa3">More...</a><br/></td></tr>
-<tr class="separator:a1fada7056c2553debc6b9866dc02cfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedbf0b77d375b5e9c72d81db817216d9"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#aedbf0b77d375b5e9c72d81db817216d9">qhasharr_getstr</a> (qhasharr_t *tbl, const char *key)</td></tr>
-<tr class="memdesc:aedbf0b77d375b5e9c72d81db817216d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;getstr(): Finds an object with given name and returns as string type.  <a href="#aedbf0b77d375b5e9c72d81db817216d9">More...</a><br/></td></tr>
-<tr class="separator:aedbf0b77d375b5e9c72d81db817216d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac791e5e306a41af71dd96c652419f312"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#ac791e5e306a41af71dd96c652419f312">qhasharr_getint</a> (qhasharr_t *tbl, const char *key)</td></tr>
-<tr class="memdesc:ac791e5e306a41af71dd96c652419f312"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;getint(): Finds an object with given name and returns as integer type.  <a href="#ac791e5e306a41af71dd96c652419f312">More...</a><br/></td></tr>
-<tr class="separator:ac791e5e306a41af71dd96c652419f312"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62a3cd6c22bee69becfa7b5af798fe8d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a62a3cd6c22bee69becfa7b5af798fe8d">qhasharr_remove</a> (qhasharr_t *tbl, const char *key)</td></tr>
-<tr class="memdesc:a62a3cd6c22bee69becfa7b5af798fe8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;remove(): Remove an object from this table.  <a href="#a62a3cd6c22bee69becfa7b5af798fe8d">More...</a><br/></td></tr>
-<tr class="separator:a62a3cd6c22bee69becfa7b5af798fe8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88e2f56b1a87c1f9485f5343ec7998be"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a88e2f56b1a87c1f9485f5343ec7998be">qhasharr_getnext</a> (qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx)</td></tr>
-<tr class="memdesc:a88e2f56b1a87c1f9485f5343ec7998be"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;getnext(): Get next element.  <a href="#a88e2f56b1a87c1f9485f5343ec7998be">More...</a><br/></td></tr>
-<tr class="separator:a88e2f56b1a87c1f9485f5343ec7998be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e43029429b7aa43a66d2b55ce3bac81"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a6e43029429b7aa43a66d2b55ce3bac81">qhasharr_put</a> (qhasharr_t *tbl, const char *name, const void *data, size_t datasize)</td></tr>
+<tr class="memdesc:a6e43029429b7aa43a66d2b55ce3bac81"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;<a class="el" href="qhttpclient_8c.html#ae9ac3bd43c11509c0cbd8fb284bf13eb" title="qhttpclient-&gt;put(): Uploads a file to the remote host using PUT method. ">put()</a>: Put an object into this table.  <a href="#a6e43029429b7aa43a66d2b55ce3bac81">More...</a><br/></td></tr>
+<tr class="separator:a6e43029429b7aa43a66d2b55ce3bac81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeadc9cda7a3e29e81a1f11b914c34390"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#aeadc9cda7a3e29e81a1f11b914c34390">qhasharr_putstr</a> (qhasharr_t *tbl, const char *name, const char *data)</td></tr>
+<tr class="memdesc:aeadc9cda7a3e29e81a1f11b914c34390"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;putstr(): Put a string into this table  <a href="#aeadc9cda7a3e29e81a1f11b914c34390">More...</a><br/></td></tr>
+<tr class="separator:aeadc9cda7a3e29e81a1f11b914c34390"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9df103f6016cd3d3267cdf42893ba809"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a9df103f6016cd3d3267cdf42893ba809">qhasharr_putstrf</a> (qhasharr_t *tbl, const char *name, const char *format,...)</td></tr>
+<tr class="memdesc:a9df103f6016cd3d3267cdf42893ba809"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;putstrf(): Put a formatted string into this table.  <a href="#a9df103f6016cd3d3267cdf42893ba809">More...</a><br/></td></tr>
+<tr class="separator:a9df103f6016cd3d3267cdf42893ba809"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bc56610cce2c4f7ee2373ae4a40143b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a3bc56610cce2c4f7ee2373ae4a40143b">qhasharr_put_by_obj</a> (qhasharr_t *tbl, const void *name, size_t namesize, const void *data, size_t datasize)</td></tr>
+<tr class="memdesc:a3bc56610cce2c4f7ee2373ae4a40143b"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;put_by_obj(): ut an object into this table by key object.  <a href="#a3bc56610cce2c4f7ee2373ae4a40143b">More...</a><br/></td></tr>
+<tr class="separator:a3bc56610cce2c4f7ee2373ae4a40143b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cd5ed2467b044e52699c5b14fdda7c2"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a5cd5ed2467b044e52699c5b14fdda7c2">qhasharr_get</a> (qhasharr_t *tbl, const char *name, size_t *datasize)</td></tr>
+<tr class="memdesc:a5cd5ed2467b044e52699c5b14fdda7c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;<a class="el" href="qhttpclient_8c.html#af16a3eb0912e8b5d4896466632d9c843" title="qhttpclient-&gt;get(): Downloads a file from the remote host using GET method. ">get()</a>: Get an object from this table  <a href="#a5cd5ed2467b044e52699c5b14fdda7c2">More...</a><br/></td></tr>
+<tr class="separator:a5cd5ed2467b044e52699c5b14fdda7c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8434b123a29f0b6da9b430700ce2b728"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a8434b123a29f0b6da9b430700ce2b728">qhasharr_getstr</a> (qhasharr_t *tbl, const char *name)</td></tr>
+<tr class="memdesc:a8434b123a29f0b6da9b430700ce2b728"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;getstr(): Finds an object with given name and returns as string type.  <a href="#a8434b123a29f0b6da9b430700ce2b728">More...</a><br/></td></tr>
+<tr class="separator:a8434b123a29f0b6da9b430700ce2b728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30a8198420daadc7290a1bf3f82468ac"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a30a8198420daadc7290a1bf3f82468ac">qhasharr_get_by_obj</a> (qhasharr_t *tbl, const void *name, size_t namesize, size_t *datasize)</td></tr>
+<tr class="memdesc:a30a8198420daadc7290a1bf3f82468ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;get_by_object(): Get an object from this table by key object  <a href="#a30a8198420daadc7290a1bf3f82468ac">More...</a><br/></td></tr>
+<tr class="separator:a30a8198420daadc7290a1bf3f82468ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac1f0f336ac79a12590a7f0993e09997"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#aac1f0f336ac79a12590a7f0993e09997">qhasharr_remove</a> (qhasharr_t *tbl, const char *name)</td></tr>
+<tr class="memdesc:aac1f0f336ac79a12590a7f0993e09997"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;remove(): Remove an object from this table.  <a href="#aac1f0f336ac79a12590a7f0993e09997">More...</a><br/></td></tr>
+<tr class="separator:aac1f0f336ac79a12590a7f0993e09997"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af57be2bc8caf66f6bf94cd21370ef44f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#af57be2bc8caf66f6bf94cd21370ef44f">qhasharr_remove_by_obj</a> (qhasharr_t *tbl, const char *name, size_t namesize)</td></tr>
+<tr class="memdesc:af57be2bc8caf66f6bf94cd21370ef44f"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;remove_by_obj(): Remove an object from this table by key object  <a href="#af57be2bc8caf66f6bf94cd21370ef44f">More...</a><br/></td></tr>
+<tr class="separator:af57be2bc8caf66f6bf94cd21370ef44f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54fa504cce007a18fa510be544307cab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a54fa504cce007a18fa510be544307cab">qhasharr_remove_by_idx</a> (qhasharr_t *tbl, int idx)</td></tr>
 <tr class="memdesc:a54fa504cce007a18fa510be544307cab"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;remove_by_idx(): Remove an object from this table by index number.  <a href="#a54fa504cce007a18fa510be544307cab">More...</a><br/></td></tr>
 <tr class="separator:a54fa504cce007a18fa510be544307cab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88e2f56b1a87c1f9485f5343ec7998be"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a88e2f56b1a87c1f9485f5343ec7998be">qhasharr_getnext</a> (qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx)</td></tr>
+<tr class="memdesc:a88e2f56b1a87c1f9485f5343ec7998be"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;getnext(): Get next element.  <a href="#a88e2f56b1a87c1f9485f5343ec7998be">More...</a><br/></td></tr>
+<tr class="separator:a88e2f56b1a87c1f9485f5343ec7998be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a780affb950d666046cfb5e1f9c8153"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qhasharr_8c.html#a2a780affb950d666046cfb5e1f9c8153">qhasharr_size</a> (qhasharr_t *tbl, int *maxslots, int *usedslots)</td></tr>
 <tr class="memdesc:a2a780affb950d666046cfb5e1f9c8153"><td class="mdescLeft">&#160;</td><td class="mdescRight">qhasharr-&gt;size(): Returns the number of objects in this table.  <a href="#a2a780affb950d666046cfb5e1f9c8153">More...</a><br/></td></tr>
 <tr class="separator:a2a780affb950d666046cfb5e1f9c8153"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,7 +139,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Static(array) hash-table implementation. </p>
-<p>qhasharr implements a hash-table which maps keys to values and stores into fixed size static memory like shared-memory and memory-mapped file. The creator <a class="el" href="qhasharr_8c.html#aa0f33578b50024a4a239472c52eee18c" title="Initialize static hash table. ">qhasharr()</a> initializes static memory to makes small slots in it. The default slot size factors are defined in Q_HASHARR_KEYSIZE and Q_HASHARR_VALUESIZE. And they are applied at compile time.</p>
+<p>qhasharr implements a hash-table which maps keys to values and stores into fixed size static memory like shared-memory and memory-mapped file. The creator <a class="el" href="qhasharr_8c.html#aa0f33578b50024a4a239472c52eee18c" title="Initialize static hash table. ">qhasharr()</a> initializes static memory to makes small slots in it. The default slot size factors are defined in Q_HASHARR_NAMESIZE and Q_HASHARR_DATASIZE. And they are applied at compile time.</p>
 <p>The value part of an element will be stored across several slots if it's size exceeds the slot size. But the key part of an element will be truncated if the size exceeds and it's length and more complex MD5 hash value will be stored with the key. So to look up a particular key, first we find an element which has same hash value. If the key was not truncated, we just do key comparison. But if the key was truncated because it's length exceeds, we do both md5 and key comparison(only stored size) to verify that the key is same. So please be aware of that, theoretically there is a possibility we pick wrong element in case a key exceeds the limit, has same length and MD5 hash with lookup key. But this possibility is very low and almost zero in practice.</p>
 <p>qhasharr hash-table does not provide thread-safe handling intentionally and let users determine whether to provide locking mechanism or not, depending on the use cases. When there's race conditions expected, you should provide a shared resource control using mutex or semaphore to make sure data gets updated by one instance at a time.</p>
 <div class="fragment"><div class="line">[Data Structure Diagram]</div>
@@ -227,7 +240,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>memory size needed</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This can be used for calculating minimum memory size for N slots. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00174">174</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00179">179</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
@@ -283,11 +296,11 @@ Functions</h2></td></tr>
 <div class="line"><span class="comment">// Use existing table.</span></div>
 <div class="line">qhasharr_t *tbl2 = <a class="code" href="qhasharr_8c.html#aa0f33578b50024a4a239472c52eee18c">qhasharr</a>(memory, 0);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00203">203</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00208">208</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a9bcf347eaee0dba19c55a18500956928"></a>
+<a class="anchor" id="a6e43029429b7aa43a66d2b55ce3bac81"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -301,19 +314,19 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
+          <td class="paramname"><em>name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const void *&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
+          <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>size</em>&#160;</td>
+          <td class="paramname"><em>datasize</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -346,11 +359,11 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00272">272</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00278">278</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a3355cfd308e783f2f08a7dfd3c5dc2df"></a>
+<a class="anchor" id="aeadc9cda7a3e29e81a1f11b914c34390"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -364,13 +377,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
+          <td class="paramname"><em>name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>str</em>&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -384,8 +397,8 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
-    <tr><td class="paramname">key</td><td>key string. </td></tr>
-    <tr><td class="paramname">value</td><td>string data.</td></tr>
+    <tr><td class="paramname">name</td><td>key string. </td></tr>
+    <tr><td class="paramname">data</td><td>value string.</td></tr>
   </table>
   </dd>
 </dl>
@@ -402,11 +415,11 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00376">376</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00297">297</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a3ead9a292dd55fe9f847f204f354f07e"></a>
+<a class="anchor" id="a9df103f6016cd3d3267cdf42893ba809"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -420,7 +433,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
+          <td class="paramname"><em>name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -446,7 +459,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
-    <tr><td class="paramname">key</td><td>key name. </td></tr>
+    <tr><td class="paramname">name</td><td>key string </td></tr>
     <tr><td class="paramname">format</td><td>formatted string data.</td></tr>
   </table>
   </dd>
@@ -465,16 +478,16 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00395">395</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00316">316</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ada4dcae8a5735c0e3fb14a1534e54fb6"></a>
+<a class="anchor" id="a3bc56610cce2c4f7ee2373ae4a40143b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool qhasharr_putint </td>
+          <td class="memname">bool qhasharr_put_by_obj </td>
           <td>(</td>
           <td class="paramtype">qhasharr_t *&#160;</td>
           <td class="paramname"><em>tbl</em>, </td>
@@ -482,14 +495,26 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int64_t&#160;</td>
-          <td class="paramname"><em>num</em>&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>namesize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>datasize</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -499,12 +524,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qhasharr-&gt;putint(): Put an integer into this table as string type. </p>
+<p>qhasharr-&gt;put_by_obj(): ut an object into this table by key object. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
-    <tr><td class="paramname">key</td><td>key string </td></tr>
-    <tr><td class="paramname">value</td><td>value integer</td></tr>
+    <tr><td class="paramname">name</td><td>key data </td></tr>
+    <tr><td class="paramname">namesize</td><td>size of key </td></tr>
+    <tr><td class="paramname">data</td><td>data </td></tr>
+    <tr><td class="paramname">datasize</td><td>size of data</td></tr>
   </table>
   </dd>
 </dl>
@@ -514,19 +541,18 @@ Functions</h2></td></tr>
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
 <li>ENOBUFS : Table doesn't have enough space to store the object.</li>
 <li>EINVAL : Invalid argument.</li>
-<li>EFAULT : Unexpected error. Data structure is not constant.</li>
+<li>EFAULT : Unexpected error. Data structure is not constant. </li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>The integer will be converted to a string object and stored as string object. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00424">424</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00344">344</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a1fada7056c2553debc6b9866dc02cfa3"></a>
+<a class="anchor" id="a5cd5ed2467b044e52699c5b14fdda7c2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -540,13 +566,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
+          <td class="paramname"><em>name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t *&#160;</td>
-          <td class="paramname"><em>size</em>&#160;</td>
+          <td class="paramname"><em>datasize</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -560,8 +586,8 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
-    <tr><td class="paramname">key</td><td>key string </td></tr>
-    <tr><td class="paramname">size</td><td>if not NULL, oject size will be stored</td></tr>
+    <tr><td class="paramname">name</td><td>key string </td></tr>
+    <tr><td class="paramname">datasize</td><td>if not NULL, returned object size will be stored</td></tr>
   </table>
   </dd>
 </dl>
@@ -579,11 +605,11 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>returned object must be freed after done using. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00447">447</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00444">444</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aedbf0b77d375b5e9c72d81db817216d9"></a>
+<a class="anchor" id="a8434b123a29f0b6da9b430700ce2b728"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -597,7 +623,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key</em>&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -611,7 +637,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
-    <tr><td class="paramname">key</td><td>key string</td></tr>
+    <tr><td class="paramname">name</td><td>key string</td></tr>
   </table>
   </dd>
 </dl>
@@ -629,16 +655,16 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>returned object must be freed after done using. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00483">483</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00464">464</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac791e5e306a41af71dd96c652419f312"></a>
+<a class="anchor" id="a30a8198420daadc7290a1bf3f82468ac"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int64_t qhasharr_getint </td>
+          <td class="memname">void* qhasharr_get_by_obj </td>
           <td>(</td>
           <td class="paramtype">qhasharr_t *&#160;</td>
           <td class="paramname"><em>tbl</em>, </td>
@@ -646,8 +672,20 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key</em>&#160;</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>namesize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>datasize</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -657,32 +695,35 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qhasharr-&gt;getint(): Finds an object with given name and returns as integer type. </p>
+<p>qhasharr-&gt;get_by_object(): Get an object from this table by key object </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
-    <tr><td class="paramname">key</td><td>key string</td></tr>
+    <tr><td class="paramname">name</td><td>key data </td></tr>
+    <tr><td class="paramname">namesize</td><td>size of key </td></tr>
+    <tr><td class="paramname">datasize</td><td>if not NULL, returned object size will be stored</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>value integer if successful, otherwise(not found) returns 0 </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>malloced object pointer if successful, otherwise(not found) returns NULL </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
 <li>ENOENT : No such key found.</li>
 <li>EINVAL : Invalid argument.</li>
-<li>ENOMEM : Memory allocation failed. </li>
+<li>ENOMEM : Memory allocation failed.</li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>returned object must be freed after done using. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00500">500</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00486">486</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a62a3cd6c22bee69becfa7b5af798fe8d"></a>
+<a class="anchor" id="aac1f0f336ac79a12590a7f0993e09997"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -696,7 +737,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key</em>&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -710,7 +751,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
-    <tr><td class="paramname">key</td><td>key string</td></tr>
+    <tr><td class="paramname">name</td><td>key string</td></tr>
   </table>
   </dd>
 </dl>
@@ -727,7 +768,123 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00523">523</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00518">518</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af57be2bc8caf66f6bf94cd21370ef44f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool qhasharr_remove_by_obj </td>
+          <td>(</td>
+          <td class="paramtype">qhasharr_t *&#160;</td>
+          <td class="paramname"><em>tbl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>namesize</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qhasharr-&gt;remove_by_obj(): Remove an object from this table by key object </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
+    <tr><td class="paramname">name</td><td>key data </td></tr>
+    <tr><td class="paramname">namesize</td><td>size of key</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise(not found) returns false </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOENT : No such key found.</li>
+<li>EINVAL : Invald argument.</li>
+<li>EFAULT : Unexpected error. Data structure is not constant. </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00535">535</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a54fa504cce007a18fa510be544307cab"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool qhasharr_remove_by_idx </td>
+          <td>(</td>
+          <td class="paramtype">qhasharr_t *&#160;</td>
+          <td class="paramname"><em>tbl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>idx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qhasharr-&gt;remove_by_idx(): Remove an object from this table by index number. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
+    <tr><td class="paramname">idx</td><td>slot index number</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise(not found) returns false </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOENT : Index is not pointing a valid object.</li>
+<li>EINVAL : Invald argument.</li>
+<li>EFAULT : Unexpected error. Data structure is not constant.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> idx = 0;</div>
+<div class="line">qhasharr_obj_t obj;</div>
+<div class="line"><span class="keywordflow">while</span>(tbl-&gt;getnext(tbl, &amp;obj, &amp;idx) == <span class="keyword">true</span>) {</div>
+<div class="line">  <span class="keywordflow">if</span> (condition_to_remove) {</div>
+<div class="line">    idx--;  <span class="comment">// adjust index by -1</span></div>
+<div class="line">    remove_by_idx(idx);</div>
+<div class="line">  }</div>
+<div class="line">  free(obj.name);</div>
+<div class="line">  free(obj.data);</div>
+<div class="line">}</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>This function is to remove an object in getnext() traversal loop without knowing the object name but index value. When key names are longer than defined size, the keys are stored with truncation with their fingerprint, so this method provides a way to remove those keys. getnext() returns actual index + 1(pointing next slot of current finding), so you need to adjust it by -1 for the valid index number. And once you remove object by this method, rewind idx by -1 before calling getnext() because collision objects can be moved back to removed index again, so by adjusting index by -1, getnext() can continue search from the removed slot index again. Please refer an example code. </dd></dl>
+
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00591">591</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
@@ -784,74 +941,14 @@ Functions</h2></td></tr>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> idx = 0;</div>
 <div class="line">qhasharr_obj_t obj;</div>
 <div class="line"><span class="keywordflow">while</span>(tbl-&gt;getnext(tbl, &amp;obj, &amp;idx) == <span class="keyword">true</span>) {</div>
-<div class="line">  printf(<span class="stringliteral">&quot;NAME=%s, DATA=%s, SIZE=%zu\n&quot;</span>,</div>
-<div class="line">         obj.name, (<span class="keywordtype">char</span>*)obj.data, obj.size);</div>
-<div class="line">  free(obj.name);</div>
-<div class="line">  free(obj.data);</div>
+<div class="line">  printf(<span class="stringliteral">&quot;NAMESIZE=%zu, DATASIZE=%zu\n&quot;</span>,</div>
+<div class="line">         obj.namesize, obj.datasize);</div>
+<div class="line">  free(obj.name);  <span class="comment">// key name</span></div>
+<div class="line">  free(obj.data);  <span class="comment">// value data</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Please be aware a key name will be returned with truncated length because key name gets truncated if it doesn't fit into slot size, Q_HASHARR_KEYSIZE. </dd></dl>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Please be aware a key name will be returned with truncated length because key name gets truncated if it doesn't fit into slot size, Q_HASHARR_NAMESIZE. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00571">571</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a54fa504cce007a18fa510be544307cab"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool qhasharr_remove_by_idx </td>
-          <td>(</td>
-          <td class="paramtype">qhasharr_t *&#160;</td>
-          <td class="paramname"><em>tbl</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>idx</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>qhasharr-&gt;remove_by_idx(): Remove an object from this table by index number. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
-    <tr><td class="paramname">key</td><td>key string</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise(not found) returns false </dd></dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
-<li>ENOENT : Index is not pointing a valid object.</li>
-<li>EINVAL : Invald argument.</li>
-<li>EFAULT : Unexpected error. Data structure is not constant.</li>
-</ul>
-</td></tr>
-  </table>
-  </dd>
-</dl>
-<div class="fragment"><div class="line"><span class="keywordtype">int</span> idx = 0;</div>
-<div class="line">qhasharr_obj_t obj;</div>
-<div class="line"><span class="keywordflow">while</span>(tbl-&gt;getnext(tbl, &amp;obj, &amp;idx) == <span class="keyword">true</span>) {</div>
-<div class="line">  <span class="keywordflow">if</span> (condition_to_remove) {</div>
-<div class="line">    idx--;  <span class="comment">// adjust index by -1</span></div>
-<div class="line">    remove_by_idx(idx);</div>
-<div class="line">  }</div>
-<div class="line">  free(obj.name);</div>
-<div class="line">  free(obj.data);</div>
-<div class="line">}</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>This function is to remove an object in getnext() traversal loop without knowing the object name but index value. When key names are longer than defined size, the keys are stored with truncation with their fingerprint, so this method provides a way to remove those keys. getnext() returns actual index + 1(pointing next slot of current finding), so you need to adjust it by -1 for the valid index number. And once you remove object by this method, rewind idx by -1 before calling getnext() because collision objects can be moved back to removed index again, so by adjusting index by -1, getnext() can continue search from the removed slot index again. Please refer an example code. </dd></dl>
-
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00649">649</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00676">676</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
@@ -888,13 +985,15 @@ Functions</h2></td></tr>
 <p>qhasharr-&gt;size(): Returns the number of objects in this table. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer.</td></tr>
+    <tr><td class="paramname">tbl</td><td>qhasharr_t container pointer. </td></tr>
+    <tr><td class="paramname">maxslots</td><td>if not NULL, total number of slots will be stored. </td></tr>
+    <tr><td class="paramname">usedslots</td><td>if not NULL, total number of used slots will be stored.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a number of elements stored. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00725">725</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00727">727</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
@@ -921,7 +1020,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00748">748</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00750">750</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
@@ -968,7 +1067,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00777">777</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00780">780</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>
@@ -993,9 +1092,9 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>This does not de-allocate memory but only function reference object. Data memory such as shared memory must be de-allocated separately. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This does not de-allocate the data memory but only the memory of qhasharr struct. User provided data memory must be de-allocated by user. </dd></dl>
 
-<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00852">852</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
+<p>Definition at line <a class="el" href="qhasharr_8c_source.html#l00862">862</a> of file <a class="el" href="qhasharr_8c_source.html">qhasharr.c</a>.</p>
 
 </div>
 </div>

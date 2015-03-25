@@ -44,8 +44,8 @@ extern "C" {
 #endif
 
 /* tunable knobs */
-#define Q_HASHARR_KEYSIZE (16)    /*!< knob for maximum key size. */
-#define Q_HASHARR_VALUESIZE (32)  /*!< knob for maximum data size in a slot. */
+#define Q_HASHARR_NAMESIZE (16)  /*!< knob for maximum key size. */
+#define Q_HASHARR_DATASIZE (32)  /*!< knob for maximum data size in a slot. */
 
 /* types */
 typedef struct qhasharr_s qhasharr_t;
@@ -66,15 +66,19 @@ extern bool qhasharr_put(qhasharr_t *tbl, const char *key, const void *value,
                 size_t size);
 extern bool qhasharr_putstr(qhasharr_t *tbl, const char *key, const char *str);
 extern bool qhasharr_putstrf(qhasharr_t *tbl, const char *key, const char *format, ...);
-extern bool qhasharr_putint(qhasharr_t *tbl, const char *key, int64_t num);
+extern bool qhasharr_put_by_obj(qhasharr_t *tbl, const void *name, size_t namesize,
+                                const void *data, size_t datasize);
 
 extern void *qhasharr_get(qhasharr_t *tbl, const char *key, size_t *size);
 extern char *qhasharr_getstr(qhasharr_t *tbl, const char *key);
-extern int64_t qhasharr_getint(qhasharr_t *tbl, const char *key);
-extern bool qhasharr_getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx);
+extern void *qhasharr_get_by_obj(qhasharr_t *tbl, const void *name, size_t namesize,
+                                 size_t *datasize);
 
 extern bool qhasharr_remove(qhasharr_t *tbl, const char *key);
+extern bool qhasharr_remove_by_obj(qhasharr_t *tbl, const char *name, size_t namesize);
 extern bool qhasharr_remove_by_idx(qhasharr_t *tbl, int idx);
+
+extern bool qhasharr_getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx);
 
 extern int qhasharr_size(qhasharr_t *tbl, int *maxslots, int *usedslots);
 extern void qhasharr_clear(qhasharr_t *tbl);
@@ -92,13 +96,16 @@ struct qhasharr_s {
                  size_t size);
     bool (*putstr) (qhasharr_t *tbl, const char *key, const char *str);
     bool (*putstrf) (qhasharr_t *tbl, const char *key, const char *format, ...);
-    bool (*putint) (qhasharr_t *tbl, const char *key, int64_t num);
+    bool (*put_by_obj) (qhasharr_t *tbl, const void *name, size_t namesize,
+                        const void *data, size_t datasize);
 
     void *(*get) (qhasharr_t *tbl, const char *key, size_t *size);
     char *(*getstr) (qhasharr_t *tbl, const char *key);
-    int64_t (*getint) (qhasharr_t *tbl, const char *key);
+    void *(*get_by_obj) (qhasharr_t *tbl, const void *name, size_t namesize,
+                         size_t *datasize);
 
     bool (*remove) (qhasharr_t *tbl, const char *key);
+    bool (*remove_by_obj) (qhasharr_t *tbl, const char *name, size_t namesize);
     bool (*remove_by_idx) (qhasharr_t *tbl, int idx);
 
     bool (*getnext) (qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx);
@@ -117,27 +124,25 @@ struct qhasharr_s {
  * qhasharr internal data slot structure
  */
 struct qhasharr_slot_s {
-    short  count;   /*!< hash collision counter. 0 indicates empty slot,
-                         -1 is used for collision resolution, -2 is used for
-                         indicating linked block */
-    uint32_t  hash; /*!< key hash. we use FNV32 */
-
-    uint8_t size;   /*!< value size in this slot*/
-    int link;       /*!< next link */
+    short  count;      /*!< hash collision counter. 0 indicates empty slot,
+                            -1 is used for collision resolution, -2 is used for
+                            indicating linked block */
+    uint32_t  hash;    /*!< key hash */
+    uint8_t datasize;  /*!< value size in this slot*/
+    int link;          /*!< next link */
 
     union {
         /*!< key/value data */
         struct Q_HASHARR_SLOT_KEYVAL {
-            unsigned char value[Q_HASHARR_VALUESIZE];  /*!< value */
-
-            char key[Q_HASHARR_KEYSIZE];  /*!< key string, can be cut */
-            uint16_t  keylen;              /*!< original key length */
-            unsigned char keymd5[16];      /*!< md5 hash of the key */
+            uint8_t data[Q_HASHARR_DATASIZE];  /*!< value */
+            uint8_t name[Q_HASHARR_NAMESIZE];  /*!< key string, can be cut */
+            uint16_t namesize;                 /*!< original key length */
+            uint8_t namemd5[16];               /*!< md5 hash of the key */
         } pair;
 
         /*!< extended data block, used only when the count value is -2 */
         struct Q_HASHARR_SLOT_EXT {
-            unsigned char value[sizeof(struct Q_HASHARR_SLOT_KEYVAL)];
+            uint8_t data[sizeof(struct Q_HASHARR_SLOT_KEYVAL)];
         } ext;
     } data;
 };
@@ -155,9 +160,10 @@ struct qhasharr_data_s {
  * qhasharr named-object data structure for user return
  */
 struct qhasharr_obj_s {
-    char *name;         /*!< object name */
+    void *name;         /*!< name */
+    size_t namesize;    /*!< name size */
     void *data;         /*!< data */
-    size_t size;        /*!< data size */
+    size_t datasize;    /*!< data size */
 };
 
 #ifdef __cplusplus

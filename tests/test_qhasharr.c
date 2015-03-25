@@ -30,9 +30,10 @@
 #include "qlibc.h"
 #include <errno.h>
 
+void test_thousands_of_keys(size_t memsize, int num_keys, char *key_postfix, char *value_postfix);
+
 QUNIT_START("Test qhasharr.c");
 
-#define VALUE_STR "value1"
 TEST("Test basic but complete") {
     const char *KEYS[] = {
             "key0",
@@ -61,39 +62,6 @@ TEST("Test basic but complete") {
     ASSERT_EQUAL_STR(VALUES[1], tbl->getstr(tbl, KEYS[1]));
 
     tbl->clear(tbl);
-    ASSERT_EQUAL_INT(0, tbl->size(tbl, NULL, NULL));
-
-    tbl->free(tbl);
-}
-
-void test_thousands_of_keys(size_t memsize, int num_keys, char *key_postfix, char *value_postfix) {
-    char memory[memsize];
-    qhasharr_t *tbl = qhasharr(memory, sizeof(memory));
-
-    int i;
-    for (i = 0; i < num_keys; i++) {
-        char *key = qstrdupf("key%d%s", i, key_postfix);
-        char *value = qstrdupf("value%d%s", i, value_postfix);
-
-        if (tbl->putstr(tbl, key, value) == false) {
-            ASSERT(errno == ENOBUFS);
-            break;
-        }
-        ASSERT_EQUAL_INT(i + 1, tbl->size(tbl, NULL, NULL));
-        ASSERT_EQUAL_STR(value, tbl->getstr(tbl, key));
-
-        free(key);
-        free(value);
-    }
-
-    for (; i >= 0; i--) {
-        char *key = qstrdupf("key%d%s", i, key_postfix);
-        tbl->remove(tbl, key);
-        ASSERT_EQUAL_INT(i, tbl->size(tbl, NULL, NULL));
-        ASSERT_EQUAL_PT(NULL, tbl->getstr(tbl, key));
-        free(key);
-    }
-
     ASSERT_EQUAL_INT(0, tbl->size(tbl, NULL, NULL));
 
     tbl->free(tbl);
@@ -160,3 +128,43 @@ TEST("Test remove_by_idx()") {
 }
 
 QUNIT_END();
+
+
+void test_thousands_of_keys(size_t memsize, int num_keys, char *key_postfix, char *value_postfix) {
+    char memory[memsize];
+    qhasharr_t *tbl = qhasharr(memory, sizeof(memory));
+
+    int i;
+    for (i = 0; i < num_keys; i++) {
+        char *key = qstrdupf("key%d%s", i, key_postfix);
+        char *value = qstrdupf("value%d%s", i, value_postfix);
+
+        if (tbl->putstr(tbl, key, value) == false) {
+            ASSERT(errno == ENOBUFS);
+            break;
+        }
+        ASSERT_EQUAL_INT(i + 1, tbl->size(tbl, NULL, NULL));
+        ASSERT_EQUAL_STR(value, tbl->getstr(tbl, key));
+
+        free(key);
+        free(value);
+    }
+
+    for (; i >= 0; i--) {
+        char *key = qstrdupf("key%d%s", i, key_postfix);
+        tbl->remove(tbl, key);
+        ASSERT_EQUAL_INT(i, tbl->size(tbl, NULL, NULL));
+        ASSERT_EQUAL_PT(NULL, tbl->getstr(tbl, key));
+        free(key);
+    }
+
+    int usedslots = -1;
+    ASSERT_EQUAL_INT(0, tbl->size(tbl, NULL, &usedslots));
+    ASSERT_EQUAL_INT(0, usedslots);
+    if(usedslots > 0 ) {
+        printf("==== %d\n", usedslots);
+        tbl->debug(tbl, stdout);
+    }
+
+    tbl->free(tbl);
+}

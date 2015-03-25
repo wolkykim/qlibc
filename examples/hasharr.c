@@ -79,8 +79,9 @@ int main(void) {
     int idx = 0;
     qhasharr_obj_t obj;
     while (tbl->getnext(tbl, &obj, &idx) == true) {
-        printf("NAME=%s, DATA=%s, SIZE=%zu\n", obj.name, (char *) obj.data,
-               obj.size);
+        printf("NAME=%s(%zu), DATA=%s(%zu)\n",
+               (char *)obj.name, obj.namesize,
+               (char *)obj.data, obj.datasize);
         free(obj.name);
         free(obj.data);
     }
