@@ -34,7 +34,7 @@
 
 int main(void) {
     // initialize hash-table
-    int memsize = qhasharr_calculate_memsize(10);
+    int memsize = qhasharr_calculate_memsize(20);
     char memory[memsize];
     qhasharr_t *tbl = qhasharr(memory, sizeof(memory));
     if (tbl == NULL) {
@@ -54,6 +54,14 @@ int main(void) {
     tbl->putstr(tbl, "e5", "f");
     tbl->putstr(tbl, "12345678901234567890",
                 "1234567890123456789012345678901234567890");
+
+    // by key object
+    tbl->put_by_obj(tbl, "\x1\x7f", 2, "a", 1);
+    tbl->put_by_obj(tbl, "\x2\x7f", 2, "b", 1);
+    tbl->put_by_obj(tbl, "\x3\x7f", 2, "c", 1);
+    tbl->put_by_obj(tbl, "\x4\x7f", 2, "e", 1);
+    tbl->put_by_obj(tbl, "\x5\x7f", 2, "f", 1);
+
 
     // print out
     printf("--[Test 1 : adding elements]--\n");
@@ -79,8 +87,12 @@ int main(void) {
     int idx = 0;
     qhasharr_obj_t obj;
     while (tbl->getnext(tbl, &obj, &idx) == true) {
-        printf("NAME=%s, DATA=%s, SIZE=%zu\n", obj.name, (char *) obj.data,
-               obj.size);
+        char *obj_name = tbl->printobj(obj.name, obj.name_size);
+        char *obj_data = tbl->printobj(obj.data, obj.size);
+        printf("NAME=%s, NAME_SIZE=%zu, DATA=%s, SIZE=%zu\n",
+                obj_name, obj.name_size, obj_data, obj.size);
+        free(obj_name);
+        free(obj_data);
         free(obj.name);
         free(obj.data);
     }
