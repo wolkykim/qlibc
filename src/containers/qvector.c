@@ -305,7 +305,7 @@ bool qvector_debug(qvector_t *vector, FILE *out) {
  *
  * @param vector    qvector_t container pointer.
  */
-void qvector_free_(qvector_t *vector) {
+void qvector_free(qvector_t *vector) {
     vector->list->free(vector->list);
     free(vector);
 }
