@@ -100,34 +100,6 @@
 
 #define DEFAULT_INDEX_RANGE (1000)  /*!< default value of hash-index range */
 
-#ifndef _DOXYGEN_SKIP
-
-// member methods
-static bool put(qhashtbl_t *tbl, const char *name, const void *data,
-                size_t size);
-static bool putstr(qhashtbl_t *tbl, const char *name, const char *str);
-static bool putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...);
-static bool putint(qhashtbl_t *tbl, const char *name, int64_t num);
-
-static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem);
-static char *getstr(qhashtbl_t *tbl, const char *name, bool newmem);
-static int64_t getint(qhashtbl_t *tbl, const char *name);
-
-static bool getnext(qhashtbl_t *tbl, qhashtbl_obj_t *obj, bool newmem);
-
-static bool remove_(qhashtbl_t *tbl, const char *name);
-
-static size_t size(qhashtbl_t *tbl);
-static void clear(qhashtbl_t *tbl);
-static bool debug(qhashtbl_t *tbl, FILE *out);
-
-static void lock(qhashtbl_t *tbl);
-static void unlock(qhashtbl_t *tbl);
-
-static void free_(qhashtbl_t *tbl);
-
-#endif
-
 /**
  * Initialize hash table.
  *
@@ -174,27 +146,27 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
     }
 
     // assign methods
-    tbl->put = put;
-    tbl->putstr = putstr;
-    tbl->putstrf = putstrf;
-    tbl->putint = putint;
+    tbl->put = qhashtbl_put;
+    tbl->putstr = qhashtbl_putstr;
+    tbl->putstrf = qhashtbl_putstrf;
+    tbl->putint = qhashtbl_putint;
 
-    tbl->get = get;
-    tbl->getstr = getstr;
-    tbl->getint = getint;
+    tbl->get = qhashtbl_get;
+    tbl->getstr = qhashtbl_getstr;
+    tbl->getint = qhashtbl_getint;
 
-    tbl->getnext = getnext;
+    tbl->remove = qhashtbl_remove;
 
-    tbl->remove = remove_;
+    tbl->getnext = qhashtbl_getnext;
 
-    tbl->size = size;
-    tbl->clear = clear;
-    tbl->debug = debug;
+    tbl->size = qhashtbl_size;
+    tbl->clear = qhashtbl_clear;
+    tbl->debug = qhashtbl_debug;
 
-    tbl->lock = lock;
-    tbl->unlock = unlock;
+    tbl->lock = qhashtbl_lock;
+    tbl->unlock = qhashtbl_unlock;
 
-    tbl->free = free_;
+    tbl->free = qhashtbl_free;
 
     // set table range.
     tbl->range = range;
@@ -206,7 +178,7 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
     if (tbl) {
         free(tbl->slots);
         assert(tbl->qmutex == NULL);
-        free_(tbl);
+        qhashtbl_free(tbl);
     }
     return NULL;
 }
@@ -224,7 +196,7 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  */
-static bool put(qhashtbl_t *tbl, const char *name, const void *data,
+bool qhashtbl_put(qhashtbl_t *tbl, const char *name, const void *data,
                 size_t size) {
     if (name == NULL || data == NULL) {
         errno = EINVAL;
@@ -235,7 +207,7 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
     uint32_t hash = qhashmurmur3_32(name, strlen(name));
     int idx = hash % tbl->range;
 
-    lock(tbl);
+    qhashtbl_lock(tbl);
 
     // find existence key
     qhashtbl_obj_t *obj;
@@ -251,7 +223,7 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
     if (dupname == NULL || dupdata == NULL) {
         free(dupname);
         free(dupdata);
-        unlock(tbl);
+        qhashtbl_unlock(tbl);
         errno = ENOMEM;
         return false;
     }
@@ -264,7 +236,7 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
         if (obj == NULL) {
             free(dupname);
             free(dupdata);
-            unlock(tbl);
+            qhashtbl_unlock(tbl);
             errno = ENOMEM;
             return false;
         }
@@ -289,7 +261,7 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
     obj->data = dupdata;
     obj->size = size;
 
-    unlock(tbl);
+    qhashtbl_unlock(tbl);
     return true;
 }
 
@@ -305,8 +277,8 @@ static bool put(qhashtbl_t *tbl, const char *name, const void *data,
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  */
-static bool putstr(qhashtbl_t *tbl, const char *name, const char *str) {
-    return put(tbl, name, str, (str != NULL) ? (strlen(str) + 1) : 0);
+bool qhashtbl_putstr(qhashtbl_t *tbl, const char *name, const char *str) {
+    return qhashtbl_put(tbl, name, str, (str != NULL) ? (strlen(str) + 1) : 0);
 }
 
 /**
@@ -321,7 +293,7 @@ static bool putstr(qhashtbl_t *tbl, const char *name, const char *str) {
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  */
-static bool putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...) {
+bool qhashtbl_putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...) {
     char *str;
     DYNAMIC_VSPRINTF(str, format);
     if (str == NULL) {
@@ -329,7 +301,7 @@ static bool putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...) 
         return false;
     }
 
-    bool ret = putstr(tbl, name, str);
+    bool ret = qhashtbl_putstr(tbl, name, str);
     free(str);
     return ret;
 }
@@ -349,10 +321,10 @@ static bool putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...) 
  * @note
  * The integer will be converted to a string object and stored as string object.
  */
-static bool putint(qhashtbl_t *tbl, const char *name, const int64_t num) {
+bool qhashtbl_putint(qhashtbl_t *tbl, const char *name, const int64_t num) {
     char str[20 + 1];
     snprintf(str, sizeof(str), "%"PRId64, num);
-    return putstr(tbl, name, str);
+    return qhashtbl_putstr(tbl, name, str);
 }
 
 /**
@@ -389,7 +361,7 @@ static bool putint(qhashtbl_t *tbl, const char *name, const int64_t num) {
  *  directly and should not be de-allocated by user. In thread-safe mode,
  *  newmem flag must be set to true always.
  */
-static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem) {
+void *qhashtbl_get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem) {
     if (name == NULL) {
         errno = EINVAL;
         return NULL;
@@ -398,7 +370,7 @@ static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem) {
     uint32_t hash = qhashmurmur3_32(name, strlen(name));
     int idx = hash % tbl->range;
 
-    lock(tbl);
+    qhashtbl_lock(tbl);
 
     // find key
     qhashtbl_obj_t *obj;
@@ -424,7 +396,7 @@ static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem) {
             *size = obj->size;
     }
 
-    unlock(tbl);
+    qhashtbl_unlock(tbl);
 
     if (data == NULL)
         errno = ENOENT;
@@ -448,8 +420,8 @@ static void *get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem) {
  *  If newmem flag is set, returned data will be malloced and should be
  *  deallocated by user.
  */
-static char *getstr(qhashtbl_t *tbl, const char *name, const bool newmem) {
-    return get(tbl, name, NULL, newmem);
+char *qhashtbl_getstr(qhashtbl_t *tbl, const char *name, const bool newmem) {
+    return qhashtbl_get(tbl, name, NULL, newmem);
 }
 
 /**
@@ -465,15 +437,70 @@ static char *getstr(qhashtbl_t *tbl, const char *name, const bool newmem) {
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  */
-static int64_t getint(qhashtbl_t *tbl, const char *name) {
+int64_t qhashtbl_getint(qhashtbl_t *tbl, const char *name) {
     int64_t num = 0;
-    char *str = getstr(tbl, name, true);
+    char *str = qhashtbl_getstr(tbl, name, true);
     if (str != NULL) {
         num = atoll(str);
         free(str);
     }
 
     return num;
+}
+
+/**
+ * qhashtbl->remove(): Remove an object from this table.
+ *
+ * @param tbl   qhashtbl_t container pointer.
+ * @param name  key name
+ *
+ * @return true if successful, otherwise(not found) returns false
+ * @retval errno will be set in error condition.
+ *  - ENOENT : No such key found.
+ *  - EINVAL : Invalid argument.
+ */
+bool qhashtbl_remove(qhashtbl_t *tbl, const char *name) {
+    if (name == NULL) {
+        errno = EINVAL;
+        return false;
+    }
+
+    qhashtbl_lock(tbl);
+
+    uint32_t hash = qhashmurmur3_32(name, strlen(name));
+    int idx = hash % tbl->range;
+
+    // find key
+    bool found = false;
+    qhashtbl_obj_t *prev = NULL;
+    qhashtbl_obj_t *obj;
+    for (obj = tbl->slots[idx]; obj != NULL; obj = obj->next) {
+        if (obj->hash == hash && !strcmp(obj->name, name)) {
+            // adjust link
+            if (prev == NULL)
+                tbl->slots[idx] = obj->next;
+            else
+                prev->next = obj->next;
+
+            // remove
+            free(obj->name);
+            free(obj->data);
+            free(obj);
+
+            found = true;
+            tbl->num--;
+            break;
+        }
+
+        prev = obj;
+    }
+
+    qhashtbl_unlock(tbl);
+
+    if (found == false)
+        errno = ENOENT;
+
+    return found;
 }
 
 /**
@@ -514,13 +541,13 @@ static int64_t getint(qhashtbl_t *tbl, const char *name) {
  *  if deletion is expected during the scan.
  *  Object obj should be initialized with 0 by using memset() before first call.
  */
-static bool getnext(qhashtbl_t *tbl, qhashtbl_obj_t *obj, const bool newmem) {
+bool qhashtbl_getnext(qhashtbl_t *tbl, qhashtbl_obj_t *obj, const bool newmem) {
     if (obj == NULL) {
         errno = EINVAL;
         return NULL;
     }
 
-    lock(tbl);
+    qhashtbl_lock(tbl);
 
     bool found = false;
 
@@ -553,7 +580,7 @@ static bool getnext(qhashtbl_t *tbl, qhashtbl_obj_t *obj, const bool newmem) {
                 DEBUG("getnext(): Unable to allocate memory.");
                 free(obj->name);
                 free(obj->data);
-                unlock(tbl);
+                qhashtbl_unlock(tbl);
                 errno = ENOMEM;
                 return false;
             }
@@ -569,62 +596,7 @@ static bool getnext(qhashtbl_t *tbl, qhashtbl_obj_t *obj, const bool newmem) {
 
     }
 
-    unlock(tbl);
-
-    if (found == false)
-        errno = ENOENT;
-
-    return found;
-}
-
-/**
- * qhashtbl->remove(): Remove an object from this table.
- *
- * @param tbl   qhashtbl_t container pointer.
- * @param name  key name
- *
- * @return true if successful, otherwise(not found) returns false
- * @retval errno will be set in error condition.
- *  - ENOENT : No such key found.
- *  - EINVAL : Invalid argument.
- */
-static bool remove_(qhashtbl_t *tbl, const char *name) {
-    if (name == NULL) {
-        errno = EINVAL;
-        return false;
-    }
-
-    lock(tbl);
-
-    uint32_t hash = qhashmurmur3_32(name, strlen(name));
-    int idx = hash % tbl->range;
-
-    // find key
-    bool found = false;
-    qhashtbl_obj_t *prev = NULL;
-    qhashtbl_obj_t *obj;
-    for (obj = tbl->slots[idx]; obj != NULL; obj = obj->next) {
-        if (obj->hash == hash && !strcmp(obj->name, name)) {
-            // adjust link
-            if (prev == NULL)
-                tbl->slots[idx] = obj->next;
-            else
-                prev->next = obj->next;
-
-            // remove
-            free(obj->name);
-            free(obj->data);
-            free(obj);
-
-            found = true;
-            tbl->num--;
-            break;
-        }
-
-        prev = obj;
-    }
-
-    unlock(tbl);
+    qhashtbl_unlock(tbl);
 
     if (found == false)
         errno = ENOENT;
@@ -639,7 +611,7 @@ static bool remove_(qhashtbl_t *tbl, const char *name) {
  *
  * @return number of elements stored
  */
-static size_t size(qhashtbl_t *tbl) {
+size_t qhashtbl_size(qhashtbl_t *tbl) {
     return tbl->num;
 }
 
@@ -648,8 +620,8 @@ static size_t size(qhashtbl_t *tbl) {
  *
  * @param tbl   qhashtbl_t container pointer.
  */
-static void clear(qhashtbl_t *tbl) {
-    lock(tbl);
+void qhashtbl_clear(qhashtbl_t *tbl) {
+    qhashtbl_lock(tbl);
     int idx;
     for (idx = 0; idx < tbl->range && tbl->num > 0; idx++) {
         if (tbl->slots[idx] == NULL)
@@ -667,7 +639,7 @@ static void clear(qhashtbl_t *tbl) {
         }
     }
 
-    unlock(tbl);
+    qhashtbl_unlock(tbl);
 }
 
 /**
@@ -680,7 +652,7 @@ static void clear(qhashtbl_t *tbl) {
  * @retval errno will be set in error condition.
  *  - EIO : Invalid output stream.
  */
-static bool debug(qhashtbl_t *tbl, FILE *out) {
+bool qhashtbl_debug(qhashtbl_t *tbl, FILE *out) {
     if (out == NULL) {
         errno = EIO;
         return false;
@@ -688,13 +660,13 @@ static bool debug(qhashtbl_t *tbl, FILE *out) {
 
     qhashtbl_obj_t obj;
     memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
-    lock(tbl);
+    qhashtbl_lock(tbl);
     while (tbl->getnext(tbl, &obj, false) == true) {
         fprintf(out, "%s=", obj.name);
         _q_textout(out, obj.data, obj.size, MAX_HUMANOUT);
         fprintf(out, " (%zu, hash=%u)\n", obj.size, obj.hash);
     }
-    unlock(tbl);
+    qhashtbl_unlock(tbl);
 
     return true;
 }
@@ -712,7 +684,7 @@ static bool debug(qhashtbl_t *tbl, FILE *out) {
  *  This operation will do nothing if QHASHTBL_THREADSAFE option was not
  *  given at the initialization time.
  */
-static void lock(qhashtbl_t *tbl) {
+void qhashtbl_lock(qhashtbl_t *tbl) {
     Q_MUTEX_ENTER(tbl->qmutex);
 }
 
@@ -725,7 +697,7 @@ static void lock(qhashtbl_t *tbl) {
  *  This operation will do nothing if QHASHTBL_THREADSAFE option was not
  *  given at the initialization time.
  */
-static void unlock(qhashtbl_t *tbl) {
+void qhashtbl_unlock(qhashtbl_t *tbl) {
     Q_MUTEX_LEAVE(tbl->qmutex);
 }
 
@@ -734,11 +706,11 @@ static void unlock(qhashtbl_t *tbl) {
  *
  * @param tbl   qhashtbl_t container pointer.
  */
-static void free_(qhashtbl_t *tbl) {
-    lock(tbl);
-    clear(tbl);
+void qhashtbl_free(qhashtbl_t *tbl) {
+    qhashtbl_lock(tbl);
+    qhashtbl_clear(tbl);
     free(tbl->slots);
-    unlock(tbl);
+    qhashtbl_unlock(tbl);
     Q_MUTEX_DESTROY(tbl->qmutex);
     free(tbl);
 }

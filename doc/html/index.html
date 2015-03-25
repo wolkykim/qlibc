@@ -65,11 +65,14 @@ $(document).ready(function(){initNavTree('index.html','');});
 <h2>API Reference</h2>
 <ul>
 <li><a href="http://wolkykim.github.io/qlibc/doc/html/files.html">qlibc Core API Reference</a><ul>
-<li>Containers<ul>
+<li>Containers for Key/Value pairs<ul>
 <li>Tree Table &mdash; Tree data structure Key/Value table which implements Left-Leaning Red-Black algirothm.</li>
-<li>Hash Table &mdash; Hash-based data structure Key/Value pair table.</li>
-<li>Static Hash Table &mdash; Fixed size memory structure(array/mmapped/shared) based Key/Value pair table.</li>
-<li>List Table &mdash; Linked-list based Key/Value pair table.</li>
+<li>Hash Table &mdash; Hash-based data structure Key/Value table.</li>
+<li>Static Hash Table &mdash; Fixed size memory structure(array/mmapped/shared) based Key/Value table.</li>
+<li>List Table &mdash; Linked-list based Key/Value table.</li>
+</ul>
+</li>
+<li>Containers for Objects<ul>
 <li>List &mdash; Doubly Linked List.</li>
 <li>Vector &mdash; implements a growable array of elements.</li>
 <li>Queue &mdash; FIFO(First In First Out) implementation.</li>
@@ -98,11 +101,45 @@ $(document).ready(function(){initNavTree('index.html','');});
 </ul>
 </li>
 </ul>
+<h2>qLibc Tables at a Glance</h2>
+<table class="doxtable">
+<tr>
+<th align="left">Characteristics </th><th align="center">Tree Table </th><th align="center">Hash Table </th><th align="center">Static Hash Table</th><th align="center">List Table  </th></tr>
+<tr>
+<td align="left">Data structure </td><td align="center">Red-Black Tree</td><td align="center">Slot Index </td><td align="center">Block Index </td><td align="center">Linked-List </td></tr>
+<tr>
+<td align="left">Search complexity </td><td align="center">O(log n) </td><td align="center">O(1) / O(n) </td><td align="center">O(1) / O(n) </td><td align="center">O(n) </td></tr>
+<tr>
+<td align="left">Insert complexity </td><td align="center">O(log n) </td><td align="center">O(1) / O(n) </td><td align="center">O(1) / O(n) </td><td align="center">O(1) </td></tr>
+<tr>
+<td align="left">Delete complexity </td><td align="center">O(log n) </td><td align="center">O(1) / O(n) </td><td align="center">O(1) / O(n) </td><td align="center">O(n) </td></tr>
+<tr>
+<td align="left">Space complexity </td><td align="center">O(n) </td><td align="center">O(n) </td><td align="center">- </td><td align="center">O(n) </td></tr>
+<tr>
+<td align="left">Space allocation </td><td align="center">Dynamic </td><td align="center">Dynamic </td><td align="center">Pre-allocation </td><td align="center">Dynamic </td></tr>
+<tr>
+<td align="left">Data Stored Sorted </td><td align="center">Yes </td><td align="center">No </td><td align="center">No </td><td align="center">Yes (option) </td></tr>
+<tr>
+<td align="left">User comparator </td><td align="center">Supported </td><td align="center">- </td><td align="center">- </td><td align="center">Supported </td></tr>
+<tr>
+<td align="left">Allow multi-keys </td><td align="center">No </td><td align="center">No </td><td align="center">No </td><td align="center">Yes (option) </td></tr>
+<tr>
+<td align="left">Key stored digested </td><td align="center">No </td><td align="center">No </td><td align="center">Yes </td><td align="center">No </td></tr>
+<tr>
+<td align="left">Search Nearest Key </td><td align="center">Yes </td><td align="center">No </td><td align="center">No </td><td align="center">No </td></tr>
+<tr>
+<td align="left">Iterator support </td><td align="center">Yes </td><td align="center">Yes </td><td align="center">Yes </td><td align="center">Yes </td></tr>
+<tr>
+<td align="left">Iterator visit order</td><td align="center">min -&gt; max </td><td align="center">random </td><td align="center">random </td><td align="center">insert order </td></tr>
+<tr>
+<td align="left">Thread-safe option </td><td align="center">Supported </td><td align="center">Suported </td><td align="center">No </td><td align="center">Supported </td></tr>
+<tr>
+<td align="left">Runs on shared mem </td><td align="center">No </td><td align="center">No </td><td align="center">Yes </td><td align="center">No </td></tr>
+</table>
 <h2>Consistent API Look</h2>
-<p>All container APIs have a consistent look and feel. It basically provides a creator function which usually returns a pointer to a container structure. Also, <b>all functions related to the container can be accessed through function pointers inside of the container</b>.</p>
-<p>So, regardless of which container you use, you can simply put elements into a list with <code>pContainer-&gt;put(pContainer, ...)</code>. It looks like C++ classes, but it's a pure C implementation. Of course, it works with both C and C++ code**.</p>
-<p>We use this concept as much as possible because it is a simplified way of thinking and helps to improve readability. Consequently, it helps people to write bug-free code more easily.</p>
-<p>The examples below illustrates how qlibc looks like at a glance.</p>
+<p>All container APIs have a consistent look and feel. It basically provides a creator function which usually returns a pointer to a container structure. Also, <b>all functions related to the container can be accessed through function pointers inside of the container</b> or traditional style direct access APIs. For an example,</p>
+<p>So, regardless of which container you use, you can simply put elements into a list with <code>container-&gt;put(container, ...)</code> or you can call them using direct API like qtreetbl_pub(container, ...).</p>
+<p>An examples below illustrates how it looks like.</p>
 <div class="fragment"><div class="line"><span class="comment">// create a hash-table.</span></div>
 <div class="line">qhashtbl_t *tbl = <a class="code" href="qhashtbl_8c.html#acce512d557a3c776d474bfc977f34045">qhashtbl</a>(0, QHASHTBL_OPT_THREADSAFE);</div>
 <div class="line"></div>
@@ -161,7 +198,9 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li>Umesh</li>
 <li>Zhongchao Liu</li>
 </ul>
-<p>If we have forgotten or misspelled your name, please let us know. </p>
+<p>If we have forgotten or misspelled your name, please let us know.</p>
+<h2>Think the project is helpful?</h2>
+<p>Do you think this project is helpful? Show your interests and help the project going on. <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=FKTZPCFXXU8PG&amp;lc=US&amp;item_name=qLibc%20Project&amp;item_number=qlibc&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted">Donate to qLibc project</a> </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
