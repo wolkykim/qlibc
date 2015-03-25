@@ -142,6 +142,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <errno.h>
+#include <ctype.h>
 #include "qinternal.h"
 #include "utilities/qhash.h"
 #include "containers/qhasharr.h"
@@ -150,14 +151,19 @@
 
 static qhasharr_slot_t* get_slots(qhasharr_t *tbl);
 static int find_avail(qhasharr_t *tbl, int startidx);
-static int get_idx(qhasharr_t *tbl, const char *key, unsigned int hash);
+static int get_idx(qhasharr_t *tbl, const void *key, size_t key_size,
+        unsigned int hash);
 static void *get_data(qhasharr_t *tbl, int idx, size_t *size);
 static bool put_data(qhasharr_t *tbl, int idx, unsigned int hash,
-                      const char *key, const void *value, size_t size,
-                      int count);
+                      const void *key, size_t key_size, const void *value, 
+                      size_t size, int count);
 static bool copy_slot(qhasharr_t *tbl, int idx1, int idx2);
 static bool remove_slot(qhasharr_t *tbl, int idx);
 static bool remove_data(qhasharr_t *tbl, int idx);
+#ifdef BUILD_DEBUG
+static const char *print_key(qhasharr_t *tbl, const void *key, 
+        size_t key_size);
+#endif
 
 #endif
 
@@ -247,6 +253,7 @@ qhasharr_t *qhasharr(void *memory, size_t memsize) {
     tbl->size = qhasharr_size;
     tbl->clear = qhasharr_clear;
     tbl->debug = qhasharr_debug;
+    tbl->printobj = qhasharr_print_object;
 
     tbl->free = qhasharr_free;
 
@@ -256,12 +263,13 @@ qhasharr_t *qhasharr(void *memory, size_t memsize) {
 }
 
 /**
- * qhasharr->put(): Put an object into this table.
+ * qhasharr->put(): Put an object into this table by key object.
  *
- * @param tbl       qhasharr_t container pointer.
- * @param key       key string
- * @param value     value object data
- * @param size      size of value
+ * @param tbl           qhasharr_t container pointer.
+ * @param key           value object key
+ * @param key_size      size of key
+ * @param value         value object data
+ * @param size          size of value
  *
  * @return true if successful, otherwise returns false
  * @retval errno will be set in error condition.
@@ -269,8 +277,8 @@ qhasharr_t *qhasharr(void *memory, size_t memsize) {
  *  - EINVAL    : Invalid argument.
  *  - EFAULT    : Unexpected error. Data structure is not constant.
  */
-bool qhasharr_put(qhasharr_t *tbl, const char *key, const void *value,
-                size_t size) {
+bool qhasharr_put(qhasharr_t *tbl, const void *key, size_t key_size, 
+        const void *value, size_t size) {
     if (tbl == NULL || key == NULL || value == NULL) {
         errno = EINVAL;
         return false;
@@ -281,29 +289,29 @@ bool qhasharr_put(qhasharr_t *tbl, const char *key, const void *value,
 
     // check full
     if (data->usedslots >= data->maxslots) {
-        DEBUG("hasharr: put %s - FULL", key);
+        DEBUG("hasharr: put %s - FULL", print_key(tbl, key, key_size));
         errno = ENOBUFS;
         return false;
     }
 
     // get hash integer
-    unsigned int hash = qhashmurmur3_32(key, strlen(key)) % data->maxslots;
+    unsigned int hash = qhashmurmur3_32(key, key_size) % data->maxslots;
 
     // check, is slot empty
     if (tblslots[hash].count == 0) {  // empty slot
         // put data
-        if (put_data(tbl, hash, hash, key, value, size, 1) == false) {
-            DEBUG("hasharr: FAILED put(new) %s", key);
+        if (put_data(tbl, hash, hash, key, key_size, value, size, 1) == false) {
+            DEBUG("hasharr: FAILED put(new) %s", print_key(tbl, key, key_size));
             return false;
-        }DEBUG("hasharr: put(new) %s (idx=%d,hash=%u,tot=%d)", key, hash, hash,
-               data->usedslots);
+        } DEBUG("hasharr: put(new) %s (idx=%d,hash=%u,tot=%d)",
+                print_key(tbl, key, key_size), hash, hash, data->usedslots);
     } else if (tblslots[hash].count > 0) {  // same key or hash collision
         // check same key;
-        int idx = get_idx(tbl, key, hash);
+        int idx = get_idx(tbl, key, key_size, hash);
         if (idx >= 0) {  // same key
             // remove and recall
-            qhasharr_remove(tbl, key);
-            return qhasharr_put(tbl, key, value, size);
+            qhasharr_remove(tbl, key, key_size);
+            return qhasharr_put(tbl, key, key_size, value, size);
         } else {  // no same key, just hash collision
             // find empty slot
             int idx = find_avail(tbl, hash);
@@ -313,16 +321,16 @@ bool qhasharr_put(qhasharr_t *tbl, const char *key, const void *value,
             }
 
             // put data. -1 is used for collision resolution (idx != hash);
-            if (put_data(tbl, idx, hash, key, value, size, -1) == false) {
-                DEBUG("hasharr: FAILED put(col) %s", key);
+            if (put_data(tbl, idx, hash, key, key_size, value, size, -1) == false) {
+                DEBUG("hasharr: FAILED put(col) %s", print_key(tbl, key, key_size));
                 return false;
             }
 
             // increase counter from leading slot
             tblslots[hash].count++;
 
-            DEBUG("hasharr: put(col) %s (idx=%d,hash=%u,tot=%d)", key, idx,
-                  hash, data->usedslots);
+            DEBUG("hasharr: put(col) %s (idx=%d,hash=%u,tot=%d)",
+                    print_key(tbl, key, key_size), idx, hash, data->usedslots);
         }
     } else {
         // in case of -1 or -2, move it. -1 used for collision resolution,
@@ -348,13 +356,13 @@ bool qhasharr_put(qhasharr_t *tbl, const char *key, const void *value,
         }
 
         // store data
-        if (put_data(tbl, hash, hash, key, value, size, 1) == false) {
-            DEBUG("hasharr: FAILED put(swp) %s", key);
+        if (put_data(tbl, hash, hash, key, key_size, value, size, 1) == false) {
+            DEBUG("hasharr: FAILED put(swp) %s", print_key(tbl, key, key_size));
             return false;
         }
 
-        DEBUG("hasharr: put(swp) %s (idx=%u,hash=%u,tot=%d)", key, hash, hash,
-              data->usedslots);
+        DEBUG("hasharr: put(swp) %s (idx=%u,hash=%u,tot=%d)",
+                print_key(tbl, key, key_size), hash, hash, data->usedslots);
     }
 
     return true;
@@ -375,7 +383,7 @@ bool qhasharr_put(qhasharr_t *tbl, const char *key, const void *value,
  */
 bool qhasharr_putstr(qhasharr_t *tbl, const char *key, const char *str) {
     int size = (str != NULL) ? (strlen(str) + 1) : 0;
-    return qhasharr_put(tbl, key, (void *) str, size);
+    return qhasharr_put(tbl, key, strlen(key), (void *) str, size);
 }
 
 /**
@@ -428,11 +436,12 @@ bool qhasharr_putint(qhasharr_t *tbl, const char *key, int64_t num) {
 }
 
 /**
- * qhasharr->get(): Get an object from this table
+ * qhasharr->get(): Get an object from this table by key object
  *
- * @param tbl       qhasharr_t container pointer.
- * @param key       key string
- * @param size      if not NULL, oject size will be stored
+ * @param tbl           qhasharr_t container pointer.
+ * @param key           value object key
+ * @param key_size      size of key
+ * @param size          if not NULL, oject size will be stored
  *
  * @return malloced object pointer if successful, otherwise(not found)
  *  returns NULL
@@ -444,7 +453,8 @@ bool qhasharr_putint(qhasharr_t *tbl, const char *key, int64_t num) {
  * @note
  * returned object must be freed after done using.
  */
-void *qhasharr_get(qhasharr_t *tbl, const char *key, size_t *size) {
+void *qhasharr_get(qhasharr_t *tbl, const void *key, size_t key_size, 
+        size_t *size) {
     if (tbl == NULL || key == NULL) {
         errno = EINVAL;
         return NULL;
@@ -453,9 +463,9 @@ void *qhasharr_get(qhasharr_t *tbl, const char *key, size_t *size) {
     qhasharr_data_t *data = tbl->data;
 
     // get hash integer
-    unsigned int hash = qhashmurmur3_32(key, strlen(key)) % data->maxslots;
+    unsigned int hash = qhashmurmur3_32(key, key_size) % data->maxslots;
 
-    int idx = get_idx(tbl, key, hash);
+    int idx = get_idx(tbl, key, key_size, hash);
     if (idx < 0) {
         errno = ENOENT;
         return NULL;
@@ -481,7 +491,7 @@ void *qhasharr_get(qhasharr_t *tbl, const char *key, size_t *size) {
  * returned object must be freed after done using.
  */
 char *qhasharr_getstr(qhasharr_t *tbl, const char *key) {
-    return (char *)qhasharr_get(tbl, key, NULL);
+    return (char *) qhasharr_get(tbl, key, strlen(key), NULL);
 }
 
 /**
@@ -509,9 +519,10 @@ int64_t qhasharr_getint(qhasharr_t *tbl, const char *key) {
 }
 
 /**
- * qhasharr->remove(): Remove an object from this table.
+ * qhasharr->remove(): Remove an object from this table by key object.
  *
  * @param tbl       qhasharr_t container pointer.
+ * @param key_size  size of key
  * @param key       key string
  *
  * @return true if successful, otherwise(not found) returns false
@@ -520,7 +531,7 @@ int64_t qhasharr_getint(qhasharr_t *tbl, const char *key) {
  *  - EINVAL    : Invald argument.
  *  - EFAULT    : Unexpected error. Data structure is not constant.
  */
-bool qhasharr_remove(qhasharr_t *tbl, const char *key) {
+bool qhasharr_remove(qhasharr_t *tbl, const void *key, size_t key_size) {
     if (tbl == NULL || key == NULL) {
         errno = EINVAL;
         return false;
@@ -529,10 +540,10 @@ bool qhasharr_remove(qhasharr_t *tbl, const char *key) {
     qhasharr_data_t *data = tbl->data;
 
     // get hash integer
-    unsigned int hash = qhashmurmur3_32(key, strlen(key)) % data->maxslots;
-    int idx = get_idx(tbl, key, hash);
+    unsigned int hash = qhashmurmur3_32(key, key_size) % data->maxslots;
+    int idx = get_idx(tbl, key, key_size, hash);
     if (idx < 0) {
-        DEBUG("key(%s) not found.", key);
+        DEBUG("key(%s) not found.", print_key(tbl, key, key_size));
         errno = ENOENT;
         return false;
     }
@@ -554,10 +565,14 @@ bool qhasharr_remove(qhasharr_t *tbl, const char *key) {
  *
  * @code
  *  int idx = 0;
- *  qhasharr_obj_t obj;
- *  while(tbl->getnext(tbl, &obj, &idx) == true) {
- *    printf("NAME=%s, DATA=%s, SIZE=%zu\n",
- *           obj.name, (char*)obj.data, obj.size);
+ *  qnobj_t obj;
+ *  while(tbl->getnext(tbl, &obj, &idx) == true) { 
+ *    char *obj_name = tbl->printobj(obj.name);
+ *    char *obj_data = tbl->printobj(obj.data);
+ *    printf("NAME=%s, NAME_SIZE=%zu, DATA=%s, SIZE=%zu\n",
+ *           obj_name, obj.name_size, obj_data, obj.size);
+ *    free(obj_name);
+ *    free(obj_data);
  *    free(obj.name);
  *    free(obj.data);
  *  }
@@ -593,6 +608,7 @@ bool qhasharr_getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx) {
         }
         memcpy(obj->name, tblslots[*idx].data.pair.key, keylen);
         obj->name[keylen] = '\0';
+        obj->name_size = keylen;
 
         obj->data = get_data(tbl, *idx, &obj->size);
         if (obj->data == NULL) {
@@ -607,6 +623,66 @@ bool qhasharr_getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx) {
 
     errno = ENOENT;
     return false;
+}
+
+/**
+ * qhasharr->printobj(): Print object to string.
+ *
+ * @param data          object data
+ * @param data_size     object data size
+ *
+ * @return name string if successful, otherwise returns NULL
+ * @retval errno will be set in error condition.
+ *  - EINVAL    : Invald argument.
+ *  - ENOMEM    : Memory allocation failed.
+ *
+ * @code
+ *  int idx = 0;
+ *  qnobj_t obj;
+ *  while(tbl->getnext(tbl, &obj, &idx) == true) { 
+ *    char *obj_name = tbl->printobj(obj.name);
+ *    char *obj_data = tbl->printobj(obj.data);
+ *    printf("NAME=%s, NAME_SIZE=%zu, DATA=%s, SIZE=%zu\n",
+ *           obj_name, obj.name_size, obj_data, obj.size);
+ *    free(obj_name);
+ *    free(obj_data);
+ *    free(obj.name);
+ *    free(obj.data);
+ *  }
+ * @endcode
+ *
+ * @note
+ *  Please be aware that return pointer must be free.
+ */
+
+char *qhasharr_print_object(const void *data, size_t data_size) {
+    if (data == NULL) {
+        errno = EINVAL;
+        return NULL;
+    }
+    int i;
+    // "0x" + '\0'
+    char *str = (char *)calloc(data_size * 2 + 2 + 1, sizeof(char));
+    if (str == NULL) {
+        errno = ENOMEM;
+        return NULL;
+    }
+    memcpy(str, data, data_size);
+    bool is_printable = true;
+    for (i = 0; i < data_size; i++) {
+        if (!isprint(str[i])) {
+            is_printable = false;
+            break;
+        }
+    }
+    if (!is_printable) {
+        char *key_string = (char *)data;
+        str[0] = '0';
+        str[1] = 'x';
+        for (i = 0; i < data_size; i++)
+            sprintf(str + i*2 + 2, "%02X", key_string[i]);
+    }
+    return str;
 }
 
 /**
@@ -791,11 +867,13 @@ bool qhasharr_debug(qhasharr_t *tbl, FILE *out) {
     qhasharr_obj_t obj;
     while (tbl->getnext(tbl, &obj, &idx) == true) {
         uint16_t keylen = tblslots[idx - 1].data.pair.keylen;
-        fprintf(out, "%s%s(%d)=", obj.name,
+        char *obj_name = tbl->printobj(obj.name, obj.name_size);
+        fprintf(out, "%s%s(%d)=", obj_name,
                 (keylen > Q_HASHARR_KEYSIZE) ? "..." : "", keylen);
         _q_textout(out, obj.data, obj.size, MAX_HUMANOUT);
         fprintf(out, " (%zu)\n", obj.size);
 
+        free(obj_name);
         free(obj.name);
         free(obj.data);
     }
@@ -882,7 +960,8 @@ static int find_avail(qhasharr_t *tbl, int startidx) {
     return -1;
 }
 
-static int get_idx(qhasharr_t *tbl, const char *key, unsigned int hash) {
+static int get_idx(qhasharr_t *tbl, const void *key, size_t key_size, 
+        unsigned int hash) {
     qhasharr_data_t *data = tbl->data;
     qhasharr_slot_t *tblslots = get_slots(tbl);
 
@@ -895,7 +974,7 @@ static int get_idx(qhasharr_t *tbl, const char *key, unsigned int hash) {
                 count++;
 
                 // is same key?
-                size_t keylen = strlen(key);
+                size_t keylen = key_size;
                 // first check key length
                 if (keylen == tblslots[idx].data.pair.keylen) {
                     if (keylen <= Q_HASHARR_KEYSIZE) {
@@ -976,11 +1055,13 @@ static void *get_data(qhasharr_t *tbl, int idx, size_t *size) {
 
     if (size != NULL)
         *size = valsize;
+
     return value;
 }
 
 static bool put_data(qhasharr_t *tbl, int idx, unsigned int hash,
-                      const char *key, const void *value, size_t size,
+                      const void *key, size_t key_size,
+                      const void *value, size_t size,
                       int count) {
     qhasharr_data_t *data = tbl->data;
     qhasharr_slot_t *tblslots = get_slots(tbl);
@@ -992,7 +1073,7 @@ static bool put_data(qhasharr_t *tbl, int idx, unsigned int hash,
         return false;
     }
 
-    size_t keylen = strlen(key);
+    size_t keylen = key_size;
     unsigned char keymd5[16];
     qhashmd5(key, keylen, keymd5);
 
@@ -1011,7 +1092,8 @@ static bool put_data(qhasharr_t *tbl, int idx, unsigned int hash,
         if (savesize > 0) {  // find next empty slot
             int tmpidx = find_avail(tbl, newidx + 1);
             if (tmpidx < 0) {
-                DEBUG("hasharr: Can't expand slot for key %s.", key);
+                DEBUG("hasharr: Can't expand slot for key %s.", 
+                        print_key(tbl, key, key_size));
                 remove_data(tbl, idx);
                 errno = ENOBUFS;
                 return false;
@@ -1027,8 +1109,8 @@ static bool put_data(qhasharr_t *tbl, int idx, unsigned int hash,
 
             tblslots[newidx].link = tmpidx;   // link chain
 
-            DEBUG("hasharr: slot %d is linked to slot %d for key %s.", tmpidx,
-                  newidx, key);
+            DEBUG("hasharr: slot %d is linked to slot %d for key %s.",
+                    tmpidx, newidx, print_key(tbl, key, key_size));
             newidx = tmpidx;
         }
 
@@ -1124,5 +1206,31 @@ static bool remove_data(qhasharr_t *tbl, int idx) {
 
     return true;
 }
+
+#ifdef BUILD_DEBUG
+static const char *print_key(qhasharr_t *tbl, const void *key, size_t key_size) {
+    int i;
+    size_t len = (key_size > Q_HASHARR_KEYSIZE)?Q_HASHARR_KEYSIZE:key_size;
+    char *str = (char *)key;
+    bool is_printable = true;
+    for (i = 0; i < len; i++) {
+        if (!isprint(str[i])) {
+            is_printable = false;
+            break;
+        }
+    }
+    if (!is_printable) {
+        str = tbl->debug_key_msg;
+        char *key_string = (char *)key;
+        memset(str, 0, Q_HASHARR_KEYSIZE*2+2+1);
+        str[0] = '0';
+        str[1] = 'x';
+        for (i = 0; i < len; i++)
+            sprintf(str + i*2 + 2, "%02X", key_string[i]);
+    }
+
+    return str;
+}
+#endif
 
 #endif /* _DOXYGEN_SKIP */

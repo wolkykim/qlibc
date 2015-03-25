@@ -55,6 +55,15 @@ int main(void) {
     tbl->putstr(tbl, "12345678901234567890",
                 "1234567890123456789012345678901234567890");
 
+    // by key object
+    tbl->put(tbl, "\x1\x7f", 2, "aa", strlen("aa"));
+    tbl->put(tbl, "\x2\x7f", 2, "bb", strlen("bb"));
+    tbl->put(tbl, "\x3\x7f", 2, "cc", strlen("cc"));
+    tbl->put(tbl, "\x4\x7f", 2, "dd", strlen("dd"));
+    tbl->put(tbl, "\x5\x7f", 2, "ee", strlen("ee"));
+    tbl->put(tbl, "\x6\x7f", 2, "ff", strlen("ff"));
+
+
     // print out
     printf("--[Test 1 : adding elements]--\n");
     tbl->debug(tbl, stdout);
@@ -79,8 +88,12 @@ int main(void) {
     int idx = 0;
     qhasharr_obj_t obj;
     while (tbl->getnext(tbl, &obj, &idx) == true) {
-        printf("NAME=%s, DATA=%s, SIZE=%zu\n", obj.name, (char *) obj.data,
-               obj.size);
+        char *obj_name = tbl->printobj(obj.name, obj.name_size);
+        char *obj_data = tbl->printobj(obj.data, obj.size);
+        printf("NAME=%s, NAME_SIZE=%zu, DATA=%s, SIZE=%zu\n",
+                obj_name, obj.name_size, obj_data, obj.size);
+        free(obj_name);
+        free(obj_data);
         free(obj.name);
         free(obj.data);
     }
