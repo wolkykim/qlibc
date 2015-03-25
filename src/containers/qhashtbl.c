@@ -155,9 +155,9 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
     tbl->getstr = qhashtbl_getstr;
     tbl->getint = qhashtbl_getint;
 
-    tbl->getnext = qhashtbl_getnext;
-
     tbl->remove = qhashtbl_remove;
+
+    tbl->getnext = qhashtbl_getnext;
 
     tbl->size = qhashtbl_size;
     tbl->clear = qhashtbl_clear;

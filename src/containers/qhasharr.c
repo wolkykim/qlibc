@@ -239,10 +239,11 @@ qhasharr_t *qhasharr(void *memory, size_t memsize) {
     tbl->get = qhasharr_get;
     tbl->getstr = qhasharr_getstr;
     tbl->getint = qhasharr_getint;
-    tbl->getnext = qhasharr_getnext;
 
     tbl->remove = qhasharr_remove;
     tbl->remove_by_idx = qhasharr_remove_by_idx;
+
+    tbl->getnext = qhasharr_getnext;
 
     tbl->size = qhasharr_size;
     tbl->clear = qhasharr_clear;
