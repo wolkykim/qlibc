@@ -302,7 +302,7 @@ bool qhasharr_put(qhasharr_t *tbl, const char *key, const void *value,
         int idx = get_idx(tbl, key, hash);
         if (idx >= 0) {  // same key
             // remove and recall
-            qhasharr_remove(tbl, key);
+            qhasharr_remove_by_idx(tbl, idx);
             return qhasharr_put(tbl, key, value, size);
         } else {  // no same key, just hash collision
             // find empty slot
