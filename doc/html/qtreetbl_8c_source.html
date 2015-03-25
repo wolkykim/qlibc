@@ -206,10 +206,10 @@ $(document).ready(function(){initNavTree('qtreetbl_8c_source.html','');});
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;                                <span class="keywordtype">size_t</span> namesize);</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="keyword">static</span> qtreetbl_obj_t *remove_min(qtreetbl_obj_t *obj);</div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="keyword">static</span> qtreetbl_obj_t *new_obj(<span class="keywordtype">bool</span> red, <span class="keyword">const</span> <span class="keywordtype">void</span> *name, <span class="keywordtype">size_t</span> namesize,</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">void</span> *data, <span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#a47fd0f664c1c70ca9217822cf49d7207">datasize</a>);</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">void</span> *data, <span class="keywordtype">size_t</span> datasize);</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="keyword">static</span> qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">void</span> *name, <span class="keywordtype">size_t</span> namesize,</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">void</span> *data, <span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#a47fd0f664c1c70ca9217822cf49d7207">datasize</a>);</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">void</span> *data, <span class="keywordtype">size_t</span> datasize);</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="keyword">static</span> qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;                                  <span class="keyword">const</span> <span class="keywordtype">void</span> *name, <span class="keywordtype">size_t</span> namesize);</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> free_objs(qtreetbl_obj_t *obj);</div>
@@ -325,7 +325,7 @@ $(document).ready(function(){initNavTree('qtreetbl_8c_source.html','');});
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="comment"> *  - ENOMEM : Memory allocation failure.</span></div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00260"></a><span class="lineno"><a class="line" href="qtreetbl_8c.html#a49e05111c8541c7155e352fb618cf170">  260</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qtreetbl_8c.html#a49e05111c8541c7155e352fb618cf170">qtreetbl_put</a>(qtreetbl_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keyword">const</span> <span class="keywordtype">void</span> *data,</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                  <span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#a47fd0f664c1c70ca9217822cf49d7207">datasize</a>) {</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                  <span class="keywordtype">size_t</span> datasize) {</div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="qtreetbl_8c.html#ad2a7a784bf15be78fb7e72ab25940fe5">qtreetbl_put_by_obj</a>(tbl, name,</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                               (name != NULL) ? (strlen(name) + 1) : 0, data,</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                               datasize);</div>
@@ -393,7 +393,7 @@ $(document).ready(function(){initNavTree('qtreetbl_8c_source.html','');});
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<span class="comment"> *  This is the underlying put function which all other put methods use.</span></div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00328"></a><span class="lineno"><a class="line" href="qtreetbl_8c.html#ad2a7a784bf15be78fb7e72ab25940fe5">  328</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qtreetbl_8c.html#ad2a7a784bf15be78fb7e72ab25940fe5">qtreetbl_put_by_obj</a>(qtreetbl_t *tbl, <span class="keyword">const</span> <span class="keywordtype">void</span> *name, <span class="keywordtype">size_t</span> namesize,</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;                         <span class="keyword">const</span> <span class="keywordtype">void</span> *data, <span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#a47fd0f664c1c70ca9217822cf49d7207">datasize</a>) {</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;                         <span class="keyword">const</span> <span class="keywordtype">void</span> *data, <span class="keywordtype">size_t</span> datasize) {</div>
 <div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keywordflow">if</span> (name == NULL || namesize == 0 || data == NULL || datasize == 0) {</div>
 <div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        errno = EINVAL;</div>
 <div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
@@ -448,7 +448,7 @@ $(document).ready(function(){initNavTree('qtreetbl_8c_source.html','');});
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;<span class="comment"> *  directly and should not be de-allocated by user. In thread-safe mode,</span></div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;<span class="comment"> *  newmem flag must be set to true always.</span></div>
 <div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00384"></a><span class="lineno"><a class="line" href="qtreetbl_8c.html#ab3232b711f0462533a066ecffb01a297">  384</a></span>&#160;<span class="keywordtype">void</span> *<a class="code" href="qtreetbl_8c.html#ab3232b711f0462533a066ecffb01a297">qtreetbl_get</a>(qtreetbl_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keywordtype">size_t</span> *<a class="code" href="qlist_8c.html#a47fd0f664c1c70ca9217822cf49d7207">datasize</a>,</div>
+<div class="line"><a name="l00384"></a><span class="lineno"><a class="line" href="qtreetbl_8c.html#ab3232b711f0462533a066ecffb01a297">  384</a></span>&#160;<span class="keywordtype">void</span> *<a class="code" href="qtreetbl_8c.html#ab3232b711f0462533a066ecffb01a297">qtreetbl_get</a>(qtreetbl_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keywordtype">size_t</span> *datasize,</div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;<span class="keywordtype">bool</span> newmem) {</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="qtreetbl_8c.html#a6ad04787f2efd3d4324b51fbb826fb38">qtreetbl_get_by_obj</a>(tbl, name,</div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;                               (name != NULL) ? (strlen(name) + 1) : 0,</div>
@@ -502,7 +502,7 @@ $(document).ready(function(){initNavTree('qtreetbl_8c_source.html','');});
 <div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;<span class="comment"> *  newmem flag must be set to true always.</span></div>
 <div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00437"></a><span class="lineno"><a class="line" href="qtreetbl_8c.html#a6ad04787f2efd3d4324b51fbb826fb38">  437</a></span>&#160;<span class="keywordtype">void</span> *<a class="code" href="qtreetbl_8c.html#a6ad04787f2efd3d4324b51fbb826fb38">qtreetbl_get_by_obj</a>(qtreetbl_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keywordtype">size_t</span> namesize,</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;                          <span class="keywordtype">size_t</span> *<a class="code" href="qlist_8c.html#a47fd0f664c1c70ca9217822cf49d7207">datasize</a>, <span class="keywordtype">bool</span> newmem) {</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;                          <span class="keywordtype">size_t</span> *datasize, <span class="keywordtype">bool</span> newmem) {</div>
 <div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;    <span class="keywordflow">if</span> (name == NULL || namesize == 0) {</div>
 <div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;        errno = EINVAL;</div>
 <div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
@@ -1064,7 +1064,7 @@ $(document).ready(function(){initNavTree('qtreetbl_8c_source.html','');});
 <div class="line"><a name="l00997"></a><span class="lineno">  997</span>&#160;}</div>
 <div class="line"><a name="l00998"></a><span class="lineno">  998</span>&#160;</div>
 <div class="line"><a name="l00999"></a><span class="lineno">  999</span>&#160;<span class="keyword">static</span> qtreetbl_obj_t *new_obj(<span class="keywordtype">bool</span> red, <span class="keyword">const</span> <span class="keywordtype">void</span> *name, <span class="keywordtype">size_t</span> namesize,</div>
-<div class="line"><a name="l01000"></a><span class="lineno"> 1000</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">void</span> *data, <span class="keywordtype">size_t</span> <a class="code" href="qlist_8c.html#a47fd0f664c1c70ca9217822cf49d7207">datasize</a>) {</div>
+<div class="line"><a name="l01000"></a><span class="lineno"> 1000</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">void</span> *data, <span class="keywordtype">size_t</span> datasize) {</div>
 <div class="line"><a name="l01001"></a><span class="lineno"> 1001</span>&#160;    qtreetbl_obj_t *obj = (qtreetbl_obj_t *) calloc(1, <span class="keyword">sizeof</span>(qtreetbl_obj_t));</div>
 <div class="line"><a name="l01002"></a><span class="lineno"> 1002</span>&#160;    <span class="keywordtype">void</span> *copyname = <a class="code" href="qstring_8c.html#acc32dbf9f419ef637d0547211b7125b9">qmemdup</a>(name, namesize);</div>
 <div class="line"><a name="l01003"></a><span class="lineno"> 1003</span>&#160;    <span class="keywordtype">void</span> *copydata = <a class="code" href="qstring_8c.html#acc32dbf9f419ef637d0547211b7125b9">qmemdup</a>(data, datasize);</div>
@@ -1081,7 +1081,7 @@ $(document).ready(function(){initNavTree('qtreetbl_8c_source.html','');});
 <div class="line"><a name="l01014"></a><span class="lineno"> 1014</span>&#160;    obj-&gt;name = copyname;</div>
 <div class="line"><a name="l01015"></a><span class="lineno"> 1015</span>&#160;    obj-&gt;namesize = namesize;</div>
 <div class="line"><a name="l01016"></a><span class="lineno"> 1016</span>&#160;    obj-&gt;data = copydata;</div>
-<div class="line"><a name="l01017"></a><span class="lineno"> 1017</span>&#160;    obj-&gt;datasize = <a class="code" href="qlist_8c.html#a47fd0f664c1c70ca9217822cf49d7207">datasize</a>;</div>
+<div class="line"><a name="l01017"></a><span class="lineno"> 1017</span>&#160;    obj-&gt;datasize = datasize;</div>
 <div class="line"><a name="l01018"></a><span class="lineno"> 1018</span>&#160;</div>
 <div class="line"><a name="l01019"></a><span class="lineno"> 1019</span>&#160;    <span class="keywordflow">return</span> obj;</div>
 <div class="line"><a name="l01020"></a><span class="lineno"> 1020</span>&#160;}</div>
@@ -1105,7 +1105,7 @@ $(document).ready(function(){initNavTree('qtreetbl_8c_source.html','');});
 <div class="line"><a name="l01038"></a><span class="lineno"> 1038</span>&#160;        <span class="keywordflow">if</span> (copydata != NULL) {</div>
 <div class="line"><a name="l01039"></a><span class="lineno"> 1039</span>&#160;            free(obj-&gt;data);</div>
 <div class="line"><a name="l01040"></a><span class="lineno"> 1040</span>&#160;            obj-&gt;data = copydata;</div>
-<div class="line"><a name="l01041"></a><span class="lineno"> 1041</span>&#160;            obj-&gt;datasize = <a class="code" href="qlist_8c.html#a47fd0f664c1c70ca9217822cf49d7207">datasize</a>;</div>
+<div class="line"><a name="l01041"></a><span class="lineno"> 1041</span>&#160;            obj-&gt;datasize = datasize;</div>
 <div class="line"><a name="l01042"></a><span class="lineno"> 1042</span>&#160;        }</div>
 <div class="line"><a name="l01043"></a><span class="lineno"> 1043</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (cmp &lt; 0) {</div>
 <div class="line"><a name="l01044"></a><span class="lineno"> 1044</span>&#160;        obj-&gt;right = put_obj(tbl, obj-&gt;right, name, namesize, data, datasize);</div>
@@ -1230,7 +1230,6 @@ $(document).ready(function(){initNavTree('qtreetbl_8c_source.html','');});
 <div class="ttc" id="qtreetbl_8c_html_ab3232b711f0462533a066ecffb01a297"><div class="ttname"><a href="qtreetbl_8c.html#ab3232b711f0462533a066ecffb01a297">qtreetbl_get</a></div><div class="ttdeci">void * qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize, bool newmem)</div><div class="ttdoc">qtreetbl-&gt;get(): Get an object from this table. </div><div class="ttdef"><b>Definition:</b> <a href="qtreetbl_8c_source.html#l00384">qtreetbl.c:384</a></div></div>
 <div class="ttc" id="qtreetbl_8c_html_a5c8aa458bac0dc5e7dc0ab97c6f52dfd"><div class="ttname"><a href="qtreetbl_8c.html#a5c8aa458bac0dc5e7dc0ab97c6f52dfd">qtreetbl_lock</a></div><div class="ttdeci">void qtreetbl_lock(qtreetbl_t *tbl)</div><div class="ttdoc">qtreetbl-&gt;lock(): Enter critical section. </div><div class="ttdef"><b>Definition:</b> <a href="qtreetbl_8c_source.html#l00807">qtreetbl.c:807</a></div></div>
 <div class="ttc" id="qtreetbl_8c_html_ac475383244c35814d0950f0fa0c6414e"><div class="ttname"><a href="qtreetbl_8c.html#ac475383244c35814d0950f0fa0c6414e">qtreetbl_putstrf</a></div><div class="ttdeci">bool qtreetbl_putstrf(qtreetbl_t *tbl, const char *name, const char *format,...)</div><div class="ttdoc">qtreetbl-&gt;putstrf(): Put a formatted string into this table. </div><div class="ttdef"><b>Definition:</b> <a href="qtreetbl_8c_source.html#l00297">qtreetbl.c:297</a></div></div>
-<div class="ttc" id="qlist_8c_html_a47fd0f664c1c70ca9217822cf49d7207"><div class="ttname"><a href="qlist_8c.html#a47fd0f664c1c70ca9217822cf49d7207">datasize</a></div><div class="ttdeci">static size_t datasize(qlist_t *list)</div><div class="ttdoc">qlist-&gt;size(): Returns the sum of total element size. </div><div class="ttdef"><b>Definition:</b> <a href="qlist_8c_source.html#l00678">qlist.c:678</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
