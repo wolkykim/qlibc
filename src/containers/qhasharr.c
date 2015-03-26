@@ -373,7 +373,7 @@ bool qhasharr_put_by_obj(qhasharr_t *tbl, const void *name, size_t namesize,
         int idx = get_idx(tbl, name, namesize, hash);
         if (idx >= 0) {  // same key
             // remove and recall
-            qhasharr_remove_by_obj(tbl, name, namesize);
+            qhasharr_remove_by_idx(tbl, idx);
             return qhasharr_put_by_obj(tbl, name, namesize, data, datasize);
         } else {  // no same key but hash collision
             // find empty slot
