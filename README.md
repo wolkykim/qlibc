@@ -46,7 +46,7 @@ Please refer the LICENSE document included in the package for more details.
 
 | Characteristics     | Tree Table   | Hash Table   |Static Hash Table| List Table   |
 |:--------------------|:------------:|:------------:|:---------------:|:------------:|
-| Data structure      |Red-Black Tree| Slot Index   | Block Index     | Linked-List  |
+| Data structure      | Binary Tree  | Slot Index   | Block Array     | Linked-List  |
 | Search complexity   | O(log n)     | O(1) / O(n)  | O(1) / O(n)     | O(n)         |
 | Insert complexity   | O(log n)     | O(1) / O(n)  | O(1) / O(n)     | O(1)         |
 | Delete complexity   | O(log n)     | O(1) / O(n)  | O(1) / O(n)     | O(n)         |
