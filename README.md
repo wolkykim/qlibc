@@ -16,7 +16,7 @@ Please refer the LICENSE document included in the package for more details.
 
 * [qlibc Core API Reference](http://wolkykim.github.io/qlibc/doc/html/files.html)
   * Containers for Key/Value pairs
-    * Tree Table --- in binary tree(left-leaning red-black) data structure.
+    * Tree Table --- in binary tree(left-leaning red-black tree) data structure.
     * Hash Table --- in hash-based data structure.
     * Static Hash Table --- in fixed size memory(array/mmapped/shared).
     * List Table --- in (doubly) linked-list data structure.
