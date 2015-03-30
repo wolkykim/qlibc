@@ -66,10 +66,10 @@ $(document).ready(function(){initNavTree('index.html','');});
 <ul>
 <li><a href="http://wolkykim.github.io/qlibc/doc/html/files.html">qlibc Core API Reference</a><ul>
 <li>Containers for Key/Value pairs<ul>
-<li>Tree Table &mdash; Tree data structure Key/Value table which implements Left-Leaning Red-Black algirothm.</li>
-<li>Hash Table &mdash; Hash-based data structure Key/Value table.</li>
-<li>Static Hash Table &mdash; Fixed size memory structure(array/mmapped/shared) based Key/Value table.</li>
-<li>List Table &mdash; Linked-list based Key/Value table.</li>
+<li>Tree Table &mdash; in binary tree(left-leaning red-black tree) data structure.</li>
+<li>Hash Table &mdash; in hash-based data structure.</li>
+<li>Static Hash Table &mdash; in fixed size memory(array/mmapped/shared).</li>
+<li>List Table &mdash; in (doubly) linked-list data structure.</li>
 </ul>
 </li>
 <li>Containers for Objects<ul>
@@ -106,7 +106,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <tr>
 <th align="left">Characteristics </th><th align="center">Tree Table </th><th align="center">Hash Table </th><th align="center">Static Hash Table</th><th align="center">List Table  </th></tr>
 <tr>
-<td align="left">Data structure </td><td align="center">Red-Black Tree</td><td align="center">Slot Index </td><td align="center">Block Index </td><td align="center">Linked-List </td></tr>
+<td align="left">Data structure </td><td align="center">Binary Tree </td><td align="center">Slot Index </td><td align="center">Block Array </td><td align="center">Linked-List </td></tr>
 <tr>
 <td align="left">Search complexity </td><td align="center">O(log n) </td><td align="center">O(1) / O(n) </td><td align="center">O(1) / O(n) </td><td align="center">O(n) </td></tr>
 <tr>

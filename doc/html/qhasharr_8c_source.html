@@ -440,7 +440,7 @@ $(document).ready(function(){initNavTree('qhasharr_8c_source.html','');});
 <div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;        <span class="keywordtype">int</span> idx = get_idx(tbl, name, namesize, hash);</div>
 <div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;        <span class="keywordflow">if</span> (idx &gt;= 0) {  <span class="comment">// same key</span></div>
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;            <span class="comment">// remove and recall</span></div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;            <a class="code" href="qhasharr_8c.html#af57be2bc8caf66f6bf94cd21370ef44f">qhasharr_remove_by_obj</a>(tbl, name, namesize);</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;            <a class="code" href="qhasharr_8c.html#a54fa504cce007a18fa510be544307cab">qhasharr_remove_by_idx</a>(tbl, idx);</div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="qhasharr_8c.html#a3bc56610cce2c4f7ee2373ae4a40143b">qhasharr_put_by_obj</a>(tbl, name, namesize, data, datasize);</div>
 <div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;        } <span class="keywordflow">else</span> {  <span class="comment">// no same key but hash collision</span></div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;            <span class="comment">// find empty slot</span></div>
