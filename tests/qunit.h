@@ -61,7 +61,7 @@ int _q_this_failed = 0;                                                     \
 int _q_errcnt = 0;                                                          \
 int _q_assert_cnt = 0;  /* number of assert test in a test */               \
 int _q_assert_dot_cnt = 0;  /* number of dots printed out in a test. */     \
-struct timespec _q_timer;                                                   \
+long _q_timer;                                                              \
 int main(int argc, char **argv) {                                           \
     PRINTLN("%s", _q_title);                                                \
     PRINTLN("======================================================================");  \
@@ -85,9 +85,8 @@ int main(int argc, char **argv) {                                           \
 
 #define _TEST_RESULT()                                                      \
     TIMER_STOP(_q_timer);                                                   \
-    if (_q_tot_tests ) PRINTLN(" %s (%d assertions, %ldus)",                \
-        (_q_this_failed) ? "FAIL" : "OK", _q_assert_cnt,                    \
-        ((_q_timer.tv_sec * 1000000000) + _q_timer.tv_nsec) / 1000);        \
+    if (_q_tot_tests ) PRINTLN(" %s (%d assertions, %ldms)",                \
+        (_q_this_failed) ? "FAIL" : "OK", _q_assert_cnt, _q_timer);         \
     _q_tot_failed += (_q_this_failed) ? 1 : 0;                              \
     _q_this_failed = 0;
 
@@ -112,13 +111,11 @@ int main(int argc, char **argv) {                                           \
 #define ASSERT_FALSE(b) ASSERT(!(b))
 
 #define TIMER_START(x) do {                                                 \
-        clock_gettime(CLOCK_MONOTONIC, &x);                                 \
+        x = qtime_current_milli();                                          \
     } while(0)
 
 #define TIMER_STOP(x) do {                                                  \
-        struct timespec _tp1 = x, _tp2;                                     \
-        clock_gettime(CLOCK_MONOTONIC, &_tp2);                              \
-        qtime_timespec_diff(_tp1, _tp2, &x);                                \
+        x = qtime_current_milli() - x;                                      \
     } while(0)
 
 #ifdef __cplusplus

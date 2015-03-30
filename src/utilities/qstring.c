@@ -36,8 +36,8 @@
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
-#include <time.h>
 #include <unistd.h>
+#include <sys/time.h>
 #include "qinternal.h"
 #include "utilities/qencode.h"
 #include "utilities/qhash.h"
@@ -651,23 +651,20 @@ qlist_t *qstrtokenizer(const char *str, const char *delimiters) {
  *  it uses rand().
  */
 char *qstrunique(const char *seed) {
-    int time1;
-    long time2;
+    long usec;
 #ifdef _WIN32
     FILETIME ft;
     GetSystemTimeAsFileTime(&ft);
-    time1 = (int)time(NULL);
-    time2 = (long)ft.dwLowDateTime;
+    usec = ft.dwLowDateTime % 1000000;
 #else
-    struct timespec tv;
-    clock_gettime(CLOCK_MONOTONIC, &tv);
-    time1 = (int) tv.tv_sec;
-    time2 = (long) tv.tv_nsec;
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    usec = tv.tv_usec;
 #endif
 
     char uniquestr[128];
-    snprintf(uniquestr, sizeof(uniquestr), "%u%d%d%ld%s", getpid(), rand(),
-             time1, time2, (seed != NULL) ? seed : "");
+    snprintf(uniquestr, sizeof(uniquestr), "%u%d%lu%ld%s", getpid(), rand(),
+             (unsigned long)time(NULL), usec, (seed != NULL) ? seed : "");
 
     unsigned char md5hash[16];
     qhashmd5(uniquestr, strlen(uniquestr), md5hash);
