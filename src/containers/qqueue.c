@@ -78,10 +78,10 @@
  *  void *obj = queue->pop(queue, NULL);
  *  printf("pop(): %s\n", (char*)obj);
  *  free(obj);
- *  str = queue->pop(queue, NULL);
+ *  obj = queue->pop(queue, NULL);
  *  printf("pop(): %s\n", (char*)obj);
  *  free(obj);
- *  str = queue->pop(queue, NULL);
+ *  obj = queue->pop(queue, NULL);
  *  printf("pop(): %s\n", (char*)obj);
  *  free(obj);
  *
