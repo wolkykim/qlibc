@@ -45,7 +45,7 @@ TARGETS1	= \
 			test_qhasharr		\
 			test_qhasharr_darkdh \
 			test_qtreetbl		\
-			test_qstring
+			test_qstring		
 
 TARGETS2	= ${TARGETS1}
 TARGETS		= ${@EXAMPLES_TARGETS@}
@@ -60,19 +60,19 @@ test:	all
 	@./launcher.sh ${TARGETS}
 
 test_qtreetbl: test_qtreetbl.o
-	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qtreetbl.o ${LIBQLIBC} -lm
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qtreetbl.o ${LIBQLIBC} -lm -lrt
 
 test_qhashtbl: test_qhashtbl.o
-	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhashtbl.o ${LIBQLIBC}
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhashtbl.o ${LIBQLIBC} -lrt
 
 test_qhasharr: test_qhasharr.o
-	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhasharr.o ${LIBQLIBC}
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhasharr.o ${LIBQLIBC} -lrt
 
 test_qhasharr_darkdh: test_qhasharr_darkdh.o
-	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhasharr_darkdh.o ${LIBQLIBC}
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhasharr_darkdh.o ${LIBQLIBC} -lrt
 
 test_qstring: test_qstring.o
-	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qstring.o ${LIBQLIBC}
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qstring.o ${LIBQLIBC} -lrt
 
 ## Clear Module
 clean:
