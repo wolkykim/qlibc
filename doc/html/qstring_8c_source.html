@@ -103,8 +103,8 @@ $(document).ready(function(){initNavTree('qstring_8c_source.html','');});
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;stdarg.h&gt;</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &lt;ctype.h&gt;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &lt;time.h&gt;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &lt;sys/time.h&gt;</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;qinternal.h&quot;</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;utilities/qencode.h&quot;</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;utilities/qhash.h&quot;</span></div>
@@ -718,261 +718,258 @@ $(document).ready(function(){initNavTree('qstring_8c_source.html','');});
 <div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;<span class="comment"> *  it uses rand().</span></div>
 <div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00653"></a><span class="lineno"><a class="line" href="qstring_8c.html#ad300f196f08a8243c384f2f59f06f67b">  653</a></span>&#160;<span class="keywordtype">char</span> *<a class="code" href="qstring_8c.html#ad300f196f08a8243c384f2f59f06f67b">qstrunique</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *seed) {</div>
-<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;    <span class="keywordtype">int</span> time1;</div>
-<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;    <span class="keywordtype">long</span> time2;</div>
-<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;<span class="preprocessor">#ifdef _WIN32</span></div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;<span class="preprocessor"></span>    FILETIME ft;</div>
-<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;    GetSystemTimeAsFileTime(&amp;ft);</div>
-<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;    time1 = (int)time(NULL);</div>
-<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;    time2 = (long)ft.dwLowDateTime;</div>
-<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;#<span class="keywordflow">else</span></div>
-<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;    <span class="keyword">struct</span> timespec tv;</div>
-<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;    clock_gettime(CLOCK_MONOTONIC, &amp;tv);</div>
-<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;    time1 = (int) tv.tv_sec;</div>
-<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;    time2 = (<span class="keywordtype">long</span>) tv.tv_nsec;</div>
-<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;    <span class="keywordtype">char</span> uniquestr[128];</div>
-<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;    snprintf(uniquestr, <span class="keyword">sizeof</span>(uniquestr), <span class="stringliteral">&quot;%u%d%d%ld%s&quot;</span>, getpid(), rand(),</div>
-<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;             time1, time2, (seed != NULL) ? seed : <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;</div>
-<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> md5hash[16];</div>
-<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;    <a class="code" href="qhash_8c.html#a3ed9a8cb5f08fa3e3c58776a62f3f54f">qhashmd5</a>(uniquestr, strlen(uniquestr), md5hash);</div>
-<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;    <span class="keywordtype">char</span> *md5ascii = <a class="code" href="qencode_8c.html#acf074770f495d087f9bbb268a52debb9">qhex_encode</a>(md5hash, 16);</div>
-<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;</div>
-<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;    <span class="keywordflow">return</span> md5ascii;</div>
-<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;}</div>
-<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;<span class="comment"> * Convert integer to comma string.</span></div>
-<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;<span class="comment"> * @param number    integer</span></div>
-<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;<span class="comment"> * @return a pointer of malloced string which contains comma separated number</span></div>
-<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;<span class="comment"> *         if successful, otherwise returns NULL</span></div>
-<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00687"></a><span class="lineno"><a class="line" href="qstring_8c.html#a75b5521fd90e830770182d68d613fc43">  687</a></span>&#160;<span class="keywordtype">char</span> *<a class="code" href="qstring_8c.html#a75b5521fd90e830770182d68d613fc43">qstr_comma_number</a>(<span class="keywordtype">int</span> number) {</div>
-<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;    <span class="keywordtype">char</span> *str, *strp;</div>
-<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;</div>
-<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;    str = strp = (<span class="keywordtype">char</span> *) malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">char</span>) * (14 + 1));</div>
-<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;    <span class="keywordflow">if</span> (str == NULL)</div>
-<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;    <span class="keywordtype">long</span> usec;</div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;<span class="preprocessor">#ifdef _WIN32</span></div>
+<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;<span class="preprocessor"></span>    FILETIME ft;</div>
+<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;    GetSystemTimeAsFileTime(&amp;ft);</div>
+<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;    usec = ft.dwLowDateTime % 1000000;</div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;<span class="preprocessor"></span>    <span class="keyword">struct </span>timeval tv;</div>
+<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;    gettimeofday(&amp;tv, NULL);</div>
+<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;    usec = tv.tv_usec;</div>
+<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;    <span class="keywordtype">char</span> uniquestr[128];</div>
+<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;    snprintf(uniquestr, <span class="keyword">sizeof</span>(uniquestr), <span class="stringliteral">&quot;%u%d%lu%ld%s&quot;</span>, getpid(), rand(),</div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;             (<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>)time(NULL), usec, (seed != NULL) ? seed : <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;</div>
+<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> md5hash[16];</div>
+<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;    <a class="code" href="qhash_8c.html#a3ed9a8cb5f08fa3e3c58776a62f3f54f">qhashmd5</a>(uniquestr, strlen(uniquestr), md5hash);</div>
+<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;    <span class="keywordtype">char</span> *md5ascii = <a class="code" href="qencode_8c.html#acf074770f495d087f9bbb268a52debb9">qhex_encode</a>(md5hash, 16);</div>
+<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;</div>
+<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;    <span class="keywordflow">return</span> md5ascii;</div>
+<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;}</div>
+<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;<span class="comment"> * Convert integer to comma string.</span></div>
+<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;<span class="comment"> * @param number    integer</span></div>
+<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;<span class="comment"> * @return a pointer of malloced string which contains comma separated number</span></div>
+<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;<span class="comment"> *         if successful, otherwise returns NULL</span></div>
+<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00684"></a><span class="lineno"><a class="line" href="qstring_8c.html#a75b5521fd90e830770182d68d613fc43">  684</a></span>&#160;<span class="keywordtype">char</span> *<a class="code" href="qstring_8c.html#a75b5521fd90e830770182d68d613fc43">qstr_comma_number</a>(<span class="keywordtype">int</span> number) {</div>
+<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;    <span class="keywordtype">char</span> *str, *strp;</div>
+<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;</div>
+<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;    str = strp = (<span class="keywordtype">char</span> *) malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">char</span>) * (14 + 1));</div>
+<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;    <span class="keywordflow">if</span> (str == NULL)</div>
+<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;</div>
+<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;    <span class="keywordtype">char</span> buf[10 + 1], *bufp;</div>
+<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;    snprintf(buf, <span class="keyword">sizeof</span>(buf), <span class="stringliteral">&quot;%d&quot;</span>, abs(number));</div>
 <div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;</div>
-<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;    <span class="keywordtype">char</span> buf[10 + 1], *bufp;</div>
-<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;    snprintf(buf, <span class="keyword">sizeof</span>(buf), <span class="stringliteral">&quot;%d&quot;</span>, abs(number));</div>
-<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;</div>
-<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;    <span class="keywordflow">if</span> (number &lt; 0)</div>
-<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;        *strp++ = <span class="charliteral">&#39;-&#39;</span>;</div>
-<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;    <span class="keywordflow">for</span> (bufp = buf; *bufp != <span class="charliteral">&#39;\0&#39;</span>; strp++, bufp++) {</div>
-<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;        *strp = *bufp;</div>
-<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;        <span class="keywordflow">if</span> ((strlen(bufp)) % 3 == 1 &amp;&amp; *(bufp + 1) != <span class="charliteral">&#39;\0&#39;</span>)</div>
-<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;            *(++strp) = <span class="charliteral">&#39;,&#39;</span>;</div>
-<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;    }</div>
-<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;    *strp = <span class="charliteral">&#39;\0&#39;</span>;</div>
-<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;</div>
-<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;    <span class="keywordflow">return</span> str;</div>
-<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;}</div>
-<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;<span class="comment"> * Test for an alpha-numeric string</span></div>
+<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;    <span class="keywordflow">if</span> (number &lt; 0)</div>
+<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;        *strp++ = <span class="charliteral">&#39;-&#39;</span>;</div>
+<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;    <span class="keywordflow">for</span> (bufp = buf; *bufp != <span class="charliteral">&#39;\0&#39;</span>; strp++, bufp++) {</div>
+<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;        *strp = *bufp;</div>
+<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;        <span class="keywordflow">if</span> ((strlen(bufp)) % 3 == 1 &amp;&amp; *(bufp + 1) != <span class="charliteral">&#39;\0&#39;</span>)</div>
+<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;            *(++strp) = <span class="charliteral">&#39;,&#39;</span>;</div>
+<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;    }</div>
+<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;    *strp = <span class="charliteral">&#39;\0&#39;</span>;</div>
+<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;</div>
+<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;    <span class="keywordflow">return</span> str;</div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;}</div>
+<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;<span class="comment"> * Test for an alpha-numeric string</span></div>
+<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;<span class="comment"> * @param testfunc  test function for individual character</span></div>
+<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;<span class="comment"> * @param str       a pointer of string</span></div>
 <div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;<span class="comment"> * @param testfunc  test function for individual character</span></div>
-<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;<span class="comment"> * @param str       a pointer of string</span></div>
-<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;<span class="comment"> * @return true for ok, otherwise returns false</span></div>
-<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;<span class="comment"> * @code</span></div>
-<div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;<span class="comment"> *   if(qstrtest(isalnum, &quot;hello1234&quot;) == true) {</span></div>
-<div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;<span class="comment"> *     printf(&quot;It is alpha-numeric string.&quot;);</span></div>
-<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;<span class="comment"> *   }</span></div>
-<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;<span class="comment"> *   if(qstrtest(isdigit, &quot;0123456789&quot;) == true) {</span></div>
-<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;<span class="comment"> *     printf(&quot;It is alpha-numeric string.&quot;);</span></div>
-<div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;<span class="comment"> *   }</span></div>
-<div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;<span class="comment"> * @endcode</span></div>
-<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;<span class="comment"> * @note</span></div>
-<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;<span class="comment"> *  Basically you can use below test functios without creating your own version.</span></div>
-<div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;<span class="comment"> *  Make sure &lt;ctype.h&gt; header should be included before using any of these</span></div>
-<div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;<span class="comment"> *  functions.</span></div>
-<div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;<span class="comment"> *    isalnum - checks for an alphanumeric character.</span></div>
-<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;<span class="comment"> *    isalpha - checks for an alphabetic character.</span></div>
-<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;<span class="comment"> *    isascii - checks  whether  c is a 7-bit unsigned char value that fits into</span></div>
-<div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;<span class="comment"> *              the ASCII character set.</span></div>
-<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;<span class="comment"> *    isblank - checks for a blank character; that is, a space or a tab.</span></div>
-<div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;<span class="comment"> *    iscntrl - checks for a control character.</span></div>
-<div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;<span class="comment"> *    isdigit - checks for a digit (0 through 9).</span></div>
-<div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;<span class="comment"> *    isgraph - checks for any printable character except space.</span></div>
-<div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;<span class="comment"> *    islower - checks for a lower-case character.</span></div>
-<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;<span class="comment"> *    isprint - checks for any printable character including space.</span></div>
-<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;<span class="comment"> *    ispunct - checks for any printable character which is not a  space or an</span></div>
-<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;<span class="comment"> *              alphanumeric character.</span></div>
-<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;<span class="comment"> *    isspace - checks  for  white-space  characters.</span></div>
-<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;<span class="comment"> *    isupper - checks for an uppercase letter.</span></div>
-<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;<span class="comment"> *    isxdigit -  checks for a hexadecimal digits.</span></div>
-<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;<span class="comment"> *  Please refer &quot;man isalnum&quot; for more details about these functions.</span></div>
-<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00748"></a><span class="lineno"><a class="line" href="qstring_8c.html#a6ddf2449ee1edb1139005fa88213567c">  748</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qstring_8c.html#a6ddf2449ee1edb1139005fa88213567c">qstrtest</a>(<span class="keywordtype">int</span> (*testfunc)(<span class="keywordtype">int</span>), <span class="keyword">const</span> <span class="keywordtype">char</span> *str) {</div>
-<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;    <span class="keywordflow">for</span> (; *str; str++) {</div>
-<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;        <span class="keywordflow">if</span> (testfunc(*str) == 0)</div>
-<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;    }</div>
-<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;}</div>
-<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;<span class="comment"> * Test for an email-address formatted string</span></div>
-<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;<span class="comment"> * @param email     email-address formatted string</span></div>
-<div class="line"><a name="l00760"></a><span class="lineno">  760</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false</span></div>
-<div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00763"></a><span class="lineno"><a class="line" href="qstring_8c.html#af8e066e1239a1670b9640bdf0e456b89">  763</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qstring_8c.html#af8e066e1239a1670b9640bdf0e456b89">qstr_is_email</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *email) {</div>
-<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;    <span class="keywordtype">int</span> i, alpa, dot, gol;</div>
+<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;<span class="comment"> * @return true for ok, otherwise returns false</span></div>
+<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;<span class="comment"> *   if(qstrtest(isalnum, &quot;hello1234&quot;) == true) {</span></div>
+<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;<span class="comment"> *     printf(&quot;It is alpha-numeric string.&quot;);</span></div>
+<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;<span class="comment"> *   if(qstrtest(isdigit, &quot;0123456789&quot;) == true) {</span></div>
+<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;<span class="comment"> *     printf(&quot;It is alpha-numeric string.&quot;);</span></div>
+<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;<span class="comment"> * @note</span></div>
+<div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;<span class="comment"> *  Basically you can use below test functios without creating your own version.</span></div>
+<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;<span class="comment"> *  Make sure &lt;ctype.h&gt; header should be included before using any of these</span></div>
+<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;<span class="comment"> *  functions.</span></div>
+<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;<span class="comment"> *    isalnum - checks for an alphanumeric character.</span></div>
+<div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;<span class="comment"> *    isalpha - checks for an alphabetic character.</span></div>
+<div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;<span class="comment"> *    isascii - checks  whether  c is a 7-bit unsigned char value that fits into</span></div>
+<div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;<span class="comment"> *              the ASCII character set.</span></div>
+<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;<span class="comment"> *    isblank - checks for a blank character; that is, a space or a tab.</span></div>
+<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;<span class="comment"> *    iscntrl - checks for a control character.</span></div>
+<div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;<span class="comment"> *    isdigit - checks for a digit (0 through 9).</span></div>
+<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;<span class="comment"> *    isgraph - checks for any printable character except space.</span></div>
+<div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;<span class="comment"> *    islower - checks for a lower-case character.</span></div>
+<div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;<span class="comment"> *    isprint - checks for any printable character including space.</span></div>
+<div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;<span class="comment"> *    ispunct - checks for any printable character which is not a  space or an</span></div>
+<div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;<span class="comment"> *              alphanumeric character.</span></div>
+<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;<span class="comment"> *    isspace - checks  for  white-space  characters.</span></div>
+<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;<span class="comment"> *    isupper - checks for an uppercase letter.</span></div>
+<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;<span class="comment"> *    isxdigit -  checks for a hexadecimal digits.</span></div>
+<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;<span class="comment"> *  Please refer &quot;man isalnum&quot; for more details about these functions.</span></div>
+<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00745"></a><span class="lineno"><a class="line" href="qstring_8c.html#a6ddf2449ee1edb1139005fa88213567c">  745</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qstring_8c.html#a6ddf2449ee1edb1139005fa88213567c">qstrtest</a>(<span class="keywordtype">int</span> (*testfunc)(<span class="keywordtype">int</span>), <span class="keyword">const</span> <span class="keywordtype">char</span> *str) {</div>
+<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;    <span class="keywordflow">for</span> (; *str; str++) {</div>
+<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;        <span class="keywordflow">if</span> (testfunc(*str) == 0)</div>
+<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;    }</div>
+<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;}</div>
+<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;<span class="comment"> * Test for an email-address formatted string</span></div>
+<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;<span class="comment"> * @param email     email-address formatted string</span></div>
+<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false</span></div>
+<div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00760"></a><span class="lineno"><a class="line" href="qstring_8c.html#af8e066e1239a1670b9640bdf0e456b89">  760</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qstring_8c.html#af8e066e1239a1670b9640bdf0e456b89">qstr_is_email</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *email) {</div>
+<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;    <span class="keywordtype">int</span> i, alpa, dot, gol;</div>
+<div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;</div>
+<div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;    <span class="keywordflow">if</span> (email == NULL)</div>
+<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;</div>
-<div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;    <span class="keywordflow">if</span> (email == NULL)</div>
-<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;</div>
-<div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;    <span class="keywordflow">for</span> (i = alpa = dot = gol = 0; email[i] != <span class="charliteral">&#39;\0&#39;</span>; i++) {</div>
-<div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;        <span class="keywordflow">switch</span> (email[i]) {</div>
-<div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;            <span class="keywordflow">case</span> <span class="charliteral">&#39;@&#39;</span>: {</div>
-<div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160;                <span class="keywordflow">if</span> (alpa == 0)</div>
-<div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;                <span class="keywordflow">if</span> (gol &gt; 0)</div>
-<div class="line"><a name="l00775"></a><span class="lineno">  775</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00776"></a><span class="lineno">  776</span>&#160;                gol++;</div>
-<div class="line"><a name="l00777"></a><span class="lineno">  777</span>&#160;                <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;            }</div>
-<div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160;            <span class="keywordflow">case</span> <span class="charliteral">&#39;.&#39;</span>: {</div>
-<div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160;                <span class="keywordflow">if</span> ((i &gt; 0) &amp;&amp; (email[i - 1] == <span class="charliteral">&#39;@&#39;</span>))</div>
-<div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160;                <span class="keywordflow">if</span> ((gol &gt; 0) &amp;&amp; (email[i - 1] == <span class="charliteral">&#39;.&#39;</span>))</div>
-<div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;                dot++;</div>
-<div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;                <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;            }</div>
-<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;            <span class="keywordflow">default</span>: {</div>
-<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;                alpa++;</div>
-<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;                <span class="keywordflow">if</span> ((email[i] &gt;= <span class="charliteral">&#39;0&#39;</span>) &amp;&amp; (email[i] &lt;= <span class="charliteral">&#39;9&#39;</span>))</div>
-<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((email[i] &gt;= <span class="charliteral">&#39;A&#39;</span>) &amp;&amp; (email[i] &lt;= <span class="charliteral">&#39;Z&#39;</span>))</div>
-<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((email[i] &gt;= <span class="charliteral">&#39;a&#39;</span>) &amp;&amp; (email[i] &lt;= <span class="charliteral">&#39;z&#39;</span>))</div>
-<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((email[i] == <span class="charliteral">&#39;-&#39;</span>) || (email[i] == <span class="charliteral">&#39;_&#39;</span>))</div>
-<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;                <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;            }</div>
-<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;        }</div>
-<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;    }</div>
-<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;</div>
-<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;    <span class="keywordflow">if</span> ((alpa &lt;= 3) || (gol == 0) || (dot == 0))</div>
-<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;}</div>
-<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;<span class="comment"> * Test for an IPv4 address string</span></div>
-<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;<span class="comment"> * @param url       IPv4 address string</span></div>
-<div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00813"></a><span class="lineno">  813</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false</span></div>
-<div class="line"><a name="l00814"></a><span class="lineno">  814</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160;<span class="comment"> * @code</span></div>
-<div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;<span class="comment"> *   if(qstr_is_ip4addr(&quot;1.2.3.4&quot;) == true) {</span></div>
-<div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160;<span class="comment"> *     printf(&quot;It is IPv4 address string.&quot;);</span></div>
-<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;<span class="comment"> *   }</span></div>
-<div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;<span class="comment"> * @endcode</span></div>
-<div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00821"></a><span class="lineno"><a class="line" href="qstring_8c.html#a87849863c09feb068f316ffb63aaef03">  821</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qstring_8c.html#a87849863c09feb068f316ffb63aaef03">qstr_is_ip4addr</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *str) {</div>
-<div class="line"><a name="l00822"></a><span class="lineno">  822</span>&#160;    <span class="keywordtype">char</span> *dupstr = strdup(str);</div>
-<div class="line"><a name="l00823"></a><span class="lineno">  823</span>&#160;</div>
-<div class="line"><a name="l00824"></a><span class="lineno">  824</span>&#160;    <span class="keywordtype">char</span> *s1, *s2;</div>
-<div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160;    <span class="keywordtype">int</span> periodcnt;</div>
-<div class="line"><a name="l00826"></a><span class="lineno">  826</span>&#160;    <span class="keywordflow">for</span> (s1 = dupstr, periodcnt = 0; (s2 = strchr(s1, <span class="charliteral">&#39;.&#39;</span>)) != NULL;</div>
-<div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160;            s1 = s2 + 1, periodcnt++) {</div>
-<div class="line"><a name="l00828"></a><span class="lineno">  828</span>&#160;        *s2 = <span class="charliteral">&#39;\0&#39;</span>;</div>
-<div class="line"><a name="l00829"></a><span class="lineno">  829</span>&#160;</div>
-<div class="line"><a name="l00830"></a><span class="lineno">  830</span>&#160;        <span class="keywordtype">int</span> n;</div>
-<div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="qstring_8c.html#a6ddf2449ee1edb1139005fa88213567c">qstrtest</a>(isdigit, s1) == <span class="keyword">false</span> || (n = atoi(s1)) &lt;= 0 || n &gt;= 256) {</div>
-<div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160;            free(dupstr);</div>
-<div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;        }</div>
-<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;    }</div>
-<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;</div>
-<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;    free(dupstr);</div>
-<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;    <span class="keywordflow">if</span> (periodcnt != 3)</div>
-<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;}</div>
-<div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;</div>
-<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;<span class="preprocessor">#ifdef __linux__</span></div>
-<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &lt;iconv.h&gt;</span></div>
-<div class="line"><a name="l00845"></a><span class="lineno">  845</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160;<span class="preprocessor"></span><span class="comment"></span></div>
-<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160;<span class="comment"> * Convert character encoding</span></div>
-<div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160;<span class="comment"> * @param str       additional seed string. this can be NULL</span></div>
-<div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;<span class="comment"> * @param fromcode  encoding type of str</span></div>
-<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;<span class="comment"> * @param tocode    encoding to convert</span></div>
-<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;<span class="comment"> * @param mag       magnification between fromcode and tocode</span></div>
+<div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;    <span class="keywordflow">for</span> (i = alpa = dot = gol = 0; email[i] != <span class="charliteral">&#39;\0&#39;</span>; i++) {</div>
+<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;        <span class="keywordflow">switch</span> (email[i]) {</div>
+<div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;            <span class="keywordflow">case</span> <span class="charliteral">&#39;@&#39;</span>: {</div>
+<div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;                <span class="keywordflow">if</span> (alpa == 0)</div>
+<div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;                <span class="keywordflow">if</span> (gol &gt; 0)</div>
+<div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;                gol++;</div>
+<div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;                <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00775"></a><span class="lineno">  775</span>&#160;            }</div>
+<div class="line"><a name="l00776"></a><span class="lineno">  776</span>&#160;            <span class="keywordflow">case</span> <span class="charliteral">&#39;.&#39;</span>: {</div>
+<div class="line"><a name="l00777"></a><span class="lineno">  777</span>&#160;                <span class="keywordflow">if</span> ((i &gt; 0) &amp;&amp; (email[i - 1] == <span class="charliteral">&#39;@&#39;</span>))</div>
+<div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160;                <span class="keywordflow">if</span> ((gol &gt; 0) &amp;&amp; (email[i - 1] == <span class="charliteral">&#39;.&#39;</span>))</div>
+<div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;                dot++;</div>
+<div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160;                <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;            }</div>
+<div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;            <span class="keywordflow">default</span>: {</div>
+<div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;                alpa++;</div>
+<div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;                <span class="keywordflow">if</span> ((email[i] &gt;= <span class="charliteral">&#39;0&#39;</span>) &amp;&amp; (email[i] &lt;= <span class="charliteral">&#39;9&#39;</span>))</div>
+<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((email[i] &gt;= <span class="charliteral">&#39;A&#39;</span>) &amp;&amp; (email[i] &lt;= <span class="charliteral">&#39;Z&#39;</span>))</div>
+<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((email[i] &gt;= <span class="charliteral">&#39;a&#39;</span>) &amp;&amp; (email[i] &lt;= <span class="charliteral">&#39;z&#39;</span>))</div>
+<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;                <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((email[i] == <span class="charliteral">&#39;-&#39;</span>) || (email[i] == <span class="charliteral">&#39;_&#39;</span>))</div>
+<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;                <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;            }</div>
+<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;        }</div>
+<div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;    }</div>
+<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;</div>
+<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;    <span class="keywordflow">if</span> ((alpa &lt;= 3) || (gol == 0) || (dot == 0))</div>
+<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;}</div>
+<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;<span class="comment"> * Test for an IPv4 address string</span></div>
+<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160;<span class="comment"> * @param url       IPv4 address string</span></div>
+<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;<span class="comment"> * @return true if successful, otherwise returns false</span></div>
+<div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00813"></a><span class="lineno">  813</span>&#160;<span class="comment"> *   if(qstr_is_ip4addr(&quot;1.2.3.4&quot;) == true) {</span></div>
+<div class="line"><a name="l00814"></a><span class="lineno">  814</span>&#160;<span class="comment"> *     printf(&quot;It is IPv4 address string.&quot;);</span></div>
+<div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160;<span class="comment"> *   }</span></div>
+<div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00818"></a><span class="lineno"><a class="line" href="qstring_8c.html#a87849863c09feb068f316ffb63aaef03">  818</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qstring_8c.html#a87849863c09feb068f316ffb63aaef03">qstr_is_ip4addr</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *str) {</div>
+<div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;    <span class="keywordtype">char</span> *dupstr = strdup(str);</div>
+<div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;</div>
+<div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160;    <span class="keywordtype">char</span> *s1, *s2;</div>
+<div class="line"><a name="l00822"></a><span class="lineno">  822</span>&#160;    <span class="keywordtype">int</span> periodcnt;</div>
+<div class="line"><a name="l00823"></a><span class="lineno">  823</span>&#160;    <span class="keywordflow">for</span> (s1 = dupstr, periodcnt = 0; (s2 = strchr(s1, <span class="charliteral">&#39;.&#39;</span>)) != NULL;</div>
+<div class="line"><a name="l00824"></a><span class="lineno">  824</span>&#160;            s1 = s2 + 1, periodcnt++) {</div>
+<div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160;        *s2 = <span class="charliteral">&#39;\0&#39;</span>;</div>
+<div class="line"><a name="l00826"></a><span class="lineno">  826</span>&#160;</div>
+<div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160;        <span class="keywordtype">int</span> n;</div>
+<div class="line"><a name="l00828"></a><span class="lineno">  828</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="qstring_8c.html#a6ddf2449ee1edb1139005fa88213567c">qstrtest</a>(isdigit, s1) == <span class="keyword">false</span> || (n = atoi(s1)) &lt;= 0 || n &gt;= 256) {</div>
+<div class="line"><a name="l00829"></a><span class="lineno">  829</span>&#160;            free(dupstr);</div>
+<div class="line"><a name="l00830"></a><span class="lineno">  830</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;        }</div>
+<div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160;    }</div>
+<div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160;</div>
+<div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;    free(dupstr);</div>
+<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;    <span class="keywordflow">if</span> (periodcnt != 3)</div>
+<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;}</div>
+<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;</div>
+<div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;<span class="preprocessor">#ifdef __linux__</span></div>
+<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &lt;iconv.h&gt;</span></div>
+<div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;<span class="preprocessor"></span><span class="comment"></span></div>
+<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00845"></a><span class="lineno">  845</span>&#160;<span class="comment"> * Convert character encoding</span></div>
+<div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;<span class="comment"> * @param str       additional seed string. this can be NULL</span></div>
+<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160;<span class="comment"> * @param fromcode  encoding type of str</span></div>
+<div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160;<span class="comment"> * @param tocode    encoding to convert</span></div>
+<div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160;<span class="comment"> * @param mag       magnification between fromcode and tocode</span></div>
+<div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;<span class="comment"> * @return a pointer of malloced converted string if successful,</span></div>
+<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;<span class="comment"> *         otherwise returns NULL</span></div>
 <div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;<span class="comment"> * @return a pointer of malloced converted string if successful,</span></div>
-<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;<span class="comment"> *         otherwise returns NULL</span></div>
-<div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;<span class="comment"> * @code</span></div>
-<div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;<span class="comment"> *   qCharEncode(&quot;KOREAN_EUCKR_STRING&quot;, &quot;EUC-KR&quot;, &quot;UTF-8&quot;, 1.5);</span></div>
-<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;<span class="comment"> * @endcode</span></div>
-<div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00862"></a><span class="lineno"><a class="line" href="qstring_8c.html#ae5317b2503cfc75f1b7faaef86da33d6">  862</a></span>&#160;<span class="keywordtype">char</span> *<a class="code" href="qstring_8c.html#ae5317b2503cfc75f1b7faaef86da33d6">qstr_conv_encoding</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *str, <span class="keyword">const</span> <span class="keywordtype">char</span> *fromcode,</div>
-<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;                         <span class="keyword">const</span> <span class="keywordtype">char</span> *tocode, <span class="keywordtype">float</span> mag) {</div>
-<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;<span class="preprocessor">#ifdef __linux__</span></div>
-<div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (str == NULL)</div>
-<div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;<span class="comment"> * @code</span></div>
+<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;<span class="comment"> *   qCharEncode(&quot;KOREAN_EUCKR_STRING&quot;, &quot;EUC-KR&quot;, &quot;UTF-8&quot;, 1.5);</span></div>
+<div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;<span class="comment"> * @endcode</span></div>
+<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00859"></a><span class="lineno"><a class="line" href="qstring_8c.html#ae5317b2503cfc75f1b7faaef86da33d6">  859</a></span>&#160;<span class="keywordtype">char</span> *<a class="code" href="qstring_8c.html#ae5317b2503cfc75f1b7faaef86da33d6">qstr_conv_encoding</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *str, <span class="keyword">const</span> <span class="keywordtype">char</span> *fromcode,</div>
+<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;                         <span class="keyword">const</span> <span class="keywordtype">char</span> *tocode, <span class="keywordtype">float</span> mag) {</div>
+<div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;<span class="preprocessor">#ifdef __linux__</span></div>
+<div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (str == NULL)</div>
+<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;</div>
+<div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;    <span class="keywordtype">char</span> *fromstr = (<span class="keywordtype">char</span> *) str;</div>
+<div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;    <span class="keywordtype">size_t</span> fromsize = strlen(fromstr) + 1;</div>
 <div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160;</div>
-<div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160;    <span class="keywordtype">char</span> *fromstr = (<span class="keywordtype">char</span> *) str;</div>
-<div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;    <span class="keywordtype">size_t</span> fromsize = strlen(fromstr) + 1;</div>
-<div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160;</div>
-<div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;    <span class="keywordtype">size_t</span> tosize = <span class="keyword">sizeof</span>(char) * ((mag * (fromsize - 1)) + 1);</div>
-<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;    <span class="keywordtype">char</span> *tostr = (<span class="keywordtype">char</span> *) malloc(tosize);</div>
-<div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;    <span class="keywordflow">if</span> (tostr == NULL)</div>
-<div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;    <span class="keywordtype">char</span> *tostr1 = tostr;</div>
-<div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;</div>
-<div class="line"><a name="l00877"></a><span class="lineno">  877</span>&#160;    iconv_t it = iconv_open(tocode, fromcode);</div>
-<div class="line"><a name="l00878"></a><span class="lineno">  878</span>&#160;    <span class="keywordflow">if</span> (it &lt; 0) {</div>
-<div class="line"><a name="l00879"></a><span class="lineno">  879</span>&#160;        DEBUG(<span class="stringliteral">&quot;iconv_open() failed.&quot;</span>);</div>
-<div class="line"><a name="l00880"></a><span class="lineno">  880</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00881"></a><span class="lineno">  881</span>&#160;    }</div>
+<div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160;    <span class="keywordtype">size_t</span> tosize = <span class="keyword">sizeof</span>(char) * ((mag * (fromsize - 1)) + 1);</div>
+<div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;    <span class="keywordtype">char</span> *tostr = (<span class="keywordtype">char</span> *) malloc(tosize);</div>
+<div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160;    <span class="keywordflow">if</span> (tostr == NULL)</div>
+<div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;    <span class="keywordtype">char</span> *tostr1 = tostr;</div>
+<div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;</div>
+<div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;    iconv_t it = iconv_open(tocode, fromcode);</div>
+<div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;    <span class="keywordflow">if</span> (it &lt; 0) {</div>
+<div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;        DEBUG(<span class="stringliteral">&quot;iconv_open() failed.&quot;</span>);</div>
+<div class="line"><a name="l00877"></a><span class="lineno">  877</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00878"></a><span class="lineno">  878</span>&#160;    }</div>
+<div class="line"><a name="l00879"></a><span class="lineno">  879</span>&#160;</div>
+<div class="line"><a name="l00880"></a><span class="lineno">  880</span>&#160;    <span class="keywordtype">int</span> ret = iconv(it, &amp;fromstr, &amp;fromsize, &amp;tostr, &amp;tosize);</div>
+<div class="line"><a name="l00881"></a><span class="lineno">  881</span>&#160;    iconv_close(it);</div>
 <div class="line"><a name="l00882"></a><span class="lineno">  882</span>&#160;</div>
-<div class="line"><a name="l00883"></a><span class="lineno">  883</span>&#160;    <span class="keywordtype">int</span> ret = iconv(it, &amp;fromstr, &amp;fromsize, &amp;tostr, &amp;tosize);</div>
-<div class="line"><a name="l00884"></a><span class="lineno">  884</span>&#160;    iconv_close(it);</div>
-<div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160;</div>
-<div class="line"><a name="l00886"></a><span class="lineno">  886</span>&#160;    <span class="keywordflow">if</span> (ret &lt; 0) {</div>
-<div class="line"><a name="l00887"></a><span class="lineno">  887</span>&#160;        DEBUG(<span class="stringliteral">&quot;iconv() failed.&quot;</span>);</div>
-<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;        free(tostr1);</div>
-<div class="line"><a name="l00889"></a><span class="lineno">  889</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00890"></a><span class="lineno">  890</span>&#160;    }</div>
-<div class="line"><a name="l00891"></a><span class="lineno">  891</span>&#160;</div>
-<div class="line"><a name="l00892"></a><span class="lineno">  892</span>&#160;    <span class="keywordflow">return</span> tostr1;</div>
-<div class="line"><a name="l00893"></a><span class="lineno">  893</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00894"></a><span class="lineno">  894</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00895"></a><span class="lineno">  895</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00883"></a><span class="lineno">  883</span>&#160;    <span class="keywordflow">if</span> (ret &lt; 0) {</div>
+<div class="line"><a name="l00884"></a><span class="lineno">  884</span>&#160;        DEBUG(<span class="stringliteral">&quot;iconv() failed.&quot;</span>);</div>
+<div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160;        free(tostr1);</div>
+<div class="line"><a name="l00886"></a><span class="lineno">  886</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00887"></a><span class="lineno">  887</span>&#160;    }</div>
+<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;</div>
+<div class="line"><a name="l00889"></a><span class="lineno">  889</span>&#160;    <span class="keywordflow">return</span> tostr1;</div>
+<div class="line"><a name="l00890"></a><span class="lineno">  890</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00891"></a><span class="lineno">  891</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00892"></a><span class="lineno">  892</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00893"></a><span class="lineno">  893</span>&#160;<span class="preprocessor"></span>}</div>
 <div class="ttc" id="qstring_8c_html_a6ad659c9b3a4f6b515368cb0fa098d32"><div class="ttname"><a href="qstring_8c.html#a6ad659c9b3a4f6b515368cb0fa098d32">qstrdup_between</a></div><div class="ttdeci">char * qstrdup_between(const char *str, const char *start, const char *end)</div><div class="ttdoc">Duplicate a substing set. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00379">qstring.c:379</a></div></div>
 <div class="ttc" id="qencode_8c_html_acf074770f495d087f9bbb268a52debb9"><div class="ttname"><a href="qencode_8c.html#acf074770f495d087f9bbb268a52debb9">qhex_encode</a></div><div class="ttdeci">char * qhex_encode(const void *bin, size_t size)</div><div class="ttdoc">Encode data to Hexadecimal digit format. </div><div class="ttdef"><b>Definition:</b> <a href="qencode_8c_source.html#l00393">qencode.c:393</a></div></div>
 <div class="ttc" id="qstring_8c_html_a4ab535e3b8608f1ef81ed21a7d602cef"><div class="ttname"><a href="qstring_8c.html#a4ab535e3b8608f1ef81ed21a7d602cef">qstrcatf</a></div><div class="ttdeci">char * qstrcatf(char *str, const char *format,...)</div><div class="ttdoc">Append formatted string to the end of the source str. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00428">qstring.c:428</a></div></div>
 <div class="ttc" id="qstring_8c_html_aa694e3f14941ac016fccbb456e24a134"><div class="ttname"><a href="qstring_8c.html#aa694e3f14941ac016fccbb456e24a134">qstrupper</a></div><div class="ttdeci">char * qstrupper(char *str)</div><div class="ttdoc">Convert character to bigger character. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00516">qstring.c:516</a></div></div>
 <div class="ttc" id="qstring_8c_html_a1a4b63ebdee0be75f217d52dc7cb1750"><div class="ttname"><a href="qstring_8c.html#a1a4b63ebdee0be75f217d52dc7cb1750">qstrtrim_tail</a></div><div class="ttdeci">char * qstrtrim_tail(char *str)</div><div class="ttdoc">Remove tailing white spaces(including CR, LF) of the string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00116">qstring.c:116</a></div></div>
 <div class="ttc" id="qstring_8c_html_abd1fa48bffd427c7c3847eebc9681f3b"><div class="ttname"><a href="qstring_8c.html#abd1fa48bffd427c7c3847eebc9681f3b">qstrgets</a></div><div class="ttdeci">char * qstrgets(char *buf, size_t size, char **offset)</div><div class="ttdoc">Get one line from the string offset. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00461">qstring.c:461</a></div></div>
-<div class="ttc" id="qstring_8c_html_a87849863c09feb068f316ffb63aaef03"><div class="ttname"><a href="qstring_8c.html#a87849863c09feb068f316ffb63aaef03">qstr_is_ip4addr</a></div><div class="ttdeci">bool qstr_is_ip4addr(const char *str)</div><div class="ttdoc">Test for an IPv4 address string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00821">qstring.c:821</a></div></div>
+<div class="ttc" id="qstring_8c_html_a87849863c09feb068f316ffb63aaef03"><div class="ttname"><a href="qstring_8c.html#a87849863c09feb068f316ffb63aaef03">qstr_is_ip4addr</a></div><div class="ttdeci">bool qstr_is_ip4addr(const char *str)</div><div class="ttdoc">Test for an IPv4 address string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00818">qstring.c:818</a></div></div>
 <div class="ttc" id="qlist_8c_html_a171f1b505417b5a936e198993c9cb372"><div class="ttname"><a href="qlist_8c.html#a171f1b505417b5a936e198993c9cb372">qlist</a></div><div class="ttdeci">qlist_t * qlist(int options)</div><div class="ttdoc">Create new qlist_t linked-list container. </div><div class="ttdef"><b>Definition:</b> <a href="qlist_8c_source.html#l00124">qlist.c:124</a></div></div>
 <div class="ttc" id="qstring_8c_html_a737037e2fc79cc1fa8de2a6fedaf21ed"><div class="ttname"><a href="qstring_8c.html#a737037e2fc79cc1fa8de2a6fedaf21ed">qstrtrim_head</a></div><div class="ttdeci">char * qstrtrim_head(char *str)</div><div class="ttdoc">Remove heading white spaces of the string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00090">qstring.c:90</a></div></div>
 <div class="ttc" id="qstring_8c_html_afed8e04d6f83692b815251e9f76cc8fd"><div class="ttname"><a href="qstring_8c.html#afed8e04d6f83692b815251e9f76cc8fd">qstrdupf</a></div><div class="ttdeci">char * qstrdupf(const char *format,...)</div><div class="ttdoc">Duplicate a formatted string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00358">qstring.c:358</a></div></div>
 <div class="ttc" id="qhash_8c_html_a3ed9a8cb5f08fa3e3c58776a62f3f54f"><div class="ttname"><a href="qhash_8c.html#a3ed9a8cb5f08fa3e3c58776a62f3f54f">qhashmd5</a></div><div class="ttdeci">bool qhashmd5(const void *data, size_t nbytes, void *retbuf)</div><div class="ttdoc">Calculate 128-bit(16-bytes) MD5 hash. </div><div class="ttdef"><b>Definition:</b> <a href="qhash_8c_source.html#l00067">qhash.c:67</a></div></div>
-<div class="ttc" id="qstring_8c_html_ae5317b2503cfc75f1b7faaef86da33d6"><div class="ttname"><a href="qstring_8c.html#ae5317b2503cfc75f1b7faaef86da33d6">qstr_conv_encoding</a></div><div class="ttdeci">char * qstr_conv_encoding(const char *str, const char *fromcode, const char *tocode, float mag)</div><div class="ttdoc">Convert character encoding. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00862">qstring.c:862</a></div></div>
+<div class="ttc" id="qstring_8c_html_ae5317b2503cfc75f1b7faaef86da33d6"><div class="ttname"><a href="qstring_8c.html#ae5317b2503cfc75f1b7faaef86da33d6">qstr_conv_encoding</a></div><div class="ttdeci">char * qstr_conv_encoding(const char *str, const char *fromcode, const char *tocode, float mag)</div><div class="ttdoc">Convert character encoding. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00859">qstring.c:859</a></div></div>
 <div class="ttc" id="qstring_8c_html_ae656735491546fa512358935c381e19a"><div class="ttname"><a href="qstring_8c.html#ae656735491546fa512358935c381e19a">qstrncpy</a></div><div class="ttdeci">char * qstrncpy(char *dst, size_t size, const char *src, size_t nbytes)</div><div class="ttdoc">Copy src string to dst no more than n bytes. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00339">qstring.c:339</a></div></div>
 <div class="ttc" id="qstring_8c_html_af45ab0b307be585b9b24aa45e37ad5eb"><div class="ttname"><a href="qstring_8c.html#af45ab0b307be585b9b24aa45e37ad5eb">qstrtokenizer</a></div><div class="ttdeci">qlist_t * qstrtokenizer(const char *str, const char *delimiters)</div><div class="ttdoc">String Tokenizer. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00622">qstring.c:622</a></div></div>
 <div class="ttc" id="qstring_8c_html_aef51c584fd78c0430ccfb5f51c32cf71"><div class="ttname"><a href="qstring_8c.html#aef51c584fd78c0430ccfb5f51c32cf71">qstrtrim</a></div><div class="ttdeci">char * qstrtrim(char *str)</div><div class="ttdoc">Remove white spaces(including CR, LF) from head and tail of the string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00055">qstring.c:55</a></div></div>
@@ -980,11 +977,11 @@ $(document).ready(function(){initNavTree('qstring_8c_source.html','');});
 <div class="ttc" id="qstring_8c_html_aa0fc982fbf9c6163d98cbb46e6faa86d"><div class="ttname"><a href="qstring_8c.html#aa0fc982fbf9c6163d98cbb46e6faa86d">qstrcpy</a></div><div class="ttdeci">char * qstrcpy(char *dst, size_t size, const char *src)</div><div class="ttdoc">Copy src string to dst. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00320">qstring.c:320</a></div></div>
 <div class="ttc" id="qstring_8c_html_a6183cbf7350c2373915feac84b5ec25c"><div class="ttname"><a href="qstring_8c.html#a6183cbf7350c2373915feac84b5ec25c">qstrtok</a></div><div class="ttdeci">char * qstrtok(char *str, const char *delimiters, char *retstop, int *offset)</div><div class="ttdoc">Split string into tokens. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00576">qstring.c:576</a></div></div>
 <div class="ttc" id="qstring_8c_html_acc32dbf9f419ef637d0547211b7125b9"><div class="ttname"><a href="qstring_8c.html#acc32dbf9f419ef637d0547211b7125b9">qmemdup</a></div><div class="ttdeci">void * qmemdup(const void *data, size_t size)</div><div class="ttdoc">Duplicate a copy of memory data. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00406">qstring.c:406</a></div></div>
-<div class="ttc" id="qstring_8c_html_a6ddf2449ee1edb1139005fa88213567c"><div class="ttname"><a href="qstring_8c.html#a6ddf2449ee1edb1139005fa88213567c">qstrtest</a></div><div class="ttdeci">bool qstrtest(int(*testfunc)(int), const char *str)</div><div class="ttdoc">Test for an alpha-numeric string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00748">qstring.c:748</a></div></div>
+<div class="ttc" id="qstring_8c_html_a6ddf2449ee1edb1139005fa88213567c"><div class="ttname"><a href="qstring_8c.html#a6ddf2449ee1edb1139005fa88213567c">qstrtest</a></div><div class="ttdeci">bool qstrtest(int(*testfunc)(int), const char *str)</div><div class="ttdoc">Test for an alpha-numeric string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00745">qstring.c:745</a></div></div>
 <div class="ttc" id="qstring_8c_html_acc9b4062910be63934d6b1658359b9bd"><div class="ttname"><a href="qstring_8c.html#acc9b4062910be63934d6b1658359b9bd">qstrrev</a></div><div class="ttdeci">char * qstrrev(char *str)</div><div class="ttdoc">Reverse the order of characters in the string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00493">qstring.c:493</a></div></div>
-<div class="ttc" id="qstring_8c_html_af8e066e1239a1670b9640bdf0e456b89"><div class="ttname"><a href="qstring_8c.html#af8e066e1239a1670b9640bdf0e456b89">qstr_is_email</a></div><div class="ttdeci">bool qstr_is_email(const char *email)</div><div class="ttdoc">Test for an email-address formatted string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00763">qstring.c:763</a></div></div>
+<div class="ttc" id="qstring_8c_html_af8e066e1239a1670b9640bdf0e456b89"><div class="ttname"><a href="qstring_8c.html#af8e066e1239a1670b9640bdf0e456b89">qstr_is_email</a></div><div class="ttdeci">bool qstr_is_email(const char *email)</div><div class="ttdoc">Test for an email-address formatted string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00760">qstring.c:760</a></div></div>
 <div class="ttc" id="qstring_8c_html_a01772aae3cdd533ff6f0f68367df9226"><div class="ttname"><a href="qstring_8c.html#a01772aae3cdd533ff6f0f68367df9226">qstrreplace</a></div><div class="ttdeci">char * qstrreplace(const char *mode, char *srcstr, const char *tokstr, const char *word)</div><div class="ttdoc">Replace string or tokens as word from source string with given mode. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00236">qstring.c:236</a></div></div>
-<div class="ttc" id="qstring_8c_html_a75b5521fd90e830770182d68d613fc43"><div class="ttname"><a href="qstring_8c.html#a75b5521fd90e830770182d68d613fc43">qstr_comma_number</a></div><div class="ttdeci">char * qstr_comma_number(int number)</div><div class="ttdoc">Convert integer to comma string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00687">qstring.c:687</a></div></div>
+<div class="ttc" id="qstring_8c_html_a75b5521fd90e830770182d68d613fc43"><div class="ttname"><a href="qstring_8c.html#a75b5521fd90e830770182d68d613fc43">qstr_comma_number</a></div><div class="ttdeci">char * qstr_comma_number(int number)</div><div class="ttdoc">Convert integer to comma string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00684">qstring.c:684</a></div></div>
 <div class="ttc" id="qstring_8c_html_ad17ac23f4397125c8bdfd9359f2b6780"><div class="ttname"><a href="qstring_8c.html#ad17ac23f4397125c8bdfd9359f2b6780">qstrlower</a></div><div class="ttdeci">char * qstrlower(char *str)</div><div class="ttdoc">Convert character to lower character. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00536">qstring.c:536</a></div></div>
 <div class="ttc" id="qstring_8c_html_ad300f196f08a8243c384f2f59f06f67b"><div class="ttname"><a href="qstring_8c.html#ad300f196f08a8243c384f2f59f06f67b">qstrunique</a></div><div class="ttdeci">char * qstrunique(const char *seed)</div><div class="ttdoc">Generate unique id. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00653">qstring.c:653</a></div></div>
 <div class="ttc" id="qhttpclient_8c_html_ac3c34055be115314ffe7f18c3d19eb54"><div class="ttname"><a href="qhttpclient_8c.html#ac3c34055be115314ffe7f18c3d19eb54">head</a></div><div class="ttdeci">static bool head(qhttpclient_t *client, const char *uri, int *rescode, qlisttbl_t *reqheaders, qlisttbl_t *resheaders)</div><div class="ttdoc">qhttpclient-&gt;head(): Sends a HEAD request. </div><div class="ttdef"><b>Definition:</b> <a href="qhttpclient_8c_source.html#l00553">qhttpclient.c:553</a></div></div>
