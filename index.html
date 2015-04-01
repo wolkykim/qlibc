@@ -1,37 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
+    <meta charset="UTF-8">
     <title>qLibc Project by wolkykim</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
-
   <body>
-    <header>
-      <div class="inner">
-        <h1>qLibc Project</h1>
-        <h2>The goal of qLibc project is to provide a simple but powerful general purpose C/C++ library.</h2>
-        <a href="https://github.com/wolkykim/qlibc" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+    <section class="page-header">
+      <h1 class="project-name">qLibc Project</h1>
+      <h2 class="project-tagline">The goal of qLibc project is to provide a simple but powerful general purpose C/C++ library.</h2>
+      <a href="https://github.com/wolkykim/qlibc" class="btn">View on GitHub</a>
+      <a href="https://github.com/wolkykim/qlibc/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/wolkykim/qlibc/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
+    <section class="main-content">
+      <h1>
 <a id="whats-qlibc" class="anchor" href="#whats-qlibc" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's qLibc?</h1>
 
-<p>qLibc is currently one of the most functionally-complete, publicly-licensed C/C++ libraries. The goal of the qLibc project is to provide a <strong>simple and powerful general purpose C/C++ library</strong> that includes all kinds of containers and general library routines. It provides a ready-made set of common container APIs with a consistent API look.</p>
+<p>qLibc is currently one of the most functionally-complete, publicly-licensed
+C/C++ libraries. The goal of the qLibc project is to provide a <strong>simple and
+powerful general purpose C/C++ library</strong> that includes all kinds of containers
+and general library routines. It provides a ready-made set of common container
+APIs with a consistent API look.</p>
 
 <h2>
 <a id="qlibc-copyright" class="anchor" href="#qlibc-copyright" aria-hidden="true"><span class="octicon octicon-link"></span></a>qLibc Copyright</h2>
@@ -47,13 +42,19 @@ Please refer the LICENSE document included in the package for more details.</p>
 <p><a href="http://wolkykim.github.io/qlibc/doc/html/files.html">qlibc Core API Reference</a></p>
 
 <ul>
-<li>Containers
+<li>Containers for Key/Value pairs
+
+<ul>
+<li>Tree Table --- in binary tree(left-leaning red-black tree) data structure.</li>
+<li>Hash Table --- in hash-based data structure.</li>
+<li>Static Hash Table --- in fixed size memory(array/mmapped/shared).</li>
+<li>List Table --- in (doubly) linked-list data structure.</li>
+</ul>
+</li>
+<li>Containers for Objects
 
 <ul>
 <li>List --- Doubly Linked List.</li>
-<li>List Table --- KEY/VALUE paired table implemented on linked-list.</li>
-<li>Hash Table --- Hash-based KEY/VALUE paired table.</li>
-<li>Static Hash Table --- Static(array/mmapped/shared) memory based KEY/VALUE paired table.</li>
 <li>Vector --- implements a growable array of elements.</li>
 <li>Queue --- FIFO(First In First Out) implementation.</li>
 <li>Stack --- LIFO(Last In First Out) implementation.</li>
@@ -62,14 +63,13 @@ Please refer the LICENSE document included in the package for more details.</p>
 <li>General utilities.
 
 <ul>
-<li>String</li>
-<li>I/O</li>
-<li>File</li>
+<li>String --- string trimmer, modifier, replacer, case converter, pattern detectors, ...</li>
+<li>I/O --- non-blcking I/O, stream reader/writer, ...</li>
+<li>File --- file locking, file/directory hander, path correctors, ...</li>
 <li>IPC, Semaphore Shared-memory</li>
-<li>En/decoders</li>
-<li>Hashes</li>
-<li>System</li>
-<li>Time</li>
+<li>En/decoders --- Url en/decoder, Base64 en/decoder, Hex en/decoder, ...</li>
+<li>Hashes --- Murmur hases, FNV hases, MD5 hashes, ...</li>
+<li>Time --- time diff, time format converstion, ...</li>
 </ul>
 </li>
 </ul>
@@ -78,10 +78,10 @@ Please refer the LICENSE document included in the package for more details.</p>
 <p><a href="http://wolkykim.github.io/qlibc/doc/html/files.html">qLibc Extension API Reference</a></p>
 
 <ul>
-<li>INI-style Configuration File Parser.</li>
 <li>Apache-style Configuration File Parser.</li>
-<li>Rotating File Logger.</li>
+<li>INI-style Configuration File Parser.</li>
 <li>HTTP client.</li>
+<li>Rotating File Logger.</li>
 <li>Database(MySQL) interface.</li>
 <li><a href="http://en.wikipedia.org/wiki/Token_bucket">Token-Bucket</a></li>
 </ul>
@@ -89,49 +89,176 @@ Please refer the LICENSE document included in the package for more details.</p>
 </ul>
 
 <h2>
+<a id="qlibc-tables-at-a-glance" class="anchor" href="#qlibc-tables-at-a-glance" aria-hidden="true"><span class="octicon octicon-link"></span></a>qLibc Tables at a Glance</h2>
+
+<table>
+<thead>
+<tr>
+<th align="left">Characteristics</th>
+<th align="center">Tree Table</th>
+<th align="center">Hash Table</th>
+<th align="center">Static Hash Table</th>
+<th align="center">List Table</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Data structure</td>
+<td align="center">Binary Tree</td>
+<td align="center">Slot Index</td>
+<td align="center">Block Array</td>
+<td align="center">Linked-List</td>
+</tr>
+<tr>
+<td align="left">Search complexity</td>
+<td align="center">O(log n)</td>
+<td align="center">O(1) / O(n)</td>
+<td align="center">O(1) / O(n)</td>
+<td align="center">O(n)</td>
+</tr>
+<tr>
+<td align="left">Insert complexity</td>
+<td align="center">O(log n)</td>
+<td align="center">O(1) / O(n)</td>
+<td align="center">O(1) / O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="left">Delete complexity</td>
+<td align="center">O(log n)</td>
+<td align="center">O(1) / O(n)</td>
+<td align="center">O(1) / O(n)</td>
+<td align="center">O(n)</td>
+</tr>
+<tr>
+<td align="left">Space complexity</td>
+<td align="center">O(n)</td>
+<td align="center">O(n)</td>
+<td align="center">-</td>
+<td align="center">O(n)</td>
+</tr>
+<tr>
+<td align="left">Space allocation</td>
+<td align="center">Dynamic</td>
+<td align="center">Dynamic</td>
+<td align="center">Pre-allocation</td>
+<td align="center">Dynamic</td>
+</tr>
+<tr>
+<td align="left">Data Stored Sorted</td>
+<td align="center">Yes</td>
+<td align="center">No</td>
+<td align="center">No</td>
+<td align="center">Yes (option)</td>
+</tr>
+<tr>
+<td align="left">User comparator</td>
+<td align="center">Supported</td>
+<td align="center">-</td>
+<td align="center">-</td>
+<td align="center">Supported</td>
+</tr>
+<tr>
+<td align="left">Allow multi-keys</td>
+<td align="center">No</td>
+<td align="center">No</td>
+<td align="center">No</td>
+<td align="center">Yes (option)</td>
+</tr>
+<tr>
+<td align="left">Key stored digested</td>
+<td align="center">No</td>
+<td align="center">No</td>
+<td align="center">Yes</td>
+<td align="center">No</td>
+</tr>
+<tr>
+<td align="left">Search Nearest Key</td>
+<td align="center">Yes</td>
+<td align="center">No</td>
+<td align="center">No</td>
+<td align="center">No</td>
+</tr>
+<tr>
+<td align="left">Iterator support</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+</tr>
+<tr>
+<td align="left">Iterator visit order</td>
+<td align="center">min -&gt; max</td>
+<td align="center">random</td>
+<td align="center">random</td>
+<td align="center">insert order</td>
+</tr>
+<tr>
+<td align="left">Thread-safe option</td>
+<td align="center">Supported</td>
+<td align="center">Suported</td>
+<td align="center">No</td>
+<td align="center">Supported</td>
+</tr>
+<tr>
+<td align="left">Runs on shared mem</td>
+<td align="center">No</td>
+<td align="center">No</td>
+<td align="center">Yes</td>
+<td align="center">No</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
 <a id="consistent-api-look" class="anchor" href="#consistent-api-look" aria-hidden="true"><span class="octicon octicon-link"></span></a>Consistent API Look</h2>
 
-<p>All container APIs have a consistent look and feel. It basically provides a creator function which usually returns a pointer to a container structure. Also, <strong>all functions related to the container can be accessed through function pointers inside of the container</strong>.</p>
+<p>All container APIs have a consistent look and feel. It basically provides
+a creator function which usually returns a pointer to a container structure.
+Also, <strong>all functions related to the container can be accessed through function
+pointers inside of the container</strong> or traditional style direct access APIs.
+For an example, </p>
 
-<p>So, regardless of which container you use, you can simply put elements into a list with <code>pContainer-&gt;put(pContainer, ...)</code>. It looks like C++ classes, but it's a pure C implementation. Of course, it works with both C and C++ code**.</p>
+<p>So, regardless of which container you use, you can simply put elements into
+a list with <code>container-&gt;put(container, ...)</code> or you can call them using
+direct API like qtreetbl_pub(container, ...).</p>
 
-<p>We use this concept as much as possible because it is a simplified way of thinking and helps to improve readability. Consequently, it helps people to write bug-free code more easily.</p>
+<p>An examples below illustrates how it looks like.</p>
 
-<p>The example below illustrates qlibc in action:</p>
-
-<div class="highlight highlight-C"><pre>  <span class="pl-c">// create a hash-table.</span>
-  <span class="pl-s3">qhashtbl_t</span> *tbl = qhashtbl(<span class="pl-c1">0</span>, QHASHTBL_OPT_THREADSAFE);
+<div class="highlight highlight-c"><pre>  <span class="pl-c">// create a hash-table.</span>
+  <span class="pl-c1">qhashtbl_t</span> *tbl = qhashtbl(<span class="pl-c1">0</span>, QHASHTBL_OPT_THREADSAFE);
 
   <span class="pl-c">// add an element which key name is "score".</span>
-  <span class="pl-st">int</span> x = <span class="pl-c1">12345</span>;
-  tbl-&gt;<span class="pl-en">put</span>(tbl, <span class="pl-s1"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>, &amp;x, <span class="pl-k">sizeof</span>(<span class="pl-st">int</span>));
+  <span class="pl-k">int</span> x = <span class="pl-c1">12345</span>;
+  tbl-&gt;<span class="pl-en">put</span>(tbl, <span class="pl-s"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>, &amp;x, <span class="pl-k">sizeof</span>(<span class="pl-k">int</span>));
 
   <span class="pl-c">// get the value of the element.</span>
-  <span class="pl-st">int</span> *px = tbl-&gt;<span class="pl-en">get</span>(tbl, <span class="pl-s1"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>);
+  <span class="pl-k">int</span> *px = tbl-&gt;<span class="pl-en">get</span>(tbl, <span class="pl-s"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>);
   <span class="pl-k">if</span>(px != <span class="pl-c1">NULL</span>) {
-    <span class="pl-s3">printf</span>(<span class="pl-s1"><span class="pl-pds">"</span><span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, *px);
-    <span class="pl-s3">free</span>(px);
+    <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, *px);
+    <span class="pl-c1">free</span>(px);
   }
 
   <span class="pl-c">// release table</span>
   tbl-&gt;<span class="pl-en">free</span>(tbl);</pre></div>
 
 <p>Here is an identical implementation with a Linked-List-Table container.
-You may notice that there aren't any code changes at all, except for 1 line in the table creation.
-This is why qLibc encapsulates corresponding function pointers inside of the container object.</p>
+You may notice that there aren't any code changes at all, except for 1 line
+in the table creation. This is why qLibc encapsulates corresponding function
+pointers inside of the container object.</p>
 
-<div class="highlight highlight-C"><pre>  <span class="pl-c">// create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.</span>
-  <span class="pl-s3">qlisttbl_t</span> *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
+<div class="highlight highlight-c"><pre>  <span class="pl-c">// create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.</span>
+  <span class="pl-c1">qlisttbl_t</span> *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
 
   <span class="pl-c">// add an element which key name is "score".</span>
-  <span class="pl-st">int</span> x = <span class="pl-c1">12345</span>;
-  tbl-&gt;<span class="pl-en">put</span>(tbl, <span class="pl-s1"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>, &amp;x, <span class="pl-k">sizeof</span>(<span class="pl-st">int</span>));
+  <span class="pl-k">int</span> x = <span class="pl-c1">12345</span>;
+  tbl-&gt;<span class="pl-en">put</span>(tbl, <span class="pl-s"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>, &amp;x, <span class="pl-k">sizeof</span>(<span class="pl-k">int</span>));
 
   <span class="pl-c">// get the value of the element.</span>
-  <span class="pl-st">int</span> *px = tbl-&gt;<span class="pl-en">get</span>(tbl, <span class="pl-s1"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>);
+  <span class="pl-k">int</span> *px = tbl-&gt;<span class="pl-en">get</span>(tbl, <span class="pl-s"><span class="pl-pds">"</span>score<span class="pl-pds">"</span></span>);
   <span class="pl-k">if</span>(px != <span class="pl-c1">NULL</span>) {
-    <span class="pl-s3">printf</span>(<span class="pl-s1"><span class="pl-pds">"</span><span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, *px);             
-    <span class="pl-s3">free</span>(px);
+    <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, *px);             
+    <span class="pl-c1">free</span>(px);
   }
 
   <span class="pl-c">// release table</span>
@@ -156,41 +283,38 @@ Currently, we have high demands on following areas.</p>
 (in alphabetical order by first name)</p>
 
 <ul>
-<li>Anthony Tseng</li>
+<li><a href="https://github.com/darkdh">Anthony Tseng</a></li>
 <li>Cesar</li>
-<li>Colin</li>
-<li>Dmitry Vorobiev</li>
+<li><a href="https://github.com/colintd">Colin</a></li>
+<li><a href="https://github.com/Charles0429">Charles</a></li>
+<li><a href="https://github.com/demitsuri">Dmitry Vorobiev</a></li>
 <li>HyoSup Woo</li>
-<li>Keith Rosenberg</li>
+<li><a href="https://github.com/netpoetica">Keith Rosenberg</a></li>
 <li>Krishna</li>
+<li><a href="https://github.com/haveTryTwo">Liu Zhongchao</a></li>
 <li>Luis Jimenez</li>
 <li>Maik Beckmann</li>
 <li>RQ</li>
-<li>Ryan Gonzalez</li>
-<li>Seungyoung Kim</li>
+<li><a href="https://github.com/kirbyfan64">Ryan Gonzalez</a></li>
+<li><a href="https://github.com/wolkykim">Seungyoung Kim</a></li>
 <li>Umesh</li>
-<li>Zhongchao Liu</li>
 </ul>
 
 <p>If we have forgotten or misspelled your name, please let us know.</p>
-        </section>
 
-        <aside id="sidebar">
-          <a href="https://github.com/wolkykim/qlibc/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/wolkykim/qlibc/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
+<h2>
+<a id="think-the-project-is-helpful" class="anchor" href="#think-the-project-is-helpful" aria-hidden="true"><span class="octicon octicon-link"></span></a>Think the project is helpful?</h2>
 
-          <p class="repo-owner"><a href="https://github.com/wolkykim/qlibc"></a> is maintained by <a href="https://github.com/wolkykim">wolkykim</a>.</p>
+<p>Do you think this project is helpful? Show your interests and help the project going on.
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=FKTZPCFXXU8PG&amp;lc=US&amp;item_name=qLibc%20Project&amp;item_number=qlibc&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted">Donate to qLibc project</a></p>
 
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
-    </div>
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/wolkykim/qlibc">qLibc Project</a> is maintained by <a href="https://github.com/wolkykim">wolkykim</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
 
             <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -205,3 +329,4 @@ Currently, we have high demands on following areas.</p>
 
   </body>
 </html>
+
