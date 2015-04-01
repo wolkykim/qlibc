@@ -41,12 +41,12 @@ RM		= @RM@
 DEPLIBS		= @DEPLIBS@
 
 TARGETS1	= \
-			test_qhashtbl		\
-			test_qhasharr		\
-			test_qhasharr_darkdh \
-			test_qtreetbl		\
-			test_qstring       \
-			test_qlist
+		test_qstring		\
+		test_qhashtbl		\
+		test_qhasharr		\
+		test_qhasharr_darkdh	\
+		test_qtreetbl		\
+		test_qlist
 
 TARGETS2	= ${TARGETS1}
 TARGETS		= ${@EXAMPLES_TARGETS@}
@@ -60,6 +60,9 @@ run:	test
 test:	all
 	@./launcher.sh ${TARGETS}
 
+test_qstring: test_qstring.o
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qstring.o ${LIBQLIBC}
+
 test_qtreetbl: test_qtreetbl.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qtreetbl.o ${LIBQLIBC} -lm
 
@@ -72,11 +75,9 @@ test_qhasharr: test_qhasharr.o
 test_qhasharr_darkdh: test_qhasharr_darkdh.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qhasharr_darkdh.o ${LIBQLIBC}
 
-test_qstring: test_qstring.o
-	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qstring.o ${LIBQLIBC}
-
 test_qlist: test_qlist.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qlist.o ${LIBQLIBC}
+
 ## Clear Module
 clean:
 	${RM} -f *.o ${TARGETS}
@@ -84,3 +85,4 @@ clean:
 ## Compile Module
 .c.o:
 	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
+

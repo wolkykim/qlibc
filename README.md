@@ -133,20 +133,21 @@ Currently, we have high demands on following areas.
 The following people have helped with suggestions, ideas, code or fixing bugs:
 (in alphabetical order by first name)
 
-* Anthony Tseng
+* [Anthony Tseng](https://github.com/darkdh)
 * Cesar
-* Colin
-* Dmitry Vorobiev
+* [Colin](https://github.com/colintd)
+* [Charles](https://github.com/Charles0429)
+* [Dmitry Vorobiev](https://github.com/demitsuri)
 * HyoSup Woo
-* Keith Rosenberg
+* [Keith Rosenberg](https://github.com/netpoetica)
 * Krishna
+* [Liu Zhongchao](https://github.com/haveTryTwo)
 * Luis Jimenez
 * Maik Beckmann
 * RQ
-* Ryan Gonzalez
-* Seungyoung Kim
+* [Ryan Gonzalez](https://github.com/kirbyfan64)
+* [Seungyoung Kim](https://github.com/wolkykim)
 * Umesh
-* Zhongchao Liu
 
 If we have forgotten or misspelled your name, please let us know.
 

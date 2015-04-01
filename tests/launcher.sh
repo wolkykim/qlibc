@@ -9,13 +9,13 @@ FAIL=0
 FAILDESC=""
 for EXECUTABLE in $*; do
 	./$EXECUTABLE
+	echo ""
 	if [ $? != 0 ]; then
 		FAIL=1
 		FAILDESC="$FAILDESC $EXECUTABLE"
 	fi
 done
 
-echo""
 if [ $FAIL != 0 ]; then
 	echo "======================================================================"
 	echo "**** OOOOOPS!!! UNSUCESSFUL UNIT TEST FOUND. PLEASE FIX AND RERUN ****"
