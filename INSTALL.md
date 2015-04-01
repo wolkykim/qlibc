@@ -37,9 +37,9 @@ To see detailed configure options, use `--help` option:
 $ ./configure --help
 ```
 
-### MacOS X and Windows systems
+### All systems
 
-Run "cmake" command.
+Run the "cmake" command.
 
 ```
 $ cmake .
