@@ -582,7 +582,7 @@ bool qlist_removeat(qlist_t *list, int index) {
  */
 bool qlist_getnext(qlist_t *list, qlist_obj_t *obj, bool newmem) {
     if (obj == NULL)
-        return NULL;
+        return false;
 
     qlist_lock(list);
 
