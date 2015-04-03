@@ -48,35 +48,35 @@ TEST("Test basic features")
     list->addfirst(list, values[0], strlen(values[0]) + 1);
     ASSERT_EQUAL_INT(1, list->size(list));
     data = list->getfirst(list, NULL, false);
-    ASSERT_EQUAL_STR(values[0], (char * )data);
+    ASSERT_EQUAL_STR(values[0], (char*)data);
 
     list->addlast(list, values[2], strlen(values[2]) + 1);
     ASSERT_EQUAL_INT(2, list->size(list));
     data = list->getfirst(list, NULL, false);
-    ASSERT_EQUAL_STR(values[0], (char * )data);
+    ASSERT_EQUAL_STR(values[0], (char*)data);
     data = list->getlast(list, NULL, false);
-    ASSERT_EQUAL_STR(values[2], (char * )data);
+    ASSERT_EQUAL_STR(values[2], (char*)data);
     
     list->addat(list, 1, values[1], strlen(values[1]) + 1);
     ASSERT_EQUAL_INT(3, list->size(list));
     data = list->getfirst(list, NULL, false);
-    ASSERT_EQUAL_STR(values[0], (char * )data);
+    ASSERT_EQUAL_STR(values[0], (char*)data);
     data = list->getat(list, 1, NULL, 0);
-    ASSERT_EQUAL_STR(values[1], (char * )data);
+    ASSERT_EQUAL_STR(values[1], (char*)data);
     data = list->getlast(list, NULL, false);
-    ASSERT_EQUAL_STR(values[2], (char * )data);
+    ASSERT_EQUAL_STR(values[2], (char*)data);
     
     data = list->popat(list, 1, NULL);
     ASSERT_EQUAL_INT(2, list->size(list));
-    ASSERT_EQUAL_STR(values[1], (char * )data);
+    ASSERT_EQUAL_STR(values[1], (char*)data);
     free(data);
     data = list->popfirst(list, NULL);
     ASSERT_EQUAL_INT(1, list->size(list));
-    ASSERT_EQUAL_STR(values[0], (char * )data);
+    ASSERT_EQUAL_STR(values[0], (char*)data);
     free(data);
     data = list->poplast(list, NULL);
     ASSERT_EQUAL_INT(0, list->size(list));
-    ASSERT_EQUAL_STR(values[2], (char * )data);
+    ASSERT_EQUAL_STR(values[2], (char*)data);
     free(data);
 }
 
@@ -121,14 +121,14 @@ TEST("Test boundary conditions")
     list->addfirst(list, values[0], strlen(values[0]) + 1);
 
     data = list->getfirst(list, NULL, false);
-    ASSERT_EQUAL_STR(values[0], (char * )data);
+    ASSERT_EQUAL_STR(values[0], (char*)data);
     data = list->getlast(list, NULL, false);
-    ASSERT_EQUAL_STR(values[0], (char * )data);
+    ASSERT_EQUAL_STR(values[0], (char*)data);
     data = list->getat(list, 2, NULL, false);
     ASSERT_NULL(data);
 
     data = list->popfirst(list, NULL);
-    ASSERT_EQUAL_STR(values[0], (char * )data);
+    ASSERT_EQUAL_STR(values[0], (char*)data);
     free(data);
     ASSERT_EQUAL_INT(0, list->size(list));
 
@@ -136,7 +136,7 @@ TEST("Test boundary conditions")
     data = list->popat(list, 2, NULL);
     ASSERT_NULL(data);
     data = list->popat(list, 0, NULL);
-    ASSERT_EQUAL_STR(values[0], (char * )data);
+    ASSERT_EQUAL_STR(values[0], (char*)data);
     free(data);
 
     list->addfirst(list, values[0], strlen(values[0]) + 1);
@@ -154,7 +154,7 @@ TEST("Test boundary conditions")
     list->addfirst(list, values[0], strlen(values[0]) + 1);
     list->reverse(list);
     data = list->getfirst(list, NULL, false);
-    ASSERT_EQUAL_STR(values[0], (char * )data);
+    ASSERT_EQUAL_STR(values[0], (char*)data);
     list->clear(list);
     ASSERT_EQUAL_INT(0, list->size(list));
     list->free(list);

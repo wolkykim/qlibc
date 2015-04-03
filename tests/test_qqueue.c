@@ -46,7 +46,7 @@ TEST("Test basic features")
     ASSERT_EQUAL_INT(queue->size(queue), 0);
     
     bool result;
-    result = queue->push(queue, (void *) data, sizeof(data));
+    result = queue->push(queue, (void*) data, sizeof(data));
     ASSERT_EQUAL_BOOL(true, result);
     ASSERT_EQUAL_INT(1, queue->size(queue));
     result = queue->pushstr(queue, string);
@@ -104,7 +104,7 @@ TEST("Test boundary conditions")
     /*test when queue has only one element*/
     queue = qqueue(0);
 
-    result = queue->push(queue, (void *) array, sizeof(array));
+    result = queue->push(queue, (void*) array, sizeof(array));
     ASSERT_EQUAL_BOOL(result, true);
     data = queue->popat(queue, 2, NULL);
     ASSERT_NULL(data);
