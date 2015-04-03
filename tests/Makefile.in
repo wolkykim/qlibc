@@ -46,7 +46,8 @@ TARGETS1	= \
 		test_qhasharr		\
 		test_qhasharr_darkdh	\
 		test_qtreetbl		\
-		test_qlist
+		test_qlist			\
+		test_qqueue
 
 TARGETS2	= ${TARGETS1}
 TARGETS		= ${@EXAMPLES_TARGETS@}
@@ -77,6 +78,9 @@ test_qhasharr_darkdh: test_qhasharr_darkdh.o
 
 test_qlist: test_qlist.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qlist.o ${LIBQLIBC}
+
+test_qqueue: test_qqueue.o
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qqueue.o ${LIBQLIBC}
 
 ## Clear Module
 clean:
