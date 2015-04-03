@@ -26,7 +26,7 @@
 ## POSSIBILITY OF SUCH DAMAGE.
 ################################################################################
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
 PROJECT(qlibc C)
 
 INCLUDE_DIRECTORIES(${qlibc_SOURCE_DIR}/include/qlibc)
