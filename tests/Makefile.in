@@ -46,7 +46,7 @@ TARGETS1	= \
 		test_qhasharr		\
 		test_qhasharr_darkdh	\
 		test_qtreetbl		\
-		test_qlist			\
+		test_qlist		\
 		test_qqueue
 
 TARGETS2	= ${TARGETS1}

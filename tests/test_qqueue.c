@@ -1,11 +1,44 @@
+/******************************************************************************
+ * qLibc
+ *
+ * Copyright (c) 2010-2015 Seungyoung Kim.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
+/* This code is written and updated by following people and released under
+ * the same license as above qLibc license.
+ * Copyright (c) 2015 Charles - https://github.com/Charles0429
+ *****************************************************************************/
+
 #include "qunit.h"
 #include "qlibc.h"
 #include "limits.h"
 
 QUNIT_START("Test qqueue.c");
 
-TEST("Test basic features") {
-    const int data[] = {0, 1, 2, 3, 4, 5, 6};
+TEST("Test basic features")
+{
+    const int data[] = { 0, 1, 2, 3, 4, 5, 6 };
     const char *string = "a test for string";
     int64_t num = 4234080023325;
 
@@ -13,10 +46,10 @@ TEST("Test basic features") {
     ASSERT_EQUAL_INT(queue->size(queue), 0);
     
     bool result;
-    result = queue->push(queue, (void *)data, sizeof(data));
+    result = queue->push(queue, (void *) data, sizeof(data));
     ASSERT_EQUAL_BOOL(true, result);
     ASSERT_EQUAL_INT(1, queue->size(queue));
-    result = queue->pushstr(queue, string);   
+    result = queue->pushstr(queue, string);
     ASSERT_EQUAL_BOOL(true, result);
     ASSERT_EQUAL_INT(2, queue->size(queue));
     result = queue->pushint(queue, num);
@@ -32,14 +65,16 @@ TEST("Test basic features") {
     ASSERT_EQUAL_INT(pop_num, num);
 
     queue->clear(queue);
-    queue->free(queue); 
+    queue->free(queue);
 }
 
-TEST("Test boundary conditions") {
-    
-    const int array[] = {1, 2, 3, 4, 5, 6};
-    const char *string = "ewqljljoaq;vsl23053054302ds;flajewjpeo2353rekffkl;sdk;f";
+TEST("Test boundary conditions")
+{
 
+    const int array[] = { 1, 2, 3, 4, 5, 6 };
+    const char *string =
+            "ewqljljoaq;vsl23053054302ds;flajewjpeo2353rekffkl;sdk;f";
+    
     /*test when queue is empty*/
     qqueue_t *queue = qqueue(0);
     ASSERT_EQUAL_INT(0, queue->size(queue));
@@ -69,7 +104,7 @@ TEST("Test boundary conditions") {
     /*test when queue has only one element*/
     queue = qqueue(0);
 
-    result = queue->push(queue, (void *)array, sizeof(array));
+    result = queue->push(queue, (void *) array, sizeof(array));
     ASSERT_EQUAL_BOOL(result, true);
     data = queue->popat(queue, 2, NULL);
     ASSERT_NULL(data);
@@ -126,15 +161,13 @@ TEST("Test boundary conditions") {
     queue->free(queue);
 }
 
-void test_thousands_of_values(int num_values, char *prefix, char *postfix)
-{
+void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
     qqueue_t *queue = qqueue(0);
     ASSERT_EQUAL_INT(0, queue->size(queue));
 
     /*test strings*/
     int i;
-    for(i = 0; i < num_values; i++)
-    {
+    for (i = 0; i < num_values; i++) {
         char *value = qstrdupf("value:%s%d%s", prefix, i, postfix);
         
         queue->pushstr(queue, value);
@@ -143,8 +176,7 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix)
     }
 
     i = 0;
-    while(queue->size(queue) != 0)
-    {
+    while (queue->size(queue) != 0) {
         char *value = qstrdupf("value:%s%d%s", prefix, i, postfix);
 
         char *data = queue->popstr(queue);
@@ -155,11 +187,9 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix)
 
     /*test arrays*/
     int array[8];
-    for(i = 0; i < num_values; i++)
-    {
+    for (i = 0; i < num_values; i++) {
         int j;
-        for(j = 0; j < 8; j++)
-        {
+        for (j = 0; j < 8; j++) {
             array[j] = 8 * i + 1;
         }
 
@@ -168,11 +198,9 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix)
     }
 
     void *array_data;
-    for(i = 0; i < num_values; i++)
-    {
+    for (i = 0; i < num_values; i++) {
         int j;
-        for(j = 0; j < 8; j++)
-        {
+        for (j = 0; j < 8; j++) {
             array[j] = 8 * i + 1;
         }
 
@@ -183,14 +211,12 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix)
     /*test ints*/
     int64_t k;
     int64_t size;
-    for(k = LONG_MIN, size = 0; size < num_values; k++, size++)
-    {
+    for (k = LONG_MIN, size = 0; size < num_values; k++, size++) {
         queue->pushint(queue, k);
         ASSERT_EQUAL_INT(size + 1, queue->size(queue));
     }
 
-    for(k = LONG_MIN, size = 0; size < num_values; k++, size++)
-    {
+    for (k = LONG_MIN, size = 0; size < num_values; k++, size++) {
         int64_t num = queue->popint(queue);
         ASSERT_EQUAL_INT(k, num);
     }
@@ -199,20 +225,33 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix)
     queue->free(queue);
 }
 
-TEST("Test thousands of values: without prefix and postfix") {
+TEST("Test thousands of values: without prefix and postfix")
+{
     test_thousands_of_values(10000, "", "");
 }
 
-TEST("Test thousands of values: with prefix and without postfix") {
-    test_thousands_of_values(10000, "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866", "");
+TEST("Test thousands of values: with prefix and without postfix")
+{
+    test_thousands_of_values(
+            10000,
+            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
+            "");
 }
 
-TEST("Test thousands of values: without prefix and with postfix") {
-    test_thousands_of_values(10000, "", "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
+TEST("Test thousands of values: without prefix and with postfix")
+{
+    test_thousands_of_values(
+            10000,
+            "",
+            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
 }
 
-TEST("Test thousands of values: with prefix and postfix") {
-    test_thousands_of_values(10000, "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866", "1a087a6982371bbfc9d4e14ae    76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
+TEST("Test thousands of values: with prefix and postfix")
+{
+    test_thousands_of_values(
+            10000,
+            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
+            "1a087a6982371bbfc9d4e14ae    76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
 }
 
 QUNIT_END();
