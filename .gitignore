@@ -4,6 +4,9 @@ Makefile
 /config.h
 /config.log
 /config.status
+/CMakeCache.txt
+/CMakeFiles/
+/cmake_install.cmake
 /lib/*.a
 /lib/*.so
 /lib/*.so.?

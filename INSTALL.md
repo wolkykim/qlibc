@@ -1,7 +1,8 @@
 Installing qLibc
 ================
 
-qLibc supports POSIX-compliant operating systems, including Linux, MacOS X and most of Unix systems. Windows OS is supported with most of features.
+qLibc supports POSIX-compliant operating systems, including Linux, MacOS X
+and most of Unix systems. Windows OS is supported with most of features.
 
 ## Configure
 
@@ -13,7 +14,8 @@ Run "configure" command.
 $ ./configure
 ```
 
-By default qLibc will be installed in `/usr/local/{include,lib}`, so use `--prefix` option if you want to change the installation path:
+By default qLibc will be installed in `/usr/local/{include,lib}`, so use
+`--prefix` option if you want to change the installation path:
 
 ```
 $ ./configure --prefix=/usr/local/qlibc
@@ -37,7 +39,7 @@ To see detailed configure options, use `--help` option:
 $ ./configure --help
 ```
 
-### MacOS X and Windows systems
+### MacOS X and Windows systems (includes most of Unix systems)
 
 Run "cmake" command.
 
@@ -45,8 +47,11 @@ Run "cmake" command.
 $ cmake .
 ```
 
-In many systems, CMake needs to be installed separately. qlibc requires CMake version 2.8.12 or above.
-Currently, we're focusing on getting the library compiled on those machines using cmake thus it doesn't provide the full configure options as we provide in configure command.
+In many systems, CMake needs to be installed separately. qlibc requires CMake
+version 2.8 or above. Currently, we're focusing on getting the library compiled
+on those machines using cmake thus it doesn't provide the full configure
+options that are provided in the configure command as well as build makefiles
+for examples and unit tests.
 
 ## Compile
 
@@ -58,13 +63,17 @@ $ make
 
 ## Install
 
-This command will install `qLibc` on your system. By default, the directory prefix is "/usr/local" so header files will be installed into `/usr/local/include` and library files will be installed into `/usr/local/lib`:
+This command will install `qLibc` on your system. By default, the directory
+prefix is "/usr/local" so header files will be installed into `/usr/local/include`
+and library files will be installed into `/usr/local/lib`:
 
 ```
 $ make install
 ```
 
-This will only install header files and library(archive; static and dynamic) files. The document files in the "doc" directory will not be installed, so please make a copy of it by yourself if you want to keep it in the system.
+This will only install header files and library(archive; static and dynamic)
+files. The document files in the "doc" directory will not be installed,
+so please make a copy of it by yourself if you want to keep it in the system.
 
 ## Uninstall
 
@@ -76,29 +85,34 @@ $ make uninstall
 
 ## Examples and Unit Tests.
 
-Analyzing the example code is probably a best starting point to being familiar with qlibc, but please note that the examples were written as simply as possible just to show the sample usages.
+Analyzing the example code is probably a best starting point to being familiar
+with qlibc, but please note that the examples were written as simply
+as possible just to show the sample usages.
 
-As a reminder, example codes and API documents are provided with the package in the "examples" and "doc" directories.
+As a reminder, example codes and API documents are provided with the package
+in the "examples" and "doc" directories.
+
+Please note that the build Makefile is only provided when the package is
+configured usinig "configure" script. CMake doesn't build the makefiles.
 
 ### Run Examples
 
-The examples also can be compiled by running "make" command in the "examples" directory.
+The examples also can be compiled by running "make" command in the "examples"
+directory.
 
 ```
 $ cd examples
 $ make
 ```
 
-If you're using cmake to configure the qlibc package, it will not generate Makefile for codes in examples.
+If you're using cmake to configure the qlibc package, it will not generate
+Makefile for codes in examples.
 
 ### Run Unit Tests
-
-Currently Unit Tests cover only small portion of codes. This part is in-progress area that we're looking for contributors to enrich this area. 
 
 Unit tests can be compiled and run as following.
 
 ```
-$ cd tests
-$ make
+$ cd tests (or in src directory)
 $ make test
 ```
