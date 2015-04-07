@@ -85,6 +85,7 @@ test_qqueue: test_qqueue.o
 
 test_qstack: test_qstack.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qstack.o ${LIBQLIBC}
+
 ## Clear Module
 clean:
 	${RM} -f *.o ${TARGETS}
@@ -92,4 +93,3 @@ clean:
 ## Compile Module
 .c.o:
 	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
-
