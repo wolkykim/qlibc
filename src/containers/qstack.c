@@ -231,7 +231,7 @@ bool qstack_pushstr(qstack_t *stack, const char *str) {
  *  - ENOMEM    : Memory allocation failure.
  */
 bool qstack_pushint(qstack_t *stack, int64_t num) {
-    return stack->list->addfirst(stack->list, &num, sizeof(int));
+    return stack->list->addfirst(stack->list, &num, sizeof(num));
 }
 
 /**
