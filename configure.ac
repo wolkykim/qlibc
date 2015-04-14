@@ -98,7 +98,7 @@ AC_PREFIX_DEFAULT([/usr/local])
 ## Checks for programs.
 AC_PROG_CC
 if test $ac_compiler_gnu = yes; then
-	CFLAGS="-Wall -Wstrict-prototypes -fPIC"
+	CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -fPIC"
 #else
 #	AC_MSG_FAILURE([GCC is required.])
 fi
