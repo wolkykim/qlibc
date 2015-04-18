@@ -136,7 +136,7 @@
 #include "utilities/qstring.h"
 #include "utilities/qsocket.h"
 #include "containers/qlisttbl.h"
-#include "containers/qvector.h"
+#include "containers/qgrow.h"
 #include "extensions/qhttpclient.h"
 
 #ifndef _DOXYGEN_SKIP
@@ -1214,7 +1214,7 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
     }
 
     // create stream buffer
-    qvector_t *outBuf = qvector(0);
+    qgrow_t *outBuf = qgrow(0);
     if (outBuf == NULL)
         return false;
 

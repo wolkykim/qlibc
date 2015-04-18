@@ -48,7 +48,8 @@ TARGETS1	= \
 		test_qtreetbl		\
 		test_qlist		\
 		test_qqueue		\
-		test_qstack
+		test_qstack		\
+		test_qvector
 
 TARGETS2	= ${TARGETS1}
 TARGETS		= ${@EXAMPLES_TARGETS@}
@@ -84,7 +85,10 @@ test_qqueue: test_qqueue.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qqueue.o ${LIBQLIBC}
 
 test_qstack: test_qstack.o
-	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ test_qstack.o ${LIBQLIBC}
+	${CC} ${CFLAGS} ${CPPFLAGS} -g -o $@ test_qstack.o ${LIBQLIBC}
+
+test_qvector: test_qvector.o
+	${CC} ${CFLAGS} ${CPPFLAGS} -g -o $@ test_qvector.o ${LIBQLIBC}
 
 ## Clear Module
 clean:

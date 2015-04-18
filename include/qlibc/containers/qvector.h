@@ -25,9 +25,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
+/* This code is written and updated by following people and released under
+ * the same license as above qLibc license.
+ * Copyright (c) 2015 Charles - https://github.com/Charles0429
+ *****************************************************************************/
 
 /**
- * Vector container that handles growable objects.
+ * Vector container.
  *
  * @file qvector.h
  */
@@ -38,7 +42,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "qlist.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,50 +49,102 @@ extern "C" {
 
 /* types */
 typedef struct qvector_s qvector_t;
+typedef struct qvector_obj_s qvector_obj_t;
 
 /* public functions */
 enum {
-    QVECTOR_THREADSAFE = (QLIST_THREADSAFE)  /*!< make it thread-safe */
+    QVECTOR_THREADSAFE = (0x01)  /*!< make it thread-safe */
 };
 
-extern qvector_t *qvector(int options);
+extern qvector_t *qvector(int options, size_t num, size_t size);
 
-extern bool qvector_add(qvector_t *vector, const void *object, size_t size);
-extern bool qvector_addstr(qvector_t *vector, const char *str);
-extern bool qvector_addstrf(qvector_t *vector, const char *format, ...);
+extern bool qvector_addfirst(qvector_t *vector, const void *data);
+extern bool qvector_addlast(qvector_t *vector, const void *data);
+extern bool qvector_addat(qvector_t *vector, int index, const void *data);
+
+extern void *qvector_getfirst(qvector_t *vector, bool newmem);
+extern void *qvector_getlast(qvector_t *vector, bool newmem);
+extern void *qvector_getat(qvector_t *vector, int index, bool newmem);
+
+extern bool qvector_setfirst(qvector_t *vector, const void *data);
+extern bool qvector_setlast(qvector_t *vector, const void *data);
+extern bool qvector_setat(qvector_t *vector, int index, const void *data);
+
+extern void *qvector_popfirst(qvector_t *vector);
+extern void *qvector_poplast(qvector_t *vector);
+extern void *qvector_popat(qvector_t *vector, int index);
+
+extern bool qvector_removefirst(qvector_t *vector);
+extern bool qvector_removelast(qvector_t *vector);
+extern bool qvector_removeat(qvector_t *vector, int index);
 
 extern size_t qvector_size(qvector_t *vector);
-extern size_t qvector_datasize(qvector_t *vector);
+extern bool qvector_resize(qvector_t *vector, size_t newsize);
 
 extern void *qvector_toarray(qvector_t *vector, size_t *size);
-extern char *qvector_tostring(qvector_t *vector);
+
+extern void qvector_lock(qvector_t *vector);
+extern void qvector_unlock(qvector_t *vector);
 
 extern void qvector_clear(qvector_t *vector);
 extern bool qvector_debug(qvector_t *vector, FILE *out);
 extern void qvector_free(qvector_t *vector);
+
+extern void qvector_reverse(qvector_t *vector);
+extern bool qvector_getnext(qvector_t *vector, qvector_obj_t *obj, bool newmem);
 
 /**
  * qvector container object
  */
 struct qvector_s {
     /* capsulated member functions */
-    bool (*add) (qvector_t *vector, const void *data, size_t size);
-    bool (*addstr) (qvector_t *vector, const char *str);
-    bool (*addstrf) (qvector_t *vector, const char *format, ...);
 
-    size_t (*size) (qvector_t *vector);
-    size_t (*datasize) (qvector_t *vector);
+    bool (*addfirst)(qvector_t *vector, const void *object);
+    bool (*addlast)(qvector_t *vector, const void *data);
+    bool (*addat)(qvector_t *vector, int index, const void *data);
 
-    void *(*toarray) (qvector_t *vector, size_t *size);
-    char *(*tostring) (qvector_t *vector);
+    void *(*getfirst)(qvector_t *vector, bool newmem);
+    void *(*getlast)(qvector_t *vector, bool newmem);
+    void *(*getat)(qvector_t *vector, int index, bool newmem);
 
-    void (*clear) (qvector_t *vector);
-    bool (*debug) (qvector_t *vector, FILE *out);
+    bool (*setfirst)(qvector_t *vector, const void *data);
+    bool (*setlast)(qvector_t *vector, const void *data);
+    bool (*setat)(qvector_t *vector, int index, const void *data);
 
-    void (*free) (qvector_t *vector);
+    void *(*popfirst)(qvector_t *vector);
+    void *(*poplast)(qvector_t *vector);
+    void *(*popat)(qvector_t *vector, int index);
+
+    bool (*removefirst)(qvector_t *vector);
+    bool (*removelast)(qvector_t *vector);
+    bool (*removeat)(qvector_t *vector, int index);
+
+    size_t (*size)(qvector_t *vector);
+    bool   (*resize)(qvector_t *vector, size_t newsize);
+
+    void *(*toarray)(qvector_t *vector, size_t *size);
+
+    void (*lock)(qvector_t *vector);
+    void (*unlock)(qvector_t *vector);
+
+    void (*clear)(qvector_t *vector);
+    bool (*debug)(qvector_t *vector, FILE *out);
+    void (*free)(qvector_t *vector);
+
+    void (*reverse)(qvector_t *vector);
+    bool (*getnext)(qvector_t *vector, qvector_obj_t *obj, bool newmem);
 
     /* private variables - do not access directly */
-    qlist_t *list;  /*!< data container */
+    void *qmutex;
+    void *data;
+    size_t num; /*number of elements*/
+    size_t esize; /*the size of each element*/
+    size_t alloc; /*allocated number of elements*/
+};
+
+struct qvector_obj_s { 
+    void *data;
+    int index;
 };
 
 #ifdef __cplusplus
