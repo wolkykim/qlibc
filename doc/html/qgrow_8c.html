@@ -68,7 +68,7 @@ $(document).ready(function(){initNavTree('qgrow_8c.html','');});
 </div><!--header-->
 <div class="contents">
 
-<p>Vector implementation.  
+<p>Grow container that handles growable objects.  
 <a href="#details">More...</a></p>
 
 <p><a href="qgrow_8c_source.html">Go to the source code of this file.</a></p>
@@ -110,10 +110,10 @@ Functions</h2></td></tr>
 <tr class="separator:a00f87daf5492d6a042fca6e310086560"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Vector implementation. </p>
+<div class="textblock"><p>Grow container that handles growable objects. </p>
 <p>qgrow container is a grow implementation. It implements a growable array of objects and it extends qlist container that allow a linked-list to be treated as a grow.</p>
 <div class="fragment"><div class="line">[Code sample - Object]</div>
-<div class="line">qgrow_t *grow = <a class="code" href="qgrow_8c.html#a3a0165e2eba9d9098f2e448791e8aae9">qgrow</a>(QVECTOR_THREADSAFE);</div>
+<div class="line">qgrow_t *grow = <a class="code" href="qgrow_8c.html#a3a0165e2eba9d9098f2e448791e8aae9">qgrow</a>(QGROW_THREADSAFE);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// add elements</span></div>
 <div class="line">grow-&gt;addstr(grow, <span class="stringliteral">&quot;AB&quot;</span>);      <span class="comment">// no need to supply size</span></div>
@@ -210,10 +210,10 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <div class="fragment"><div class="line"><span class="comment">// allocate memory</span></div>
-<div class="line">qgrow_t *grow = <a class="code" href="qgrow_8c.html#a3a0165e2eba9d9098f2e448791e8aae9">qgrow</a>(QVECTOR_THREADSAFE);</div>
+<div class="line">qgrow_t *grow = <a class="code" href="qgrow_8c.html#a3a0165e2eba9d9098f2e448791e8aae9">qgrow</a>(QGROW_THREADSAFE);</div>
 <div class="line">grow-&gt;free(grow);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Available options:<ul>
-<li>QVECTOR_THREADSAFE - make it thread-safe. </li>
+<li>QGROW_THREADSAFE - make it thread-safe. </li>
 </ul>
 </dd></dl>
 
@@ -468,7 +468,7 @@ Functions</h2></td></tr>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
-<li>ENOENT : Vector is empty.</li>
+<li>ENOENT : empty.</li>
 <li>ENOMEM : Memory allocation failure. </li>
 </ul>
 </td></tr>
@@ -505,7 +505,7 @@ Functions</h2></td></tr>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
-<li>ENOENT : Vector is empty.</li>
+<li>ENOENT : empty.</li>
 <li>ENOMEM : Memory allocation failure.</li>
 </ul>
 </td></tr>

@@ -94,7 +94,7 @@ $(document).ready(function(){initNavTree('qgrow_8c_source.html','');});
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> *****************************************************************************/</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * @file qgrow.c Vector implementation.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * @file qgrow.c Grow container that handles growable objects.</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"> * qgrow container is a grow implementation. It implements a growable array</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"> * of objects and it extends qlist container that allow a linked-list to be</span></div>
@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('qgrow_8c_source.html','');});
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"> * @code</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"> *  [Code sample - Object]</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"> *  qgrow_t *grow = qgrow(QVECTOR_THREADSAFE);</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"> *  qgrow_t *grow = qgrow(QGROW_THREADSAFE);</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"> *  // add elements</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"> *  grow-&gt;addstr(grow, &quot;AB&quot;);      // no need to supply size</span></div>
@@ -190,13 +190,13 @@ $(document).ready(function(){initNavTree('qgrow_8c_source.html','');});
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment"> * @code</span></div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment"> *  // allocate memory</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment"> *  qgrow_t *grow = qgrow(QVECTOR_THREADSAFE);</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment"> *  qgrow_t *grow = qgrow(QGROW_THREADSAFE);</span></div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="comment"> *  grow-&gt;free(grow);</span></div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="comment"> * @endcode</span></div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment"> * @note</span></div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment"> *   Available options:</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="comment"> *   - QVECTOR_THREADSAFE - make it thread-safe.</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="comment"> *   - QGROW_THREADSAFE - make it thread-safe.</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00134"></a><span class="lineno"><a class="line" href="qgrow_8c.html#a3a0165e2eba9d9098f2e448791e8aae9">  134</a></span>&#160;qgrow_t *<a class="code" href="qgrow_8c.html#a3a0165e2eba9d9098f2e448791e8aae9">qgrow</a>(<span class="keywordtype">int</span> options) {</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    qgrow_t *grow = (qgrow_t *) calloc(1, <span class="keyword">sizeof</span>(qgrow_t));</div>
@@ -319,7 +319,7 @@ $(document).ready(function(){initNavTree('qgrow_8c_source.html','');});
 <div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;<span class="comment"> * @return a pointer of finally merged elements(malloced), otherwise returns</span></div>
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="comment"> *  NULL</span></div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<span class="comment"> *  - ENOENT    : Vector is empty.</span></div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<span class="comment"> *  - ENOENT    : empty.</span></div>
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00258"></a><span class="lineno"><a class="line" href="qgrow_8c.html#af8dcd5f0d8fce7d4c9d1727076823019">  258</a></span>&#160;<span class="keywordtype">void</span> *<a class="code" href="qgrow_8c.html#af8dcd5f0d8fce7d4c9d1727076823019">qgrow_toarray</a>(qgrow_t *grow, <span class="keywordtype">size_t</span> *size) {</div>
@@ -334,7 +334,7 @@ $(document).ready(function(){initNavTree('qgrow_8c_source.html','');});
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="comment"> * @return a pointer of finally merged strings(malloced), otherwise returns NULL</span></div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="comment"> * @retval errno will be set in error condition.</span></div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="comment"> *  - ENOENT    : Vector is empty.</span></div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="comment"> *  - ENOENT    : empty.</span></div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;<span class="comment"> *  - ENOMEM    : Memory allocation failure.</span></div>
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="comment"> * @note</span></div>
