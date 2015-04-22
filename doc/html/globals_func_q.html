@@ -162,6 +162,39 @@ $(document).ready(function(){initNavTree('globals_func_q.html','');});
 <li>qgetenv()
 : <a class="el" href="qsystem_8c.html#a572fee0d88280a0dd1f5ab0905296eea">qsystem.c</a>
 </li>
+<li>qgrow()
+: <a class="el" href="qgrow_8c.html#a3a0165e2eba9d9098f2e448791e8aae9">qgrow.c</a>
+</li>
+<li>qgrow_add()
+: <a class="el" href="qgrow_8c.html#a313f8b8da26b36f9558525efe34cda29">qgrow.c</a>
+</li>
+<li>qgrow_addstr()
+: <a class="el" href="qgrow_8c.html#a0e4759834172363db2e63799da00696b">qgrow.c</a>
+</li>
+<li>qgrow_addstrf()
+: <a class="el" href="qgrow_8c.html#a6c52a8b3243100e3f2b7a97f47b6b992">qgrow.c</a>
+</li>
+<li>qgrow_clear()
+: <a class="el" href="qgrow_8c.html#a748f12b95d3e7f199e77a503070fe62b">qgrow.c</a>
+</li>
+<li>qgrow_datasize()
+: <a class="el" href="qgrow_8c.html#aec52e4932ddb3e1f29b95540f2231ac7">qgrow.c</a>
+</li>
+<li>qgrow_debug()
+: <a class="el" href="qgrow_8c.html#a093d851a279a44373605d7c57d498d4c">qgrow.c</a>
+</li>
+<li>qgrow_free()
+: <a class="el" href="qgrow_8c.html#a00f87daf5492d6a042fca6e310086560">qgrow.c</a>
+</li>
+<li>qgrow_size()
+: <a class="el" href="qgrow_8c.html#a3e37ab3040be6523fc93a135aea45949">qgrow.c</a>
+</li>
+<li>qgrow_toarray()
+: <a class="el" href="qgrow_8c.html#af8dcd5f0d8fce7d4c9d1727076823019">qgrow.c</a>
+</li>
+<li>qgrow_tostring()
+: <a class="el" href="qgrow_8c.html#ab1a0aaa7efbdbb40bac079d6ad103a8e">qgrow.c</a>
+</li>
 <li>qhasharr()
 : <a class="el" href="qhasharr_8c.html#aa0f33578b50024a4a239472c52eee18c">qhasharr.c</a>
 </li>
@@ -784,22 +817,16 @@ $(document).ready(function(){initNavTree('globals_func_q.html','');});
 : <a class="el" href="qencode_8c.html#a254eadb7e79e9c22042c0779feac9e93">qencode.c</a>
 </li>
 <li>qvector()
-: <a class="el" href="qvector_8c.html#a203044eab6c840e593223148b24e8995">qvector.c</a>
+: <a class="el" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector.c</a>
 </li>
-<li>qvector_add()
-: <a class="el" href="qvector_8c.html#a1c334529ab20886033a64413a17760d1">qvector.c</a>
+<li>qvector_addfirst()
+: <a class="el" href="qvector_8c.html#a0bf76991577f397aafecb52599709103">qvector.c</a>
 </li>
-<li>qvector_addstr()
-: <a class="el" href="qvector_8c.html#a39902c2ec296e42892b71058bff7c1fd">qvector.c</a>
-</li>
-<li>qvector_addstrf()
-: <a class="el" href="qvector_8c.html#a17a159b4acbfbf97bc106798ac92eaff">qvector.c</a>
+<li>qvector_addlast()
+: <a class="el" href="qvector_8c.html#af61312ebeacce01f8d2b1777802d3f98">qvector.c</a>
 </li>
 <li>qvector_clear()
 : <a class="el" href="qvector_8c.html#a6aa6d22249f4cbeff4cbcb31aea99063">qvector.c</a>
-</li>
-<li>qvector_datasize()
-: <a class="el" href="qvector_8c.html#a550eb3c6d77ad7f2f6c38b3ed05c0dfa">qvector.c</a>
 </li>
 <li>qvector_debug()
 : <a class="el" href="qvector_8c.html#a217d5fe3cb59560703d84e47097dc989">qvector.c</a>
@@ -807,14 +834,62 @@ $(document).ready(function(){initNavTree('globals_func_q.html','');});
 <li>qvector_free()
 : <a class="el" href="qvector_8c.html#a69479bf55198bdd1c29e906d1b069480">qvector.c</a>
 </li>
+<li>qvector_getat()
+: <a class="el" href="qvector_8c.html#a73f4f6085f1fa68e03451790e292436f">qvector.c</a>
+</li>
+<li>qvector_getfirst()
+: <a class="el" href="qvector_8c.html#a96c7398c8e03e820b7f5d016639bc6f3">qvector.c</a>
+</li>
+<li>qvector_getlast()
+: <a class="el" href="qvector_8c.html#ad93462633f13508a3c1345525e7776e2">qvector.c</a>
+</li>
+<li>qvector_getnext()
+: <a class="el" href="qvector_8c.html#a888474c5ca93c96452782cddb03ada82">qvector.c</a>
+</li>
+<li>qvector_lock()
+: <a class="el" href="qvector_8c.html#a251c32fb5bafe5e1beafe18f8c8bd2bb">qvector.c</a>
+</li>
+<li>qvector_popat()
+: <a class="el" href="qvector_8c.html#a7c361ad0a5caf3d3a4732cf087b178ab">qvector.c</a>
+</li>
+<li>qvector_popfirst()
+: <a class="el" href="qvector_8c.html#a5f7fac8917d39c653aaf57b0b5ef913b">qvector.c</a>
+</li>
+<li>qvector_poplast()
+: <a class="el" href="qvector_8c.html#ae501069d92ff2c9d9c852eb702346e69">qvector.c</a>
+</li>
+<li>qvector_removeat()
+: <a class="el" href="qvector_8c.html#adc720c91738ed960fac9c0675d5aafbe">qvector.c</a>
+</li>
+<li>qvector_removefirst()
+: <a class="el" href="qvector_8c.html#a0da63e7c76f7cf42db2e5e027bd51a02">qvector.c</a>
+</li>
+<li>qvector_removelast()
+: <a class="el" href="qvector_8c.html#aa2643b2f497925b48e746ef58fc50729">qvector.c</a>
+</li>
+<li>qvector_resize()
+: <a class="el" href="qvector_8c.html#a304a57b5c428b4c517f1d0a22c84529b">qvector.c</a>
+</li>
+<li>qvector_reverse()
+: <a class="el" href="qvector_8c.html#a11d7f8b4c7ac35bbfb60b168ae2a5046">qvector.c</a>
+</li>
+<li>qvector_setat()
+: <a class="el" href="qvector_8c.html#ae3290364eec4333b91c2b7314e6fee5a">qvector.c</a>
+</li>
+<li>qvector_setfirst()
+: <a class="el" href="qvector_8c.html#a9971c9a1bf24e25373b93fe2b8529d35">qvector.c</a>
+</li>
+<li>qvector_setlast()
+: <a class="el" href="qvector_8c.html#a843cf9ea1d613a5eb28e7c7ac957b1cf">qvector.c</a>
+</li>
 <li>qvector_size()
 : <a class="el" href="qvector_8c.html#aea2dd45d8692621f3aba1822b8f9e80e">qvector.c</a>
 </li>
 <li>qvector_toarray()
 : <a class="el" href="qvector_8c.html#ae367e5e5fc33e2eb5dc9eb8791efcb15">qvector.c</a>
 </li>
-<li>qvector_tostring()
-: <a class="el" href="qvector_8c.html#a31171fcb6798dc2886f12e06ce5313be">qvector.c</a>
+<li>qvector_unlock()
+: <a class="el" href="qvector_8c.html#a73dbecdb97c5825dedfd7fdd605cc0ad">qvector.c</a>
 </li>
 </ul>
 </div><!-- contents -->

@@ -1,5 +1,6 @@
 var dir_0b61c55142250c0cc363383afd8075a4 =
 [
+    [ "qgrow.c", "qgrow_8c.html", "qgrow_8c" ],
     [ "qhasharr.c", "qhasharr_8c.html", "qhasharr_8c" ],
     [ "qhashtbl.c", "qhashtbl_8c.html", "qhashtbl_8c" ],
     [ "qlist.c", "qlist_8c.html", "qlist_8c" ],

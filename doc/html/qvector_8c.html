@@ -68,165 +68,206 @@ $(document).ready(function(){initNavTree('qvector_8c.html','');});
 </div><!--header-->
 <div class="contents">
 
-<p>Vector implementation.  
+<p>Vector container implementation.  
 <a href="#details">More...</a></p>
 
 <p><a href="qvector_8c_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a203044eab6c840e593223148b24e8995"><td class="memItemLeft" align="right" valign="top">qvector_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a203044eab6c840e593223148b24e8995">qvector</a> (int options)</td></tr>
-<tr class="memdesc:a203044eab6c840e593223148b24e8995"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize vector.  <a href="#a203044eab6c840e593223148b24e8995">More...</a><br/></td></tr>
-<tr class="separator:a203044eab6c840e593223148b24e8995"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c334529ab20886033a64413a17760d1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a1c334529ab20886033a64413a17760d1">qvector_add</a> (qvector_t *vector, const void *data, size_t size)</td></tr>
-<tr class="memdesc:a1c334529ab20886033a64413a17760d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;add(): Stack object  <a href="#a1c334529ab20886033a64413a17760d1">More...</a><br/></td></tr>
-<tr class="separator:a1c334529ab20886033a64413a17760d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39902c2ec296e42892b71058bff7c1fd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a39902c2ec296e42892b71058bff7c1fd">qvector_addstr</a> (qvector_t *vector, const char *str)</td></tr>
-<tr class="memdesc:a39902c2ec296e42892b71058bff7c1fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;addstr(): Stack string  <a href="#a39902c2ec296e42892b71058bff7c1fd">More...</a><br/></td></tr>
-<tr class="separator:a39902c2ec296e42892b71058bff7c1fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17a159b4acbfbf97bc106798ac92eaff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a17a159b4acbfbf97bc106798ac92eaff">qvector_addstrf</a> (qvector_t *vector, const char *format,...)</td></tr>
-<tr class="memdesc:a17a159b4acbfbf97bc106798ac92eaff"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;addstrf(): Stack formatted string  <a href="#a17a159b4acbfbf97bc106798ac92eaff">More...</a><br/></td></tr>
-<tr class="separator:a17a159b4acbfbf97bc106798ac92eaff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51748a7e6721639ff37999b531c6e425"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a51748a7e6721639ff37999b531c6e425"></a>
+static void *&#160;</td><td class="memItemRight" valign="bottom"><b>get_at</b> (qvector_t *vector, int index, bool newmem)</td></tr>
+<tr class="separator:a51748a7e6721639ff37999b531c6e425"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cb6c698932511561dba1574d0a18460"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4cb6c698932511561dba1574d0a18460"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>remove_at</b> (qvector_t *vector, int index)</td></tr>
+<tr class="separator:a4cb6c698932511561dba1574d0a18460"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8a262e93b18c9dc800f002389a9d645"><td class="memItemLeft" align="right" valign="top">qvector_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector</a> (size_t max, size_t objsize, int options)</td></tr>
+<tr class="memdesc:ac8a262e93b18c9dc800f002389a9d645"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create new qvector_t container.  <a href="#ac8a262e93b18c9dc800f002389a9d645">More...</a><br/></td></tr>
+<tr class="separator:ac8a262e93b18c9dc800f002389a9d645"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bf76991577f397aafecb52599709103"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a0bf76991577f397aafecb52599709103">qvector_addfirst</a> (qvector_t *vector, const void *data)</td></tr>
+<tr class="memdesc:a0bf76991577f397aafecb52599709103"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;addfirst(): Insert a element at the beginning of this vector.  <a href="#a0bf76991577f397aafecb52599709103">More...</a><br/></td></tr>
+<tr class="separator:a0bf76991577f397aafecb52599709103"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af61312ebeacce01f8d2b1777802d3f98"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#af61312ebeacce01f8d2b1777802d3f98">qvector_addlast</a> (qvector_t *vector, const void *data)</td></tr>
+<tr class="memdesc:af61312ebeacce01f8d2b1777802d3f98"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;addlast(): Insert a element at the end of this vector.  <a href="#af61312ebeacce01f8d2b1777802d3f98">More...</a><br/></td></tr>
+<tr class="separator:af61312ebeacce01f8d2b1777802d3f98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96c7398c8e03e820b7f5d016639bc6f3"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a96c7398c8e03e820b7f5d016639bc6f3">qvector_getfirst</a> (qvector_t *vector, bool newmem)</td></tr>
+<tr class="memdesc:a96c7398c8e03e820b7f5d016639bc6f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;addat(): Inserts a element at the specified position in this vector.  <a href="#a96c7398c8e03e820b7f5d016639bc6f3">More...</a><br/></td></tr>
+<tr class="separator:a96c7398c8e03e820b7f5d016639bc6f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad93462633f13508a3c1345525e7776e2"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#ad93462633f13508a3c1345525e7776e2">qvector_getlast</a> (qvector_t *vector, bool newmem)</td></tr>
+<tr class="memdesc:ad93462633f13508a3c1345525e7776e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;getlast(): Returns the last element in this vector.  <a href="#ad93462633f13508a3c1345525e7776e2">More...</a><br/></td></tr>
+<tr class="separator:ad93462633f13508a3c1345525e7776e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73f4f6085f1fa68e03451790e292436f"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a73f4f6085f1fa68e03451790e292436f">qvector_getat</a> (qvector_t *vector, int index, bool newmem)</td></tr>
+<tr class="memdesc:a73f4f6085f1fa68e03451790e292436f"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;getat(): Returns the element at the specified position in this vector.  <a href="#a73f4f6085f1fa68e03451790e292436f">More...</a><br/></td></tr>
+<tr class="separator:a73f4f6085f1fa68e03451790e292436f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9971c9a1bf24e25373b93fe2b8529d35"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a9971c9a1bf24e25373b93fe2b8529d35">qvector_setfirst</a> (qvector_t *vector, const void *data)</td></tr>
+<tr class="memdesc:a9971c9a1bf24e25373b93fe2b8529d35"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;setfirst(): Set the first element with a new value in this vector.  <a href="#a9971c9a1bf24e25373b93fe2b8529d35">More...</a><br/></td></tr>
+<tr class="separator:a9971c9a1bf24e25373b93fe2b8529d35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a843cf9ea1d613a5eb28e7c7ac957b1cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a843cf9ea1d613a5eb28e7c7ac957b1cf">qvector_setlast</a> (qvector_t *vector, const void *data)</td></tr>
+<tr class="memdesc:a843cf9ea1d613a5eb28e7c7ac957b1cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;setlast(): Set the last element with a new value in this vector.  <a href="#a843cf9ea1d613a5eb28e7c7ac957b1cf">More...</a><br/></td></tr>
+<tr class="separator:a843cf9ea1d613a5eb28e7c7ac957b1cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3290364eec4333b91c2b7314e6fee5a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#ae3290364eec4333b91c2b7314e6fee5a">qvector_setat</a> (qvector_t *vector, int index, const void *data)</td></tr>
+<tr class="memdesc:ae3290364eec4333b91c2b7314e6fee5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;setat(): Set new value to the specified position in this vector.  <a href="#ae3290364eec4333b91c2b7314e6fee5a">More...</a><br/></td></tr>
+<tr class="separator:ae3290364eec4333b91c2b7314e6fee5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f7fac8917d39c653aaf57b0b5ef913b"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a5f7fac8917d39c653aaf57b0b5ef913b">qvector_popfirst</a> (qvector_t *vector)</td></tr>
+<tr class="memdesc:a5f7fac8917d39c653aaf57b0b5ef913b"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;popfirst(): Returns and remove the first element in this vector.  <a href="#a5f7fac8917d39c653aaf57b0b5ef913b">More...</a><br/></td></tr>
+<tr class="separator:a5f7fac8917d39c653aaf57b0b5ef913b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae501069d92ff2c9d9c852eb702346e69"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#ae501069d92ff2c9d9c852eb702346e69">qvector_poplast</a> (qvector_t *vector)</td></tr>
+<tr class="memdesc:ae501069d92ff2c9d9c852eb702346e69"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;poplast(): Returns the last element of this vector.  <a href="#ae501069d92ff2c9d9c852eb702346e69">More...</a><br/></td></tr>
+<tr class="separator:ae501069d92ff2c9d9c852eb702346e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c361ad0a5caf3d3a4732cf087b178ab"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a7c361ad0a5caf3d3a4732cf087b178ab">qvector_popat</a> (qvector_t *vector, int index)</td></tr>
+<tr class="memdesc:a7c361ad0a5caf3d3a4732cf087b178ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;popat(): Returns and remove the element at specified position in this vector.  <a href="#a7c361ad0a5caf3d3a4732cf087b178ab">More...</a><br/></td></tr>
+<tr class="separator:a7c361ad0a5caf3d3a4732cf087b178ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0da63e7c76f7cf42db2e5e027bd51a02"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a0da63e7c76f7cf42db2e5e027bd51a02">qvector_removefirst</a> (qvector_t *vector)</td></tr>
+<tr class="memdesc:a0da63e7c76f7cf42db2e5e027bd51a02"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;removefirst(): Removes the first element in this vector.  <a href="#a0da63e7c76f7cf42db2e5e027bd51a02">More...</a><br/></td></tr>
+<tr class="separator:a0da63e7c76f7cf42db2e5e027bd51a02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2643b2f497925b48e746ef58fc50729"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#aa2643b2f497925b48e746ef58fc50729">qvector_removelast</a> (qvector_t *vector)</td></tr>
+<tr class="memdesc:aa2643b2f497925b48e746ef58fc50729"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;removelast(): Removes the last element in this vector.  <a href="#aa2643b2f497925b48e746ef58fc50729">More...</a><br/></td></tr>
+<tr class="separator:aa2643b2f497925b48e746ef58fc50729"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc720c91738ed960fac9c0675d5aafbe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#adc720c91738ed960fac9c0675d5aafbe">qvector_removeat</a> (qvector_t *vector, int index)</td></tr>
+<tr class="memdesc:adc720c91738ed960fac9c0675d5aafbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;removeat(): Removes the element at the specified position in this vector.  <a href="#adc720c91738ed960fac9c0675d5aafbe">More...</a><br/></td></tr>
+<tr class="separator:adc720c91738ed960fac9c0675d5aafbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea2dd45d8692621f3aba1822b8f9e80e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#aea2dd45d8692621f3aba1822b8f9e80e">qvector_size</a> (qvector_t *vector)</td></tr>
-<tr class="memdesc:aea2dd45d8692621f3aba1822b8f9e80e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;size(): Returns the number of elements in this vector.  <a href="#aea2dd45d8692621f3aba1822b8f9e80e">More...</a><br/></td></tr>
+<tr class="memdesc:aea2dd45d8692621f3aba1822b8f9e80e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;size(): Get the number of elements in this vector.  <a href="#aea2dd45d8692621f3aba1822b8f9e80e">More...</a><br/></td></tr>
 <tr class="separator:aea2dd45d8692621f3aba1822b8f9e80e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a550eb3c6d77ad7f2f6c38b3ed05c0dfa"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a550eb3c6d77ad7f2f6c38b3ed05c0dfa">qvector_datasize</a> (qvector_t *vector)</td></tr>
-<tr class="memdesc:a550eb3c6d77ad7f2f6c38b3ed05c0dfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;datasize(): Returns the sum of total element size in this vector.  <a href="#a550eb3c6d77ad7f2f6c38b3ed05c0dfa">More...</a><br/></td></tr>
-<tr class="separator:a550eb3c6d77ad7f2f6c38b3ed05c0dfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae367e5e5fc33e2eb5dc9eb8791efcb15"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#ae367e5e5fc33e2eb5dc9eb8791efcb15">qvector_toarray</a> (qvector_t *vector, size_t *size)</td></tr>
-<tr class="memdesc:ae367e5e5fc33e2eb5dc9eb8791efcb15"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;toarray(): Returns the serialized chunk containing all the elements in this vector.  <a href="#ae367e5e5fc33e2eb5dc9eb8791efcb15">More...</a><br/></td></tr>
-<tr class="separator:ae367e5e5fc33e2eb5dc9eb8791efcb15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31171fcb6798dc2886f12e06ce5313be"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a31171fcb6798dc2886f12e06ce5313be">qvector_tostring</a> (qvector_t *vector)</td></tr>
-<tr class="memdesc:a31171fcb6798dc2886f12e06ce5313be"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;tostring(): Returns a string representation of this vector, containing string representation of each element.  <a href="#a31171fcb6798dc2886f12e06ce5313be">More...</a><br/></td></tr>
-<tr class="separator:a31171fcb6798dc2886f12e06ce5313be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a251c32fb5bafe5e1beafe18f8c8bd2bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a251c32fb5bafe5e1beafe18f8c8bd2bb">qvector_lock</a> (qvector_t *vector)</td></tr>
+<tr class="memdesc:a251c32fb5bafe5e1beafe18f8c8bd2bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;lock(): Enters critical section.  <a href="#a251c32fb5bafe5e1beafe18f8c8bd2bb">More...</a><br/></td></tr>
+<tr class="separator:a251c32fb5bafe5e1beafe18f8c8bd2bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73dbecdb97c5825dedfd7fdd605cc0ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a73dbecdb97c5825dedfd7fdd605cc0ad">qvector_unlock</a> (qvector_t *vector)</td></tr>
+<tr class="memdesc:a73dbecdb97c5825dedfd7fdd605cc0ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;unlock(): Leaves critical section.  <a href="#a73dbecdb97c5825dedfd7fdd605cc0ad">More...</a><br/></td></tr>
+<tr class="separator:a73dbecdb97c5825dedfd7fdd605cc0ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aa6d22249f4cbeff4cbcb31aea99063"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a6aa6d22249f4cbeff4cbcb31aea99063">qvector_clear</a> (qvector_t *vector)</td></tr>
-<tr class="memdesc:a6aa6d22249f4cbeff4cbcb31aea99063"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;clear(): Removes all of the elements from this vector.  <a href="#a6aa6d22249f4cbeff4cbcb31aea99063">More...</a><br/></td></tr>
+<tr class="memdesc:a6aa6d22249f4cbeff4cbcb31aea99063"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;clear(): Remove all the elemnts in this vector.  <a href="#a6aa6d22249f4cbeff4cbcb31aea99063">More...</a><br/></td></tr>
 <tr class="separator:a6aa6d22249f4cbeff4cbcb31aea99063"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a217d5fe3cb59560703d84e47097dc989"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a217d5fe3cb59560703d84e47097dc989">qvector_debug</a> (qvector_t *vector, FILE *out)</td></tr>
-<tr class="memdesc:a217d5fe3cb59560703d84e47097dc989"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;debug(): Print out stored elements for debugging purpose.  <a href="#a217d5fe3cb59560703d84e47097dc989">More...</a><br/></td></tr>
-<tr class="separator:a217d5fe3cb59560703d84e47097dc989"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69479bf55198bdd1c29e906d1b069480"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a69479bf55198bdd1c29e906d1b069480">qvector_free</a> (qvector_t *vector)</td></tr>
-<tr class="memdesc:a69479bf55198bdd1c29e906d1b069480"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;free(): De-allocate vector  <a href="#a69479bf55198bdd1c29e906d1b069480">More...</a><br/></td></tr>
+<tr class="memdesc:a69479bf55198bdd1c29e906d1b069480"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;free(): Free this vector.  <a href="#a69479bf55198bdd1c29e906d1b069480">More...</a><br/></td></tr>
 <tr class="separator:a69479bf55198bdd1c29e906d1b069480"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a217d5fe3cb59560703d84e47097dc989"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a217d5fe3cb59560703d84e47097dc989">qvector_debug</a> (qvector_t *vector, FILE *out)</td></tr>
+<tr class="memdesc:a217d5fe3cb59560703d84e47097dc989"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;debug(): Prints out stored elements for debugging purpose.  <a href="#a217d5fe3cb59560703d84e47097dc989">More...</a><br/></td></tr>
+<tr class="separator:a217d5fe3cb59560703d84e47097dc989"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a304a57b5c428b4c517f1d0a22c84529b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a304a57b5c428b4c517f1d0a22c84529b">qvector_resize</a> (qvector_t *vector, size_t newmax)</td></tr>
+<tr class="memdesc:a304a57b5c428b4c517f1d0a22c84529b"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;resize(): Changes the allocated memory space size.  <a href="#a304a57b5c428b4c517f1d0a22c84529b">More...</a><br/></td></tr>
+<tr class="separator:a304a57b5c428b4c517f1d0a22c84529b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae367e5e5fc33e2eb5dc9eb8791efcb15"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#ae367e5e5fc33e2eb5dc9eb8791efcb15">qvector_toarray</a> (qvector_t *vector, size_t *size)</td></tr>
+<tr class="memdesc:ae367e5e5fc33e2eb5dc9eb8791efcb15"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;toarray(): Returns an array contains all the elements in this vector.  <a href="#ae367e5e5fc33e2eb5dc9eb8791efcb15">More...</a><br/></td></tr>
+<tr class="separator:ae367e5e5fc33e2eb5dc9eb8791efcb15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11d7f8b4c7ac35bbfb60b168ae2a5046"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a11d7f8b4c7ac35bbfb60b168ae2a5046">qvector_reverse</a> (qvector_t *vector)</td></tr>
+<tr class="memdesc:a11d7f8b4c7ac35bbfb60b168ae2a5046"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;reverse(): Reverse the order of element in this vector.  <a href="#a11d7f8b4c7ac35bbfb60b168ae2a5046">More...</a><br/></td></tr>
+<tr class="separator:a11d7f8b4c7ac35bbfb60b168ae2a5046"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a888474c5ca93c96452782cddb03ada82"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qvector_8c.html#a888474c5ca93c96452782cddb03ada82">qvector_getnext</a> (qvector_t *vector, qvector_obj_t *obj, bool newmem)</td></tr>
+<tr class="memdesc:a888474c5ca93c96452782cddb03ada82"><td class="mdescLeft">&#160;</td><td class="mdescRight">qvector-&gt;getnext(): Get next element in this vector.  <a href="#a888474c5ca93c96452782cddb03ada82">More...</a><br/></td></tr>
+<tr class="separator:a888474c5ca93c96452782cddb03ada82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Vector implementation. </p>
-<p>qvector container is a vector implementation. It implements a growable array of objects and it extends qlist container that allow a linked-list to be treated as a vector.</p>
-<div class="fragment"><div class="line">[Code sample - Object]</div>
-<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#a203044eab6c840e593223148b24e8995">qvector</a>(QVECTOR_THREADSAFE);</div>
+<div class="textblock"><p>Vector container implementation. </p>
+<p>qvector container is a vector container implementation qvector provides uniformly named methods to add, get, pop and remove an element at the beginning and end of the vector.</p>
+<div class="fragment"><div class="line"> [Conceptional Data Structure Diagram]</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// add elements</span></div>
-<div class="line">vector-&gt;addstr(vector, <span class="stringliteral">&quot;AB&quot;</span>);      <span class="comment">// no need to supply size</span></div>
-<div class="line">vector-&gt;addstrf(vector, <span class="stringliteral">&quot;%d&quot;</span>, 12); <span class="comment">// for formatted string</span></div>
-<div class="line">vector-&gt;addstr(vector, <span class="stringliteral">&quot;CD&quot;</span>);</div>
+<div class="line"> DATA             [ C ][ B ][ A ]</div>
+<div class="line"> (positive index)   0    1    2</div>
+<div class="line"> (negative index)  -3   -2   -1</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// get the chunk as a string</span></div>
-<div class="line"><span class="keywordtype">char</span> *<span class="keyword">final</span> = vector-&gt;tostring(vector);</div>
+<div class="line">@encode</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// print out</span></div>
-<div class="line">printf(<span class="stringliteral">&quot;Number of elements = %zu\n&quot;</span>, vector-&gt;size(vector));</div>
-<div class="line">printf(<span class="stringliteral">&quot;Final string = %s\n&quot;</span>, <span class="keyword">final</span>);</div>
+<div class="line">@code</div>
+<div class="line"> <span class="comment">//create a vector</span></div>
+<div class="line"> qvector_t *vector = <a class="code" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector</a>(QVECTOR_THREADSAFE, 3, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// release</span></div>
-<div class="line">free(<span class="keyword">final</span>);</div>
-<div class="line">vector-&gt;free(vector);</div>
+<div class="line"> <span class="comment">//insert elements</span></div>
+<div class="line"> vector-&gt;addlast(vector, 100);</div>
+<div class="line"> vector-&gt;addlast(vector, 101);</div>
+<div class="line"> vector-&gt;addlast(vector, 102);</div>
 <div class="line"></div>
-<div class="line">[Result]</div>
-<div class="line">Number of elements = 3</div>
-<div class="line">Final <span class="keywordtype">string</span> = AB12CD</div>
-</div><!-- fragment --><div class="fragment"><div class="line">[Code sample - Object]</div>
-<div class="line"><span class="comment">// sample object</span></div>
-<div class="line"><span class="keyword">struct </span>sampleobj {</div>
-<div class="line">  <span class="keywordtype">int</span> num;</div>
-<div class="line">  <span class="keywordtype">char</span> str[10];</div>
-<div class="line">};</div>
+<div class="line"> <span class="comment">//get</span></div>
+<div class="line"> <span class="keywordtype">void</span> *e1 = vector-&gt;getfirst(vector, <span class="keyword">true</span>);   <span class="comment">//malloced</span></div>
+<div class="line"> <span class="keywordtype">void</span> *e3 = vector-&gt;getlast(vector, <span class="keyword">false</span>);   <span class="comment">//not malloced</span></div>
+<div class="line"> (...omit...)</div>
+<div class="line"> free(e1);</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// get new vector</span></div>
-<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#a203044eab6c840e593223148b24e8995">qvector</a>();</div>
+<div class="line"> <span class="comment">//pop (get and remove)</span></div>
+<div class="line"> <span class="keywordtype">void</span> *e2 = vector-&gt;popat(vector, 1);    <span class="comment">//get malloced copy</span></div>
+<div class="line"> (...omit...)</div>
+<div class="line"> free(e2);</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// add objects</span></div>
-<div class="line"><span class="keywordtype">int</span> i;</div>
-<div class="line"><span class="keyword">struct </span>sampleobj obj;</div>
-<div class="line"><span class="keywordflow">for</span>(i = 0; i &lt; 3; i++) {</div>
-<div class="line">  <span class="comment">// filling object with sample data</span></div>
-<div class="line">  obj.num  = i;</div>
-<div class="line">  sprintf(obj.str, <span class="stringliteral">&quot;hello%d&quot;</span>, i);</div>
+<div class="line"> <span class="comment">//debug output</span></div>
+<div class="line"> vector-&gt;debug(vector, stdout, <span class="keyword">true</span>);</div>
 <div class="line"></div>
-<div class="line">  <span class="comment">// stack</span></div>
-<div class="line">  vector-&gt;add(vector, (<span class="keywordtype">void</span> *)&amp;obj, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sampleobj));</div>
-<div class="line">}</div>
+<div class="line"> <span class="comment">//remove all the elements</span></div>
+<div class="line"> vector-&gt;clear(vector);</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// final</span></div>
-<div class="line"><span class="keyword">struct </span>sampleobj *<span class="keyword">final</span>;</div>
-<div class="line"><span class="keyword">final</span> = (<span class="keyword">struct </span>sampleobj *)vector-&gt;toarray(vector, NULL);</div>
-<div class="line"></div>
-<div class="line"><span class="comment">// print out</span></div>
-<div class="line">printf(<span class="stringliteral">&quot;Number of Objects = %zu\n&quot;</span>, vector-&gt;size(vector));</div>
-<div class="line"><span class="keywordflow">for</span>(i = 0; i &lt; vector-&gt;size(vector); i++) {</div>
-<div class="line">  printf(<span class="stringliteral">&quot;Object%d %d, %s\n&quot;</span>, i+1, <span class="keyword">final</span>[i].num, <span class="keyword">final</span>[i].str);</div>
-<div class="line">}</div>
-<div class="line"></div>
-<div class="line"><span class="comment">// release</span></div>
-<div class="line">free(<span class="keyword">final</span>);</div>
-<div class="line">vector-&gt;free(vector);</div>
-<div class="line"></div>
-<div class="line">[Result]</div>
-<div class="line">Number of Objects = 3</div>
-<div class="line">Object1 0, hello0</div>
-<div class="line">Object2 1, hello1</div>
-<div class="line">Object3 2, hello2</div>
+<div class="line"> <span class="comment">//free vector object</span></div>
+<div class="line"> vector-&gt;free(vector);</div>
 </div><!-- fragment --> 
 <p>Definition in file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a203044eab6c840e593223148b24e8995"></a>
+<a class="anchor" id="ac8a262e93b18c9dc800f002389a9d645"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">qvector_t* qvector </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>options</em></td><td>)</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>max</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>objsize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>options</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initialize vector. </p>
+<p>Create new qvector_t container. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">max</td><td>max number of elements </td></tr>
+    <tr><td class="paramname">objsize</td><td>size of each element </td></tr>
     <tr><td class="paramname">options</td><td>combination of initialization options.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>qvector_t container pointer. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of malloced qvector_t container, otherwise returns NULL </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
 <li>ENOMEM : Memory allocation failure.</li>
+<li>EINVAL : Invalid argument.</li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
-<div class="fragment"><div class="line"><span class="comment">// allocate memory</span></div>
-<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#a203044eab6c840e593223148b24e8995">qvector</a>(QVECTOR_THREADSAFE);</div>
-<div class="line">vector-&gt;free(vector);</div>
+<div class="fragment"><div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector</a>(10, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>), 0);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Available options:<ul>
-<li>QVECTOR_THREADSAFE - make it thread-safe. </li>
+<li>QVECTOR_THREADSAFE - make it thread-safe.</li>
+<li>QVECTOR_RESIZE_DOUBLE - double the size when vector is full</li>
+<li>QVECTOR_RESIZE_LINEAR - add the size with initial num when vector is full</li>
+<li>QVECTOR_RESIZE_EXACT - add up as much as needed </li>
 </ul>
 </dd></dl>
 
-<p>Definition at line <a class="el" href="qvector_8c_source.html#l00134">134</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00117">117</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a1c334529ab20886033a64413a17760d1"></a>
+<a class="anchor" id="a0bf76991577f397aafecb52599709103"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool qvector_add </td>
+          <td class="memname">bool qvector_addfirst </td>
           <td>(</td>
           <td class="paramtype">qvector_t *&#160;</td>
           <td class="paramname"><em>vector</em>, </td>
@@ -235,13 +276,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const void *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>size</em>&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -251,37 +286,42 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qvector-&gt;add(): Stack object </p>
+<p>qvector-&gt;addfirst(): Insert a element at the beginning of this vector. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
-    <tr><td class="paramname">object</td><td>a pointer of object data </td></tr>
-    <tr><td class="paramname">size</td><td>size of object</td></tr>
+    <tr><td class="paramname">data</td><td>a pointer which points data memory</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
-    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
-<li>EINVAL : Invalid argument.</li>
-<li>ENOMEM : Memory allocation failure. </li>
-</ul>
-</td></tr>
+    <tr><td class="paramname">errno</td><td>will be set in error condition.</td></tr>
   </table>
   </dd>
 </dl>
-
-<p>Definition at line <a class="el" href="qvector_8c_source.html#l00178">178</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+<ul>
+<li>EINVAL : Invalid argument.</li>
+<li>ENOMEM : Memory allocation failure.</li>
+</ul>
+<div class="fragment"><div class="line"><span class="comment">//create a sample object.</span></div>
+<div class="line"><span class="keyword">struct </span>my_obj obj;</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//create a vector and add the sample object.</span></div>
+<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector</a>(0, 1, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> my_obj));</div>
+<div class="line">vector-&gt;addfirst(vector, &amp;obj);</div>
+</div><!-- fragment --> 
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00233">233</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a39902c2ec296e42892b71058bff7c1fd"></a>
+<a class="anchor" id="af61312ebeacce01f8d2b1777802d3f98"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool qvector_addstr </td>
+          <td class="memname">bool qvector_addlast </td>
           <td>(</td>
           <td class="paramtype">qvector_t *&#160;</td>
           <td class="paramname"><em>vector</em>, </td>
@@ -289,8 +329,8 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>str</em>&#160;</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -300,36 +340,42 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qvector-&gt;addstr(): Stack string </p>
+<p>qvector-&gt;addlast(): Insert a element at the end of this vector. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
-    <tr><td class="paramname">str</td><td>a pointer of string</td></tr>
+    <tr><td class="paramname">data</td><td>a pointer which points data memory</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
-    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
-<li>EINVAL : Invalid argument.</li>
-<li>ENOMEM : Memory allocation failure. </li>
-</ul>
-</td></tr>
+    <tr><td class="paramname">errno</td><td>will be set in error condition.</td></tr>
   </table>
   </dd>
 </dl>
-
-<p>Definition at line <a class="el" href="qvector_8c_source.html#l00193">193</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+<ul>
+<li>EINVAL : Invalid argument.</li>
+<li>ENOMEM : Memory allocation failure.</li>
+</ul>
+<div class="fragment"><div class="line"><span class="comment">//create a sample object.</span></div>
+<div class="line"><span class="keyword">struct </span>my_obj obj;</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//create a vector and add the sample object.</span></div>
+<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector</a>(0, 1, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> my_obj));</div>
+<div class="line">vector-&gt;addlast(vector, &amp;obj);</div>
+</div><!-- fragment --> 
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00259">259</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a17a159b4acbfbf97bc106798ac92eaff"></a>
+<a class="anchor" id="a96c7398c8e03e820b7f5d016639bc6f3"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool qvector_addstrf </td>
+          <td class="memname">void* qvector_getfirst </td>
           <td>(</td>
           <td class="paramtype">qvector_t *&#160;</td>
           <td class="paramname"><em>vector</em>, </td>
@@ -337,14 +383,8 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>format</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>newmem</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -354,19 +394,425 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qvector-&gt;addstrf(): Stack formatted string </p>
+<p>qvector-&gt;addat(): Inserts a element at the specified position in this vector. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
-    <tr><td class="paramname">format</td><td>string format</td></tr>
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer </td></tr>
+    <tr><td class="paramname">index</td><td>index at which the specified element is to be inserted </td></tr>
+    <tr><td class="paramname">data</td><td>a pointer which points data memory</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in errno condition.</td></tr>
+  </table>
+  </dd>
+</dl>
+<ul>
+<li>ERANGE : Index out of range.</li>
+<li>EINVAL : Invalid argument.</li>
+<li>ENOMEM : Memory allocation failure.</li>
+</ul>
+<div class="fragment"><div class="line">                       first     last      <span class="keyword">new</span></div>
+<div class="line">    Array              [ A ][ B ][ C ]?==?[   ]</div>
+<div class="line">    (positive index)     0    1    2        3</div>
+<div class="line">    (negative index)    -3   -2   -1     </div>
+<div class="line">  </div>
+<div class="line">   @encode</div>
+<div class="line">  </div>
+<div class="line">   @code </div>
+<div class="line">    qvector_t *vector = <a class="code" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector</a>();</div>
+<div class="line">    vector-&gt;addat(vector, 0, &amp;data); <span class="comment">//same as addfirst().</span></div>
+<div class="line">    vector-&gt;addat(vector, 0, &amp;data); <span class="comment">//same as addlast().</span></div>
+<div class="line">  </div>
+<div class="line">   @encode</div>
+<div class="line">  </div>
+<div class="line">   @note</div>
+<div class="line">    Index starts from 0.</div>
+<div class="line">  /</div>
+<div class="line"><span class="keywordtype">bool</span> qvector_addat(qvector_t *vector, <span class="keywordtype">int</span> index, <span class="keyword">const</span> <span class="keywordtype">void</span> *data) {</div>
+<div class="line">    <span class="comment">//check arguments</span></div>
+<div class="line">    <span class="keywordflow">if</span> (data == NULL) {</div>
+<div class="line">        errno = EINVAL;</div>
+<div class="line">        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">//check index</span></div>
+<div class="line">    <span class="keywordflow">if</span> (index &lt; 0) {</div>
+<div class="line">        index += vector-&gt;num;</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordflow">if</span> (index &gt; vector-&gt;num) {</div>
+<div class="line">        errno = ERANGE;</div>
+<div class="line">        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    vector-&gt;lock(vector);</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">//check whether the vector is full</span></div>
+<div class="line">    <span class="keywordflow">if</span> (vector-&gt;num &gt;= vector-&gt;max) {</div>
+<div class="line">        <span class="keywordtype">size_t</span> newmax = vector-&gt;max + 1;</div>
+<div class="line">        <span class="keywordflow">if</span> (vector-&gt;options &amp; QVECTOR_RESIZE_DOUBLE) {</div>
+<div class="line">            newmax = (vector-&gt;max + 1) * 2;</div>
+<div class="line">        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (vector-&gt;options &amp; QVECTOR_RESIZE_LINEAR) {</div>
+<div class="line">            newmax = vector-&gt;max + vector-&gt;initnum;</div>
+<div class="line">        } <span class="keywordflow">else</span> {</div>
+<div class="line">            newmax = vector-&gt;max + 1;</div>
+<div class="line">        }</div>
+<div class="line">        <span class="keywordtype">bool</span> result = vector-&gt;resize(vector, newmax);</div>
+<div class="line">        <span class="keywordflow">if</span>(result == <span class="keyword">false</span>)</div>
+<div class="line">        {</div>
+<div class="line">            vector-&gt;unlock(vector);</div>
+<div class="line">            errno = ENOMEM;</div>
+<div class="line">            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line">        }</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">//shift data from index...(num - 1)  to index + 1...num</span></div>
+<div class="line">    <span class="keywordtype">int</span> i;</div>
+<div class="line">    <span class="keywordflow">for</span> (i = vector-&gt;num; i &gt; index; i--) {</div>
+<div class="line">        <span class="keywordtype">void</span> *dst = (<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *)vector-&gt;data + vector-&gt;objsize * i;</div>
+<div class="line">        <span class="keywordtype">void</span> *src = (<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *)vector-&gt;data + vector-&gt;objsize * (i - 1);</div>
+<div class="line"></div>
+<div class="line">        memcpy(dst, src, vector-&gt;objsize);</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordtype">void</span> *add = (<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *)vector-&gt;data + index * vector-&gt;objsize;</div>
+<div class="line">    memcpy(add, data, vector-&gt;objsize);</div>
+<div class="line">    vector-&gt;num++;    </div>
+<div class="line"></div>
+<div class="line">    vector-&gt;unlock(vector);</div>
+<div class="line">    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line">}</div>
+<div class="line"><span class="comment"></span></div>
+<div class="line"><span class="comment">/**</span></div>
+<div class="line"><span class="comment"> * qvector-&gt;getfirst(): Returns the first element in this vector.</span></div>
+<div class="line"><span class="comment">  </span></div>
+<div class="line"><span class="comment"> * @param vector    qvector_t container pointer.</span></div>
+<div class="line"><span class="comment"> * @param newmem    whether or not to allocate memory for the element.</span></div>
+<div class="line"><span class="comment">  </span></div>
+<div class="line"><span class="comment"> * @return a pointer of element, otherwise returns NULL.</span></div>
+<div class="line"><span class="comment"> * @retval errno will be set in error condition.</span></div>
+<div class="line"><span class="comment"> *  - ENOENT : Vector is empty.</span></div>
+<div class="line"><span class="comment"> *  - ENOMEM : Memory allocation failure.</span></div>
+<div class="line"><span class="comment">  </span></div>
+<div class="line"><span class="comment"> * @code</span></div>
+<div class="line"><span class="comment"> *  size_t size;</span></div>
+<div class="line"><span class="comment"> *  void *data = vector-&gt;getfirst(vector, true);</span></div>
+<div class="line"><span class="comment"> *  if (data != NULL) {</span></div>
+<div class="line"><span class="comment"> *      (...omit...)</span></div>
+<div class="line"><span class="comment"> *      free(data);</span></div>
+<div class="line"><span class="comment"> *  }</span></div>
+<div class="line"><span class="comment">  </span></div>
+<div class="line"><span class="comment"> * </span></div>
+</div><!-- fragment --> 
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00371">371</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad93462633f13508a3c1345525e7776e2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* qvector_getlast </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>newmem</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;getlast(): Returns the last element in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
+    <tr><td class="paramname">newmem</td><td>whether or not to allocate memory for the element.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of element, otherwise returns NULL. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
-<li>EINVAL : Invalid argument.</li>
+<li>ENOENT : Vector is empty.</li>
+<li>ENOMEM : Memory alocation failure.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> *data = vector-&gt;getlast(vector, <span class="keyword">true</span>);</div>
+<div class="line"><span class="keywordflow">if</span> (data != NULL) {</div>
+<div class="line">    (...omit...)</div>
+<div class="line">    free(data);</div>
+<div class="line">}</div>
+</div><!-- fragment --> 
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00395">395</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a73f4f6085f1fa68e03451790e292436f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* qvector_getat </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>newmem</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;getat(): Returns the element at the specified position in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
+    <tr><td class="paramname">index</td><td>index at which the specified element is to access. </td></tr>
+    <tr><td class="paramname">newmem</td><td>whether or not to allocate memory for the element.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of element, otherwise returns NULL. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ERANGE : Index out of range.</li>
+<li>ENOMEM : Memory allocation failure.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line">                   first     last</div>
+<div class="line">Array              [ A ][ B ][ C ]</div>
+<div class="line">(positive index)     0    1    2</div>
+<div class="line">(negative index)    -1   -2   -3</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Index starts from 0. </dd></dl>
+
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00423">423</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9971c9a1bf24e25373b93fe2b8529d35"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool qvector_setfirst </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;setfirst(): Set the first element with a new value in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
+    <tr><td class="paramname">data</td><td>the pointer of new value.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOENT : Vector is empty.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>my_obj obj;</div>
+<div class="line"><span class="comment">//set values to obj;</span></div>
+<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector</a>();</div>
+<div class="line">vector-&gt;addlast();</div>
+<div class="line">vector-&gt;setfirst(vector, &amp;obj);</div>
+</div><!-- fragment --> 
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00452">452</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a843cf9ea1d613a5eb28e7c7ac957b1cf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool qvector_setlast </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;setlast(): Set the last element with a new value in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
+    <tr><td class="paramname">data</td><td>the pointer of new value.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise returns false. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOENT : Vector is empty.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>my_obj obj;</div>
+<div class="line"><span class="comment">//set values to obj;</span></div>
+<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector</a>();</div>
+<div class="line">vector-&gt;addlast();</div>
+<div class="line">vector-&gt;setlast(vector, &amp;obj);</div>
+</div><!-- fragment --> 
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00477">477</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae3290364eec4333b91c2b7314e6fee5a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool qvector_setat </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;setat(): Set new value to the specified position in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer </td></tr>
+    <tr><td class="paramname">index</td><td>index at which the specifed element is to set </td></tr>
+    <tr><td class="paramname">data</td><td>the pointer of new value to be set</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise return false. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ERANGE : Index out of range.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>my_obj obj;</div>
+<div class="line"><span class="comment">//set values to obj;</span></div>
+<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector</a>();</div>
+<div class="line">vector-&gt;addlast();</div>
+<div class="line">vector-&gt;setat(vector, 0, &amp;obj);</div>
+</div><!-- fragment --> 
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00503">503</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5f7fac8917d39c653aaf57b0b5ef913b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* qvector_popfirst </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;popfirst(): Returns and remove the first element in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of malloced element, otherwise returns NULL. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOENT : Vector is empty.</li>
 <li>ENOMEM : Memory allocation failure. </li>
 </ul>
 </td></tr>
@@ -374,7 +820,220 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qvector_8c_source.html#l00208">208</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00525">525</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae501069d92ff2c9d9c852eb702346e69"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* qvector_poplast </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;poplast(): Returns the last element of this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of malloced element, otherwise returns NULL. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOENT : Vector is empty.</li>
+<li>ENOMEM : Memeory allocation failure. </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00539">539</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7c361ad0a5caf3d3a4732cf087b178ab"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* qvector_popat </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;popat(): Returns and remove the element at specified position in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
+    <tr><td class="paramname">index</td><td>index at which the specified element is to be poped.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of malloced element, otherwise returns NULL. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOENT : Vector is empty.</li>
+<li>ERANGE : Index out of range.</li>
+<li>ENOMEM : Mmemory allocation failure.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line">                    first     last</div>
+<div class="line">Array               [ A ][ B ][ C ]</div>
+<div class="line">(positive index)      1    2    3</div>
+<div class="line">(negative index)     -1   -2   -3</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Index starts from 0. </dd></dl>
+
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00567">567</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0da63e7c76f7cf42db2e5e027bd51a02"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool qvector_removefirst </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;removefirst(): Removes the first element in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true, otherwise returns false. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOENT : Vector is empty.</li>
+<li>ERANGE : Index out of range. </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00596">596</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa2643b2f497925b48e746ef58fc50729"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool qvector_removelast </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;removelast(): Removes the last element in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true, otherwise returns false. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOENT : Vector is empty.</li>
+<li>ERANGE : Index out of range. </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00610">610</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adc720c91738ed960fac9c0675d5aafbe"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool qvector_removeat </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;removeat(): Removes the element at the specified position in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
+    <tr><td class="paramname">index</td><td>index at which the specified element is to be removed.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true, otherwise returns false. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOENT : Vector is empty.</li>
+<li>ERANGE : Index out of range. </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00625">625</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
 
 </div>
 </div>
@@ -392,7 +1051,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qvector-&gt;size(): Returns the number of elements in this vector. </p>
+<p>qvector-&gt;size(): Get the number of elements in this vector. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">vector</td><td>qvector_t container pointer.</td></tr>
@@ -401,16 +1060,16 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of elements in this vector. </dd></dl>
 
-<p>Definition at line <a class="el" href="qvector_8c_source.html#l00229">229</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00644">644</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a550eb3c6d77ad7f2f6c38b3ed05c0dfa"></a>
+<a class="anchor" id="a251c32fb5bafe5e1beafe18f8c8bd2bb"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t qvector_datasize </td>
+          <td class="memname">void qvector_lock </td>
           <td>(</td>
           <td class="paramtype">qvector_t *&#160;</td>
           <td class="paramname"><em>vector</em></td><td>)</td>
@@ -419,102 +1078,42 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qvector-&gt;datasize(): Returns the sum of total element size in this vector. </p>
+<p>qvector-&gt;lock(): Enters critical section. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">vector</td><td>qvector_t container pointer.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the sum of total element size in this vector. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>From user side, normally locking operation is only needed when traverse all elements using qvector-&gt;getnext(). </dd></dl>
 
-<p>Definition at line <a class="el" href="qvector_8c_source.html#l00241">241</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00657">657</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae367e5e5fc33e2eb5dc9eb8791efcb15"></a>
+<a class="anchor" id="a73dbecdb97c5825dedfd7fdd605cc0ad"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* qvector_toarray </td>
+          <td class="memname">void qvector_unlock </td>
           <td>(</td>
           <td class="paramtype">qvector_t *&#160;</td>
-          <td class="paramname"><em>vector</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>vector</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">size_t *&#160;</td>
-          <td class="paramname"><em>size</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>qvector-&gt;toarray(): Returns the serialized chunk containing all the elements in this vector. </p>
+<p>qvector-&gt;unlock(): Leaves critical section. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
-    <tr><td class="paramname">size</td><td>if size is not NULL, merged object size will be stored.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>a pointer of finally merged elements(malloced), otherwise returns NULL </dd></dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
-<li>ENOENT : Vector is empty.</li>
-<li>ENOMEM : Memory allocation failure. </li>
-</ul>
-</td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qvector_8c_source.html#l00258">258</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a31171fcb6798dc2886f12e06ce5313be"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* qvector_tostring </td>
-          <td>(</td>
-          <td class="paramtype">qvector_t *&#160;</td>
-          <td class="paramname"><em>vector</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>qvector-&gt;tostring(): Returns a string representation of this vector, containing string representation of each element. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">vector</td><td>qvector_t container pointer.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>a pointer of finally merged strings(malloced), otherwise returns NULL </dd></dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
-<li>ENOENT : Vector is empty.</li>
-<li>ENOMEM : Memory allocation failure.</li>
-</ul>
-</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>Return string is always terminated by '\0'. </dd></dl>
-
-<p>Definition at line <a class="el" href="qvector_8c_source.html#l00276">276</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00666">666</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
 
 </div>
 </div>
@@ -532,7 +1131,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qvector-&gt;clear(): Removes all of the elements from this vector. </p>
+<p>qvector-&gt;clear(): Remove all the elemnts in this vector. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
@@ -540,7 +1139,33 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qvector_8c_source.html#l00285">285</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00675">675</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a69479bf55198bdd1c29e906d1b069480"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void qvector_free </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;free(): Free this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00690">690</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
 
 </div>
 </div>
@@ -568,7 +1193,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qvector-&gt;debug(): Print out stored elements for debugging purpose. </p>
+<p>qvector-&gt;debug(): Prints out stored elements for debugging purpose. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
@@ -587,16 +1212,117 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qvector_8c_source.html#l00299">299</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00707">707</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a69479bf55198bdd1c29e906d1b069480"></a>
+<a class="anchor" id="a304a57b5c428b4c517f1d0a22c84529b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void qvector_free </td>
+          <td class="memname">bool qvector_resize </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>newmax</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;resize(): Changes the allocated memory space size. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
+    <tr><td class="paramname">newsize</td><td>the new max number of elements.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOMEM : Memory allocation failure.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="fragment"><div class="line"><span class="comment">//create a sample object.</span></div>
+<div class="line"><span class="keyword">struct </span>my_obj obj;</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//create a vector which allocates 4 * sizeof(obj) memory</span></div>
+<div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector</a>(0, 4, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> my_obj));</div>
+<div class="line"><span class="comment">//expand the memory space of vector to 8 * sizeof(obj)</span></div>
+<div class="line">vector-&gt;resize(vector, 8);</div>
+</div><!-- fragment --> 
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00746">746</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae367e5e5fc33e2eb5dc9eb8791efcb15"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* qvector_toarray </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;toarray(): Returns an array contains all the elements in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
+    <tr><td class="paramname">size</td><td>if size is not NULL, the number of elements will be stored.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a malloced pointer, otherwise return NULL. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>wil be set in error condition.<ul>
+<li>ENOENT : Vector is empty.</li>
+<li>ENOMEM : Memory allocation failure. </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00784">784</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a11d7f8b4c7ac35bbfb60b168ae2a5046"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void qvector_reverse </td>
           <td>(</td>
           <td class="paramtype">qvector_t *&#160;</td>
           <td class="paramname"><em>vector</em></td><td>)</td>
@@ -605,15 +1331,90 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qvector-&gt;free(): De-allocate vector </p>
+<p>qvector-&gt;reverse(): Reverse the order of element in this vector. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">will</td><td>be set in error condition.<ul>
+<li>ENOMEM : Memory allocations failure. </li>
+</ul>
+</td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="qvector_8c_source.html#l00308">308</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00820">820</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a888474c5ca93c96452782cddb03ada82"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool qvector_getnext </td>
+          <td>(</td>
+          <td class="paramtype">qvector_t *&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qvector_obj_t *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>newmem</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>qvector-&gt;getnext(): Get next element in this vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vector</td><td>qvector_t container pointer. </td></tr>
+    <tr><td class="paramname">obj</td><td>found data will be stored in this structure. </td></tr>
+    <tr><td class="paramname">newmem</td><td>whether or not to allocate memory for element.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if found, otherwise return fasle. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
+<li>ENOENT : No next element.</li>
+<li>ENOMEM : Memory allocation failure.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>obj should be initialized with 0 by using memset() by the first call. If newmem flag is true, user should de-allocate obj.data resources.</dd></dl>
+<div class="fragment"><div class="line">qvector_t *vector = <a class="code" href="qvector_8c.html#ac8a262e93b18c9dc800f002389a9d645">qvector</a>();</div>
+<div class="line">(...add data into vector...)</div>
+<div class="line"></div>
+<div class="line">qvector_obj_t obj;</div>
+<div class="line">memset((<span class="keywordtype">void</span> *)&amp;obj, 0, <span class="keyword">sizeof</span>(obj));</div>
+<div class="line">vector-&gt;lock(vector);</div>
+<div class="line"><span class="keywordflow">while</span>(vector-&gt;getnext(vector, &amp;obj, <span class="keyword">false</span>) == <span class="keyword">true</span>) {</div>
+<div class="line">    printf(<span class="stringliteral">&quot;DATA=%s\n&quot;</span>, obj.data);</div>
+<div class="line">}</div>
+<div class="line">vector-&gt;unlock(vector);</div>
+</div><!-- fragment --> 
+<p>Definition at line <a class="el" href="qvector_8c_source.html#l00878">878</a> of file <a class="el" href="qvector_8c_source.html">qvector.c</a>.</p>
 
 </div>
 </div>

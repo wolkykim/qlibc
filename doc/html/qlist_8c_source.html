@@ -649,7 +649,7 @@ $(document).ready(function(){initNavTree('qlist_8c_source.html','');});
 <div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00583"></a><span class="lineno"><a class="line" href="qlist_8c.html#a0960d05e9a2bab88c75505e4286de10a">  583</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="qlist_8c.html#a0960d05e9a2bab88c75505e4286de10a">qlist_getnext</a>(qlist_t *list, qlist_obj_t *obj, <span class="keywordtype">bool</span> newmem) {</div>
 <div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;    <span class="keywordflow">if</span> (obj == NULL)</div>
-<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;</div>
 <div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;    <a class="code" href="qlist_8c.html#ab4703d7188e6d1e5ca73827fc1aa29ad">qlist_lock</a>(list);</div>
 <div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;</div>
