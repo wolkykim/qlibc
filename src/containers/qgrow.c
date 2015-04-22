@@ -27,7 +27,7 @@
  *****************************************************************************/
 
 /**
- * @file qgrow.c Vector implementation.
+ * @file qgrow.c Grow container that handles growable objects.
  *
  * qgrow container is a grow implementation. It implements a growable array
  * of objects and it extends qlist container that allow a linked-list to be
@@ -35,7 +35,7 @@
  *
  * @code
  *  [Code sample - Object]
- *  qgrow_t *grow = qgrow(QVECTOR_THREADSAFE);
+ *  qgrow_t *grow = qgrow(QGROW_THREADSAFE);
  *
  *  // add elements
  *  grow->addstr(grow, "AB");      // no need to supply size
@@ -123,13 +123,13 @@
  *
  * @code
  *  // allocate memory
- *  qgrow_t *grow = qgrow(QVECTOR_THREADSAFE);
+ *  qgrow_t *grow = qgrow(QGROW_THREADSAFE);
  *  grow->free(grow);
  * @endcode
  *
  * @note
  *   Available options:
- *   - QVECTOR_THREADSAFE - make it thread-safe.
+ *   - QGROW_THREADSAFE - make it thread-safe.
  */
 qgrow_t *qgrow(int options) {
     qgrow_t *grow = (qgrow_t *) calloc(1, sizeof(qgrow_t));
@@ -252,7 +252,7 @@ size_t qgrow_datasize(qgrow_t *grow) {
  * @return a pointer of finally merged elements(malloced), otherwise returns
  *  NULL
  * @retval errno will be set in error condition.
- *  - ENOENT    : Vector is empty.
+ *  - ENOENT    : empty.
  *  - ENOMEM    : Memory allocation failure.
  */
 void *qgrow_toarray(qgrow_t *grow, size_t *size) {
@@ -267,7 +267,7 @@ void *qgrow_toarray(qgrow_t *grow, size_t *size) {
  *
  * @return a pointer of finally merged strings(malloced), otherwise returns NULL
  * @retval errno will be set in error condition.
- *  - ENOENT    : Vector is empty.
+ *  - ENOENT    : empty.
  *  - ENOMEM    : Memory allocation failure.
  *
  * @note
