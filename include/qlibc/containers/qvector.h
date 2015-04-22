@@ -53,10 +53,13 @@ typedef struct qvector_obj_s qvector_obj_t;
 
 /* public functions */
 enum {
-    QVECTOR_THREADSAFE = (0x01)  /*!< make it thread-safe */
+    QVECTOR_THREADSAFE = (0x01),  /*!< make it thread-safe */
+    QVECTOR_RESIZE_DOUBLE = (0x02), /*!< double the size when vector is full*/
+    QVECTOR_RESIZE_LINEAR = (0x04), /*!< add the size with initial num when vector is full*/
+    QVECTOR_RESIZE_EXACT = (0x08) /*!< add up as much as needed*/
 };
 
-extern qvector_t *qvector(int options, size_t num, size_t size);
+extern qvector_t *qvector(size_t max, size_t objsize, int options);
 
 extern bool qvector_addfirst(qvector_t *vector, const void *data);
 extern bool qvector_addlast(qvector_t *vector, const void *data);
@@ -79,7 +82,7 @@ extern bool qvector_removelast(qvector_t *vector);
 extern bool qvector_removeat(qvector_t *vector, int index);
 
 extern size_t qvector_size(qvector_t *vector);
-extern bool qvector_resize(qvector_t *vector, size_t newsize);
+extern bool qvector_resize(qvector_t *vector, size_t newmax);
 
 extern void *qvector_toarray(qvector_t *vector, size_t *size);
 
@@ -120,7 +123,7 @@ struct qvector_s {
     bool (*removeat)(qvector_t *vector, int index);
 
     size_t (*size)(qvector_t *vector);
-    bool   (*resize)(qvector_t *vector, size_t newsize);
+    bool   (*resize)(qvector_t *vector, size_t newmax);
 
     void *(*toarray)(qvector_t *vector, size_t *size);
 
@@ -138,8 +141,10 @@ struct qvector_s {
     void *qmutex;
     void *data;
     size_t num; /*number of elements*/
-    size_t esize; /*the size of each element*/
-    size_t alloc; /*allocated number of elements*/
+    size_t objsize; /*the size of each element*/
+    size_t max; /*allocated number of elements*/
+    int options;
+    size_t initnum;
 };
 
 struct qvector_obj_s { 

@@ -39,7 +39,7 @@ TEST("Test basic features")
 {
     const int values[] = {0, 1, 2};
 
-    qvector_t *vector = qvector(0, 3, sizeof(int));
+    qvector_t *vector = qvector(3, sizeof(int), 0);
     ASSERT_EQUAL_INT(0, vector->size(vector));
 
     void *data;
@@ -85,7 +85,7 @@ TEST("Test boundary conditions")
     int values[] = {1000, 1001, 1002};
     
     /*test when vector is empty*/
-    qvector_t *vector = qvector(0, 1, sizeof(int));
+    qvector_t *vector = qvector(1, sizeof(int), 0);
     bool result;
     void *data;
     qvector_obj_t obj;
@@ -117,7 +117,7 @@ TEST("Test boundary conditions")
     vector->free(vector);
 
     /*test when vector contains 1 elements*/
-    vector = qvector(0, 1, sizeof(int));
+    vector = qvector(1, sizeof(int), 0);
     vector->addfirst(vector, &values[0]);
 
     data = vector->getfirst(vector, false);
@@ -188,20 +188,20 @@ TEST("Test boundary conditions")
     ASSERT_EQUAL_INT(0, vector->size(vector));
 
     /*test when add NULL element into vector*/
-    vector = qvector(0, 1, sizeof(int));
+    vector = qvector(1, sizeof(int), 0);
     result = vector->addfirst(vector, 0);
     ASSERT_EQUAL_BOOL(result, false);
     vector->free(vector);
 }
 
-void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
+void test_thousands_of_values(int num_values, int options, char *prefix, char *postfix) {
     struct test_obj {
         char *prefix;
         int value;
         char *postfix;
     };
     
-    qvector_t *vector = qvector(0, 0, sizeof(struct test_obj));
+    qvector_t *vector = qvector(0, sizeof(struct test_obj), options);
     ASSERT_EQUAL_INT(0, vector->size(vector));
 
     int i;
@@ -285,13 +285,14 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
 
 TEST("Test thousands of values: without prefix and postfix")
 {
-    test_thousands_of_values(10000, "", "");
+    test_thousands_of_values(10000, 0, "", "");
 }
 
 TEST("Test thousands of values: with prefix and without postfix")
 {
     test_thousands_of_values(
             10000,
+            QVECTOR_RESIZE_DOUBLE,
             "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
             "");
 }
@@ -300,6 +301,7 @@ TEST("Test thousands of values: without prefix and with postfix")
 {
     test_thousands_of_values(
             10000,
+            QVECTOR_RESIZE_LINEAR,
             "",
             "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
 }
@@ -308,6 +310,7 @@ TEST("Test thousands of values: with prefix and postfix")
 {
     test_thousands_of_values(
             10000,
+            QVECTOR_RESIZE_EXACT,
             "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
             "1a087a6982371bbfc9d4e14ae    76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
 }
