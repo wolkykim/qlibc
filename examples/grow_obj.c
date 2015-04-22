@@ -39,8 +39,8 @@ int main(void) {
         char str[10];
     };
 
-    // get new vector
-    qvector_t *vector = qvector(0);
+    // get new grow
+    qgrow_t *grow = qgrow(0);
 
     // add objects
     int i;
@@ -51,22 +51,22 @@ int main(void) {
         sprintf(obj.str, "hello%d", i);
 
         // stack
-        vector->add(vector, (void *) &obj, sizeof(struct sampleobj));
+        grow->add(grow, (void *) &obj, sizeof(struct sampleobj));
     }
 
     // final
     struct sampleobj *final;
-    final = (struct sampleobj *) vector->toarray(vector, NULL);
+    final = (struct sampleobj *) grow->toarray(grow, NULL);
 
     // print out
-    printf("Number of Objects = %zu\n", vector->size(vector));
-    for (i = 0; i < vector->size(vector); i++) {
+    printf("Number of Objects = %zu\n", grow->size(grow));
+    for (i = 0; i < grow->size(grow); i++) {
         printf("Object%d %d, %s\n", i + 1, final[i].num, final[i].str);
     }
 
     // release
     free(final);
-    vector->free(vector);
+    grow->free(grow);
 
     return 0;
 }

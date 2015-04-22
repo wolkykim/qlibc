@@ -41,9 +41,10 @@
 #include "containers/qhasharr.h"
 #include "containers/qlisttbl.h"
 #include "containers/qlist.h"
+#include "containers/qvector.h"
 #include "containers/qqueue.h"
 #include "containers/qstack.h"
-#include "containers/qvector.h"
+#include "containers/qgrow.h"
 
 /* utilities */
 #include "utilities/qcount.h"

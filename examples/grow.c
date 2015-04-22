@@ -34,24 +34,24 @@
 #include "qlibc.h"
 
 int main(void) {
-    qvector_t *vector = qvector(0);
+    qgrow_t *grow = qgrow(0);
 
     // add elements
-    vector->addstr(vector, "AB");       // no need to supply size
-    vector->addstrf(vector, "%d", 12);  // for formatted string
-    vector->addstr(vector, "CD");
+    grow->addstr(grow, "AB");       // no need to supply size
+    grow->addstrf(grow, "%d", 12);  // for formatted string
+    grow->addstr(grow, "CD");
 
-    char *final = vector->tostring(vector);
+    char *final = grow->tostring(grow);
     // get the chunk as a string
 
     // print out
-    vector->debug(vector, stdout);
-    printf("Number of elements = %zu\n", vector->size(vector));
+    grow->debug(grow, stdout);
+    printf("Number of elements = %zu\n", grow->size(grow));
     printf("Final string = %s\n", final);
 
     // release
     free(final);
-    vector->free(vector);
+    grow->free(grow);
 
     return 0;
 }

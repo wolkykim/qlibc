@@ -47,9 +47,9 @@ TARGETS1	= \
 		test_qhasharr_darkdh	\
 		test_qtreetbl		\
 		test_qlist		\
+		test_qvector		\
 		test_qqueue		\
-		test_qstack		\
-		test_qvector
+		test_qstack
 
 TARGETS2	= ${TARGETS1}
 TARGETS		= ${@EXAMPLES_TARGETS@}

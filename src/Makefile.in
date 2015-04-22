@@ -73,6 +73,7 @@ QLIBC_OBJS	= \
 		containers/qvector.o		\
 		containers/qqueue.o		\
 		containers/qstack.o		\
+		containers/qgrow.o		\
 						\
 		utilities/qcount.o		\
 		utilities/qencode.o		\
@@ -129,9 +130,10 @@ install-qlibc: qlibc
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qhasharr.h ${INST_INCDIR}/qlibc/containers/qhasharr.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qlisttbl.h ${INST_INCDIR}/qlibc/containers/qlisttbl.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qlist.h ${INST_INCDIR}/qlibc/containers/qlist.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qvector.h ${INST_INCDIR}/qlibc/containers/qvector.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qqueue.h ${INST_INCDIR}/qlibc/containers/qqueue.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qstack.h ${INST_INCDIR}/qlibc/containers/qstack.h
-	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qvector.h ${INST_INCDIR}/qlibc/containers/qvector.h
+	${INSTALL_DATA} ${QLIBC_INCDIR}/containers/qgrow.h ${INST_INCDIR}/qlibc/containers/qgrow.h
 	${MKDIR_P} ${INST_INCDIR}/qlibc/utilities/
 	${INSTALL_DATA} ${QLIBC_INCDIR}/utilities/qcount.h ${INST_INCDIR}/qlibc/utilities/qcount.h
 	${INSTALL_DATA} ${QLIBC_INCDIR}/utilities/qencode.h ${INST_INCDIR}/qlibc/utilities/qencode.h

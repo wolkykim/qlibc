@@ -40,9 +40,9 @@ CPPFLAGS	= @CPPFLAGS@ -I${QLIBC_INCDIR}
 RM		= @RM@
 DEPLIBS		= @DEPLIBS@
 
-TARGETS1	= list listtbl hashtbl hasharr vector vector_obj queue stack \
+TARGETS1	= list listtbl hashtbl hasharr grow grow_obj queue stack \
 			  config apacheconf
-TARGETS2	= list listtbl hashtbl hasharr vector vector_obj queue stack
+TARGETS2	= list listtbl hashtbl hasharr grow grow_obj queue stack
 TARGETS		= ${@EXAMPLES_TARGETS@}
 LIBQLIBC	= ${QLIBC_LIBDIR}/libqlibc.a ${DEPLIBS}
 LIBQLIBCEXT	= ${QLIBC_LIBDIR}/libqlibcext.a
@@ -62,11 +62,11 @@ hashtbl: hashtbl.o
 hasharr:	hasharr.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ hasharr.o ${LIBQLIBC}
 
-vector: vector.o
-	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ vector.o ${LIBQLIBC}
+grow: grow.o
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ grow.o ${LIBQLIBC}
 
-vector_obj: vector_obj.o
-	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ vector_obj.o ${LIBQLIBC}
+grow_obj: grow_obj.o
+	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ grow_obj.o ${LIBQLIBC}
 
 queue: queue.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -o $@ queue.o ${LIBQLIBC}
