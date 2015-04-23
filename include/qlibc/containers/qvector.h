@@ -27,7 +27,7 @@
  *****************************************************************************/
 /* This code is written and updated by following people and released under
  * the same license as above qLibc license.
- * Copyright (c) 2015 Charles - https://github.com/Charles0429
+ * Copyright (c) 2015 Zhenjiang Xie - https://github.com/Charles0429
  *****************************************************************************/
 
 /**
