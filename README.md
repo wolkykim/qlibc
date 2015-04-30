@@ -150,8 +150,3 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * Umesh
 
 If we have forgotten or misspelled your name, please let us know.
-
-## Think the project is helpful?
-
-Do you think this project is helpful? Show your interests and help the project going on.
-[Donate to qLibc project](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=FKTZPCFXXU8PG&lc=US&item_name=qLibc%20Project&item_number=qlibc&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)
