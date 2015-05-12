@@ -722,6 +722,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 enable_debug
+enable_qhasharr_ts
 enable_ipc
 enable_ext
 enable_ext_qconfig
@@ -1352,6 +1353,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-debug          Enable debugging output. This will print out
                           internal debugging messages to stdout.
+  --enable-qhasharr-ts    Enable qhash array timestamp function.
   --disable-ipc           Disable IPC APIs(src/ipc/) in qlibc library.
   --disable-ext           Disable building qlibext extension library.
   --disable-ext-qconfig   Disable qconfig extension in qlibext library.
@@ -4630,6 +4632,20 @@ fi
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: 'debug' feature is enabled" >&5
 $as_echo "$as_me: 'debug' feature is enabled" >&6;}
 		CPPFLAGS="$CPPFLAGS -DBUILD_DEBUG"
+	fi
+
+
+	# Check whether --enable-qhasharr-ts was given.
+if test "${enable_qhasharr_ts+set}" = set; then :
+  enableval=$enable_qhasharr_ts;
+else
+  enableval=no
+fi
+
+	if test "$enableval" = yes; then
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: 'qhasharr-ts' feature is enabled" >&5
+$as_echo "$as_me: 'qhasharr-ts' feature is enabled" >&6;}
+		CPPFLAGS="$CPPFLAGS -DQHASHARR_TIMESTAMP"
 	fi
 
 
