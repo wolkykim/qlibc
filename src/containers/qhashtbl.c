@@ -176,7 +176,6 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
     malloc_failure:
     errno = ENOMEM;
     if (tbl) {
-        free(tbl->slots);
         assert(tbl->qmutex == NULL);
         qhashtbl_free(tbl);
     }

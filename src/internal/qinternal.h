@@ -73,7 +73,6 @@ struct qmutex_s {
 };
 
 #define Q_MUTEX_NEW(m,r) do {                                           \
-        if(m == NULL) break;                                            \
         qmutex_t *x = (qmutex_t *)calloc(1, sizeof(qmutex_t));          \
         pthread_mutexattr_t _mutexattr;                                 \
         pthread_mutexattr_init(&_mutexattr);                            \
