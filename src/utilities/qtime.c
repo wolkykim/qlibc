@@ -30,9 +30,9 @@
  * @file qtime.c Time handling APIs.
  */
 
-//#define __USE_XOPEN
-//#define _XOPEN_SOURCE
-//#define _BSD_SOURCE
+#define __USE_XOPEN
+#define _XOPEN_SOURCE
+#define _BSD_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
