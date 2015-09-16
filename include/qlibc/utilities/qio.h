@@ -37,6 +37,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <sys/types.h>
 
 #ifdef __cplusplus
 extern "C" {
