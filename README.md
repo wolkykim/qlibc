@@ -133,6 +133,7 @@ Currently, we have high demands on following areas.
 The following people have helped with suggestions, ideas, code or fixing bugs:
 (in alphabetical order by first name)
 
+* [Alexandre Lucchesi](https://github.com/alexandrelucchesi)
 * [Anthony Tseng](https://github.com/darkdh)
 * Cesar
 * [Colin](https://github.com/colintd)
