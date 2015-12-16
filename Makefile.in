@@ -29,25 +29,21 @@
 RM	= @RM@
 
 all:
-	@for DIR in src; do					\
-		echo "===> $${DIR}";				\
-		(cd $${DIR}; make all);				\
-		echo "<=== $${DIR}";				\
-	done
+	make -C src all
+
+test: all
+	make -C tests test
 
 install:
-	(cd src/; make install)
+	make -C src install
 
 deinstall: uninstall
 uninstall:
 	(cd src/; make deinstall)
 
 clean:
-	@for DIR in src; do					\
-		echo "===> $${DIR}";				\
-		(cd $${DIR}; make clean);			\
-		echo "<=== $${DIR}";				\
-	done
+	make -C src clean
+
 
 distclean: clean
 	@for DIR in src tests examples; do			\
