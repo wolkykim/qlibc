@@ -135,6 +135,7 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 
 * [Alexandre Lucchesi](https://github.com/alexandrelucchesi)
 * [Anthony Tseng](https://github.com/darkdh)
+* [Carpentier Pierre-Francois](https://github.com/kakwa)
 * Cesar
 * [Colin](https://github.com/colintd)
 * [Charles](https://github.com/Charles0429)
