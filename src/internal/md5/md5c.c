@@ -26,7 +26,6 @@
  * edited for clarity and style only.
  */
 
-#include <sys/cdefs.h>
 #include <sys/types.h>
 #include <string.h>
 #include "md5.h"
