@@ -48,7 +48,7 @@
  *
  * @param str       source string
  *
- * @return a pointer of source string if rsuccessful, otherewise returns NULL
+ * @return a pointer of source string if successful, otherwise returns NULL
  *
  * @note This modify source string directly.
  */
@@ -83,7 +83,7 @@ char *qstrtrim(char *str) {
  *
  * @param str       source string
  *
- * @return a pointer of source string if rsuccessful, otherewise returns NULL
+ * @return a pointer of source string if successful, otherwise returns NULL
  *
  * @note This modify source string directly.
  */
@@ -109,7 +109,7 @@ char *qstrtrim_head(char *str) {
  *
  * @param str       source string
  *
- * @return a pointer of source string if rsuccessful, otherewise returns NULL
+ * @return a pointer of source string if successful, otherwise returns NULL
  *
  * @note This modify source string directly.
  */
@@ -136,7 +136,7 @@ char *qstrtrim_tail(char *str) {
  * @param head      heading character
  * @param tail      tailing character
  *
- * @return a pointer of source string if successful, otherewise returns NULL
+ * @return a pointer of source string if successful, otherwise returns NULL
  *
  * @note This modify source string directly.
  *
@@ -170,10 +170,10 @@ char *qstrunchar(char *str, char head, char tail) {
  * @param word      target word to be replaced
  *
  * @return a pointer of malloced or source string depending on the mode if
- *         successful, otherewise returns NULL
+ *         successful, otherwise returns NULL
  *
  * @note
- * The mode argument has two separated character. First character
+ * The mode argument has two separated characters. First character
  * is used to decide replacing method and can be 't' or 's'.
  * The character 't' and 's' stand on [t]oken and [s]tring.
  *
