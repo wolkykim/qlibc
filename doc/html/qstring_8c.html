@@ -171,7 +171,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a pointer of source string if rsuccessful, otherewise returns NULL</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of source string if successful, otherwise returns NULL</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This modify source string directly. </dd></dl>
 
 <p>Definition at line <a class="el" href="qstring_8c_source.html#l00055">55</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
@@ -199,7 +199,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a pointer of source string if rsuccessful, otherewise returns NULL</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of source string if successful, otherwise returns NULL</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This modify source string directly. </dd></dl>
 
 <p>Definition at line <a class="el" href="qstring_8c_source.html#l00090">90</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
@@ -227,7 +227,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a pointer of source string if rsuccessful, otherewise returns NULL</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of source string if successful, otherwise returns NULL</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This modify source string directly. </dd></dl>
 
 <p>Definition at line <a class="el" href="qstring_8c_source.html#l00116">116</a> of file <a class="el" href="qstring_8c_source.html">qstring.c</a>.</p>
@@ -273,7 +273,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a pointer of source string if successful, otherewise returns NULL</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of source string if successful, otherwise returns NULL</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This modify source string directly.</dd></dl>
 <div class="fragment"><div class="line"><span class="keywordtype">char</span> *str = strdup(<span class="stringliteral">&quot;   \&quot;hello world\&quot;   &quot;</span>);</div>
 <div class="line"><a class="code" href="qstring_8c.html#aef51c584fd78c0430ccfb5f51c32cf71">qstrtrim</a>(str); <span class="comment">// to remove white spaces</span></div>
@@ -329,8 +329,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a pointer of malloced or source string depending on the mode if successful, otherewise returns NULL</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The mode argument has two separated character. First character is used to decide replacing method and can be 't' or 's'. The character 't' and 's' stand on [t]oken and [s]tring.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer of malloced or source string depending on the mode if successful, otherwise returns NULL</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The mode argument has two separated characters. First character is used to decide replacing method and can be 't' or 's'. The character 't' and 's' stand on [t]oken and [s]tring.</dd></dl>
 <p>When 't' is given each character of the token string(third argument) will be compared with source string individually. If matched one is found. the character will be replaced with given work.</p>
 <p>If 's' is given instead of 't'. Token string will be analyzed only one chunk word. So the replacement will be occured when the case of whole word matched.</p>
 <p>Second character is used to decide returning memory type and can be 'n' or 'r' which are stand on [n]ew and [r]eplace.</p>
