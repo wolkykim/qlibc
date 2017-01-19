@@ -30,8 +30,12 @@
  * @file qaconf.c Apache-style configuration file parser.
  *
  * Apache-style Configuration is a configuration file syntax and format
- * originally introduced by Apache HTTPd project. This format is power,
- * versatile, flexible and human friendly.
+ * originally introduced by Apache HTTPd project. This format is powerful,
+ * flexible and human friendly. Even though this code gets distributed
+ * as a part of qLibc project, the code is written not to have any external
+ * dependencies to make this single file stands alone for better portability.
+ * It is purely written from the ground up and dedicated to the public
+ * by Seungyoung Kim.
  *
  * Sample Apache-style Configuration Syntax:
  * @code
