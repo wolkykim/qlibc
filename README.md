@@ -133,6 +133,7 @@ Currently, we have high demands on following areas.
 The following people have helped with suggestions, ideas, code or fixing bugs:
 (in alphabetical order by first name)
 
+* [Seungyoung "Steve" Kim](https://github.com/wolkykim) - Project Lead
 * [Alexandre Lucchesi](https://github.com/alexandrelucchesi)
 * [Anthony Tseng](https://github.com/darkdh)
 * [Carpentier Pierre-Francois](https://github.com/kakwa)
@@ -148,7 +149,6 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * Maik Beckmann
 * RQ
 * [Ryan Gonzalez](https://github.com/kirbyfan64)
-* [Seungyoung "Steve" Kim](https://github.com/wolkykim) - Project Lead
 * Umesh
 
 If we have forgotten or misspelled your name, please let us know.
