@@ -766,6 +766,9 @@ bool qvector_resize(qvector_t *vector, size_t newmax) {
 
     vector->data = newdata;
     vector->max = newmax;
+    if (vector->num > newmax) {
+        vector->num = newmax;
+    }
     
     vector->unlock(vector);
     return true;
