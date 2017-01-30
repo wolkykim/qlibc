@@ -25,9 +25,9 @@ if [ $FAIL != 0 ]; then
 fi
 
 echo "======================================================================"
-echo "****           Good job! All tests were successful                ****"
+echo "****             Good job! All tests are successful               ****"
 echo "======================================================================"
-echo "*   ____                 _       _    All tests were all successful. *"  
+echo "*   ____                 _     All tests have finished successfully. *"  
 echo "*  / ___| ___   ___   __| |     | | ___ | |__   | |                  *"
 echo "* | |  _ / _ \ / _ \ / _\` |  _  | |/ _ \| '_ \  | |                  *"
 echo "* | |_| | (_) | (_) | (_| | | |_| | (_) | |_) | |_|                  *"
