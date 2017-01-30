@@ -315,5 +315,30 @@ TEST("Test thousands of values: with prefix and postfix")
             "1a087a6982371bbfc9d4e14ae    76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
 }
 
+TEST("Test resize")
+{
+    qvector_t *vector = qvector(10, sizeof(int), 0);
+    ASSERT_EQUAL_INT(0, vector->size(vector));
+
+    int i;
+    for (i=0; i < 5; i++) {
+        vector->addlast(vector, &i);
+    }
+    ASSERT_EQUAL_INT(5, vector->size(vector));
+
+    for (i=0; i < vector->size(vector); i++) {
+        ASSERT_EQUAL_INT(i, *(int *)vector->getat(vector, i, false));;
+    }
+
+    vector->resize(vector, 3);
+    ASSERT_EQUAL_INT(3, vector->size(vector));
+
+    for (i=0; i < vector->size(vector); i++) {
+        ASSERT_EQUAL_INT(i, *(int *)vector->getat(vector, i, false));;
+    }
+
+    vector->free(vector);
+}
+
 QUNIT_END();
 
