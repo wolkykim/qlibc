@@ -375,16 +375,28 @@ static char *_parsestr(qlisttbl_t *tbl, const char *str) {
             char *newstr = NULL;
             switch (varstr[0]) {
                 case _VAR_CMD: {
+                    if (varlen - 1 == 0) {
+                        newstr = strdup("");
+                        break;
+                    }
                     if ((newstr = qstrtrim(qsyscmd(varstr + 1))) == NULL) {
                         newstr = strdup("");
                     }
                     break;
                 }
                 case _VAR_ENV: {
+                    if (varlen - 1 == 0) {
+                        newstr = strdup("");
+                        break;
+                    }
                     newstr = strdup(qgetenv(varstr + 1, ""));
                     break;
                 }
                 default: {
+                    if (varlen == 0) {
+                        newstr = strdup("");
+                        break;
+                    }
                     if ((newstr = tbl->getstr(tbl, varstr, true)) == NULL) {
                         s = e;  // not found
                         continue;
