@@ -663,7 +663,7 @@ bool qhashtbl_debug(qhashtbl_t *tbl, FILE *out) {
     while (tbl->getnext(tbl, &obj, false) == true) {
         fprintf(out, "%s=", obj.name);
         _q_textout(out, obj.data, obj.size, MAX_HUMANOUT);
-        fprintf(out, " (%zu, hash=%u)\n", obj.size, obj.hash);
+        fprintf(out, " (%zu, %08x)\n", obj.size, obj.hash);
     }
     qhashtbl_unlock(tbl);
 

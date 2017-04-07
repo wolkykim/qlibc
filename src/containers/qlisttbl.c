@@ -1002,7 +1002,7 @@ bool qlisttbl_debug(qlisttbl_t *tbl, FILE *out)
     for (obj = tbl->first; obj; obj = obj->next) {
         fprintf(out, "%s=" , obj->name);
         _q_textout(out, obj->data, obj->size, MAX_HUMANOUT);
-        fprintf(out, " (%zu,%4x)\n" , obj->size, obj->hash);
+        fprintf(out, " (%zu, %08x)\n" , obj->size, obj->hash);
     }
     qlisttbl_unlock(tbl);
 
