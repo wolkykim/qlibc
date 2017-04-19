@@ -148,6 +148,7 @@ AC_SUBST(DEPLIBS, ["-lpthread"])
 ##
 
 Q_ARG_ENABLE([debug], [Enable debugging output. This will print out internal debugging messages to stdout.], [-DBUILD_DEBUG])
+Q_ARG_ENABLE([qhasharr-ts], [Enable qhash array timestamp function.], [-DQHASHARR_TIMESTAMP])
 
 Q_ARG_DISABLE([ipc], [Disable IPC APIs(src/ipc/) in qlibc library.], [-DDISABLE_IPC])
 Q_ARG_DISABLE([ext], [Disable building qlibext extension library.], [])

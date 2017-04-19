@@ -250,6 +250,11 @@ qhasharr_t *qhasharr(void *memory, size_t memsize) {
 
     tbl->getnext = qhasharr_getnext;
 
+#ifdef QHASHARR_TIMESTAMP
+    tbl->getts = qhasharr_getts;
+    tbl->getts_by_obj = qhasharr_getts_by_obj;
+#endif
+
     tbl->size = qhasharr_size;
     tbl->clear = qhasharr_clear;
     tbl->debug = qhasharr_debug;
@@ -532,7 +537,7 @@ bool qhasharr_remove(qhasharr_t *tbl, const char *name) {
  *  - EINVAL    : Invald argument.
  *  - EFAULT    : Unexpected error. Data structure is not constant.
  */
-bool qhasharr_remove_by_obj(qhasharr_t *tbl, const char *name, size_t namesize) {
+bool qhasharr_remove_by_obj(qhasharr_t *tbl, const void *name, size_t namesize) {
     if (tbl == NULL || name == NULL || namesize == 0) {
         errno = EINVAL;
         return false;
@@ -714,6 +719,71 @@ bool qhasharr_getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx) {
     errno = ENOENT;
     return false;
 }
+
+#ifdef QHASHARR_TIMESTAMP
+/**
+ * qhasharr->getts(): Get an timestamp of object from this table
+ *
+ * @param tbl       qhasharr_t container pointer.
+ * @param name      key string
+ * @param ts        if not NULL, timestamp of object will be stored
+ *
+ * @return malloced object pointer if successful, otherwise(not found)
+ *  returns NULL
+ * @retval errno will be set in error condition.
+ *  - ENOENT    : No such key found.
+ *  - EINVAL    : Invalid argument.
+ *
+ * @note
+ * timestamp must be pre-allocated.
+ */
+bool qhasharr_getts(qhasharr_t *tbl, const char *name, time_t *ts) {
+    return qhasharr_getts_by_obj(tbl, name, (name) ? strlen(name) + 1 : 0, ts);
+}
+
+/**
+ * qhasharr->getts_by_obj(): Get an timestamp of object by key object from
+ *                              this table 
+ *
+ * @param tbl       qhasharr_t container pointer.
+ * @param name      key data
+ * @param namesize  size of key
+ * @param ts        if not NULL, timestamp of object will be stored
+ *
+ * @return malloced object pointer if successful, otherwise(not found)
+ *  returns NULL
+ * @retval errno will be set in error condition.
+ *  - ENOENT    : No such key found.
+ *  - EINVAL    : Invalid argument.
+ *
+ * @note
+ * timestamp must be pre-allocated.
+ */
+bool qhasharr_getts_by_obj(qhasharr_t *tbl, const void *name, size_t namesize,
+        time_t *ts) {
+    if (tbl == NULL || name == NULL || namesize == 0) {
+        errno = EINVAL;
+        return false;
+    }
+
+    qhasharr_data_t *tbldata = tbl->data;
+
+    // get hash integer
+    uint32_t hash = qhashmurmur3_32(name, namesize) % tbldata->maxslots;
+    int idx = get_idx(tbl, name, namesize, hash);
+    if (idx < 0) {
+        errno = ENOENT;
+        return false;
+    }
+
+    if (ts) {
+        qhasharr_slot_t *tblslots = get_slots(tbl);
+        *ts = tblslots[idx].timestamp;
+    }
+
+    return true;
+}
+#endif
 
 /**
  * qhasharr->size(): Returns the number of objects in this table.
@@ -985,6 +1055,9 @@ static void *get_data(qhasharr_t *tbl, int idx, size_t *size) {
 
     if (size != NULL)
         *size = datasize;
+#ifdef QHASHARR_TIMESTAMP
+    time(&tblslots[idx].timestamp);
+#endif
     return data;
 }
 
@@ -1056,6 +1129,10 @@ static bool put_data(qhasharr_t *tbl, int idx, uint32_t hash, const void *name,
         // increase used slot counter
         tbldata->usedslots++;
     }
+
+#ifdef QHASHARR_TIMESTAMP
+    time(&tblslots[idx].timestamp);
+#endif
 
     return true;
 }

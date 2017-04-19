@@ -33,6 +33,9 @@
 #include "qunit.h"
 #include "qlibc.h"
 #include <errno.h>
+#ifdef QHASHARR_TIMESTAMP
+#include <unistd.h>
+#endif
 
 QUNIT_START("Test qhasharr.c by darkdh");
 
@@ -143,6 +146,32 @@ TEST("getnext()")
     }
     ASSERT_EQUAL_INT(tbl->size(tbl, NULL, NULL), TARGET_NUM);
 }
+#ifdef QHASHARR_TIMESTAMP
+TEST ("getts()") {
+    tbl->clear(tbl);
+    for(i = 0;i < TARGET_NUM; i++) {
+        ASSERT_TRUE(tbl->put(tbl, key[i], value[i],
+                    valuesize[i]));
+        sleep(1);
+    }
+    for(i = 1;i < TARGET_NUM; i++) {
+        time_t t1, t2;
+        ASSERT_TRUE(tbl->getts(tbl, key[i], &t2));
+        ASSERT_TRUE(tbl->getts(tbl, key[i - 1], &t1));
+        double timeinterval = difftime(t2, t1);
+        ASSERT_EQUAL_INT(timeinterval, 1);
+    }
+    for(i = 0;i < TARGET_NUM; i++) {
+        time_t t1, t2;
+        time(&t1);
+        ASSERT_NOT_NULL(tbl->getstr(tbl, key[i]));
+        ASSERT_TRUE(tbl->getts(tbl, key[i], &t2));
+        double timeinterval = difftime(t2, t1);
+        ASSERT_EQUAL_INT(timeinterval, 0);
+    }
+
+}
+#endif
 
 // free table reference object.
 tbl->free(tbl);

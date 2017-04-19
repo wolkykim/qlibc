@@ -38,6 +38,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#ifdef QHASHARR_TIMESTAMP
+#include <time.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,23 +65,29 @@ typedef struct qhasharr_obj_s qhasharr_obj_t;
 extern qhasharr_t *qhasharr(void *memory, size_t memsize);
 extern size_t qhasharr_calculate_memsize(int max);
 
-extern bool qhasharr_put(qhasharr_t *tbl, const char *key, const void *value,
+extern bool qhasharr_put(qhasharr_t *tbl, const char *name, const void *value,
                 size_t size);
-extern bool qhasharr_putstr(qhasharr_t *tbl, const char *key, const char *str);
-extern bool qhasharr_putstrf(qhasharr_t *tbl, const char *key, const char *format, ...);
+extern bool qhasharr_putstr(qhasharr_t *tbl, const char *name, const char *str);
+extern bool qhasharr_putstrf(qhasharr_t *tbl, const char *name, const char *format, ...);
 extern bool qhasharr_put_by_obj(qhasharr_t *tbl, const void *name, size_t namesize,
                                 const void *data, size_t datasize);
 
-extern void *qhasharr_get(qhasharr_t *tbl, const char *key, size_t *size);
-extern char *qhasharr_getstr(qhasharr_t *tbl, const char *key);
+extern void *qhasharr_get(qhasharr_t *tbl, const char *name, size_t *size);
+extern char *qhasharr_getstr(qhasharr_t *tbl, const char *name);
 extern void *qhasharr_get_by_obj(qhasharr_t *tbl, const void *name, size_t namesize,
                                  size_t *datasize);
 
-extern bool qhasharr_remove(qhasharr_t *tbl, const char *key);
-extern bool qhasharr_remove_by_obj(qhasharr_t *tbl, const char *name, size_t namesize);
+extern bool qhasharr_remove(qhasharr_t *tbl, const char *name);
+extern bool qhasharr_remove_by_obj(qhasharr_t *tbl, const void *name, size_t namesize);
 extern bool qhasharr_remove_by_idx(qhasharr_t *tbl, int idx);
 
 extern bool qhasharr_getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx);
+
+#ifdef QHASHARR_TIMESTAMP
+extern bool qhasharr_getts(qhasharr_t *tbl, const char *name, time_t *ts);
+extern bool qhasharr_getts_by_obj(qhasharr_t *tbl, const void *name,
+        size_t namesize, time_t *ts);
+#endif
 
 extern int qhasharr_size(qhasharr_t *tbl, int *maxslots, int *usedslots);
 extern void qhasharr_clear(qhasharr_t *tbl);
@@ -92,23 +101,29 @@ extern void qhasharr_free(qhasharr_t *tbl);
  */
 struct qhasharr_s {
     /* encapsulated member functions */
-    bool (*put) (qhasharr_t *tbl, const char *key, const void *value,
+    bool (*put) (qhasharr_t *tbl, const char *name, const void *value,
                  size_t size);
-    bool (*putstr) (qhasharr_t *tbl, const char *key, const char *str);
-    bool (*putstrf) (qhasharr_t *tbl, const char *key, const char *format, ...);
+    bool (*putstr) (qhasharr_t *tbl, const char *name, const char *str);
+    bool (*putstrf) (qhasharr_t *tbl, const char *name, const char *format, ...);
     bool (*put_by_obj) (qhasharr_t *tbl, const void *name, size_t namesize,
                         const void *data, size_t datasize);
 
-    void *(*get) (qhasharr_t *tbl, const char *key, size_t *size);
-    char *(*getstr) (qhasharr_t *tbl, const char *key);
+    void *(*get) (qhasharr_t *tbl, const char *name, size_t *size);
+    char *(*getstr) (qhasharr_t *tbl, const char *name);
     void *(*get_by_obj) (qhasharr_t *tbl, const void *name, size_t namesize,
                          size_t *datasize);
 
-    bool (*remove) (qhasharr_t *tbl, const char *key);
-    bool (*remove_by_obj) (qhasharr_t *tbl, const char *name, size_t namesize);
+    bool (*remove) (qhasharr_t *tbl, const char *name);
+    bool (*remove_by_obj) (qhasharr_t *tbl, const void *name, size_t namesize);
     bool (*remove_by_idx) (qhasharr_t *tbl, int idx);
 
     bool (*getnext) (qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx);
+
+#ifdef QHASHARR_TIMESTAMP
+    bool (*getts) (qhasharr_t *tbl, const char *key, time_t *ts);
+    bool (*getts_by_obj) (qhasharr_t *tbl, const void *name, size_t namesize,
+            time_t *ts);
+#endif
 
     int  (*size) (qhasharr_t *tbl, int *maxslots, int *usedslots);
     void (*clear) (qhasharr_t *tbl);
@@ -130,6 +145,9 @@ struct qhasharr_slot_s {
     uint32_t  hash;    /*!< key hash */
     uint8_t datasize;  /*!< value size in this slot*/
     int link;          /*!< next link */
+#ifdef QHASHARR_TIMESTAMP
+    time_t timestamp;   /*!< timestamp of data */
+#endif
 
     union {
         /*!< key/value data */
