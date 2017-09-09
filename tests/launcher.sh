@@ -9,11 +9,11 @@ FAIL=0
 FAILDESC=""
 for EXECUTABLE in $*; do
 	./$EXECUTABLE
-	echo ""
 	if [ $? != 0 ]; then
 		FAIL=1
 		FAILDESC="$FAILDESC $EXECUTABLE"
 	fi
+	echo ""
 done
 
 if [ $FAIL != 0 ]; then
