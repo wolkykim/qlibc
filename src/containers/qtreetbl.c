@@ -993,7 +993,7 @@ int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
  */
 int qtreetbl_check(qtreetbl_t *tbl) {
 
-    printf("Checking tree... ");
+    printf("Checking tree... \n");
     if (tbl == NULL) return 0;
 
     if (node_check_rule4(tbl, tbl->root)) 
@@ -1001,6 +1001,10 @@ int qtreetbl_check(qtreetbl_t *tbl) {
     int path_len = 0;
     if (node_check_rule5(tbl, tbl->root, &path_len))
         return 1;
+    
+    
+    
+    print_node(tbl->root, 0);
     
     return 0;
 }
@@ -1191,6 +1195,11 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
     if (is_red(obj->left) && is_red(obj->left->left)) {
         obj = rotate_right(obj);
     }
+    
+    // split 4-nodes on the way up.
+    /*if (is_red(obj->left) && is_red(obj->right)) {
+        flip_color(obj);
+    }*/
 
     return obj;
 }
@@ -1210,7 +1219,7 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         // keep going down to the left
         obj->left = remove_obj(tbl, obj->left, name, namesize);
     } else {  // right or equal
-        if (is_red(obj->left)) {
+        if (is_red(obj->left) && !is_red(obj->right)) {
             obj = rotate_right(obj);
         }
         // remove if equal at the bottom
