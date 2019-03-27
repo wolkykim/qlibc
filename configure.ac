@@ -85,10 +85,12 @@ AC_SUBST(DEPLIBS, [""])
 
 ## Set path
 PATH="$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
-CPPFLAGS="$CPPFLAGS -I/usr/include -I/usr/local/include"
 CPPFLAGS="$CPPFLAGS -D_GNU_SOURCE"
 CPPFLAGS="$CPPFLAGS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
-LDFLAGS="$LDFLAGS -L/usr/lib -L/usr/local/lib"
+if test "x$cross_compiling" != "xyes"; then
+	CPPFLAGS="$CPPFLAGS -I/usr/include -I/usr/local/include"
+	LDFLAGS="$LDFLAGS -L/usr/lib -L/usr/local/lib"
+fi
 
 ## Set autoconf setting
 #AC_CANONICAL_TARGET
