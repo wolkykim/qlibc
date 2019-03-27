@@ -81,7 +81,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 </li>
 <li>General utilities.<ul>
 <li>String &mdash; string trimmer, modifier, replacer, case converter, pattern detectors, ...</li>
-<li>I/O &mdash; non-blcking I/O, stream reader/writer, ...</li>
+<li>I/O &mdash; non-blocking I/O, stream reader/writer, ...</li>
 <li>File &mdash; file locking, file/directory hander, path correctors, ...</li>
 <li>IPC, Semaphore Shared-memory</li>
 <li>En/decoders &mdash; Url en/decoder, Base64 en/decoder, Hex en/decoder, ...</li>
@@ -118,11 +118,11 @@ $(document).ready(function(){initNavTree('index.html','');});
 <tr>
 <td align="left">Space allocation </td><td align="center">Dynamic </td><td align="center">Dynamic </td><td align="center">Pre-allocation </td><td align="center">Dynamic </td></tr>
 <tr>
-<td align="left">Data Stored Sorted </td><td align="center">Yes </td><td align="center">No </td><td align="center">No </td><td align="center">Yes (option) </td></tr>
+<td align="left">Key Stored Sorted </td><td align="center">Yes </td><td align="center">No </td><td align="center">No </td><td align="center">Yes (option) </td></tr>
 <tr>
 <td align="left">User comparator </td><td align="center">Supported </td><td align="center">- </td><td align="center">- </td><td align="center">Supported </td></tr>
 <tr>
-<td align="left">Allow multi-keys </td><td align="center">No </td><td align="center">No </td><td align="center">No </td><td align="center">Yes (option) </td></tr>
+<td align="left">Duplicated keys </td><td align="center">No </td><td align="center">No </td><td align="center">No </td><td align="center">Yes (option) </td></tr>
 <tr>
 <td align="left">Key stored digested </td><td align="center">No </td><td align="center">No </td><td align="center">Yes </td><td align="center">No </td></tr>
 <tr>
@@ -132,9 +132,9 @@ $(document).ready(function(){initNavTree('index.html','');});
 <tr>
 <td align="left">Iterator visit order</td><td align="center">min -&gt; max </td><td align="center">random </td><td align="center">random </td><td align="center">insert order </td></tr>
 <tr>
-<td align="left">Thread-safe option </td><td align="center">Supported </td><td align="center">Suported </td><td align="center">No </td><td align="center">Supported </td></tr>
+<td align="left">Thread-safe option </td><td align="center">Supported </td><td align="center">Suported </td><td align="center">User </td><td align="center">Supported </td></tr>
 <tr>
-<td align="left">Runs on shared mem </td><td align="center">No </td><td align="center">No </td><td align="center">Yes </td><td align="center">No </td></tr>
+<td align="left">Can use shared mem </td><td align="center">No </td><td align="center">No </td><td align="center">Yes </td><td align="center">No </td></tr>
 </table>
 <h2>Consistent API Look</h2>
 <p>All container APIs have a consistent look and feel. It basically provides a creator function which usually returns a pointer to a container structure. Also, <b>all functions related to the container can be accessed through function pointers inside of the container</b> or traditional style direct access APIs. For an example,</p>
@@ -183,6 +183,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <h2>Contributors</h2>
 <p>The following people have helped with suggestions, ideas, code or fixing bugs: (in alphabetical order by first name)</p>
 <ul>
+<li><a href="https://github.com/wolkykim">Seungyoung "Steve" Kim</a> - Project Lead</li>
 <li><a href="https://github.com/alexandrelucchesi">Alexandre Lucchesi</a></li>
 <li><a href="https://github.com/darkdh">Anthony Tseng</a></li>
 <li><a href="https://github.com/kakwa">Carpentier Pierre-Francois</a></li>
@@ -190,6 +191,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li><a href="https://github.com/colintd">Colin</a></li>
 <li><a href="https://github.com/Charles0429">Charles</a></li>
 <li><a href="https://github.com/demitsuri">Dmitry Vorobiev</a></li>
+<li><a href="https://github.com/ffontaine">Fabrice Fontaine</a></li>
 <li>HyoSup Woo</li>
 <li><a href="https://github.com/netpoetica">Keith Rosenberg</a></li>
 <li>Krishna</li>
@@ -198,7 +200,6 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li>Maik Beckmann</li>
 <li>RQ</li>
 <li><a href="https://github.com/kirbyfan64">Ryan Gonzalez</a></li>
-<li><a href="https://github.com/wolkykim">Seungyoung "Steve" Kim</a> - Project Lead</li>
 <li>Umesh</li>
 </ul>
 <p>If we have forgotten or misspelled your name, please let us know. </p>
