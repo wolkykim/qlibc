@@ -4,6 +4,7 @@ git pull
 (cd ../qlibc/src; make cleandoc; make doc)
 rm -rf doc
 cp -rp ../qlibc/doc .
+cp ../qlibc/README.md index.md
 git add --all doc
 git status
 echo "Press ENTER to PUSH"
