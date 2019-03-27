@@ -1,0 +1,8 @@
+title: qLibc Project
+description: The goal of qLibc project is to provide a simple but powerful general purpose C/C++ library.
+google_analytics: UA-8949829-3
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
