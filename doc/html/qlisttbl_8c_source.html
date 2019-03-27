@@ -1069,7 +1069,7 @@ $(document).ready(function(){initNavTree('qlisttbl_8c_source.html','');});
 <div class="line"><a name="l01002"></a><span class="lineno"> 1002</span>&#160;    <span class="keywordflow">for</span> (obj = tbl-&gt;first; obj; obj = obj-&gt;next) {</div>
 <div class="line"><a name="l01003"></a><span class="lineno"> 1003</span>&#160;        fprintf(out, <span class="stringliteral">&quot;%s=&quot;</span> , obj-&gt;name);</div>
 <div class="line"><a name="l01004"></a><span class="lineno"> 1004</span>&#160;        _q_textout(out, obj-&gt;data, obj-&gt;size, MAX_HUMANOUT);</div>
-<div class="line"><a name="l01005"></a><span class="lineno"> 1005</span>&#160;        fprintf(out, <span class="stringliteral">&quot; (%zu,%4x)\n&quot;</span> , obj-&gt;size, obj-&gt;hash);</div>
+<div class="line"><a name="l01005"></a><span class="lineno"> 1005</span>&#160;        fprintf(out, <span class="stringliteral">&quot; (%zu, %08x)\n&quot;</span> , obj-&gt;size, obj-&gt;hash);</div>
 <div class="line"><a name="l01006"></a><span class="lineno"> 1006</span>&#160;    }</div>
 <div class="line"><a name="l01007"></a><span class="lineno"> 1007</span>&#160;    <a class="code" href="qlisttbl_8c.html#a6fa35afd89db427de7454a7dc174f366">qlisttbl_unlock</a>(tbl);</div>
 <div class="line"><a name="l01008"></a><span class="lineno"> 1008</span>&#160;</div>
