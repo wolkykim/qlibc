@@ -4753,7 +4753,7 @@ fi
 
 # Check whether --with-openssl was given.
 if test "${with_openssl+set}" = set; then :
-  withval=$with_openssl; withval=yes
+  withval=$with_openssl;
 else
   withval=no
 fi
@@ -4801,7 +4801,7 @@ fi
 
 # Check whether --with-mysql was given.
 if test "${with_mysql+set}" = set; then :
-  withval=$with_mysql; withval=yes
+  withval=$with_mysql;
 else
   withval=no
 fi
