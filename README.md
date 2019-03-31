@@ -52,15 +52,15 @@ Please refer the LICENSE document included in the package for more details.
 | Delete complexity   | O(log n)     | O(1) / O(n)  | O(1) / O(n)     | O(n)         |
 | Space complexity    | O(n)         | O(n)         | -               | O(n)         |
 | Space allocation    | Dynamic      | Dynamic      | Pre-allocation  | Dynamic      |
-| Data Stored Sorted  | Yes          | No           | No              | Yes (option) |
+| Key Stored Sorted   | Yes          | No           | No              | Yes (option) |
 | User comparator     | Supported    | -            | -               | Supported    |
-| Allow multi-keys    | No           | No           | No              | Yes (option) |
+| Duplicated keys     | No           | No           | No              | Yes (option) |
 | Key stored digested | No           | No           | Yes             | No           |
 | Search Nearest Key  | Yes          | No           | No              | No           |
 | Iterator support    | Yes          | Yes          | Yes             | Yes          |
 | Iterator visit order| min -> max   | random       | random          | insert order |
-| Thread-safe option  | Supported    | Suported     | No              | Supported    |
-| Runs on shared mem  | No           | No           | Yes             | No           |
+| Thread-safe option  | Supported    | Suported     | User            | Supported    |
+| Can use shared mem  | No           | No           | Yes             | No           |
 
 ## Consistent API Look
 
@@ -141,6 +141,7 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * [Colin](https://github.com/colintd)
 * [Charles](https://github.com/Charles0429)
 * [Dmitry Vorobiev](https://github.com/demitsuri)
+* [Fabrice Fontaine](https://github.com/ffontaine)
 * HyoSup Woo
 * [Keith Rosenberg](https://github.com/netpoetica)
 * Krishna

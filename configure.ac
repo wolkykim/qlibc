@@ -85,10 +85,12 @@ AC_SUBST(DEPLIBS, [""])
 
 ## Set path
 PATH="$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
-CPPFLAGS="$CPPFLAGS -I/usr/include -I/usr/local/include"
 CPPFLAGS="$CPPFLAGS -D_GNU_SOURCE"
 CPPFLAGS="$CPPFLAGS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
-LDFLAGS="$LDFLAGS -L/usr/lib -L/usr/local/lib"
+if test "x$cross_compiling" != "xyes"; then
+	CPPFLAGS="$CPPFLAGS -I/usr/include -I/usr/local/include"
+	LDFLAGS="$LDFLAGS -L/usr/lib -L/usr/local/lib"
+fi
 
 ## Set autoconf setting
 #AC_CANONICAL_TARGET
@@ -172,7 +174,7 @@ fi
 ## --with section
 ##
 
-AC_ARG_WITH([openssl],[AS_HELP_STRING([--with-openssl], [This will enable HTTPS support in qhttpclient extension API. When it's enabled, user applications will need to link openssl library with -lssl option.])],[withval=yes],[withval=no])
+AC_ARG_WITH([openssl],[AS_HELP_STRING([--with-openssl], [This will enable HTTPS support in qhttpclient extension API. When it's enabled, user applications will need to link openssl library with -lssl option.])],[],[withval=no])
 if test "$withval" = yes; then
 	if test "$with_openssl" = yes; then
 		with_openssl="/usr/include"
@@ -187,7 +189,7 @@ if test "$withval" = yes; then
 	fi
 fi
 
-AC_ARG_WITH([mysql],[AS_HELP_STRING([--with-mysql], [This will enable MySQL database support in qdatabase extension API. When it's enabled, user applications need to link mysql client library. (ex: -lmysqlclient)])],[withval=yes],[withval=no])
+AC_ARG_WITH([mysql],[AS_HELP_STRING([--with-mysql], [This will enable MySQL database support in qdatabase extension API. When it's enabled, user applications need to link mysql client library. (ex: -lmysqlclient)])],[],[withval=no])
 if test "$withval" = yes; then
 	if test "$with_mysql" = yes; then
 		with_mysql="/usr/include/mysql"
