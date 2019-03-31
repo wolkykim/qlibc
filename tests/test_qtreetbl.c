@@ -315,7 +315,7 @@ TEST("Test thousands of keys put/delete: long key + long value")
             "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
 }
 
-TEST("Test rule 4")
+TEST("Test rule 4 and 5")
 {
     qtreetbl_t *tbl = qtreetbl(0);
     

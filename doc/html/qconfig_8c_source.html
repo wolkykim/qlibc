@@ -442,46 +442,58 @@ $(document).ready(function(){initNavTree('qconfig_8c_source.html','');});
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;            <span class="keywordtype">char</span> *newstr = NULL;</div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;            <span class="keywordflow">switch</span> (varstr[0]) {</div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;                <span class="keywordflow">case</span> _VAR_CMD: {</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;                    <span class="keywordflow">if</span> ((newstr = <a class="code" href="qstring_8c.html#aef51c584fd78c0430ccfb5f51c32cf71">qstrtrim</a>(<a class="code" href="qsystem_8c.html#a5463b8e0d69c2f317da6d9c47dee14f4">qsyscmd</a>(varstr + 1))) == NULL) {</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;                    <span class="keywordflow">if</span> (varlen - 1 == 0) {</div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;                        newstr = strdup(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                    }</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;                }</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;                <span class="keywordflow">case</span> _VAR_ENV: {</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;                    newstr = strdup(<a class="code" href="qsystem_8c.html#a572fee0d88280a0dd1f5ab0905296eea">qgetenv</a>(varstr + 1, <span class="stringliteral">&quot;&quot;</span>));</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                        <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;                    }</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;                    <span class="keywordflow">if</span> ((newstr = <a class="code" href="qstring_8c.html#aef51c584fd78c0430ccfb5f51c32cf71">qstrtrim</a>(<a class="code" href="qsystem_8c.html#a5463b8e0d69c2f317da6d9c47dee14f4">qsyscmd</a>(varstr + 1))) == NULL) {</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;                        newstr = strdup(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;                    }</div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;                    <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;                }</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;                <span class="keywordflow">default</span>: {</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;                    <span class="keywordflow">if</span> ((newstr = tbl-&gt;getstr(tbl, varstr, <span class="keyword">true</span>)) == NULL) {</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;                        s = e;  <span class="comment">// not found</span></div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;                        <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;                <span class="keywordflow">case</span> _VAR_ENV: {</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;                    <span class="keywordflow">if</span> (varlen - 1 == 0) {</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;                        newstr = strdup(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;                        <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;                    }</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;                }</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;            }</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;            <span class="comment">// replace</span></div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;            strncpy(varstr, s, varlen + 3);  <span class="comment">// ${str}</span></div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;            varstr[varlen + 3] = <span class="charliteral">&#39;\0&#39;</span>;</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;            s = <a class="code" href="qstring_8c.html#a01772aae3cdd533ff6f0f68367df9226">qstrreplace</a>(<span class="stringliteral">&quot;sn&quot;</span>, value, varstr, newstr);</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;            free(newstr);</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;            free(varstr);</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;            free(value);</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;            value = s;</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;            loop = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;        }</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;    } <span class="keywordflow">while</span> (loop == <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    <span class="keywordflow">return</span> value;</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;}</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _DOXYGEN_SKIP */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* DISABLE_QCONFIG */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;                    newstr = strdup(<a class="code" href="qsystem_8c.html#a572fee0d88280a0dd1f5ab0905296eea">qgetenv</a>(varstr + 1, <span class="stringliteral">&quot;&quot;</span>));</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;                }</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;                <span class="keywordflow">default</span>: {</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;                    <span class="keywordflow">if</span> (varlen == 0) {</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;                        newstr = strdup(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;                        <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;                    }</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;                    <span class="keywordflow">if</span> ((newstr = tbl-&gt;getstr(tbl, varstr, <span class="keyword">true</span>)) == NULL) {</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;                        s = e;  <span class="comment">// not found</span></div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;                        <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;                    }</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;                }</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;            }</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;            <span class="comment">// replace</span></div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;            strncpy(varstr, s, varlen + 3);  <span class="comment">// ${str}</span></div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;            varstr[varlen + 3] = <span class="charliteral">&#39;\0&#39;</span>;</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;            s = <a class="code" href="qstring_8c.html#a01772aae3cdd533ff6f0f68367df9226">qstrreplace</a>(<span class="stringliteral">&quot;sn&quot;</span>, value, varstr, newstr);</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;            free(newstr);</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;            free(varstr);</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;            free(value);</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;            value = s;</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;            loop = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;        }</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;    } <span class="keywordflow">while</span> (loop == <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    <span class="keywordflow">return</span> value;</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;}</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* _DOXYGEN_SKIP */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* DISABLE_QCONFIG */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;<span class="preprocessor"></span></div>
 <div class="ttc" id="qconfig_8c_html_a935668a20d0b3f5b6b84b46e9262bc0b"><div class="ttname"><a href="qconfig_8c.html#a935668a20d0b3f5b6b84b46e9262bc0b">qconfig_parse_file</a></div><div class="ttdeci">qlisttbl_t * qconfig_parse_file(qlisttbl_t *tbl, const char *filepath, char sepchar)</div><div class="ttdoc">Load &amp; parse configuration file. </div><div class="ttdef"><b>Definition:</b> <a href="qconfig_8c_source.html#l00126">qconfig.c:126</a></div></div>
 <div class="ttc" id="qstring_8c_html_afed8e04d6f83692b815251e9f76cc8fd"><div class="ttname"><a href="qstring_8c.html#afed8e04d6f83692b815251e9f76cc8fd">qstrdupf</a></div><div class="ttdeci">char * qstrdupf(const char *format,...)</div><div class="ttdoc">Duplicate a formatted string. </div><div class="ttdef"><b>Definition:</b> <a href="qstring_8c_source.html#l00358">qstring.c:358</a></div></div>
 <div class="ttc" id="qlisttbl_8c_html_ace8778acce088344531b5249d580aca7"><div class="ttname"><a href="qlisttbl_8c.html#ace8778acce088344531b5249d580aca7">qlisttbl</a></div><div class="ttdeci">qlisttbl_t * qlisttbl(int options)</div><div class="ttdoc">Create a new Q_LIST linked-list container. </div><div class="ttdef"><b>Definition:</b> <a href="qlisttbl_8c_source.html#l00150">qlisttbl.c:150</a></div></div>
