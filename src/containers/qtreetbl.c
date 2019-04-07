@@ -1196,11 +1196,6 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         obj = rotate_right(obj);
     }
     
-    // split 4-nodes on the way up.
-    /*if (is_red(obj->left) && is_red(obj->right)) {
-        flip_color(obj);
-    }*/
-
     return obj;
 }
 
