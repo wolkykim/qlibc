@@ -864,6 +864,151 @@ bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
     return true;
 }
 
+/**
+ * Display the tree structure from the node pointed by `obj` and down.
+ *
+ * @param tbl   A pointer to a node of the tree.
+ * @param depth The depth of the node in the tree.
+ *              The depth of the tree root is 0.
+ *
+ */
+void print_node(qtreetbl_obj_t *obj, int depth) {
+    // Skip tree-leaves
+    if (!obj) return;
+
+    // 4-spaces indentation for each node level
+    for (int i = 0; i < depth; i++) {
+        printf("    ");
+    }
+
+    // Print the red-ness of the node
+    printf("R=%c W= ", (obj->red) ? 'Y' : 'N');
+
+    // Print the content of the node
+    for (int i = 0; i < obj->namesize; i++) {
+        printf("%c", ((char *) obj->name)[i]);
+    }
+
+    // No more data to print for this node, go to next line.
+    printf("\n");
+
+    // Recursive call to display the children
+    print_node(obj->left, depth + 1);
+    print_node(obj->right, depth + 1);
+}
+
+/**
+ * Display the tree structure.
+ *
+ * @param tbl   qtreetbl_t container pointer.
+ *
+ */
+void qtreetbl_print(qtreetbl_t *tbl) {
+
+    qtreetbl_lock(tbl);
+
+    print_node(tbl->root, 0);
+
+    qtreetbl_unlock(tbl);
+}
+
+/**
+ * Verifies that RULE 4 of the red-black tree is verified for the node pointed
+ * by `obj` and all its children.
+ *
+ * Rule 4 states that no red node shall have a red child.
+ *
+ * @param tbl A pointer to the tree object.
+ * @param obj A pointer to a node of the tree object.
+ */
+int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
+    // RULE 4: No red node has a red child
+
+    if (obj == NULL) return 0;
+
+    if (is_red(obj)) {
+        if (is_red(obj->right) || is_red(obj->left)) {
+            printf("ERROR: Rule 4 violated.\n");
+            printf("Red node with key '");
+            // Print the name
+            for (int i = 0; i < obj->namesize; i++) {
+                printf("%c", ((char *) obj->name)[i]);
+            }
+            printf("' has at least one red child.\n");
+            print_node(tbl->root, 0);
+
+            return 1;
+        }
+    }
+
+    if (node_check_rule4(tbl, obj->right))
+        return 1;
+    if (node_check_rule4(tbl, obj->left))
+        return 1;
+    
+    return 0;
+}
+
+/**
+ * Verifies that RULE 5 of the red-black tree is verified for the node pointed
+ * by `obj` and all its children.
+ *
+ * Rule 5 states that every path from the root of the tree to any leaf of the
+ * tree has the same number of black nodes.
+ *
+ * @param tbl A pointer to the tree object.
+ * @param obj A pointer to a node of the tree object.
+ */
+int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
+
+    if (obj == NULL) {
+        *path_len = 0;
+    } else {
+        int right_path_len;
+        if (node_check_rule5(tbl, obj->right, &right_path_len))
+            return 1;
+        
+        int left_path_len;
+        if (node_check_rule5(tbl, obj->left, &left_path_len))
+            return 1;
+
+        if (right_path_len != left_path_len) {
+            printf("ERROR: Rule 5 violated.");
+            print_node(tbl->root, 0);
+            return 1;
+        } else {
+            *path_len = right_path_len;
+
+            if (!is_red(obj)) (*path_len)++;
+        }
+    }
+
+    return 0;
+}
+
+/**
+ * Verifies that the (some) invariants of the red-black tree are satisfied.
+ *
+ * @param tbl A pointer to the tree object to check.
+ */
+int qtreetbl_check(qtreetbl_t *tbl) {
+
+    printf("Checking tree... \n");
+    if (tbl == NULL) return 0;
+
+    if (node_check_rule4(tbl, tbl->root)) 
+        return 1;
+    int path_len = 0;
+    if (node_check_rule5(tbl, tbl->root, &path_len))
+        return 1;
+    
+    
+    
+    print_node(tbl->root, 0);
+    
+    return 0;
+}
+
 #ifndef _DOXYGEN_SKIP
 
 static bool is_red(qtreetbl_obj_t *obj) {
@@ -1050,7 +1195,7 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
     if (is_red(obj->left) && is_red(obj->left->left)) {
         obj = rotate_right(obj);
     }
-
+    
     return obj;
 }
 
@@ -1069,7 +1214,7 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         // keep going down to the left
         obj->left = remove_obj(tbl, obj->left, name, namesize);
     } else {  // right or equal
-        if (is_red(obj->left)) {
+        if (is_red(obj->left) && !is_red(obj->right)) {
             obj = rotate_right(obj);
         }
         // remove if equal at the bottom

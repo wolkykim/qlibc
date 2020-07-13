@@ -315,6 +315,63 @@ TEST("Test thousands of keys put/delete: long key + long value")
             "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
 }
 
+TEST("Test rule 4 and 5")
+{
+    qtreetbl_t *tbl = qtreetbl(0);
+    
+    size_t siz = sizeof(int);
+    int val = 0;
+    
+    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 0 0", &val, siz);
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    tbl->remove(tbl, "0 0 0 0 0 0 0 0 0 0 0 0");
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 0 0", &val, siz); 
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    
+    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 1 0", &val, siz); 
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    tbl->remove(tbl, "0 0 0 0 0 0 0 0 0 0 1 0");  
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 1 0", &val, siz); 
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+
+    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 1 1 0", &val, siz); 
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    
+    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 1 1", &val, siz); 
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    tbl->remove(tbl, "0 0 0 0 0 0 0 0 0 0 1 1");
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 1 1", &val, siz); 
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    
+    tbl->put(tbl, "0 0 1 0 0 0 0 0 0 0 1 1", &val, siz);
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    
+    tbl->put(tbl, "0 0 0 0 0 0 1 0 0 0 1 1", &val, siz); 
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    
+    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 1 1 1", &val, siz);
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    
+    tbl->remove(tbl, "0 0 0 0 0 0 0 0 0 1 1 0");
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    
+    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 1 1 0", &val, siz);
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    
+    tbl->put(tbl, "1 0 0 0 0 0 0 0 0 1 1 0", &val, siz);
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    
+    tbl->put(tbl, "0 0 0 0 0 0 0 0 1 1 1 0", &val, siz);
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    tbl->remove(tbl, "0 0 0 0 0 0 0 0 1 1 1 0");
+    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+
+    tbl->free(tbl);
+}
+
 QUNIT_END()
 ;
 
