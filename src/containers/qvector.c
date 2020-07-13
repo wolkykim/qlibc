@@ -674,11 +674,7 @@ void qvector_unlock(qvector_t *vector) {
  */
 void qvector_clear(qvector_t *vector) {
     vector->lock(vector);
-    free(vector->data);
-    vector->data = NULL;
     vector->num = 0;
-    vector->objsize = 0;
-    vector->max = 0;
     vector->unlock(vector);
 }
 
