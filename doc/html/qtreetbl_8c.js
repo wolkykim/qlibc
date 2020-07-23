@@ -21,5 +21,10 @@ var qtreetbl_8c =
     [ "qtreetbl_unlock", "qtreetbl_8c.html#a88a8e67f478390c6b25780fda3134a8d", null ],
     [ "qtreetbl_free", "qtreetbl_8c.html#a2bac240b706b85273338a26fb986eee7", null ],
     [ "qtreetbl_byte_cmp", "qtreetbl_8c.html#a61a3463749adb906e549d51f8a9c5a51", null ],
-    [ "qtreetbl_debug", "qtreetbl_8c.html#a663dfe23addb8debd1c3da5e54d2c930", null ]
+    [ "qtreetbl_debug", "qtreetbl_8c.html#a663dfe23addb8debd1c3da5e54d2c930", null ],
+    [ "print_node", "qtreetbl_8c.html#a85c0a722a571106ec388f60475e57bae", null ],
+    [ "qtreetbl_print", "qtreetbl_8c.html#a9562937f1baae06a7c7a0bd0eb2f1b15", null ],
+    [ "node_check_rule4", "qtreetbl_8c.html#abca6528ccee240ac07699cf3ecd9116a", null ],
+    [ "node_check_rule5", "qtreetbl_8c.html#a4ebb5ddc96e04ac64dd75dbaa0852d99", null ],
+    [ "qtreetbl_check", "qtreetbl_8c.html#ab53aff8d2c853903ecd90ff83eba2056", null ]
 ];

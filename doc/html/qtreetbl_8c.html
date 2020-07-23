@@ -141,6 +141,21 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>qtreetbl_byte_cmp</b> 
 <tr class="memitem:a663dfe23addb8debd1c3da5e54d2c930"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qtreetbl_8c.html#a663dfe23addb8debd1c3da5e54d2c930">qtreetbl_debug</a> (qtreetbl_t *tbl, FILE *out)</td></tr>
 <tr class="memdesc:a663dfe23addb8debd1c3da5e54d2c930"><td class="mdescLeft">&#160;</td><td class="mdescRight">qtreetbl-&gt;debug(): Print hash table for debugging purpose  <a href="#a663dfe23addb8debd1c3da5e54d2c930">More...</a><br/></td></tr>
 <tr class="separator:a663dfe23addb8debd1c3da5e54d2c930"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85c0a722a571106ec388f60475e57bae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qtreetbl_8c.html#a85c0a722a571106ec388f60475e57bae">print_node</a> (qtreetbl_obj_t *obj, int depth)</td></tr>
+<tr class="memdesc:a85c0a722a571106ec388f60475e57bae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display the tree structure from the node pointed by <code>obj</code> and down.  <a href="#a85c0a722a571106ec388f60475e57bae">More...</a><br/></td></tr>
+<tr class="separator:a85c0a722a571106ec388f60475e57bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9562937f1baae06a7c7a0bd0eb2f1b15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qtreetbl_8c.html#a9562937f1baae06a7c7a0bd0eb2f1b15">qtreetbl_print</a> (qtreetbl_t *tbl)</td></tr>
+<tr class="memdesc:a9562937f1baae06a7c7a0bd0eb2f1b15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display the tree structure.  <a href="#a9562937f1baae06a7c7a0bd0eb2f1b15">More...</a><br/></td></tr>
+<tr class="separator:a9562937f1baae06a7c7a0bd0eb2f1b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abca6528ccee240ac07699cf3ecd9116a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qtreetbl_8c.html#abca6528ccee240ac07699cf3ecd9116a">node_check_rule4</a> (qtreetbl_t *tbl, qtreetbl_obj_t *obj)</td></tr>
+<tr class="memdesc:abca6528ccee240ac07699cf3ecd9116a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifies that RULE 4 of the red-black tree is verified for the node pointed by <code>obj</code> and all its children.  <a href="#abca6528ccee240ac07699cf3ecd9116a">More...</a><br/></td></tr>
+<tr class="separator:abca6528ccee240ac07699cf3ecd9116a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ebb5ddc96e04ac64dd75dbaa0852d99"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qtreetbl_8c.html#a4ebb5ddc96e04ac64dd75dbaa0852d99">node_check_rule5</a> (qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len)</td></tr>
+<tr class="memdesc:a4ebb5ddc96e04ac64dd75dbaa0852d99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifies that RULE 5 of the red-black tree is verified for the node pointed by <code>obj</code> and all its children.  <a href="#a4ebb5ddc96e04ac64dd75dbaa0852d99">More...</a><br/></td></tr>
+<tr class="separator:a4ebb5ddc96e04ac64dd75dbaa0852d99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab53aff8d2c853903ecd90ff83eba2056"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qtreetbl_8c.html#ab53aff8d2c853903ecd90ff83eba2056">qtreetbl_check</a> (qtreetbl_t *tbl)</td></tr>
+<tr class="memdesc:ab53aff8d2c853903ecd90ff83eba2056"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifies that the (some) invariants of the red-black tree are satisfied.  <a href="#ab53aff8d2c853903ecd90ff83eba2056">More...</a><br/></td></tr>
+<tr class="separator:ab53aff8d2c853903ecd90ff83eba2056"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tree Table container that implements "Left-Leaning Red-Black" BST algorithm. </p>
@@ -1274,6 +1289,177 @@ This operation will do nothing if QTREETBL_THREADSAFE option was not given at th
 </dl>
 
 <p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00854">854</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a85c0a722a571106ec388f60475e57bae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void print_node </td>
+          <td>(</td>
+          <td class="paramtype">qtreetbl_obj_t *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>depth</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Display the tree structure from the node pointed by <code>obj</code> and down. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tbl</td><td>A pointer to a node of the tree. </td></tr>
+    <tr><td class="paramname">depth</td><td>The depth of the node in the tree. The depth of the tree root is 0. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00875">875</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9562937f1baae06a7c7a0bd0eb2f1b15"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void qtreetbl_print </td>
+          <td>(</td>
+          <td class="paramtype">qtreetbl_t *&#160;</td>
+          <td class="paramname"><em>tbl</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Display the tree structure. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tbl</td><td>qtreetbl_t container pointer. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00906">906</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abca6528ccee240ac07699cf3ecd9116a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int node_check_rule4 </td>
+          <td>(</td>
+          <td class="paramtype">qtreetbl_t *&#160;</td>
+          <td class="paramname"><em>tbl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qtreetbl_obj_t *&#160;</td>
+          <td class="paramname"><em>obj</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Verifies that RULE 4 of the red-black tree is verified for the node pointed by <code>obj</code> and all its children. </p>
+<p>Rule 4 states that no red node shall have a red child.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tbl</td><td>A pointer to the tree object. </td></tr>
+    <tr><td class="paramname">obj</td><td>A pointer to a node of the tree object. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00924">924</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4ebb5ddc96e04ac64dd75dbaa0852d99"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int node_check_rule5 </td>
+          <td>(</td>
+          <td class="paramtype">qtreetbl_t *&#160;</td>
+          <td class="paramname"><em>tbl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qtreetbl_obj_t *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>path_len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Verifies that RULE 5 of the red-black tree is verified for the node pointed by <code>obj</code> and all its children. </p>
+<p>Rule 5 states that every path from the root of the tree to any leaf of the tree has the same number of black nodes.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tbl</td><td>A pointer to the tree object. </td></tr>
+    <tr><td class="paramname">obj</td><td>A pointer to a node of the tree object. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00962">962</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab53aff8d2c853903ecd90ff83eba2056"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int qtreetbl_check </td>
+          <td>(</td>
+          <td class="paramtype">qtreetbl_t *&#160;</td>
+          <td class="paramname"><em>tbl</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Verifies that the (some) invariants of the red-black tree are satisfied. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tbl</td><td>A pointer to the tree object to check. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="qtreetbl_8c_source.html#l00994">994</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
