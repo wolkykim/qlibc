@@ -687,8 +687,10 @@ void qvector_free(qvector_t *vector) {
     vector->clear(vector);
     Q_MUTEX_DESTROY(vector->qmutex);
 
-    free(vector->data);
-    vector->data = NULL;
+    if(vector->data != NULL) {
+        free(vector->data);
+    }
+
     free(vector);
 }
 
