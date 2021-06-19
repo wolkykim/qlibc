@@ -40,6 +40,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include "../containers/qlisttbl.h"
 
 #ifdef __cplusplus
 extern "C" {
