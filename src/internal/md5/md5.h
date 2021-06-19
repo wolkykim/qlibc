@@ -24,14 +24,18 @@
 #ifndef Q_MD5_H
 #define Q_MD5_H
 
+#include <stdint.h>
+#include <stdio.h>
+#include <sys/types.h>
+
 #define MD5_BLOCK_LENGTH		64
 #define MD5_DIGEST_LENGTH		16
 #define MD5_DIGEST_STRING_LENGTH	(MD5_DIGEST_LENGTH * 2 + 1)
 
 /* MD5 context. */
 typedef struct MD5Context {
-    u_int32_t state[4]; /* state (ABCD) */
-    u_int32_t count[2]; /* number of bits, modulo 2^64 (lsb first) */
+    uint32_t state[4]; /* state (ABCD) */
+    uint32_t count[2]; /* number of bits, modulo 2^64 (lsb first) */
     unsigned char buffer[64]; /* input buffer */
 } MD5_CTX;
 
