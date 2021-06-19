@@ -121,7 +121,11 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/types.h>
-#include <sys/socket.h>
+#ifdef __WIN32
+    #include <winsock2.h>
+#else
+    #include <sys/socket.h>
+#endif
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
