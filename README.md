@@ -20,11 +20,16 @@ Please refer the LICENSE document included in the package for more details.
     * Hash Table --- in hash-based data structure.
     * Static Hash Table --- in fixed size memory(array/mmapped/shared).
     * List Table --- in (doubly) linked-list data structure.
+    * Trie --- in tree-based data structure **(TODO)**.
   * Containers for Objects
     * List --- Doubly Linked List.
     * Vector --- implements a growable array of elements.
     * Queue --- FIFO(First In First Out) implementation.
     * Stack --- LIFO(Last In First Out) implementation.
+  * Algorithms (**TODO**):
+    * Quick sort
+    * Bubble sort
+    * Merge Sort
   * General utilities.
     * String --- string trimmer, modifier, replacer, case converter, pattern detectors, ...
     * I/O --- non-blocking I/O, stream reader/writer, ...
