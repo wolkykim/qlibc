@@ -1,0 +1,292 @@
+[
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/containers/qgrow.c.o -c /d/GitProject/qlibc/src/containers/qgrow.c",
+  "file": "/d/GitProject/qlibc/src/containers/qgrow.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/containers/qhasharr.c.o -c /d/GitProject/qlibc/src/containers/qhasharr.c",
+  "file": "/d/GitProject/qlibc/src/containers/qhasharr.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/containers/qhashtbl.c.o -c /d/GitProject/qlibc/src/containers/qhashtbl.c",
+  "file": "/d/GitProject/qlibc/src/containers/qhashtbl.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/containers/qlist.c.o -c /d/GitProject/qlibc/src/containers/qlist.c",
+  "file": "/d/GitProject/qlibc/src/containers/qlist.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/containers/qlisttbl.c.o -c /d/GitProject/qlibc/src/containers/qlisttbl.c",
+  "file": "/d/GitProject/qlibc/src/containers/qlisttbl.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/containers/qqueue.c.o -c /d/GitProject/qlibc/src/containers/qqueue.c",
+  "file": "/d/GitProject/qlibc/src/containers/qqueue.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/containers/qset.c.o -c /d/GitProject/qlibc/src/containers/qset.c",
+  "file": "/d/GitProject/qlibc/src/containers/qset.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/containers/qstack.c.o -c /d/GitProject/qlibc/src/containers/qstack.c",
+  "file": "/d/GitProject/qlibc/src/containers/qstack.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/containers/qtreetbl.c.o -c /d/GitProject/qlibc/src/containers/qtreetbl.c",
+  "file": "/d/GitProject/qlibc/src/containers/qtreetbl.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/containers/qvector.c.o -c /d/GitProject/qlibc/src/containers/qvector.c",
+  "file": "/d/GitProject/qlibc/src/containers/qvector.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/internal/md5/md5c.c.o -c /d/GitProject/qlibc/src/internal/md5/md5c.c",
+  "file": "/d/GitProject/qlibc/src/internal/md5/md5c.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/internal/qinternal.c.o -c /d/GitProject/qlibc/src/internal/qinternal.c",
+  "file": "/d/GitProject/qlibc/src/internal/qinternal.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/ipc/qsem.c.o -c /d/GitProject/qlibc/src/ipc/qsem.c",
+  "file": "/d/GitProject/qlibc/src/ipc/qsem.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/ipc/qshm.c.o -c /d/GitProject/qlibc/src/ipc/qshm.c",
+  "file": "/d/GitProject/qlibc/src/ipc/qshm.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/utilities/qcount.c.o -c /d/GitProject/qlibc/src/utilities/qcount.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qcount.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/utilities/qencode.c.o -c /d/GitProject/qlibc/src/utilities/qencode.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qencode.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/utilities/qfile.c.o -c /d/GitProject/qlibc/src/utilities/qfile.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qfile.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/utilities/qhash.c.o -c /d/GitProject/qlibc/src/utilities/qhash.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qhash.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/utilities/qio.c.o -c /d/GitProject/qlibc/src/utilities/qio.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qio.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/utilities/qsocket.c.o -c /d/GitProject/qlibc/src/utilities/qsocket.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qsocket.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/utilities/qstring.c.o -c /d/GitProject/qlibc/src/utilities/qstring.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qstring.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/utilities/qsystem.c.o -c /d/GitProject/qlibc/src/utilities/qsystem.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qsystem.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibc_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc.dir/src/utilities/qtime.c.o -c /d/GitProject/qlibc/src/utilities/qtime.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qtime.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibcext_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext.dir/src/extensions/qaconf.c.o -c /d/GitProject/qlibc/src/extensions/qaconf.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qaconf.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibcext_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext.dir/src/extensions/qconfig.c.o -c /d/GitProject/qlibc/src/extensions/qconfig.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qconfig.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibcext_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext.dir/src/extensions/qdatabase.c.o -c /d/GitProject/qlibc/src/extensions/qdatabase.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qdatabase.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibcext_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext.dir/src/extensions/qhttpclient.c.o -c /d/GitProject/qlibc/src/extensions/qhttpclient.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qhttpclient.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibcext_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext.dir/src/extensions/qlog.c.o -c /d/GitProject/qlibc/src/extensions/qlog.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qlog.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe -Dqlibcext_EXPORTS -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext.dir/src/extensions/qtokenbucket.c.o -c /d/GitProject/qlibc/src/extensions/qtokenbucket.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qtokenbucket.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext-static.dir/src/extensions/qaconf.c.o -c /d/GitProject/qlibc/src/extensions/qaconf.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qaconf.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext-static.dir/src/extensions/qconfig.c.o -c /d/GitProject/qlibc/src/extensions/qconfig.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qconfig.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext-static.dir/src/extensions/qdatabase.c.o -c /d/GitProject/qlibc/src/extensions/qdatabase.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qdatabase.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext-static.dir/src/extensions/qhttpclient.c.o -c /d/GitProject/qlibc/src/extensions/qhttpclient.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qhttpclient.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext-static.dir/src/extensions/qlog.c.o -c /d/GitProject/qlibc/src/extensions/qlog.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qlog.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibcext-static.dir/src/extensions/qtokenbucket.c.o -c /d/GitProject/qlibc/src/extensions/qtokenbucket.c",
+  "file": "/d/GitProject/qlibc/src/extensions/qtokenbucket.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/containers/qgrow.c.o -c /d/GitProject/qlibc/src/containers/qgrow.c",
+  "file": "/d/GitProject/qlibc/src/containers/qgrow.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/containers/qhasharr.c.o -c /d/GitProject/qlibc/src/containers/qhasharr.c",
+  "file": "/d/GitProject/qlibc/src/containers/qhasharr.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/containers/qhashtbl.c.o -c /d/GitProject/qlibc/src/containers/qhashtbl.c",
+  "file": "/d/GitProject/qlibc/src/containers/qhashtbl.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/containers/qlist.c.o -c /d/GitProject/qlibc/src/containers/qlist.c",
+  "file": "/d/GitProject/qlibc/src/containers/qlist.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/containers/qlisttbl.c.o -c /d/GitProject/qlibc/src/containers/qlisttbl.c",
+  "file": "/d/GitProject/qlibc/src/containers/qlisttbl.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/containers/qqueue.c.o -c /d/GitProject/qlibc/src/containers/qqueue.c",
+  "file": "/d/GitProject/qlibc/src/containers/qqueue.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/containers/qset.c.o -c /d/GitProject/qlibc/src/containers/qset.c",
+  "file": "/d/GitProject/qlibc/src/containers/qset.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/containers/qstack.c.o -c /d/GitProject/qlibc/src/containers/qstack.c",
+  "file": "/d/GitProject/qlibc/src/containers/qstack.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/containers/qtreetbl.c.o -c /d/GitProject/qlibc/src/containers/qtreetbl.c",
+  "file": "/d/GitProject/qlibc/src/containers/qtreetbl.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/containers/qvector.c.o -c /d/GitProject/qlibc/src/containers/qvector.c",
+  "file": "/d/GitProject/qlibc/src/containers/qvector.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/internal/md5/md5c.c.o -c /d/GitProject/qlibc/src/internal/md5/md5c.c",
+  "file": "/d/GitProject/qlibc/src/internal/md5/md5c.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/internal/qinternal.c.o -c /d/GitProject/qlibc/src/internal/qinternal.c",
+  "file": "/d/GitProject/qlibc/src/internal/qinternal.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/ipc/qsem.c.o -c /d/GitProject/qlibc/src/ipc/qsem.c",
+  "file": "/d/GitProject/qlibc/src/ipc/qsem.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/ipc/qshm.c.o -c /d/GitProject/qlibc/src/ipc/qshm.c",
+  "file": "/d/GitProject/qlibc/src/ipc/qshm.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/utilities/qcount.c.o -c /d/GitProject/qlibc/src/utilities/qcount.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qcount.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/utilities/qencode.c.o -c /d/GitProject/qlibc/src/utilities/qencode.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qencode.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/utilities/qfile.c.o -c /d/GitProject/qlibc/src/utilities/qfile.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qfile.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/utilities/qhash.c.o -c /d/GitProject/qlibc/src/utilities/qhash.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qhash.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/utilities/qio.c.o -c /d/GitProject/qlibc/src/utilities/qio.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qio.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/utilities/qsocket.c.o -c /d/GitProject/qlibc/src/utilities/qsocket.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qsocket.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/utilities/qstring.c.o -c /d/GitProject/qlibc/src/utilities/qstring.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qstring.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/utilities/qsystem.c.o -c /d/GitProject/qlibc/src/utilities/qsystem.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qsystem.c"
+},
+{
+  "directory": "/d/GitProject/qlibc/build",
+  "command": "/mingw64/bin/cc.exe  -I/d/GitProject/qlibc/src/internal -I/d/GitProject/qlibc/include/qlibc  -o CMakeFiles/qlibc-static.dir/src/utilities/qtime.c.o -c /d/GitProject/qlibc/src/utilities/qtime.c",
+  "file": "/d/GitProject/qlibc/src/utilities/qtime.c"
+}
+]
