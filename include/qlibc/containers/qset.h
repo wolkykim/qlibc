@@ -68,23 +68,42 @@ enum {
 
 extern qset_t *qset(uint64_t num_els, qset_hashfunction hash, int options);
 
+/*
+ * *************************************************************************
+ *                              BASIC MANIPULATION
+ * *************************************************************************
+ */
+
 extern int qset_add(qset_t *set, const char *key);
 extern int qset_remove(qset_t *set, const char *key);
 extern int qset_contains(qset_t *set, const char *key);
 extern uint64_t qset_length(qset_t *set);
 
+/*
+ * *************************************************************************
+ *                              BINARY OPERATORS 
+ * *************************************************************************
+ */
+
 extern qset_t *qset_union(qset_t *a, qset_t *b);
 extern qset_t *qset_intersection(qset_t *a, qset_t *b);
 extern qset_t *qset_difference(qset_t *a, qset_t *b);
 extern qset_t *qset_symmetric_difference(qset_t *a, qset_t *b);
-extern int qset_is_subset(qset_t *test, qset_t *against);
-extern int qset_is_superset(qset_t *test, qset_t *against);
-extern int qset_is_subset_strict(qset_t *test, qset_t *against);
-extern int qset_is_superset_strict(qset_t *test, qset_t *against);
+
+/*
+ * *************************************************************************
+ *                              UNARY OPERATORS 
+ * *************************************************************************
+ */
+
+extern int qset_is_subset(qset_t *a, qset_t *b);
+extern int qset_is_superset(qset_t *a, qset_t *b);
+extern int qset_is_strsubset(qset_t *a, qset_t *b);
+extern int qset_is_strsuperset(qset_t *a, qset_t *b);
 
 extern int qset_cmp(qset_t *a, qset_t *b);
 
-extern void *qset_toarray(qset_t *set, uint64_t *setize);
+extern char **qset_toarray(qset_t *set, uint64_t *setsize);
 extern void qset_lock(qset_t *set);
 extern void qset_unlock(qset_t *set);
 
