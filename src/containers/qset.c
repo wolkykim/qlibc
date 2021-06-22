@@ -199,12 +199,49 @@ extern qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
 
 }
 
-extern int qset_is_subset(qset_t *a, qset_t *b) {}
-extern int qset_is_superset(qset_t *a, qset_t *b) {}
-extern int qset_is_strsubset(qset_t *a, qset_t *b) {}
-extern int qset_is_strsuperset(qset_t *a, qset_t *b) {}
+extern int qset_is_subset(qset_t *a, qset_t *b) {
+    for (uint64_t i; i < a->num_nodes;i++) {
+        if (a->nodes[i] != NULL) {
+            if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash) == QSET_FALSE) {
+                return QSET_FALSE;
+            }
+        }
+    }
 
-extern int qset_cmp(qset_t *a, qset_t *b) {}
+    return QSET_TRUE;
+}
+extern int qset_is_superset(qset_t *a, qset_t *b) {
+    return qset_is_subset(b, a);
+}
+extern int qset_is_strsubset(qset_t *a, qset_t *b) {
+    if (a->used_nodes >= b->used_nodes) {
+        return QSET_FALSE;
+    }
+
+    return qset_is_subset(a, b);
+}
+extern int qset_is_strsuperset(qset_t *a, qset_t *b) {
+    return qset_is_strsubset(b,a);
+}
+
+extern int qset_cmp(qset_t *a, qset_t *b) {
+    if (a->used_nodes < b->used_nodes) {
+        return QSET_RGREATER;
+    }
+    else if (b->used_nodes < a->used_nodes) {
+        return QSET_LGREATER;
+    }
+
+    for (uint64_t i = 0; i < a->used_nodes; ++i) {
+        if (a->nodes[i] != NULL) {
+            if (qset_contains(b, a->nodes[i]->key) != QSET_TRUE) {
+                return QSET_NEQ;
+            }
+        }
+    }
+
+    return QSET_EQ;
+}
 
 extern char **qset_toarray(qset_t *set, uint64_t *setsize) {}
 extern void qset_lock(qset_t *set) {}
