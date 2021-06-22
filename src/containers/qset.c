@@ -41,6 +41,16 @@ static void __free_index(qset_t *set, uint64_t index);
 static int __set_contains(qset_t *set, const char *key, uint64_t hash);
 static int __set_add(qset_t *set, const char *key, uint64_t hash);
 static void __relayout_nodes(qset_t *set, uint64_t start, short end_on_null);
+
+static void __set_union(qset_t *a, qset_t *b); 
+static void __set_intersection(qset_t *a, qset_t *b);
+static void __set_difference(qset_t *a, qset_t *b);
+static void __set_symmetric_difference(qset_t *a, qset_t *b);
+
+static int __set_is_subset(qset_t *a , qset_t *b);
+static int __set_is_superset(qset_t *a, qset_t *b);
+static int __set_is_strsubset(qset_t *a, qset_t *b);
+static int __set_is_strsuperset(qset_t *a, qset_t *b);
 #endif
 
 /**
@@ -114,23 +124,89 @@ qset_t *qset(uint64_t num_els, qset_hashfunction hash, int options) {
     return set;
 }
 
-extern int qset_add(qset_t *set, const char *key) {}
-extern int qset_remove(qset_t *set, const char *key) {}
-extern int qset_contains(qset_t *set, const char *key) {}
-extern uint64_t qset_length(qset_t *set) {}
+/**
+ * qset->add(): Insert an element at the end of this set.
+ * 
+ * @param set       qset_t container pointer
+ * @param key       a string to be inserted
+ * 
+ * @return true if successful, otherwise false
+ * @retval based on the condition:
+ * - successful: QSET_TRUE
+ * - non-distinct element: QSET_PRESENT
+ * - full: QSET_CIRERR
+ * - memory error: QSET_MALLERR     
+ * 
+ */
+extern int qset_add(qset_t *set, const char *key) {
+    uint64_t hash = set->hash_func(key);
+    return __set_add(set, key, hash);
+}
+extern int qset_remove(qset_t *set, const char *key) {
+    uint64_t index, hash = set->hash_func(key);
+    int pos = __get_index(set, key, hash, &index);
+    if (pos != QSET_TRUE) {
+        return pos;
+    }
 
-extern qset_t *qset_union(qset_t *a, qset_t *b) {}
-extern qset_t *qset_intersection(qset_t *a, qset_t *b) {}
-extern qset_t *qset_difference(qset_t *a, qset_t *b) {}
-extern qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {}
-extern int qset_is_subset(qset_t *test, qset_t *against) {}
-extern int qset_is_superset(qset_t *test, qset_t *against) {}
-extern int qset_is_subset_strict(qset_t *test, qset_t *against) {}
-extern int qset_is_superset_strict(qset_t *test, qset_t *against) {}
+    __free_index(set, index);
+    __relayout_nodes(set, index, 0);
+
+    (set->used_nodes)--;
+
+    return QSET_TRUE;
+
+}
+extern int qset_contains(qset_t *set, const char *key) {
+    uint64_t index, hash = set->hash_func(key);
+    return __get_index(set, key, hash, &index);      
+}
+extern uint64_t qset_length(qset_t *set) {
+    return set->used_nodes;
+}
+
+extern qset_t *qset_union(qset_t *a, qset_t *b) {
+    qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
+    if (c->used_nodes != 0) {
+        return QSET_OCCERR;
+    }
+    __set_union(a,b);
+    return c;
+}
+extern qset_t *qset_intersection(qset_t *a, qset_t *b) {
+    qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
+    if (c->used_nodes != 0) {
+        return QSET_OCCERR;
+    }
+    __set_intersection(a,b);
+    return c; 
+}
+extern qset_t *qset_difference(qset_t *a, qset_t *b) {
+    qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
+    if (c->used_nodes != 0) {
+        return QSET_OCCERR;
+    }
+    __set_difference(a,b);
+    return c; 
+}
+extern qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
+    qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
+    if (c->used_nodes != 0) {
+        return QSET_OCCERR;
+    }
+    __set_symmetric_difference(a,b);
+    return c; 
+
+}
+
+extern int qset_is_subset(qset_t *a, qset_t *b) {}
+extern int qset_is_superset(qset_t *a, qset_t *b) {}
+extern int qset_is_strsubset(qset_t *a, qset_t *b) {}
+extern int qset_is_strsuperset(qset_t *a, qset_t *b) {}
 
 extern int qset_cmp(qset_t *a, qset_t *b) {}
 
-extern void *qset_toarray(qset_t *set, uint64_t *setize) {}
+extern char **qset_toarray(qset_t *set, uint64_t *setsize) {}
 extern void qset_lock(qset_t *set) {}
 extern void qset_unlock(qset_t *set) {}
 
