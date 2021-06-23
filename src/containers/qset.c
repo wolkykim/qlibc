@@ -138,11 +138,11 @@ qset_t *qset(uint64_t num_els, qset_hashfunction hash, int options) {
  * - memory error: QSET_MALLERR     
  * 
  */
-extern int qset_add(qset_t *set, const char *key) {
+int qset_add(qset_t *set, const char *key) {
     uint64_t hash = set->hash_func(key);
     return __set_add(set, key, hash);
 }
-extern int qset_remove(qset_t *set, const char *key) {
+int qset_remove(qset_t *set, const char *key) {
     uint64_t index, hash = set->hash_func(key);
     int pos = __get_index(set, key, hash, &index);
     if (pos != QSET_TRUE) {
@@ -157,15 +157,15 @@ extern int qset_remove(qset_t *set, const char *key) {
     return QSET_TRUE;
 
 }
-extern int qset_contains(qset_t *set, const char *key) {
+int qset_contains(qset_t *set, const char *key) {
     uint64_t index, hash = set->hash_func(key);
     return __get_index(set, key, hash, &index);      
 }
-extern uint64_t qset_length(qset_t *set) {
+uint64_t qset_length(qset_t *set) {
     return set->used_nodes;
 }
 
-extern qset_t *qset_union(qset_t *a, qset_t *b) {
+qset_t *qset_union(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c->used_nodes != 0) {
         return QSET_OCCERR;
@@ -173,7 +173,7 @@ extern qset_t *qset_union(qset_t *a, qset_t *b) {
     __set_union(a,b);
     return c;
 }
-extern qset_t *qset_intersection(qset_t *a, qset_t *b) {
+qset_t *qset_intersection(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c->used_nodes != 0) {
         return QSET_OCCERR;
@@ -181,7 +181,7 @@ extern qset_t *qset_intersection(qset_t *a, qset_t *b) {
     __set_intersection(a,b);
     return c; 
 }
-extern qset_t *qset_difference(qset_t *a, qset_t *b) {
+qset_t *qset_difference(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c->used_nodes != 0) {
         return QSET_OCCERR;
@@ -189,7 +189,7 @@ extern qset_t *qset_difference(qset_t *a, qset_t *b) {
     __set_difference(a,b);
     return c; 
 }
-extern qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
+qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c->used_nodes != 0) {
         return QSET_OCCERR;
@@ -199,7 +199,7 @@ extern qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
 
 }
 
-extern int qset_is_subset(qset_t *a, qset_t *b) {
+int qset_is_subset(qset_t *a, qset_t *b) {
     for (uint64_t i; i < a->num_nodes;i++) {
         if (a->nodes[i] != NULL) {
             if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash) == QSET_FALSE) {
@@ -210,21 +210,21 @@ extern int qset_is_subset(qset_t *a, qset_t *b) {
 
     return QSET_TRUE;
 }
-extern int qset_is_superset(qset_t *a, qset_t *b) {
+int qset_is_superset(qset_t *a, qset_t *b) {
     return qset_is_subset(b, a);
 }
-extern int qset_is_strsubset(qset_t *a, qset_t *b) {
+int qset_is_strsubset(qset_t *a, qset_t *b) {
     if (a->used_nodes >= b->used_nodes) {
         return QSET_FALSE;
     }
 
     return qset_is_subset(a, b);
 }
-extern int qset_is_strsuperset(qset_t *a, qset_t *b) {
+int qset_is_strsuperset(qset_t *a, qset_t *b) {
     return qset_is_strsubset(b,a);
 }
 
-extern int qset_cmp(qset_t *a, qset_t *b) {
+int qset_cmp(qset_t *a, qset_t *b) {
     if (a->used_nodes < b->used_nodes) {
         return QSET_RGREATER;
     }
@@ -243,11 +243,11 @@ extern int qset_cmp(qset_t *a, qset_t *b) {
     return QSET_EQ;
 }
 
-extern char **qset_toarray(qset_t *set, uint64_t *setsize) {}
-extern void qset_lock(qset_t *set) {}
-extern void qset_unlock(qset_t *set) {}
+char **qset_toarray(qset_t *set, uint64_t *setsize) {}
+void qset_lock(qset_t *set) {}
+void qset_unlock(qset_t *set) {}
 
-extern void qset_clear(qset_t *set) {}
-extern bool qset_debug(qset_t *set, FILE *out) {}
-extern void qset_free(qset_t *set) {}
+void qset_clear(qset_t *set) {}
+bool qset_debug(qset_t *set, FILE *out) {}
+void qset_free(qset_t *set) {}
 
