@@ -4,10 +4,10 @@ What's qLibc?
 qLibc is currently one of the most functionally-complete, publicly-licensed
 C/C++ libraries. The goal of the qLibc project is to provide a **simple and
 powerful general purpose C/C++ library** that includes all kinds of containers
-and general library routines. It provides a ready-made set of common container
-APIs with a consistent API look.
+and general library routines. It provides a ready-made set of common container APIs with a consistent API look.
 
-Side note: This fork repo is just hobby-ish contribution, not really sure if my fork is acceptable by the Project Lead.
+**Side note**: This fork repo is just hobby-ish contribution.
+I'm not really sure if my fork is acceptable by the Project Lead.
 
 ## qLibc Copyright
 
@@ -22,12 +22,12 @@ Please refer the LICENSE document included in the package for more details.
     * Hash Table --- in hash-based data structure.
     * Static Hash Table --- in fixed size memory(array/mmapped/shared).
     * List Table --- in (doubly) linked-list data structure.
-    * Trie --- in tree-based data structure **(TODO)**.
   * Containers for Objects
     * List --- Doubly Linked List.
     * Vector --- implements a growable array of elements.
     * Queue --- FIFO(First In First Out) implementation.
     * Stack --- LIFO(Last In First Out) implementation.
+    * Set --- Mathematical Set that has some basic set operations
   * General utilities.
     * String --- string trimmer, modifier, replacer, case converter, pattern detectors, ...
     * I/O --- non-blocking I/O, stream reader/writer, ...
@@ -144,6 +144,7 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * [Colin](https://github.com/colintd)
 * [Charles](https://github.com/Charles0429)
 * [Dmitry Vorobiev](https://github.com/demitsuri)
+* [D6E093](https://github.com/aragami1408)
 * [Fabrice Fontaine](https://github.com/ffontaine)
 * HyoSup Woo
 * [Keith Rosenberg](https://github.com/netpoetica)
