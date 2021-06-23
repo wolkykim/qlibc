@@ -91,7 +91,6 @@ extern void qset_lock(qset_t *set);
 extern void qset_unlock(qset_t *set);
 
 extern void qset_clear(qset_t *set);
-extern bool qset_debug(qset_t *set, FILE *out);
 extern void qset_free(qset_t *set);
 
 
