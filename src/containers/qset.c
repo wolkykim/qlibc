@@ -33,7 +33,10 @@
 #include "qinternal.h"
 #include "containers/qset.h"
 
+#define MAX_FULLNESS_PERCENT 0.25
+
 #ifndef _DOXYGEN_SKIP
+
 static uint64_t __default_hash(const char *key);
 static int __get_index(qset_t *set, const char *key, uint64_t hash, uint64_t *index);
 static int __assign_node(qset_t *set, const char *key, uint64_t hash, uint64_t index);
@@ -42,21 +45,12 @@ static int __set_contains(qset_t *set, const char *key, uint64_t hash);
 static int __set_add(qset_t *set, const char *key, uint64_t hash);
 static void __relayout_nodes(qset_t *set, uint64_t start, short end_on_null);
 
-static void __set_union(qset_t *a, qset_t *b); 
-static void __set_intersection(qset_t *a, qset_t *b);
-static void __set_difference(qset_t *a, qset_t *b);
-static void __set_symmetric_difference(qset_t *a, qset_t *b);
-
-static int __set_is_subset(qset_t *a , qset_t *b);
-static int __set_is_superset(qset_t *a, qset_t *b);
-static int __set_is_strsubset(qset_t *a, qset_t *b);
-static int __set_is_strsuperset(qset_t *a, qset_t *b);
 #endif
 
 /**
  * Create new qset_t container
  * 
- * @param num_els number of elements
+ * @param num_els num of elements
  * @param hash hash function callback
  * @param options combination of initialization options.
  * 
@@ -118,7 +112,6 @@ qset_t *qset(uint64_t num_els, qset_hashfunction hash, int options) {
     set->unlock = qset_unlock;
 
     set->clear = qset_clear;
-    set->debug = qset_debug;
     set->free = qset_free;
 
     return set;
@@ -162,7 +155,6 @@ int qset_remove(qset_t *set, const char *key) {
     __relayout_nodes(set, index, 0);
 
     (set->used_nodes)--;
-
     return QSET_TRUE;
 
 }
@@ -192,7 +184,16 @@ qset_t *qset_union(qset_t *a, qset_t *b) {
     if (c->used_nodes != 0) {
         return QSET_OCCERR;
     }
-    __set_union(a,b);
+    for (uint64_t i = 0; i < a->num_nodes; ++i) {
+        if (a->nodes[i] != NULL) {
+            __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
+        }
+    }
+    for (uint64_t i = 0; i < b->num_nodes; ++i) {
+        if (b->nodes[i] != NULL) {
+            __set_add(c, b->nodes[i]->key, b->nodes[i]->hash);
+        }
+    }
     return c;
 }
 qset_t *qset_intersection(qset_t *a, qset_t *b) {
@@ -200,7 +201,14 @@ qset_t *qset_intersection(qset_t *a, qset_t *b) {
     if (c->used_nodes != 0) {
         return QSET_OCCERR;
     }
-    __set_intersection(a,b);
+
+    for (uint64_t i = 0; i < a->num_nodes; ++i) {
+        if (a->nodes[i] == NULL) {
+            if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash) == QSET_TRUE) {
+                __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
+            }
+        } 
+    }
     return c; 
 }
 qset_t *qset_difference(qset_t *a, qset_t *b) {
@@ -208,7 +216,6 @@ qset_t *qset_difference(qset_t *a, qset_t *b) {
     if (c->used_nodes != 0) {
         return QSET_OCCERR;
     }
-    __set_difference(a,b);
     return c; 
 }
 qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
@@ -216,7 +223,6 @@ qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
     if (c->used_nodes != 0) {
         return QSET_OCCERR;
     }
-    __set_symmetric_difference(a,b);
     return c; 
 
 }
@@ -305,3 +311,95 @@ void qset_free(qset_t *set) {
     return QSET_TRUE;
 }
 
+#ifndef _DOXYGEN_SKIP
+
+
+static uint64_t __default_hash(const char *key) {
+    size_t i, len = strlen(key);
+    uint64_t h = 14695981039346656037ULL; 
+    for (i = 0; i < len; ++i) {
+        h = h ^ (unsigned char) key[i];
+        h = h * 1099511628211ULL; 
+    }
+    return h;
+}
+static int __get_index(qset_t *set, const char *key, uint64_t hash, uint64_t *index) {
+    uint64_t i, idx;
+    idx = hash % set->num_nodes;
+    i = idx;
+    size_t len = strlen(key);
+    while (1) {
+        if (set->nodes[i] == NULL) {
+            *index = i;
+            return QSET_FALSE; // not here OR first open slot
+        } else if (hash == set->nodes[i]->hash && len == strlen(set->nodes[i]->key) && strncmp(key, set->nodes[i]->key, len) == 0) {
+            *index = i;
+            return QSET_TRUE;
+        }
+        ++i;
+        if (i == set->num_nodes)
+            i = 0;
+        if (i == idx) // this means we went all the way around and the set is full
+            return QSET_CIRERR;
+    }
+}
+static int __assign_node(qset_t *set, const char *key, uint64_t hash, uint64_t index) {
+    size_t len = strlen(key);
+    set->nodes[index] = (qset_obj_t*)malloc(sizeof(qset_obj_t));
+    set->nodes[index]->key = (char*)calloc(len + 1, sizeof(char));
+    memcpy(set->nodes[index]->key, key, len);
+    set->nodes[index]->hash = hash;
+    return QSET_TRUE;
+}
+static void __free_index(qset_t *set, uint64_t index) {
+    free(set->nodes[index]->key);
+    free(set->nodes[index]);
+    set->nodes[index] = NULL;
+}
+static int __set_contains(qset_t *set, const char *key, uint64_t hash) {
+    uint64_t index;
+    return __get_index(set, key, hash, &index);
+}
+static int __set_add(qset_t *set, const char *key, uint64_t hash) {
+    uint64_t index;
+    if (__set_contains(set, key, hash) == QSET_TRUE)
+        return QSET_PRESENT;
+
+    if ((float)set->used_nodes / set->num_nodes > MAX_FULLNESS_PERCENT) {
+        uint64_t num_els = set->num_nodes * 2; 
+        qset_obj_t** tmp = (qset_obj_t**)realloc(set->nodes, num_els * sizeof(qset_obj_t*));
+        if (tmp == NULL || set->nodes == NULL) 
+            return QSET_MALLERR;
+
+        set->nodes = tmp;
+        uint64_t i, orig_num_els = set->num_nodes;
+        for (i = orig_num_els; i < num_els; ++i)
+            set->nodes[i] = NULL;
+
+        set->num_nodes = num_els;
+        
+        __relayout_nodes(set, 0, 1);
+    }
+    int res = __get_index(set, key, hash, &index);
+    if (res == QSET_FALSE) { 
+        __assign_node(set, key, hash, index);
+        ++set->used_nodes;
+        return QSET_TRUE;
+    }
+    return res;
+}
+static void __relayout_nodes(qset_t *set, uint64_t start, short end_on_null) {
+    uint64_t index = 0, i;
+    for (i = start; i < set->num_nodes; ++i) {
+        if(set->nodes[i] != NULL) {
+            __get_index(set, set->nodes[i]->key, set->nodes[i]->hash, &index);
+            if (i != index) { // we are moving this node
+                __assign_node(set, set->nodes[i]->key, set->nodes[i]->hash, index);
+                __free_index(set, i);
+            }
+        } else if (end_on_null == 0 && i != start) {
+            break;
+        }
+    }
+}
+#endif

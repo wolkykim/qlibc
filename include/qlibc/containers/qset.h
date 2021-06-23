@@ -109,7 +109,6 @@ struct qset_s {
     void (*lock)(qset_t*);
     void (*unlock)(qset_t*);
     void (*clear)(qset_t*);
-    bool (*debug)(qset_t*, FILE *);
     void (*free)(qset_t*);
 
     /* private variables - do not access directly */
