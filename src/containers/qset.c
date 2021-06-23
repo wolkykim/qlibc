@@ -296,7 +296,6 @@ void qset_clear(qset_t *set) {
     set->used_nodes = 0;
     return QSET_TRUE;
 }
-bool qset_debug(qset_t *set, FILE *out) {}
 void qset_free(qset_t *set) {
     qset_clear(set);
     free(set->nodes);
