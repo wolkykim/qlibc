@@ -26,10 +26,6 @@ Please refer the LICENSE document included in the package for more details.
     * Vector --- implements a growable array of elements.
     * Queue --- FIFO(First In First Out) implementation.
     * Stack --- LIFO(Last In First Out) implementation.
-  * Algorithms (**TODO**):
-    * Quick sort
-    * Bubble sort
-    * Merge Sort
   * General utilities.
     * String --- string trimmer, modifier, replacer, case converter, pattern detectors, ...
     * I/O --- non-blocking I/O, stream reader/writer, ...
