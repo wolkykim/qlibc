@@ -7,6 +7,8 @@ powerful general purpose C/C++ library** that includes all kinds of containers
 and general library routines. It provides a ready-made set of common container
 APIs with a consistent API look.
 
+Side note: This fork repo is just hobby-ish contribution, not really sure if my fork is acceptable by the Project Lead.
+
 ## qLibc Copyright
 
 qLibc is published under 2-clause BSD license known as Simplified BSD License.
