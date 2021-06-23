@@ -125,23 +125,32 @@ qset_t *qset(uint64_t num_els, qset_hashfunction hash, int options) {
 }
 
 /**
- * qset->add(): Insert an element at the end of this set.
+ * @brief Insert an element at the end of this set.
  * 
  * @param set       qset_t container pointer
  * @param key       a string to be inserted
  * 
- * @return true if successful, otherwise false
+ * @return QSET_TRUE if successful, otherwise refer to Return values
  * @retval based on the condition:
- * - successful: QSET_TRUE
  * - non-distinct element: QSET_PRESENT
  * - full: QSET_CIRERR
  * - memory error: QSET_MALLERR     
+ * 
+ * CAUTION: QSET_CIRERR actually doesn't exist, but still there for security purpose.
  * 
  */
 int qset_add(qset_t *set, const char *key) {
     uint64_t hash = set->hash_func(key);
     return __set_add(set, key, hash);
 }
+/**
+ * @brief Remove an element at the end of this set.
+ * 
+ * @param set qset_t container pointer
+ * @param key a string to be removed
+ * 
+ * @return if removed, returns QSET_TRUE, QSET_FALSE if otherwise.
+ */
 int qset_remove(qset_t *set, const char *key) {
     uint64_t index, hash = set->hash_func(key);
     int pos = __get_index(set, key, hash, &index);
@@ -157,6 +166,19 @@ int qset_remove(qset_t *set, const char *key) {
     return QSET_TRUE;
 
 }
+/**
+ * @brief Check if key in set
+ * 
+ * @param set qset_t container pointer
+ * @param key a string to be searched
+ * 
+ * @return QSET_TRUE if successful, otherwise refer to Return values
+ * 
+ * @retval based on the condition:
+ * - QSET_FALSE if not found
+ * - QSET_CIRERR of set is full and not found 
+ * 
+ */
 int qset_contains(qset_t *set, const char *key) {
     uint64_t index, hash = set->hash_func(key);
     return __get_index(set, key, hash, &index);      
@@ -243,11 +265,44 @@ int qset_cmp(qset_t *a, qset_t *b) {
     return QSET_EQ;
 }
 
-char **qset_toarray(qset_t *set, uint64_t *setsize) {}
-void qset_lock(qset_t *set) {}
-void qset_unlock(qset_t *set) {}
+char **qset_toarray(qset_t *set, uint64_t *set_size) {
+    *set_size = set->used_nodes;
+    char **results = (char **)calloc(set->used_nodes + 1, sizeof(char *));
+    uint64_t i, j = 0;
+    size_t len;
+    for (i = 0; i < set->num_nodes; ++i) {
+        if (set->nodes[i] != NULL) {
+            len = strlen(set->nodes[i]->key);
+            results[j] = (char *)calloc(len + 1, sizeof(char));
+            memcpy(results[j], set->nodes[i]->key, len);
+            ++j;
+        }
+    }
+    return results;
+}
+void qset_lock(qset_t *set) {
+    Q_MUTEX_ENTER(set->qmutex);
+}
+void qset_unlock(qset_t *set) {
+    Q_MUTEX_LEAVE(set->qmutex);
+}
 
-void qset_clear(qset_t *set) {}
+void qset_clear(qset_t *set) {
+    for (uint64_t i = 0; i < set->num_nodes; ++i) {
+        if (set->nodes[i] != NULL) {
+            __free_index(set, i);
+        }
+    }
+    set->used_nodes = 0;
+    return QSET_TRUE;
+}
 bool qset_debug(qset_t *set, FILE *out) {}
-void qset_free(qset_t *set) {}
+void qset_free(qset_t *set) {
+    qset_clear(set);
+    free(set->nodes);
+    set->num_nodes = 0;
+    set->used_nodes = 0;
+    set->hash_func = NULL;
+    return QSET_TRUE;
+}
 
