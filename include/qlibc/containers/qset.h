@@ -103,7 +103,7 @@ extern int qset_is_strsuperset(qset_t *a, qset_t *b);
 
 extern int qset_cmp(qset_t *a, qset_t *b);
 
-extern char **qset_toarray(qset_t *set, uint64_t *setsize);
+extern char **qset_toarray(qset_t *set, uint64_t *set_size);
 extern void qset_lock(qset_t *set);
 extern void qset_unlock(qset_t *set);
 
