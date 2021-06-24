@@ -47,16 +47,24 @@ extern "C" {
 typedef struct qset_s qset_t;
 typedef struct qset_obj_s qset_obj_t;
 typedef uint64_t (*qset_hashfunction)(const char *key);
+typedef enum qset_cmp_e qset_cmp_t;
 
 /* public functions */
 enum {
     QSET_THREADSAFE = (0x01), /*!< make it thread-safe */ 
 };
 
+enum qset_cmp_e {
+    QSET_CMP_RGREATER,
+    QSET_CMP_LGREATER,
+    QSET_CMP_EQ,
+    QSET_CMP_NEQ,
+};
+
 #define QSET_TRUE 0
 #define QSET_FALSE -1
 
-#define QSET_MALLERR -2 /* MALLOC ERROR - ENOMEM*/
+#define QSET_MALLERR -2 /* MALLOC ERROR*/
 #define QSET_CIRERR -3 /* CIRCULAR ERROR */
 #define QSET_OCCERR -4 /* OCCUPIED ERROR */
 #define QSET_PRESENT 1 /* ALREADY PRESENT */
@@ -66,12 +74,11 @@ enum {
 #define QSET_EQ 0 /* EQUAL */
 #define QSET_NEQ 2 /* NOT EQUAL */
 
-extern qset_t *qset(uint64_t num_els, qset_hashfunction hash, int options);
+extern qset_t *qset(qset_t *set, uint64_t num_els, qset_hashfunction hash, int options);
 
-
-extern int qset_add(qset_t *set, const char *key);
-extern int qset_remove(qset_t *set, const char *key);
-extern int qset_contains(qset_t *set, const char *key);
+extern bool qset_add(qset_t *set, const char *key);
+extern bool qset_remove(qset_t *set, const char *key);
+extern bool qset_contains(qset_t *set, const char *key);
 extern uint64_t qset_length(qset_t *set);
 
 extern qset_t *qset_union(qset_t *a, qset_t *b);
@@ -79,12 +86,12 @@ extern qset_t *qset_intersection(qset_t *a, qset_t *b);
 extern qset_t *qset_difference(qset_t *a, qset_t *b);
 extern qset_t *qset_symmetric_difference(qset_t *a, qset_t *b);
 
-extern int qset_is_subset(qset_t *a, qset_t *b);
-extern int qset_is_superset(qset_t *a, qset_t *b);
-extern int qset_is_strsubset(qset_t *a, qset_t *b);
-extern int qset_is_strsuperset(qset_t *a, qset_t *b);
+extern bool qset_is_subset(qset_t *a, qset_t *b);
+extern bool qset_is_superset(qset_t *a, qset_t *b);
+extern bool qset_is_strsubset(qset_t *a, qset_t *b);
+extern bool qset_is_strsuperset(qset_t *a, qset_t *b);
 
-extern int qset_cmp(qset_t *a, qset_t *b);
+extern qset_cmp_t qset_cmp(qset_t *a, qset_t *b);
 
 extern char **qset_toarray(qset_t *set, uint64_t *set_size);
 extern void qset_lock(qset_t *set);
