@@ -48,15 +48,15 @@ typedef struct qset_s qset_t;
 typedef struct qset_obj_s qset_obj_t;
 typedef uint64_t (*qset_hashfunction)(const char *key);
 
-
 /* public functions */
 enum {
-    QSET_THREADSAFE = (0x01), /*!< make it thread-safe */
+    QSET_THREADSAFE = (0x01), /*!< make it thread-safe */ 
 };
 
 #define QSET_TRUE 0
 #define QSET_FALSE -1
-#define QSET_MALLERR -2 /* MALLOC ERROR */
+
+#define QSET_MALLERR -2 /* MALLOC ERROR - ENOMEM*/
 #define QSET_CIRERR -3 /* CIRCULAR ERROR */
 #define QSET_OCCERR -4 /* OCCUPIED ERROR */
 #define QSET_PRESENT 1 /* ALREADY PRESENT */
@@ -116,6 +116,7 @@ struct qset_s {
     qset_obj_t **nodes;
     uint64_t num_nodes;
     uint64_t used_nodes;
+
     qset_hashfunction hash_func;
 };
 

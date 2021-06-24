@@ -26,6 +26,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
+/**
+ * @file qset.c Mathematical Set Implementation
+ * qset container is a mathemetical set implementation.
+ *
+ */
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -150,13 +155,13 @@ int qset_remove(qset_t *set, const char *key) {
     if (pos != QSET_TRUE) {
         return pos;
     }
-
+    qset_lock(set);
     __free_index(set, index);
     __relayout_nodes(set, index, 0);
 
     (set->used_nodes)--;
+    qset_unlock(set);
     return QSET_TRUE;
-
 }
 /**
  * @brief Check if key in set
@@ -175,15 +180,24 @@ int qset_contains(qset_t *set, const char *key) {
     uint64_t index, hash = set->hash_func(key);
     return __get_index(set, key, hash, &index);      
 }
+/**
+ * @brief Get the length of the set
+ * 
+ * @param set  qset_t container pointer
+ * @return the length in unsigned int 64 bit
+ */
 uint64_t qset_length(qset_t *set) {
     return set->used_nodes;
 }
-
+/**
+ * @brief The union of two sets a and b is the set that its element are either a or b. 
+ * 
+ * @param a lhs
+ * @param b rhs
+ * @return a new qset_t from the union of a and b
+ */
 qset_t *qset_union(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
-    if (c->used_nodes != 0) {
-        return QSET_OCCERR;
-    }
     for (uint64_t i = 0; i < a->num_nodes; ++i) {
         if (a->nodes[i] != NULL) {
             __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
@@ -196,12 +210,15 @@ qset_t *qset_union(qset_t *a, qset_t *b) {
     }
     return c;
 }
+/**
+ * @brief The intersection of two sets a and b is the set that its element are in both a or b. 
+ * 
+ * @param a lhs
+ * @param b rhs
+ * @return a new qset_t from the intersection of a and b
+ */
 qset_t *qset_intersection(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
-    if (c->used_nodes != 0) {
-        return QSET_OCCERR;
-    }
-
     for (uint64_t i = 0; i < a->num_nodes; ++i) {
         if (a->nodes[i] == NULL) {
             if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash) == QSET_TRUE) {
@@ -211,22 +228,58 @@ qset_t *qset_intersection(qset_t *a, qset_t *b) {
     }
     return c; 
 }
+/**
+ * @brief The difference of two sets a and b is the set that consists the elements of A and not B.
+ * 
+ * @param a lhs
+ * @param b rhs
+ * @return a new qset_t from the difference of a and b
+ */
 qset_t *qset_difference(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
-    if (c->used_nodes != 0) {
-        return QSET_OCCERR;
+    for (uint64_t i = 0; i < a->num_nodes; ++i) {
+        if (a->nodes[i] != NULL) {
+            if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash) != QSET_TRUE) {
+                __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
+            }
+        }
     }
     return c; 
 }
+/**
+ * @brief The symmetric difference of two sets a and b is the set that consists the elements of A and not B.
+ * 
+ * @param a lhs
+ * @param b rhs
+ * @return a new qset_t from the difference of a and b
+ */
 qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
-    if (c->used_nodes != 0) {
-        return QSET_OCCERR;
+    for (uint64_t i = 0; i < a->num_nodes; ++i) {
+        if (a->nodes[i] != NULL) {
+            if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash) != QSET_TRUE) {
+                __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
+            }
+        }
+    }
+
+
+    for (uint64_t i = 0; i < b->num_nodes; ++i) {
+        if (b->nodes[i] != NULL) {
+            if (__set_contains(a, b->nodes[i]->key, b->nodes[i]->hash) != QSET_TRUE) {
+                __set_add(c, b->nodes[i]->key, b->nodes[i]->hash);
+            }
+        }
     }
     return c; 
-
 }
-
+/**
+ * @brief a is a subset of b if every element of a is contained inside b
+ * 
+ * @param a left hand side
+ * @param b right hand side
+ * @return QSET_TRUE if a is a subset of b, QSET_FALSE if otherwise
+ */
 int qset_is_subset(qset_t *a, qset_t *b) {
     for (uint64_t i; i < a->num_nodes;i++) {
         if (a->nodes[i] != NULL) {
@@ -238,9 +291,23 @@ int qset_is_subset(qset_t *a, qset_t *b) {
 
     return QSET_TRUE;
 }
+/**
+ * @brief a is a superset of b if every element of b is contained inside a
+ * 
+ * @param a left hand side
+ * @param b right hand side
+ * @return QSET_TRUE if a is a superset of b, QSET_FALSE if otherwise
+ */
 int qset_is_superset(qset_t *a, qset_t *b) {
     return qset_is_subset(b, a);
 }
+/**
+ * @brief a is a strict subset of b if all elements of a in b but both two sets can't be equal
+ * 
+ * @param a left hand side
+ * @param b right hand side
+ * @return QSET_TRUE if a is a strict subset of b, QSET_FALSE if otherwise
+ */
 int qset_is_strsubset(qset_t *a, qset_t *b) {
     if (a->used_nodes >= b->used_nodes) {
         return QSET_FALSE;
@@ -248,10 +315,30 @@ int qset_is_strsubset(qset_t *a, qset_t *b) {
 
     return qset_is_subset(a, b);
 }
+/**
+ * @brief a is a strict superset of a if all elements of b in a but both two sets can't be equal
+ * 
+ * @param a left hand side
+ * @param b right hand side
+ * @return QSET_TRUE if a is a strict superset of b, QSET_FALSE if otherwise
+ */
 int qset_is_strsuperset(qset_t *a, qset_t *b) {
     return qset_is_strsubset(b,a);
 }
 
+/**
+ * @brief comparing two sets a and b based on their size and their keys
+ * 
+ * @param a left hand side
+ * @param b right hand side
+ * @return 
+ *  if both sets have the different size:
+ *      - QSET_RGREATER if a < b
+ *      - QSET_LGREATER if a > b
+ *  if both sets have the same size:
+ *      - QSET_NEQ if elements are different
+ *      - QSET_EQ if both sets have same elements
+ */
 int qset_cmp(qset_t *a, qset_t *b) {
     if (a->used_nodes < b->used_nodes) {
         return QSET_RGREATER;
@@ -276,6 +363,7 @@ char **qset_toarray(qset_t *set, uint64_t *set_size) {
     char **results = (char **)calloc(set->used_nodes + 1, sizeof(char *));
     uint64_t i, j = 0;
     size_t len;
+    qset_lock(set);
     for (i = 0; i < set->num_nodes; ++i) {
         if (set->nodes[i] != NULL) {
             len = strlen(set->nodes[i]->key);
@@ -284,6 +372,7 @@ char **qset_toarray(qset_t *set, uint64_t *set_size) {
             ++j;
         }
     }
+    qset_unlock(set);
     return results;
 }
 void qset_lock(qset_t *set) {
@@ -294,25 +383,28 @@ void qset_unlock(qset_t *set) {
 }
 
 void qset_clear(qset_t *set) {
+    qset_lock(set);
     for (uint64_t i = 0; i < set->num_nodes; ++i) {
         if (set->nodes[i] != NULL) {
             __free_index(set, i);
         }
     }
     set->used_nodes = 0;
+    qset_unlock(set);
     return QSET_TRUE;
 }
 void qset_free(qset_t *set) {
+    qset_lock(set);
     qset_clear(set);
     free(set->nodes);
     set->num_nodes = 0;
     set->used_nodes = 0;
     set->hash_func = NULL;
+    qset_unlock(set);
     return QSET_TRUE;
 }
 
 #ifndef _DOXYGEN_SKIP
-
 
 static uint64_t __default_hash(const char *key) {
     size_t i, len = strlen(key);
@@ -328,6 +420,7 @@ static int __get_index(qset_t *set, const char *key, uint64_t hash, uint64_t *in
     idx = hash % set->num_nodes;
     i = idx;
     size_t len = strlen(key);
+    qset_lock(set);
     while (1) {
         if (set->nodes[i] == NULL) {
             *index = i;
@@ -342,19 +435,24 @@ static int __get_index(qset_t *set, const char *key, uint64_t hash, uint64_t *in
         if (i == idx) // this means we went all the way around and the set is full
             return QSET_CIRERR;
     }
+    qset_unlock(set);
 }
 static int __assign_node(qset_t *set, const char *key, uint64_t hash, uint64_t index) {
     size_t len = strlen(key);
+    qset_lock(set);
     set->nodes[index] = (qset_obj_t*)malloc(sizeof(qset_obj_t));
     set->nodes[index]->key = (char*)calloc(len + 1, sizeof(char));
     memcpy(set->nodes[index]->key, key, len);
     set->nodes[index]->hash = hash;
+    qset_unlock(set);
     return QSET_TRUE;
 }
 static void __free_index(qset_t *set, uint64_t index) {
+    qset_lock(set);
     free(set->nodes[index]->key);
     free(set->nodes[index]);
     set->nodes[index] = NULL;
+    qset_unlock(set);
 }
 static int __set_contains(qset_t *set, const char *key, uint64_t hash) {
     uint64_t index;
@@ -362,6 +460,7 @@ static int __set_contains(qset_t *set, const char *key, uint64_t hash) {
 }
 static int __set_add(qset_t *set, const char *key, uint64_t hash) {
     uint64_t index;
+    qset_lock(set);
     if (__set_contains(set, key, hash) == QSET_TRUE)
         return QSET_PRESENT;
 
@@ -386,10 +485,12 @@ static int __set_add(qset_t *set, const char *key, uint64_t hash) {
         ++set->used_nodes;
         return QSET_TRUE;
     }
+    qset_unlock(set);
     return res;
 }
 static void __relayout_nodes(qset_t *set, uint64_t start, short end_on_null) {
     uint64_t index = 0, i;
+    qset_lock(set);
     for (i = start; i < set->num_nodes; ++i) {
         if(set->nodes[i] != NULL) {
             __get_index(set, set->nodes[i]->key, set->nodes[i]->hash, &index);
@@ -401,5 +502,7 @@ static void __relayout_nodes(qset_t *set, uint64_t start, short end_on_null) {
             break;
         }
     }
+    qset_unlock(set);
 }
+
 #endif
