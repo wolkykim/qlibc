@@ -75,20 +75,20 @@ static void __relayout_nodes(qset_t *set, uint64_t start, short end_on_null);
  */
 qset_t *qset(qset_t *set, uint64_t num_els, qset_hashfunction hash, int options) {
     if(num_els == 0) {
-        errno = EINVAL;
+        ret_status = QSET_MEMERR;
         return NULL;
     }
     qset_lock(set);
     qset_t *set = (qset_t *) calloc(1, sizeof(qset_t));
     if (set == NULL) {
-        errno = ENOMEM;
+        ret_status = QSET_MEMERR;
         qset_unlock(set);
         return NULL;
     }
     else {    
         set->nodes = (qset_obj_t**) malloc(num_els * sizeof(qset_obj_t*));
         if (set->nodes == NULL) {
-            errno = ENOMEM;
+            ret_status = QSET_MEMERR;
             qset_unlock(set);
             return NULL;
         }     
@@ -103,7 +103,7 @@ qset_t *qset(qset_t *set, uint64_t num_els, qset_hashfunction hash, int options)
     if (options & QSET_THREADSAFE) {
         Q_MUTEX_NEW(set->qmutex, true);
         if (set->qmutex == NULL) {
-            errno = ENOMEM;
+            ret_status = QSET_MEMERR;
             free(set);
             qset_unlock(set);
             return NULL;
@@ -154,8 +154,8 @@ bool qset_add(qset_t *set, const char *key) {
  */
 bool qset_remove(qset_t *set, const char *key) {
     uint64_t index, hash = set->hash_func(key);
-    int pos = __get_index(set, key, hash, &index);
-    if (pos != QSET_TRUE) {
+    bool pos = __get_index(set, key, hash, &index);
+    if (!pos) {
         return pos;
     }
     qset_lock(set);
@@ -164,7 +164,7 @@ bool qset_remove(qset_t *set, const char *key) {
 
     (set->used_nodes)--;
     qset_unlock(set);
-    return QSET_TRUE;
+    return true;
 }
 /**
  * @brief Check if key in set
@@ -202,7 +202,7 @@ uint64_t qset_length(qset_t *set) {
 qset_t *qset_union(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c == NULL) {
-        errno = ENOMEM;
+        ret_status = QSET_MEMERR;
         return NULL;
     }
     for (uint64_t i = 0; i < a->num_nodes; ++i) {
@@ -227,12 +227,12 @@ qset_t *qset_union(qset_t *a, qset_t *b) {
 qset_t *qset_intersection(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c == NULL) {
-        errno = ENOMEM;
+        ret_status = QSET_MEMERR;
         return NULL;
     }
     for (uint64_t i = 0; i < a->num_nodes; ++i) {
         if (a->nodes[i] == NULL) {
-            if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash) == QSET_TRUE) {
+            if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash)) {
                 __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
             }
         } 
@@ -249,12 +249,12 @@ qset_t *qset_intersection(qset_t *a, qset_t *b) {
 qset_t *qset_difference(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c == NULL) {
-        errno = ENOMEM;
+        ret_status = QSET_MEMERR;
         return NULL;
     }
     for (uint64_t i = 0; i < a->num_nodes; ++i) {
         if (a->nodes[i] != NULL) {
-            if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash) != QSET_TRUE) {
+            if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash)) {
                __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
             }
         }
@@ -271,12 +271,12 @@ qset_t *qset_difference(qset_t *a, qset_t *b) {
 qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c == NULL) {
-        errno = ENOMEM;
+        ret_status = QSET_MEMERR;
         return NULL;
     }
     for (uint64_t i = 0; i < a->num_nodes; ++i) {
         if (a->nodes[i] != NULL) {
-            if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash) != QSET_TRUE) {
+            if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash)) {
                 __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
             }
         }
@@ -285,7 +285,7 @@ qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
 
     for (uint64_t i = 0; i < b->num_nodes; ++i) {
         if (b->nodes[i] != NULL) {
-            if (__set_contains(a, b->nodes[i]->key, b->nodes[i]->hash) != QSET_TRUE) {
+            if (__set_contains(a, b->nodes[i]->key, b->nodes[i]->hash)) {
                 __set_add(c, b->nodes[i]->key, b->nodes[i]->hash);
             }
         }
@@ -302,7 +302,7 @@ qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
 bool qset_is_subset(qset_t *a, qset_t *b) {
     for (uint64_t i; i < a->num_nodes;i++) {
         if (a->nodes[i] != NULL) {
-            if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash) == QSET_FALSE) {
+            if (!__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash)) {
                 return false;
             }
         }
@@ -381,7 +381,7 @@ char **qset_toarray(qset_t *set, uint64_t *set_size) {
     *set_size = set->used_nodes;
     char **results = (char **)calloc(set->used_nodes + 1, sizeof(char *));
     if (results != NULL) {
-        errno = ENOMEM;
+        ret_status = QSET_MEMERR;
         return NULL;
     }
     uint64_t i, j = 0;
@@ -456,7 +456,7 @@ static bool __get_index(qset_t *set, const char *key, uint64_t hash, uint64_t *i
         if (i == set->num_nodes)
             i = 0;
         if (i == idx) 
-            errno = ENOBUFS;
+            ret_status = QSET_CIRERR;
             qset_unlock(set);
             return false;
     }
@@ -486,13 +486,15 @@ static bool __set_add(qset_t *set, const char *key, uint64_t hash) {
     uint64_t index;
     qset_lock(set);
     if (__set_contains(set, key, hash) == QSET_TRUE)
-        return QSET_PRESENT;
+        ret_status = QSET_PRESENT;
+        return false;
 
     if ((float)set->used_nodes / set->num_nodes > MAX_FULLNESS_PERCENT) {
         uint64_t num_els = set->num_nodes * 2; 
         qset_obj_t** tmp = (qset_obj_t**)realloc(set->nodes, num_els * sizeof(qset_obj_t*));
         if (tmp == NULL || set->nodes == NULL) 
-            return QSET_MALLERR;
+            ret_status = QSET_MEMERR;
+            return false;
 
         set->nodes = tmp;
         uint64_t i, orig_num_els = set->num_nodes;
@@ -503,11 +505,11 @@ static bool __set_add(qset_t *set, const char *key, uint64_t hash) {
         
         __relayout_nodes(set, 0, 1);
     }
-    int res = __get_index(set, key, hash, &index);
-    if (res == QSET_FALSE) { 
+    bool res = __get_index(set, key, hash, &index);
+    if (res == false) { 
         __assign_node(set, key, hash, index);
         ++set->used_nodes;
-        return QSET_TRUE;
+        return true;
     }
     qset_unlock(set);
     return res;
