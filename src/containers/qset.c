@@ -73,23 +73,20 @@ static void __relayout_nodes(qset_t *set, uint64_t start, short end_on_null);
  *   - QSET_THREADSAFE - make it thread-safe.
  * 
  */
-qset_t *qset(qset_t *set, uint64_t num_els, qset_hashfunction hash, int options) {
+qset_t *qset(uint64_t num_els, qset_hashfunction hash, int options) {
     if(num_els == 0) {
         ret_status = QSET_MEMERR;
         return NULL;
     }
-    qset_lock(set);
     qset_t *set = (qset_t *) calloc(1, sizeof(qset_t));
     if (set == NULL) {
         ret_status = QSET_MEMERR;
-        qset_unlock(set);
         return NULL;
     }
     else {    
         set->nodes = (qset_obj_t**) malloc(num_els * sizeof(qset_obj_t*));
         if (set->nodes == NULL) {
             ret_status = QSET_MEMERR;
-            qset_unlock(set);
             return NULL;
         }     
         set->num_nodes = num_els;
@@ -105,7 +102,6 @@ qset_t *qset(qset_t *set, uint64_t num_els, qset_hashfunction hash, int options)
         if (set->qmutex == NULL) {
             ret_status = QSET_MEMERR;
             free(set);
-            qset_unlock(set);
             return NULL;
         }
     }
