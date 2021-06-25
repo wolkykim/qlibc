@@ -48,6 +48,7 @@ typedef struct qset_s qset_t;
 typedef struct qset_obj_s qset_obj_t;
 typedef uint64_t (*qset_hashfunction)(const char *key);
 typedef enum qset_cmp_e qset_cmp_t;
+typedef enum qset_status_e qset_status_t;
 
 /* public functions */
 enum {
@@ -55,24 +56,20 @@ enum {
 };
 
 enum qset_cmp_e {
-    QSET_CMP_RGREATER,
-    QSET_CMP_LGREATER,
-    QSET_CMP_EQ,
-    QSET_CMP_NEQ,
+    QSET_CMP_RGREATER,  /*      qset right greater   */
+    QSET_CMP_LGREATER,  /*      qset left greater    */
+    QSET_CMP_EQ,        /*      qset equal           */
+    QSET_CMP_NEQ,       /*      qset not equal       */ 
 };
 
-#define QSET_TRUE 0
-#define QSET_FALSE -1
-
-#define QSET_MALLERR -2 /* MALLOC ERROR*/
-#define QSET_CIRERR -3 /* CIRCULAR ERROR */
-#define QSET_OCCERR -4 /* OCCUPIED ERROR */
-#define QSET_PRESENT 1 /* ALREADY PRESENT */
-
-#define QSET_RGREATER 3 /* RIGHT GREATER */
-#define QSET_LGREATER 1 /* LEFT GREATER */
-#define QSET_EQ 0 /* EQUAL */
-#define QSET_NEQ 2 /* NOT EQUAL */
+enum qset_status_e {
+    QSET_TRUE = 0,
+    QSET_FALSE = -1,
+    QSET_MEMERR = -2,   /*      MALLOC ERROR        */
+    QSET_CIRERR = -3,   /*      CIRCULAR ERROR      */
+    QSET_OCCERR = -4,   /*      OCCUPIED ERROR      */
+    QSET_PRESENT = 1,   /*      ALREADY PRESENT     */
+};
 
 extern qset_t *qset(qset_t *set, uint64_t num_els, qset_hashfunction hash, int options);
 
@@ -100,6 +97,7 @@ extern void qset_unlock(qset_t *set);
 extern void qset_clear(qset_t *set);
 extern void qset_free(qset_t *set);
 
+extern qset_status_t ret_status;
 
 struct qset_obj_s {
     char *key;
@@ -123,7 +121,6 @@ struct qset_s {
     qset_obj_t **nodes;
     uint64_t num_nodes;
     uint64_t used_nodes;
-
     qset_hashfunction hash_func;
 };
 
