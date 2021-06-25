@@ -71,7 +71,7 @@ enum qset_status_e {
     QSET_PRESENT = 1,   /*      ALREADY PRESENT     */
 };
 
-extern qset_t *qset(qset_t *set, uint64_t num_els, qset_hashfunction hash, int options);
+extern qset_t *qset(uint64_t num_els, qset_hashfunction hash, int options);
 
 extern bool qset_add(qset_t *set, const char *key);
 extern bool qset_remove(qset_t *set, const char *key);
@@ -106,9 +106,9 @@ struct qset_obj_s {
 
 struct qset_s {
 
-    int (*add)(qset_t*, const char*);
-    int (*remove)(qset_t*, const char*);
-    int (*contains)(qset_t*, const char*);
+    bool (*add)(qset_t*, const char*);
+    bool (*remove)(qset_t*, const char*);
+    bool (*contains)(qset_t*, const char*);
     uint64_t (*length)(qset_t*);
     void *(*toarray)(qset_t*, uint64_t*);
     void (*lock)(qset_t*);
