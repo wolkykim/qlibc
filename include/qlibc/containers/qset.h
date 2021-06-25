@@ -46,7 +46,7 @@ extern "C" {
 /* types */
 typedef struct qset_s qset_t;
 typedef struct qset_obj_s qset_obj_t;
-typedef uint64_t (*qset_hashfunction)(const char *key);
+typedef uint64_t (*qset_hashfunction_t)(const char *key);
 typedef enum qset_cmp_e qset_cmp_t;
 typedef enum qset_status_e qset_status_t;
 
@@ -71,7 +71,7 @@ enum qset_status_e {
     QSET_PRESENT = 1,   /*      ALREADY PRESENT     */
 };
 
-extern qset_t *qset(uint64_t num_els, qset_hashfunction hash, int options);
+extern qset_t *qset(uint64_t num_els, qset_hashfunction_t hash, int options);
 
 extern bool qset_add(qset_t *set, const char *key);
 extern bool qset_remove(qset_t *set, const char *key);
@@ -121,7 +121,7 @@ struct qset_s {
     qset_obj_t **nodes;
     uint64_t num_nodes;
     uint64_t used_nodes;
-    qset_hashfunction hash_func;
+    qset_hashfunction_t hash_func;
 };
 
 

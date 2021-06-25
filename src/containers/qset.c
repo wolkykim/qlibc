@@ -73,7 +73,7 @@ static void __relayout_nodes(qset_t *set, uint64_t start, short end_on_null);
  *   - QSET_THREADSAFE - make it thread-safe.
  * 
  */
-qset_t *qset(uint64_t num_els, qset_hashfunction hash, int options) {
+qset_t *qset(uint64_t num_els, qset_hashfunction_t hash, int options) {
     if(num_els == 0) {
         ret_status = QSET_MEMERR;
         return NULL;
