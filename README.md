@@ -6,11 +6,6 @@ C/C++ libraries. The goal of the qLibc project is to provide a **simple and
 powerful general purpose C/C++ library** that includes all kinds of containers
 and general library routines. It provides a ready-made set of common container
 APIs with a consistent API look.
-
-Side note: This fork repo is just hobby-ish contribution, not really sure if my fork is acceptable by the Project Lead.
-
-=======
-and general library routines. It provides a ready-made set of common container APIs with a consistent API look.
 ## qLibc Copyright
 
 qLibc is published under 2-clause BSD license known as Simplified BSD License.
@@ -29,6 +24,7 @@ Please refer the LICENSE document included in the package for more details.
     * Vector --- implements a growable array of elements.
     * Queue --- FIFO(First In First Out) implementation.
     * Stack --- LIFO(Last In First Out) implementation.
+    * Set --- Mathematical Set implementation.
   * General utilities.
     * String --- string trimmer, modifier, replacer, case converter, pattern detectors, ...
     * I/O --- non-blocking I/O, stream reader/writer, ...
