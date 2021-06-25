@@ -38,6 +38,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <errno.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,21 +63,12 @@ enum qset_cmp_e {
     QSET_CMP_NEQ,       /*      qset not equal       */ 
 };
 
-enum qset_status_e {
-    QSET_TRUE = 0,
-    QSET_FALSE = -1,
-    QSET_MEMERR = -2,   /*      MALLOC ERROR        */
-    QSET_CIRERR = -3,   /*      CIRCULAR ERROR      */
-    QSET_OCCERR = -4,   /*      OCCUPIED ERROR      */
-    QSET_PRESENT = 1,   /*      ALREADY PRESENT     */
-};
-
-extern qset_t *qset(uint64_t num_els, qset_hashfunction_t hash, int options);
+extern qset_t *qset(size_t num_els, qset_hashfunction_t hash, int options);
 
 extern bool qset_add(qset_t *set, const char *key);
 extern bool qset_remove(qset_t *set, const char *key);
 extern bool qset_contains(qset_t *set, const char *key);
-extern uint64_t qset_length(qset_t *set);
+extern size_t qset_length(qset_t *set);
 
 extern qset_t *qset_union(qset_t *a, qset_t *b);
 extern qset_t *qset_intersection(qset_t *a, qset_t *b);
@@ -90,14 +82,12 @@ extern bool qset_is_strsuperset(qset_t *a, qset_t *b);
 
 extern qset_cmp_t qset_cmp(qset_t *a, qset_t *b);
 
-extern char **qset_toarray(qset_t *set, uint64_t *set_size);
+extern char **qset_toarray(qset_t *set, size_t *set_size);
 extern void qset_lock(qset_t *set);
 extern void qset_unlock(qset_t *set);
 
 extern void qset_clear(qset_t *set);
 extern void qset_free(qset_t *set);
-
-extern qset_status_t ret_status;
 
 struct qset_obj_s {
     char *key;
@@ -109,8 +99,8 @@ struct qset_s {
     bool (*add)(qset_t*, const char*);
     bool (*remove)(qset_t*, const char*);
     bool (*contains)(qset_t*, const char*);
-    uint64_t (*length)(qset_t*);
-    void *(*toarray)(qset_t*, uint64_t*);
+    size_t (*length)(qset_t*);
+    void *(*toarray)(qset_t*, size_t*);
     void (*lock)(qset_t*);
     void (*unlock)(qset_t*);
     void (*clear)(qset_t*);
@@ -119,8 +109,8 @@ struct qset_s {
     /* private variables - do not access directly */
     void *qmutex;
     qset_obj_t **nodes;
-    uint64_t num_nodes;
-    uint64_t used_nodes;
+    size_t num_nodes;
+    size_t used_nodes;
     qset_hashfunction_t hash_func;
 };
 

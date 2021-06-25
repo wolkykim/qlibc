@@ -33,28 +33,82 @@
 #include "qlibc.h"
 
 int main(void) {
-	qset_t *set = qset(1024, NULL, 0);
-	set->add(set, "banana");
-	set->add(set, "orange");
-	set->add(set, "grape");
-	set->add(set, "apple");
+    qset_t *set = qset(1024, NULL, 0);
+    set->add(set, "banana");
+    set->add(set, "orange");
+    set->add(set, "grape");
+    set->add(set, "apple");
 
-	if (set->contains(set, "grape")) {
-		printf("Set contains 'grape'!\n");
-	}
-	else {
-		printf("Set doesn't contains 'grape'!\n");
-	}
+    if (set->contains(set, "grape")) {
+        printf("Set contains 'grape'!\n");
+    }
+    else {
+        printf("Set doesn't contains 'grape'!\n");
+    }
 
-	set->remove(set, "banana");
+    set->remove(set, "banana");
 
-	if (set->contains(set, "banana")) {
-		printf("Set contains 'banana'!\n");
-	}
-	else {
-		printf("Set doesn't contains 'banana'!\n");
-	}
+    if (set->contains(set, "banana")) {
+        printf("Set contains 'banana'!\n");
+    }
+    else {
+        printf("Set doesn't contains 'banana'!\n");
+    }
 
-	set->destroy(set);
+    qset_t *A = qset(1024, NULL, 0);
+    qset_t *B = qset(1024, NULL, 0);
+    A->add(A, "1");
+    A->add(A, "2");
+    A->add(A, "3");
+    A->add(A, "4");
 
+    B->add(B, "3");
+    B->add(B, "4");
+    B->add(B, "5");
+    B->add(B, "6");
+
+    qset_t *_intersection = qset_intersection(A, B); // intersection = {"3", "4"}
+    qset_t *_union = qset_union(A,B); // union = {"1", "2", "3", "4", "5", "6"}
+    qset_t *_diff = qset_difference(A, B); // diff = {"1", "2"}
+    qset_t *_sym_diff = qset_symmetric_difference(A, B) // sym_diff = {"1", "2", "5", "6"}
+    
+    qset_t *C = qset(1024, NULL, 0);
+    qset_t *D = qset(1024, NULL, 0);
+    qset_t *E = qset(1024, NULL, 0);
+    qset_t *F = qset(1024, NULL, 0);
+    C->add(C, "A");
+    C->add(C, "B");
+    C->add(C, "C");
+    C->add(C, "D");
+    C->add(C, "E");
+
+    D->add(D, "C");
+    D->add(D, "D");
+    D->add(D, "E");
+
+    E->add(E, "D");
+    E->add(E, "C");
+    E->add(E, "E");
+
+    F->add(F, "A");
+    F->add(F, "C");
+    F->add(F, "B");
+    
+
+    bool is_subset = qset_is_subset(C, D); // true
+    bool is_superset = qset_is_superset(C, D); // false
+    bool is_strsubset = qset_is_strsubset(C, D); // true
+    bool is_strsuperset = qset_is_strsuperset(C, D); // false
+
+    qset_cmp_t cmp = qset_cmp(C, D); // QSET_CMP_LGREATER
+    cmp = qset_cmp(D, C); // QSET_CMP_RGREATER
+    cmp = qset_cmp(D, E); // QSET_CMP_EQ
+    cmp = qset_cmp(F, E); // QSET_CMP_NEQ
+
+    set->destroy(set);
+    A->destroy(A);
+    B->destroy(B);
+    C->destroy(C);
+    D->destroy(D);
+    E->destroy(E);
 }
