@@ -38,11 +38,10 @@
 #include "qinternal.h"
 #include "containers/qset.h"
 
-#define MAX_FULLNESS_PERCENT 0.25
 
 #ifndef _DOXYGEN_SKIP
 
-static uint64_t __default_hash(const char *key);
+static U64 __default_hash(const char *key);
 static bool __get_index(qset_t *set, const char *key, size_t hash, size_t *index);
 static bool __assign_node(qset_t *set, const char *key, size_t hash, size_t index);
 static void __free_index(qset_t *set, size_t index);
@@ -423,9 +422,9 @@ void qset_free(qset_t *set) {
 
 #ifndef _DOXYGEN_SKIP
 
-static uint64_t __default_hash(const char *key) {
-    uint64_t i, len = strlen(key);
-    uint64_t h = 14695981039346656037ULL; 
+static U64 __default_hash(const char *key) {
+    U64 i, len = strlen(key);
+    U64 h = 14695981039346656037ULL; 
     for (i = 0; i < len; ++i) {
         h = h ^ (unsigned char) key[i];
         h = h * 1099511628211ULL; 
