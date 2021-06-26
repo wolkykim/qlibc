@@ -49,7 +49,6 @@ typedef struct qset_s qset_t;
 typedef struct qset_obj_s qset_obj_t;
 typedef uint64_t (*qset_hashfunction_t)(const char *key);
 typedef enum qset_cmp_e qset_cmp_t;
-typedef enum qset_status_e qset_status_t;
 
 /* public functions */
 enum {
