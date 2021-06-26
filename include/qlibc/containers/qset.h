@@ -55,14 +55,20 @@ typedef enum qset_cmp_e qset_cmp_t;
 
 /* public functions */
 enum {
-    QSET_THREADSAFE = (0x01), /*!< make it thread-safe */ 
+    QSET_THREADSAFE = (0x01),   /*      make it thread-safe         */ 
 };
 
 enum qset_cmp_e {
-    QSET_CMP_RGREATER,  /*      qset right greater   */
-    QSET_CMP_LGREATER,  /*      qset left greater    */
-    QSET_CMP_EQ,        /*      qset equal           */
-    QSET_CMP_NEQ,       /*      qset not equal       */ 
+    QSET_CMP_RGREATER,          /*      qset right greater          */    
+    QSET_CMP_LGREATER,          /*      qset left greater           */
+    QSET_CMP_EQ,                /*      qset equal                  */
+    QSET_CMP_NEQ,               /*      qset not equal              */ 
+};
+
+enum qset_status_e {
+    QSET_MEMERR = ENOMEM,       /*      MEMORY ERROR                */
+    QSET_CIRERR = ENOSPC,       /*      CIRCULAR ERROR              */
+    QSET_PRESENT = EAGAIN,      /*      ALREADY PRESENT             */
 };
 
 extern qset_t *qset(size_t num_els, qset_hashfunction_t hash, int options);
@@ -70,7 +76,9 @@ extern qset_t *qset(size_t num_els, qset_hashfunction_t hash, int options);
 extern bool qset_add(qset_t *set, const char *key);
 extern bool qset_remove(qset_t *set, const char *key);
 extern bool qset_contains(qset_t *set, const char *key);
+
 extern size_t qset_length(qset_t *set);
+extern size_t qset_size(qset_t *set);
 
 extern qset_t *qset_union(qset_t *a, qset_t *b);
 extern qset_t *qset_intersection(qset_t *a, qset_t *b);

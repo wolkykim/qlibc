@@ -33,7 +33,6 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include <errno.h>
 #include <stdbool.h>
 #include "qinternal.h"
 #include "containers/qset.h"
@@ -60,7 +59,7 @@ static void __relayout_nodes(qset_t *set, size_t start, short end_on_null);
  * 
  * @return a pointer of malloced qset_t container, otherwise returns NULL
  * @retval errno will be set in error condition.
- *   - ENOMEM  : Malloc failure.
+ *   - QSET_MEMERR  : Malloc failure.
  *   - EINVAL  : Invalid argument.
  * 
  * @code
@@ -74,18 +73,18 @@ static void __relayout_nodes(qset_t *set, size_t start, short end_on_null);
  */
 qset_t *qset(size_t size, qset_hashfunction_t hash, int options) {
     if(size == 0) {
-        errno = ENOMEM;
+        errno = QSET_MEMERR;
         return NULL;
     }
     qset_t *set = (qset_t *) calloc(1, sizeof(qset_t));
     if (set == NULL) {
-        errno = ENOMEM;
+        errno = QSET_MEMERR;
         return NULL;
     }
     else {    
         set->nodes = (qset_obj_t**) malloc(size * sizeof(qset_obj_t*));
         if (set->nodes == NULL) {
-            errno = ENOMEM;
+            errno = QSET_MEMERR;
             return NULL;
         }     
         set->num_nodes = size;
@@ -99,7 +98,7 @@ qset_t *qset(size_t size, qset_hashfunction_t hash, int options) {
     if (options & QSET_THREADSAFE) {
         Q_MUTEX_NEW(set->qmutex, true);
         if (set->qmutex == NULL) {
-            errno = ENOMEM;
+            errno = QSET_MEMERR;
             free(set);
             return NULL;
         }
@@ -126,7 +125,7 @@ qset_t *qset(size_t size, qset_hashfunction_t hash, int options) {
  * @param set       qset_t container pointer
  * @param key       a string to be inserted
  * 
- * @return QSET_TRUE if successful, otherwise refer to Return values
+ * @return true if successful, otherwise refer to Return values
  * @retval based on the condition:
  * - non-distinct element: QSET_PRESENT
  * - full: QSET_CIRERR
@@ -145,7 +144,7 @@ bool qset_add(qset_t *set, const char *key) {
  * @param set qset_t container pointer
  * @param key a string to be removed
  * 
- * @return if removed, returns QSET_TRUE, QSET_FALSE if otherwise.
+ * @return if removed, returns true, false if otherwise.
  */
 bool qset_remove(qset_t *set, const char *key) {
     size_t index, hash = set->hash_func(key);
@@ -167,10 +166,10 @@ bool qset_remove(qset_t *set, const char *key) {
  * @param set qset_t container pointer
  * @param key a string to be searched
  * 
- * @return QSET_TRUE if successful, otherwise refer to Return values
+ * @return true if successful, otherwise refer to Return values
  * 
  * @retval based on the condition:
- * - QSET_FALSE if not found
+ * - false if not found
  * - QSET_CIRERR of set is full and not found 
  * 
  */
@@ -187,6 +186,10 @@ bool qset_contains(qset_t *set, const char *key) {
 size_t qset_length(qset_t *set) {
     return set->used_nodes;
 }
+
+size_t qset_size(qset_t *set) {
+    return set->num_nodes;
+}
 /**
  * @brief The union of two sets a and b is the set that its element are either a or b. 
  * 
@@ -197,7 +200,7 @@ size_t qset_length(qset_t *set) {
 qset_t *qset_union(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c == NULL) {
-        errno = ENOMEM;
+        errno = QSET_MEMERR;
         return NULL;
     }
     for (size_t i = 0; i < a->num_nodes; ++i) {
@@ -222,7 +225,7 @@ qset_t *qset_union(qset_t *a, qset_t *b) {
 qset_t *qset_intersection(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c == NULL) {
-        errno = ENOMEM;
+        errno = QSET_MEMERR;
         return NULL;
     }
     for (size_t i = 0; i < a->num_nodes; ++i) {
@@ -244,7 +247,7 @@ qset_t *qset_intersection(qset_t *a, qset_t *b) {
 qset_t *qset_difference(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c == NULL) {
-        errno = ENOMEM;
+        errno = QSET_MEMERR;
         return NULL;
     }
     for (size_t i = 0; i < a->num_nodes; ++i) {
@@ -266,7 +269,7 @@ qset_t *qset_difference(qset_t *a, qset_t *b) {
 qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
     if (c == NULL) {
-        errno = ENOMEM;
+        errno = QSET_MEMERR;
         return NULL;
     }
     for (size_t i = 0; i < a->num_nodes; ++i) {
@@ -292,7 +295,7 @@ qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
  * 
  * @param a left hand side
  * @param b right hand side
- * @return QSET_TRUE if a is a subset of b, QSET_FALSE if otherwise
+ * @return true if a is a subset of b, false if otherwise
  */
 bool qset_is_subset(qset_t *a, qset_t *b) {
     for (size_t i; i < a->num_nodes;i++) {
@@ -310,7 +313,7 @@ bool qset_is_subset(qset_t *a, qset_t *b) {
  * 
  * @param a left hand side
  * @param b right hand side
- * @return QSET_TRUE if a is a superset of b, QSET_FALSE if otherwise
+ * @return true if a is a superset of b, false if otherwise
  */
 bool qset_is_superset(qset_t *a, qset_t *b) {
     return qset_is_subset(b, a);
@@ -320,7 +323,7 @@ bool qset_is_superset(qset_t *a, qset_t *b) {
  * 
  * @param a left hand side
  * @param b right hand side
- * @return QSET_TRUE if a is a strict subset of b, QSET_FALSE if otherwise
+ * @return true if a is a strict subset of b, false if otherwise
  */
 bool qset_is_strsubset(qset_t *a, qset_t *b) {
     if (a->used_nodes >= b->used_nodes) {
@@ -334,7 +337,7 @@ bool qset_is_strsubset(qset_t *a, qset_t *b) {
  * 
  * @param a left hand side
  * @param b right hand side
- * @return QSET_TRUE if a is a strict superset of b, QSET_FALSE if otherwise
+ * @return true if a is a strict superset of b, false if otherwise
  */
 bool qset_is_strsuperset(qset_t *a, qset_t *b) {
     return qset_is_strsubset(b,a);
@@ -376,7 +379,7 @@ char **qset_toarray(qset_t *set, size_t *set_size) {
     *set_size = set->used_nodes;
     char **results = (char **)calloc(set->used_nodes + 1, sizeof(char *));
     if (results != NULL) {
-        errno = ENOMEM;
+        errno = QSET_MEMERR;
         return NULL;
     }
     size_t i, j = 0;
@@ -451,7 +454,7 @@ static bool __get_index(qset_t *set, const char *key, size_t hash, size_t *index
         if (i == set->num_nodes)
             i = 0;
         if (i == idx) 
-            errno = ENOSPC;
+            errno = QSET_CIRERR;
             qset_unlock(set);
             return false;
     }
@@ -481,14 +484,14 @@ static bool __set_add(qset_t *set, const char *key, size_t hash) {
     size_t index;
     qset_lock(set);
     if (__set_contains(set, key, hash))
-        errno = EAGAIN;
+        errno = QSET_PRESENT;
         return false;
 
     if ((float)set->used_nodes / set->num_nodes > MAX_FULLNESS_PERCENT) {
         size_t size = set->num_nodes * 2; 
         qset_obj_t** tmp = (qset_obj_t**)realloc(set->nodes, size * sizeof(qset_obj_t*));
         if (tmp == NULL || set->nodes == NULL) 
-            errno = ENOMEM;
+            errno = QSET_MEMERR;
             return false;
 
         set->nodes = tmp;
