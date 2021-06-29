@@ -60,7 +60,7 @@ static void __relayout_nodes(qset_t *set, size_t start, short end_on_null);
  * @return a pointer of malloced qset_t container, otherwise returns NULL
  * @retval errno will be set in error condition.
  *   - QSET_MEMERR  : Malloc failure.
- *   - EINVAL  : Invalid argument.
+ *   - QSET_INVAL  : Invalid argument.
  * 
  * @code
  *   qset_t *set = qset(10, hash, 0);
@@ -73,7 +73,7 @@ static void __relayout_nodes(qset_t *set, size_t start, short end_on_null);
  */
 qset_t *qset(size_t size, qset_hashfunction_t hash, int options) {
     if(size == 0) {
-        errno = QSET_MEMERR;
+        errno = QSET_INVAL;
         return NULL;
     }
     qset_t *set = (qset_t *) calloc(1, sizeof(qset_t));
@@ -129,7 +129,7 @@ qset_t *qset(size_t size, qset_hashfunction_t hash, int options) {
  * @retval based on the condition:
  * - non-distinct element: QSET_PRESENT
  * - full: QSET_CIRERR
- * - memory error: QSET_MALLERR     
+ * - memory error: QSET_MEMERR     
  * 
  * CAUTION: QSET_CIRERR actually doesn't exist, but still there for security purpose.
  * 
@@ -375,8 +375,25 @@ qset_cmp_t qset_cmp(qset_t *a, qset_t *b) {
     return QSET_CMP_EQ;
 }
 
+/**
+ * @brief convert qset_t object to an array of stirng
+ * 
+ * @param set qset_t container pointer
+ * @param set_size if size is not NULL, the number of elements will be stored
+ * @return an array of string if succeed, otherwise return NULL
+ * @retval errno will be set in error condition.
+ *   - QSET_EMPTY: Set is empty.
+ *   - QSET_MEMERR: Malloc error.
+ */
 char **qset_toarray(qset_t *set, size_t *set_size) {
-    *set_size = set->used_nodes;
+    if (set->used_nodes <= 0) {
+        if (set_size != NULL) {
+            *set_size = 0;
+        }
+        errno = QSET_EMPTY;
+        return NULL;
+    }
+    qset_lock(set);
     char **results = (char **)calloc(set->used_nodes + 1, sizeof(char *));
     if (results != NULL) {
         errno = QSET_MEMERR;
@@ -384,7 +401,6 @@ char **qset_toarray(qset_t *set, size_t *set_size) {
     }
     size_t i, j = 0;
     size_t len;
-    qset_lock(set);
     for (i = 0; i < set->num_nodes; ++i) {
         if (set->nodes[i] != NULL) {
             len = strlen(set->nodes[i]->key);
@@ -396,13 +412,30 @@ char **qset_toarray(qset_t *set, size_t *set_size) {
     qset_unlock(set);
     return results;
 }
+/**
+ * @brief Enters critical section
+ * 
+ * @param set qset_t container pointer.
+ * 
+ */
 void qset_lock(qset_t *set) {
     Q_MUTEX_ENTER(set->qmutex);
 }
+/**
+ * @brief Leaves critical section
+ * 
+ * @param set qset_t container pointer.
+ * 
+ */
 void qset_unlock(qset_t *set) {
     Q_MUTEX_LEAVE(set->qmutex);
 }
 
+/**
+ * @brief Remove all elements in this set
+ * 
+ * @param set qset_t container pointer
+ */
 void qset_clear(qset_t *set) {
     qset_lock(set);
     for (size_t i = 0; i < set->num_nodes; ++i) {
@@ -413,6 +446,34 @@ void qset_clear(qset_t *set) {
     set->used_nodes = 0;
     qset_unlock(set);
 }
+
+/**
+ * @brief Prints out stored elements for debugging purpose. (Not implemented yet)
+ * 
+ * @param set qset_t container pointer
+ * @param out output stream FILE descriptor such like stdout, stderr
+ * @return true if successful, otherwise returns false
+ * @return errno will be set in error condition.
+ *   - EIO : Invalid output stream
+ */
+bool qset_debug(qset_t *set, FILE *out) {
+    if (out == NULL) {
+        errno = EIO;
+        return false;
+    }
+
+    set->lock(set);
+    //TODO: IMPLEMENT THIS
+    set->unlock(set);
+
+    return true;
+}
+
+/**
+ * @brief Free this set
+ * 
+ * @param set qset_t container pointer
+ */
 void qset_free(qset_t *set) {
     qset_lock(set);
     qset_clear(set);
