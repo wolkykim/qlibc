@@ -52,6 +52,7 @@ typedef struct qset_s qset_t;
 typedef struct qset_obj_s qset_obj_t;
 typedef U64 (*qset_hashfunction_t)(const char *key);
 typedef enum qset_cmp_e qset_cmp_t;
+typedef enum qset_status_e qset_status_t;
 
 /* public functions */
 enum {
@@ -69,6 +70,8 @@ enum qset_status_e {
     QSET_MEMERR = ENOMEM,       /*      MEMORY ERROR                */
     QSET_CIRERR = ENOSPC,       /*      CIRCULAR ERROR              */
     QSET_PRESENT = EAGAIN,      /*      ALREADY PRESENT             */
+    QSET_INVAL = EINVAL,        /*      INVALID ARGUMENT            */
+    QSET_EMPTY = ENOENT,
 };
 
 extern qset_t *qset(size_t num_els, qset_hashfunction_t hash, int options);
@@ -97,7 +100,10 @@ extern void qset_lock(qset_t *set);
 extern void qset_unlock(qset_t *set);
 
 extern void qset_clear(qset_t *set);
+extern bool qset_debug(qset_t *set, FILE *out);
 extern void qset_free(qset_t *set);
+
+
 
 struct qset_obj_s {
     char *key;
