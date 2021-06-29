@@ -71,7 +71,7 @@ enum qset_status_e {
     QSET_CIRERR = ENOSPC,       /*      CIRCULAR ERROR              */
     QSET_PRESENT = EAGAIN,      /*      ALREADY PRESENT             */
     QSET_INVAL = EINVAL,        /*      INVALID ARGUMENT            */
-    QSET_EMPTY = ENOENT,
+    QSET_EMPTY = ENOENT,        /*      NO ELEMENT                  */
 };
 
 extern qset_t *qset(size_t num_els, qset_hashfunction_t hash, int options);
@@ -102,8 +102,6 @@ extern void qset_unlock(qset_t *set);
 extern void qset_clear(qset_t *set);
 extern bool qset_debug(qset_t *set, FILE *out);
 extern void qset_free(qset_t *set);
-
-
 
 struct qset_obj_s {
     char *key;
