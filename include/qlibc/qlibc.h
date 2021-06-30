@@ -45,6 +45,7 @@
 #include "containers/qqueue.h"
 #include "containers/qstack.h"
 #include "containers/qgrow.h"
+#include "containers/qset.h"
 
 /* utilities */
 #include "utilities/qcount.h"

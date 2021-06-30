@@ -13,3 +13,9 @@ Makefile
 /tests/test_*
 !/tests/test_*\.c
 !/tests/test_*\.h
+/build/
+
+/.vscode/
+
+compile_commands.json
+compile_flags.txt
