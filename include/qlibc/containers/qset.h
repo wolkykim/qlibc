@@ -114,7 +114,7 @@ struct qset_s {
     bool (*remove)(qset_t*, const char*);
     bool (*contains)(qset_t*, const char*);
     size_t (*length)(qset_t*);
-    void *(*toarray)(qset_t*, size_t*);
+    char **(*toarray)(qset_t*, size_t*);
     void (*lock)(qset_t*);
     void (*unlock)(qset_t*);
     void (*clear)(qset_t*);

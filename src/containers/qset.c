@@ -77,27 +77,25 @@ qset_t *qset(size_t size, qset_hashfunction_t hash, int options) {
         return NULL;
     }
     qset_t *set = (qset_t *) calloc(1, sizeof(qset_t));
-    if (set == NULL) {
+    if (!set) {
         errno = QSET_MEMERR;
         return NULL;
     }
     else {    
         set->nodes = (qset_obj_t**) malloc(size * sizeof(qset_obj_t*));
-        if (set->nodes == NULL) {
+        if (!set->nodes) {
             errno = QSET_MEMERR;
             return NULL;
         }     
         set->num_nodes = size;
-        for (size_t i = 0; i < set->num_nodes; i++) {
-            set->nodes[i] = NULL;
-        }
+        for (size_t i = 0; i < set->num_nodes; i++) set->nodes[i] = NULL;
         set->used_nodes = 0;    
         set->hash_func = (hash == NULL)? &__default_hash : hash;
     }
 
     if (options & QSET_THREADSAFE) {
         Q_MUTEX_NEW(set->qmutex, true);
-        if (set->qmutex == NULL) {
+        if (!set->qmutex) {
             errno = QSET_MEMERR;
             free(set);
             return NULL;
@@ -199,17 +197,17 @@ size_t qset_size(qset_t *set) {
  */
 qset_t *qset_union(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
-    if (c == NULL) {
+    if (!c) {
         errno = QSET_MEMERR;
         return NULL;
     }
     for (size_t i = 0; i < a->num_nodes; ++i) {
-        if (a->nodes[i] != NULL) {
+        if (a->nodes[i]) {
             __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
         }
     }
     for (size_t i = 0; i < b->num_nodes; ++i) {
-        if (b->nodes[i] != NULL) {
+        if (b->nodes[i]) {
             __set_add(c, b->nodes[i]->key, b->nodes[i]->hash);
         }
     }
@@ -224,12 +222,12 @@ qset_t *qset_union(qset_t *a, qset_t *b) {
  */
 qset_t *qset_intersection(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
-    if (c == NULL) {
+    if (!c) {
         errno = QSET_MEMERR;
         return NULL;
     }
     for (size_t i = 0; i < a->num_nodes; ++i) {
-        if (a->nodes[i] == NULL) {
+        if (!a->nodes[i]) {
             if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash)) {
                 __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
             }
@@ -246,12 +244,12 @@ qset_t *qset_intersection(qset_t *a, qset_t *b) {
  */
 qset_t *qset_difference(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
-    if (c == NULL) {
+    if (!c) {
         errno = QSET_MEMERR;
         return NULL;
     }
     for (size_t i = 0; i < a->num_nodes; ++i) {
-        if (a->nodes[i] != NULL) {
+        if (a->nodes[i]) {
             if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash)) {
                __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
             }
@@ -268,12 +266,12 @@ qset_t *qset_difference(qset_t *a, qset_t *b) {
  */
 qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
     qset_t *c = (qset_t *) calloc(1, sizeof(qset_t));
-    if (c == NULL) {
+    if (!c) {
         errno = QSET_MEMERR;
         return NULL;
     }
     for (size_t i = 0; i < a->num_nodes; ++i) {
-        if (a->nodes[i] != NULL) {
+        if (a->nodes[i]) {
             if (__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash)) {
                 __set_add(c, a->nodes[i]->key, a->nodes[i]->hash);
             }
@@ -282,7 +280,7 @@ qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
 
 
     for (size_t i = 0; i < b->num_nodes; ++i) {
-        if (b->nodes[i] != NULL) {
+        if (b->nodes[i]) {
             if (__set_contains(a, b->nodes[i]->key, b->nodes[i]->hash)) {
                 __set_add(c, b->nodes[i]->key, b->nodes[i]->hash);
             }
@@ -299,7 +297,7 @@ qset_t *qset_symmetric_difference(qset_t *a, qset_t *b) {
  */
 bool qset_is_subset(qset_t *a, qset_t *b) {
     for (size_t i; i < a->num_nodes;i++) {
-        if (a->nodes[i] != NULL) {
+        if (a->nodes[i]) {
             if (!__set_contains(b, a->nodes[i]->key, a->nodes[i]->hash)) {
                 return false;
             }
@@ -365,7 +363,7 @@ qset_cmp_t qset_cmp(qset_t *a, qset_t *b) {
     }
 
     for (size_t i = 0; i < a->used_nodes; ++i) {
-        if (a->nodes[i] != NULL) {
+        if (a->nodes[i]) {
             if (!qset_contains(b, a->nodes[i]->key)) {
                 return QSET_CMP_NEQ;
             }
@@ -387,7 +385,7 @@ qset_cmp_t qset_cmp(qset_t *a, qset_t *b) {
  */
 char **qset_toarray(qset_t *set, size_t *set_size) {
     if (set->used_nodes <= 0) {
-        if (set_size != NULL) {
+        if (set_size) {
             *set_size = 0;
         }
         errno = QSET_EMPTY;
@@ -395,14 +393,14 @@ char **qset_toarray(qset_t *set, size_t *set_size) {
     }
     qset_lock(set);
     char **results = (char **)calloc(set->used_nodes + 1, sizeof(char *));
-    if (results != NULL) {
+    if (results) {
         errno = QSET_MEMERR;
         return NULL;
     }
     size_t i, j = 0;
     size_t len;
     for (i = 0; i < set->num_nodes; ++i) {
-        if (set->nodes[i] != NULL) {
+        if (set->nodes[i]) {
             len = strlen(set->nodes[i]->key);
             results[j] = (char *)calloc(len + 1, sizeof(char));
             memcpy(results[j], set->nodes[i]->key, len);
@@ -439,7 +437,7 @@ void qset_unlock(qset_t *set) {
 void qset_clear(qset_t *set) {
     qset_lock(set);
     for (size_t i = 0; i < set->num_nodes; ++i) {
-        if (set->nodes[i] != NULL) {
+        if (set->nodes[i]) {
             __free_index(set, i);
         }
     }
@@ -457,7 +455,7 @@ void qset_clear(qset_t *set) {
  *   - EIO : Invalid output stream
  */
 bool qset_debug(qset_t *set, FILE *out) {
-    if (out == NULL) {
+    if (!out) {
         errno = EIO;
         return false;
     }
@@ -502,7 +500,7 @@ static bool __get_index(qset_t *set, const char *key, size_t hash, size_t *index
     size_t len = strlen(key);
     qset_lock(set);
     while (1) {
-        if (set->nodes[i] == NULL) {
+        if (!set->nodes[i]) {
             *index = i;
             qset_unlock(set);
             return false; 
@@ -512,12 +510,12 @@ static bool __get_index(qset_t *set, const char *key, size_t hash, size_t *index
             return true;
         }
         ++i;
-        if (i == set->num_nodes)
-            i = 0;
-        if (i == idx) 
+        if (i == set->num_nodes) i = 0;
+        if (i == idx) {
             errno = QSET_CIRERR;
             qset_unlock(set);
             return false;
+        }
     }
 }
 static bool __assign_node(qset_t *set, const char *key, size_t hash, size_t index) {
@@ -544,28 +542,29 @@ static bool __set_contains(qset_t *set, const char *key, size_t hash) {
 static bool __set_add(qset_t *set, const char *key, size_t hash) {
     size_t index;
     qset_lock(set);
-    if (__set_contains(set, key, hash))
+    if (__set_contains(set, key, hash)){
         errno = QSET_PRESENT;
         return false;
+    }
 
     if ((float)set->used_nodes / set->num_nodes > MAX_FULLNESS_PERCENT) {
         size_t size = set->num_nodes * 2; 
         qset_obj_t** tmp = (qset_obj_t**)realloc(set->nodes, size * sizeof(qset_obj_t*));
-        if (tmp == NULL || set->nodes == NULL) 
+        if (tmp == NULL || set->nodes == NULL) {
             errno = QSET_MEMERR;
             return false;
+        }
 
         set->nodes = tmp;
         size_t i, orig_size = set->num_nodes;
-        for (i = orig_size; i < size; ++i)
-            set->nodes[i] = NULL;
+        for (i = orig_size; i < size; ++i) set->nodes[i] = NULL;
 
         set->num_nodes = size;
         
         __relayout_nodes(set, 0, 1);
     }
     bool res = __get_index(set, key, hash, &index);
-    if (res == false) { 
+    if (!res) {
         __assign_node(set, key, hash, index);
         ++set->used_nodes;
         return true;
