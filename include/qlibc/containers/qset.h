@@ -44,10 +44,10 @@
 extern "C" {
 #endif
 
-#define U64 uint64_t
 #define MAX_FULLNESS_PERCENT 0.25
 
 /* types */
+typedef uint64_t U64;
 typedef struct qset_s qset_t;
 typedef struct qset_obj_s qset_obj_t;
 typedef U64 (*qset_hashfunction_t)(const char *key);
@@ -104,11 +104,12 @@ extern bool qset_debug(qset_t *set, FILE *out);
 extern void qset_free(qset_t *set);
 
 struct qset_obj_s {
-    char *key;
-    U64 hash;
+    char *key;               /*!< key element*/
+    U64 hash;                /*!< hash generated from hash_func  */
 };
 
 struct qset_s {
+    /* capsulated member functions  */
 
     bool (*add)(qset_t*, const char*);
     bool (*remove)(qset_t*, const char*);
@@ -122,10 +123,10 @@ struct qset_s {
 
     /* private variables - do not access directly */
     void *qmutex;
-    qset_obj_t **nodes;
-    size_t num_nodes;
-    size_t used_nodes;
-    qset_hashfunction_t hash_func;
+    qset_obj_t **nodes;              /*!< qset_obj_t array pointer          */
+    size_t num_nodes;                /*!< number of nodes generated         */
+    size_t used_nodes;               /*!< number of nodes used in num_nodes */
+    qset_hashfunction_t hash_func;   /*!< hash function call back           */
 };
 
 
