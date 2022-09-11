@@ -1,6 +1,5 @@
 var qio_8c =
 [
-    [ "MAX_IOSEND_SIZE", "qio_8c.html#a52246cf5f9d0bf7f359dfc0f92d555ed", null ],
     [ "qio_wait_readable", "qio_8c.html#a8a695a43ebb605d243e56ad48937862e", null ],
     [ "qio_wait_writable", "qio_8c.html#ac905811f0daa394ffef7beab68585a55", null ],
     [ "qio_read", "qio_8c.html#aa34911362f1793ed1e744d3eb63500db", null ],
