@@ -1,6 +1,6 @@
 var qlog_8c =
 [
-    [ "qlog", "qlog_8c.html#acfc1a51cddb0a4e8555ea66f42276874", null ],
+    [ "qlog", "qlog_8c.html#ad58c2d6cf7daa2976934150e69c83498", null ],
     [ "write_", "qlog_8c.html#a1d9678a766dbbe0cf4863296588a70ce", null ],
     [ "writef", "qlog_8c.html#a0f1c08e4e0616731b8c5be87a8752f72", null ],
     [ "duplicate", "qlog_8c.html#a3c66d4096cbaac34db4659e04a0d6335", null ],
