@@ -245,7 +245,7 @@ struct SslConn {
 qhttpclient_t *qhttpclient(const char *destname, int port) {
     bool ishttps = false;
     char hostname[256];
-    if (port == 0 || strstr(hostname, "://") != NULL) {
+    if (port == 0 || strstr(destname, "://") != NULL) {
         if (_parse_uri(destname, &ishttps, hostname, sizeof(hostname), &port)
                 == false) {
             DEBUG("Can't parse URI %s", destname);
