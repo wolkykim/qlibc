@@ -14,7 +14,7 @@ Please refer the LICENSE document included in the package for more details.
 
 ## API Reference
 
-* [qlibc Core API Reference](http://wolkykim.github.io/qlibc/doc/html/files.html)
+* [qlibc Core API Reference](https://wolkykim.github.io/qlibc/doc/html/files.html)
   * Containers for Key/Value pairs
     * Tree Table --- in binary tree(left-leaning red-black tree) data structure.
     * Hash Table --- in hash-based data structure.
@@ -34,13 +34,13 @@ Please refer the LICENSE document included in the package for more details.
     * Hashes --- Murmur hases, FNV hases, MD5 hashes, ...
     * Time --- time diff, time format converstion, ...
 
-* [qLibc Extension API Reference](http://wolkykim.github.io/qlibc/doc/html/files.html)
+* [qLibc Extension API Reference](https://wolkykim.github.io/qlibc/doc/html/files.html)
   * Apache-style Configuration File Parser.
   * INI-style Configuration File Parser.
   * HTTP client.
   * Rotating File Logger.
   * Database(MySQL) interface.
-  * [Token-Bucket](http://en.wikipedia.org/wiki/Token_bucket)
+  * [Token-Bucket](https://en.wikipedia.org/wiki/Token_bucket)
 
 ## qLibc Tables at a Glance
 
