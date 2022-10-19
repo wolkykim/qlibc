@@ -1,4 +1,4 @@
-What's qLibc?
+What's qLibc?  [![Actions Status](https://github.com/wolkykim/qlibc/workflows/CI/badge.svg)](https://github.com/wolkykim/qlibc/actions)
 =============
 
 qLibc is currently one of the most functionally-complete, publicly-licensed
