@@ -78,14 +78,14 @@ An examples below illustrates how it looks like.
 
 ~~~{.c}
   // create a hash-table.
-  qhashtbl_t *tbl = qhashtbl(0, QHASHTBL_OPT_THREADSAFE);
+  qhashtbl_t *tbl = qhashtbl(0, QHASHTBL_THREADSAFE);
   
   // add an element which key name is "score".
   int x = 12345;
   tbl->put(tbl, "score", &x, sizeof(int));
   
   // get the value of the element.
-  int *px = tbl->get(tbl, "score");
+  int *px = tbl->get(tbl, "score", NULL, true);
   if(px != NULL) {
     printf("%d\n", *px);
     free(px);
@@ -102,14 +102,14 @@ pointers inside of the container object.
 
 ~~~{.c}
   // create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.
-  qlisttbl_t *tbl = qlisttbl(QLISTTBL_OPT_THREADSAFE);
+  qlisttbl_t *tbl = qlisttbl(QLISTTBL_THREADSAFE);
   
   // add an element which key name is "score".
   int x = 12345;
   tbl->put(tbl, "score", &x, sizeof(int));
   
   // get the value of the element.
-  int *px = tbl->get(tbl, "score");
+  int *px = tbl->get(tbl, "score", NULL, true);
   if(px != NULL) {
     printf("%d\n", *px);             
     free(px);
