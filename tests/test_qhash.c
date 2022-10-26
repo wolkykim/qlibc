@@ -32,91 +32,70 @@
 QUNIT_START("Test qhash.c");
 
 TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 0)") {
-    bool success;
     unsigned char digest[16];
-    char *hash;
-
-    success = qhashmd5_file("test_qhash_data_1.bin", 0, 0, &digest[0]);
+    bool success = qhashmd5_file("test_qhash_data_1.bin", 0, 0, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
-    hash = qhex_encode(digest, 16);
+    char *hash = qhex_encode(digest, 16);
     ASSERT_NOT_NULL(hash);
     ASSERT_EQUAL_STR(hash, "76658de2ac7d406f93dfbe8bb6d9f549");
     free(hash);
 }
 
 TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 1)") {
-    bool success;
     unsigned char digest[16];
-    char *hash;
-
-    success = qhashmd5_file("test_qhash_data_1.bin", 0, 1, &digest[0]);
+    bool success = qhashmd5_file("test_qhash_data_1.bin", 0, 1, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
-    hash = qhex_encode(digest, 16);
+    char *hash = qhex_encode(digest, 16);
     ASSERT_NOT_NULL(hash);
     ASSERT_EQUAL_STR(hash, "0cc175b9c0f1b6a831c399e269772661");
     free(hash);
 }
 
 TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 2)") {
-    bool success;
     unsigned char digest[16];
-    char *hash;
-
-    success = qhashmd5_file("test_qhash_data_1.bin", 0, 2, &digest[0]);
+    bool success = qhashmd5_file("test_qhash_data_1.bin", 0, 2, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
-    hash = qhex_encode(digest, 16);
+    char *hash = qhex_encode(digest, 16);
     ASSERT_NOT_NULL(hash);
     ASSERT_EQUAL_STR(hash, "187ef4436122d1cc2f40dc2b92f0eba0");
     free(hash);
 }
 
 TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 3)") {
-    bool success;
     unsigned char digest[16];
-    char *hash;
-
-    success = qhashmd5_file("test_qhash_data_1.bin", 0, 3, &digest[0]);
+    bool success = qhashmd5_file("test_qhash_data_1.bin", 0, 3, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
-    hash = qhex_encode(digest, 16);
+    char *hash = qhex_encode(digest, 16);
     ASSERT_NOT_NULL(hash);
     ASSERT_EQUAL_STR(hash, "900150983cd24fb0d6963f7d28e17f72");
     free(hash);
 }
 
 TEST("qhashmd5_file(test_qhash_data_1.bin, 1, 2)") {
-    bool success;
     unsigned char digest[16];
-    char *hash;
-
-    success = qhashmd5_file("test_qhash_data_1.bin", 1, 2, &digest[0]);
+    bool success = qhashmd5_file("test_qhash_data_1.bin", 1, 2, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
-    hash = qhex_encode(digest, 16);
+    char *hash = qhex_encode(digest, 16);
     ASSERT_NOT_NULL(hash);
     ASSERT_EQUAL_STR(hash, "5360af35bde9ebd8f01f492dc059593c");
     free(hash);
 }
 
 TEST("qhashmd5_file(test_qhash_data_1.bin, 2, 3)") {
-    bool success;
     unsigned char digest[16];
-    char *hash;
-
-    success = qhashmd5_file("test_qhash_data_1.bin", 2, 3, &digest[0]);
+    bool success = qhashmd5_file("test_qhash_data_1.bin", 2, 3, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
-    hash = qhex_encode(digest, 16);
+    char *hash = qhex_encode(digest, 16);
     ASSERT_NOT_NULL(hash);
     ASSERT_EQUAL_STR(hash, "a256e6b336afdc38c564789c399b516c");
     free(hash);
 }
 
 TEST("qhashmd5_file(test_qhash_data_2.bin, 0, 0)") {
-    bool success;
     unsigned char digest[16];
-    char *hash;
-
-    success = qhashmd5_file("test_qhash_data_2.bin", 0, 0, &digest[0]);
+    bool success = qhashmd5_file("test_qhash_data_2.bin", 0, 0, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
-    hash = qhex_encode(digest, 16);
+    char *hash = qhex_encode(digest, 16);
     ASSERT_NOT_NULL(hash);
     ASSERT_EQUAL_STR(hash, "8d03ad1bae270828874995868fa74476");
     free(hash);
@@ -124,13 +103,10 @@ TEST("qhashmd5_file(test_qhash_data_2.bin, 0, 0)") {
 
 /* test_qhash_data_3.bin is (32*1024) bytes to test for loop edge case */
 TEST("qhashmd5_file(test_qhash_data_3.bin, 0, 0)") {
-    bool success;
     unsigned char digest[16];
-    char *hash;
-
-    success = qhashmd5_file("test_qhash_data_3.bin", 0, 0, &digest[0]);
+    bool success = qhashmd5_file("test_qhash_data_3.bin", 0, 0, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
-    hash = qhex_encode(digest, 16);
+    char *hash = qhex_encode(digest, 16);
     ASSERT_NOT_NULL(hash);
     ASSERT_EQUAL_STR(hash, "df6b8a02c62e7928407e29778acf8b71");
     free(hash);
@@ -138,13 +114,10 @@ TEST("qhashmd5_file(test_qhash_data_3.bin, 0, 0)") {
 
 /* test_qhash_data_4.bin is (32*1024)+1 bytes to test for loop edge case */
 TEST("qhashmd5_file(test_qhash_data_4.bin, 0, 0)") {
-    bool success;
     unsigned char digest[16];
-    char *hash;
-
-    success = qhashmd5_file("test_qhash_data_4.bin", 0, 0, &digest[0]);
+    bool success = qhashmd5_file("test_qhash_data_4.bin", 0, 0, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
-    hash = qhex_encode(digest, 16);
+    char *hash = qhex_encode(digest, 16);
     ASSERT_NOT_NULL(hash);
     ASSERT_EQUAL_STR(hash, "0c4f3eb4f6f56fbc958d7c1572ffbbbf");
     free(hash);
