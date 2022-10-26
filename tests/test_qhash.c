@@ -31,11 +31,11 @@
 
 QUNIT_START("Test qhash.c");
 
-bool success;
-unsigned char digest[16];
-char *hash;
-
 TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 0)") {
+    bool success;
+    unsigned char digest[16];
+    char *hash;
+
     success = qhashmd5_file("test_qhash_data_1.bin", 0, 0, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
     hash = qhex_encode(digest, 16);
@@ -45,6 +45,10 @@ TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 0)") {
 }
 
 TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 1)") {
+    bool success;
+    unsigned char digest[16];
+    char *hash;
+
     success = qhashmd5_file("test_qhash_data_1.bin", 0, 1, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
     hash = qhex_encode(digest, 16);
@@ -54,6 +58,10 @@ TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 1)") {
 }
 
 TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 2)") {
+    bool success;
+    unsigned char digest[16];
+    char *hash;
+
     success = qhashmd5_file("test_qhash_data_1.bin", 0, 2, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
     hash = qhex_encode(digest, 16);
@@ -63,6 +71,10 @@ TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 2)") {
 }
 
 TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 3)") {
+    bool success;
+    unsigned char digest[16];
+    char *hash;
+
     success = qhashmd5_file("test_qhash_data_1.bin", 0, 3, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
     hash = qhex_encode(digest, 16);
@@ -72,6 +84,10 @@ TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 3)") {
 }
 
 TEST("qhashmd5_file(test_qhash_data_1.bin, 1, 2)") {
+    bool success;
+    unsigned char digest[16];
+    char *hash;
+
     success = qhashmd5_file("test_qhash_data_1.bin", 1, 2, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
     hash = qhex_encode(digest, 16);
@@ -81,6 +97,10 @@ TEST("qhashmd5_file(test_qhash_data_1.bin, 1, 2)") {
 }
 
 TEST("qhashmd5_file(test_qhash_data_1.bin, 2, 3)") {
+    bool success;
+    unsigned char digest[16];
+    char *hash;
+
     success = qhashmd5_file("test_qhash_data_1.bin", 2, 3, &digest[0]);
     ASSERT_EQUAL_BOOL(true, success);
     hash = qhex_encode(digest, 16);
