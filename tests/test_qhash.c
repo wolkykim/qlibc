@@ -31,20 +31,12 @@
 
 QUNIT_START("Test qhash.c");
 
-FILE *f;
-size_t written;
 bool success;
 unsigned char digest[16];
 char *hash;
-const char *testfile = "hashme.txt";
-const char *testdata = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-f = fopen(testfile, "w");
-written = fwrite(testdata, strlen(testdata), 1, f);
-fclose(f);
-
-TEST("qhashmd5_file(testfile, 0, 0)") {
-	success = qhashmd5_file(testfile, 0, 0, &digest[0]);
+TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 0)") {
+	success = qhashmd5_file("test_qhash_data_1.bin", 0, 0, &digest[0]);
 	ASSERT_EQUAL_BOOL(true, success);
 	hash = qhex_encode(digest, 16);
 	ASSERT_NOT_NULL(hash);
@@ -52,8 +44,8 @@ TEST("qhashmd5_file(testfile, 0, 0)") {
 	free(hash);
 }
 
-TEST("qhashmd5_file(testfile, 0, 1)") {
-	success = qhashmd5_file(testfile, 0, 1, &digest[0]);
+TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 1)") {
+	success = qhashmd5_file("test_qhash_data_1.bin", 0, 1, &digest[0]);
 	ASSERT_EQUAL_BOOL(true, success);
 	hash = qhex_encode(digest, 16);
 	ASSERT_NOT_NULL(hash);
@@ -61,8 +53,8 @@ TEST("qhashmd5_file(testfile, 0, 1)") {
 	free(hash);
 }
 
-TEST("qhashmd5_file(testfile, 0, 2)") {
-	success = qhashmd5_file(testfile, 0, 2, &digest[0]);
+TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 2)") {
+	success = qhashmd5_file("test_qhash_data_1.bin", 0, 2, &digest[0]);
 	ASSERT_EQUAL_BOOL(true, success);
 	hash = qhex_encode(digest, 16);
 	ASSERT_NOT_NULL(hash);
@@ -70,8 +62,8 @@ TEST("qhashmd5_file(testfile, 0, 2)") {
 	free(hash);
 }
 
-TEST("qhashmd5_file(testfile, 0, 3)") {
-	success = qhashmd5_file(testfile, 0, 3, &digest[0]);
+TEST("qhashmd5_file(test_qhash_data_1.bin, 0, 3)") {
+	success = qhashmd5_file("test_qhash_data_1.bin", 0, 3, &digest[0]);
 	ASSERT_EQUAL_BOOL(true, success);
 	hash = qhex_encode(digest, 16);
 	ASSERT_NOT_NULL(hash);
@@ -79,8 +71,8 @@ TEST("qhashmd5_file(testfile, 0, 3)") {
 	free(hash);
 }
 
-TEST("qhashmd5_file(testfile, 1, 2)") {
-	success = qhashmd5_file(testfile, 1, 2, &digest[0]);
+TEST("qhashmd5_file(test_qhash_data_1.bin, 1, 2)") {
+	success = qhashmd5_file("test_qhash_data_1.bin", 1, 2, &digest[0]);
 	ASSERT_EQUAL_BOOL(true, success);
 	hash = qhex_encode(digest, 16);
 	ASSERT_NOT_NULL(hash);
@@ -88,15 +80,13 @@ TEST("qhashmd5_file(testfile, 1, 2)") {
 	free(hash);
 }
 
-TEST("qhashmd5_file(testfile, 2, 3)") {
-	success = qhashmd5_file(testfile, 2, 3, &digest[0]);
+TEST("qhashmd5_file(test_qhash_data_1.bin, 2, 3)") {
+	success = qhashmd5_file("test_qhash_data_1.bin", 2, 3, &digest[0]);
 	ASSERT_EQUAL_BOOL(true, success);
 	hash = qhex_encode(digest, 16);
 	ASSERT_NOT_NULL(hash);
 	ASSERT_EQUAL_STR(hash, "a256e6b336afdc38c564789c399b516c");
 	free(hash);
 }
-
-remove(testfile);
 
 QUNIT_END();
