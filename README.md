@@ -142,6 +142,7 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * [Charles](https://github.com/Charles0429)
 * [Dmitry Vorobiev](https://github.com/demitsuri)
 * [Fabrice Fontaine](https://github.com/ffontaine)
+* [Fullaxx](https://github.com/Fullaxx)
 * HyoSup Woo
 * [Keith Rosenberg](https://github.com/netpoetica)
 * Krishna
