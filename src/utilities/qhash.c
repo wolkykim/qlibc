@@ -117,18 +117,17 @@ bool qhashmd5_file(const char *filepath, off_t offset, ssize_t nbytes,
         return false;
     }
 
-    // seek
+    // if requested to digest until the end of file, set nbytes to the remaining size
+    if(nbytes == 0) {
+        nbytes = size - offset;
+    }
+
+    // move the seek pointer to the beginning of the offset
     if (offset > 0) {
         if (lseek(fd, offset, SEEK_SET) != offset) {
             close(fd);
             return false;
         }
-    }
-
-    // If we are requested to read the entire file,
-    // Then set nbytes to size, to properly execute the for loop below
-    if(nbytes == 0) {
-        nbytes = size;
     }
 
     MD5_CTX context;
