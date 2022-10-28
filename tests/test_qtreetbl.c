@@ -57,8 +57,7 @@ QUNIT_START("Test qtreetbl.c");
  *
  * The nodes A I and S are nodes with RED upper link. Others are BLACK.
  */
-TEST("Test growth of tree")
-{
+TEST("Test growth of tree") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
@@ -97,8 +96,7 @@ TEST("Test growth of tree")
     tbl->free(tbl);
 }
 
-TEST("Test basic but complete")
-{
+TEST("Test basic but complete") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
 
     qtreetbl_t *tbl = qtreetbl(0);
@@ -128,8 +126,7 @@ TEST("Test basic but complete")
     tbl->free(tbl);
 }
 
-TEST("Test clear()")
-{
+TEST("Test clear()") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
     int i;
@@ -142,8 +139,7 @@ TEST("Test clear()")
     tbl->free(tbl);
 }
 
-TEST("Test put_by_obj() / get_by_obj()")
-{
+TEST("Test put_by_obj() / get_by_obj()") {
     qtreetbl_t *tbl = qtreetbl(0);
     ASSERT_EQUAL_BOOL(true, tbl->put_by_obj(tbl, "bin_name", 8, "bin_data", 8));
     size_t datasize = 0;
@@ -155,16 +151,14 @@ TEST("Test put_by_obj() / get_by_obj()")
     tbl->free(tbl);
 }
 
-TEST("Test putstrf() / getstr()")
-{
+TEST("Test putstrf() / getstr()") {
     qtreetbl_t *tbl = qtreetbl(0);
     ASSERT_EQUAL_BOOL(true, tbl->putstrf(tbl, "name", "my_%d_%s", 8, "data"));
     ASSERT_EQUAL_STR("my_8_data", tbl->getstr(tbl, "name", false));
     tbl->free(tbl);
 }
 
-TEST("Test find_nearest()")
-{
+TEST("Test find_nearest()") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
@@ -193,8 +187,7 @@ TEST("Test find_nearest()")
     tbl->free(tbl);
 }
 
-TEST("Test getnext()")
-{
+TEST("Test getnext()") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
     int i;
@@ -216,8 +209,7 @@ TEST("Test getnext()")
     tbl->free(tbl);
 }
 
-TEST("Test getnext() from find_nearest(N)")
-{
+TEST("Test getnext() from find_nearest(N)") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
     int i;
@@ -238,8 +230,7 @@ TEST("Test getnext() from find_nearest(N)")
     tbl->free(tbl);
 }
 
-TEST("Test deletion in getnext() loop")
-{
+TEST("Test deletion in getnext() loop") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
     int i;
@@ -286,37 +277,32 @@ TEST("Test deletion in getnext() loop")
     tbl->free(tbl);
 }
 
-TEST("Test thousands of keys put/delete: short key + short value")
-{
+TEST("Test thousands of keys put/delete: short key + short value") {
     test_thousands_of_keys(10000, "", "");
 }
 
-TEST("Test thousands of keys put/delete: short key + long value")
-{
+TEST("Test thousands of keys put/delete: short key + long value") {
     test_thousands_of_keys(
             10000,
             "",
             "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
 }
 
-TEST("Test thousands of keys put/delete: long key + short value")
-{
+TEST("Test thousands of keys put/delete: long key + short value") {
     test_thousands_of_keys(
             10000,
             "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
             "");
 }
 
-TEST("Test thousands of keys put/delete: long key + long value")
-{
+TEST("Test thousands of keys put/delete: long key + long value") {
     test_thousands_of_keys(
             10000,
             "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
             "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
 }
 
-TEST("Test rule 4 and 5")
-{
+TEST("Test rule 4 and 5") {
     qtreetbl_t *tbl = qtreetbl(0);
     
     size_t siz = sizeof(int);
@@ -372,8 +358,7 @@ TEST("Test rule 4 and 5")
     tbl->free(tbl);
 }
 
-QUNIT_END()
-;
+QUNIT_END();
 
 static void test_thousands_of_keys(int num_keys, char *key_postfix,
                                    char *value_postfix) {

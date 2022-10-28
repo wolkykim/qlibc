@@ -34,10 +34,11 @@
 #include "qlibc.h"
 #include "limits.h"
 
+void test_thousands_of_values(int num_values, char *prefix, char *postfix);
+
 QUNIT_START("Test qqueue.c");
 
-TEST("Test basic features")
-{
+TEST("Test basic features") {
     const int data[] = { 0, 1, 2, 3, 4, 5, 6 };
     const char *string = "a test for string";
     int64_t num = 4234080023325;
@@ -68,8 +69,7 @@ TEST("Test basic features")
     queue->free(queue);
 }
 
-TEST("Test boundary conditions")
-{
+TEST("Test boundary conditions") {
 
     const int array[] = { 1, 2, 3, 4, 5, 6 };
     const char *string =
@@ -161,15 +161,42 @@ TEST("Test boundary conditions")
     queue->free(queue);
 }
 
+TEST("Test thousands of values: without prefix and postfix") {
+    test_thousands_of_values(10000, "", "");
+}
+
+TEST("Test thousands of values: with prefix and without postfix") {
+    test_thousands_of_values(
+            10000,
+            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
+            "");
+}
+
+TEST("Test thousands of values: without prefix and with postfix") {
+    test_thousands_of_values(
+            10000,
+            "",
+            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
+}
+
+TEST("Test thousands of values: with prefix and postfix") {
+    test_thousands_of_values(
+            10000,
+            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
+            "1a087a6982371bbfc9d4e14ae    76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
+}
+
+QUNIT_END();
+
 void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
     qqueue_t *queue = qqueue(0);
     ASSERT_EQUAL_INT(0, queue->size(queue));
 
-    /*test strings*/
+    /* test strings */
     int i;
     for (i = 0; i < num_values; i++) {
         char *value = qstrdupf("value:%s%d%s", prefix, i, postfix);
-        
+
         queue->pushstr(queue, value);
         ASSERT_EQUAL_INT(i + 1, queue->size(queue));
         free(value);
@@ -185,7 +212,7 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
         i++;
     }
 
-    /*test arrays*/
+    /* test arrays */
     int array[8];
     for (i = 0; i < num_values; i++) {
         int j;
@@ -208,7 +235,7 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
         ASSERT_EQUAL_MEM(array_data, array, sizeof(array));
     }
 
-    /*test ints*/
+    /* test ints */
     int64_t k;
     int64_t size;
     for (k = LONG_MIN, size = 0; size < num_values; k++, size++) {
@@ -224,34 +251,3 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
     queue->clear(queue);
     queue->free(queue);
 }
-
-TEST("Test thousands of values: without prefix and postfix")
-{
-    test_thousands_of_values(10000, "", "");
-}
-
-TEST("Test thousands of values: with prefix and without postfix")
-{
-    test_thousands_of_values(
-            10000,
-            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
-            "");
-}
-
-TEST("Test thousands of values: without prefix and with postfix")
-{
-    test_thousands_of_values(
-            10000,
-            "",
-            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
-}
-
-TEST("Test thousands of values: with prefix and postfix")
-{
-    test_thousands_of_values(
-            10000,
-            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
-            "1a087a6982371bbfc9d4e14ae    76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
-}
-
-QUNIT_END();

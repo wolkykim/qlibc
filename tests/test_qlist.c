@@ -33,10 +33,11 @@
 #include "qunit.h"
 #include "qlibc.h"
 
+void test_thousands_of_values(int num_values, char *prefix, char *postfix);
+
 QUNIT_START("Test qlist.c");
 
-TEST("Test basic features")
-{
+TEST("Test basic features") {
     const char *values[] =
             { "value1",
                     "value2_long_value-fef6bd00f77aef990a6d62969fee0cb904d052665a1dcf10492156124fafc59769e91d1a06ec1215e435e29ef43de177f6f2a5e035860e702c82e08084950313",
@@ -80,8 +81,7 @@ TEST("Test basic features")
     free(data);
 }
 
-TEST("Test boundary conditions")
-{
+TEST("Test boundary conditions") {
     const char *values[] = { "value0" };
     
     /*test when list is empty*/
@@ -179,6 +179,33 @@ TEST("Test boundary conditions")
     list->free(list);
 }
 
+TEST("Test thousands of values: without prefix and postfix") {
+    test_thousands_of_values(10000, "", "");
+}
+
+TEST("Test thousands of values: with prefix and without postfix") {
+    test_thousands_of_values(
+            10000,
+            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
+            "");
+}
+
+TEST("Test thousands of values: without prefix and with postfix") {
+    test_thousands_of_values(
+            10000,
+            "",
+            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
+}
+
+TEST("Test thousands of values: with prefix and postfix") {
+    test_thousands_of_values(
+            10000,
+            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
+            "1a087a6982371bbfc9d4e14ae    76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
+}
+
+QUNIT_END();
+
 void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
     qlist_t *list = qlist(0);
 
@@ -194,7 +221,7 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
 
         list->addlast(list, value, dsize);
         ASSERT_EQUAL_INT(i + 1, list->size(list));
-        
+
         datasize += dsize;
         strsize += ssize;
         free(value);
@@ -213,8 +240,8 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
         free(obj.data);
         i++;
     }
-    
-    /*test reverse()*/
+
+    /* test reverse() */
     list->reverse(list);
     i = num_values - 1;
     memset((void *) &obj, 0, sizeof(obj));
@@ -226,7 +253,7 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
         i--;
     }
 
-    /*test toarray() and tostring()*/
+    /* test toarray() and tostring() */
     list->reverse(list);
     void *all_data = malloc(datasize);
     char *all_str = malloc(strsize + 1);
@@ -247,7 +274,7 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
         free(value);
         i++;
     }
-    
+
     void *to_array = list->toarray(list, NULL);
     char *to_string = list->tostring(list);
 
@@ -262,35 +289,3 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
     list->clear(list);
     list->free(list);
 }
-
-TEST("Test thousands of values: without prefix and postfix")
-{
-    test_thousands_of_values(10000, "", "");
-}
-
-TEST("Test thousands of values: with prefix and without postfix")
-{
-    test_thousands_of_values(
-            10000,
-            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
-            "");
-}
-
-TEST("Test thousands of values: without prefix and with postfix")
-{
-    test_thousands_of_values(
-            10000,
-            "",
-            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
-}
-
-TEST("Test thousands of values: with prefix and postfix")
-{
-    test_thousands_of_values(
-            10000,
-            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
-            "1a087a6982371bbfc9d4e14ae    76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
-}
-
-QUNIT_END();
-
