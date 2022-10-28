@@ -92,21 +92,19 @@ struct qmutex_s {
 
 #define Q_MUTEX_LEAVE(m) do {                                           \
         if(m == NULL) break;                                            \
-        qmutex_t *x = (qmutex_t *)m;                                    \
-        if(!pthread_equal(x->owner, pthread_self())) {                  \
+        if(!pthread_equal(((qmutex_t *)m)->owner, pthread_self())) {    \
             DEBUG("Q_MUTEX: unlock - owner mismatch.");                 \
         }                                                               \
-        if((x->count--) < 0) x->count = 0;                              \
-        pthread_mutex_unlock(&(x->mutex));                              \
+        if((((qmutex_t *)m)->count--) < 0) ((qmutex_t *)m)->count = 0;  \
+        pthread_mutex_unlock(&(((qmutex_t *)m)->mutex));                \
     } while(0)
 
 #define MAX_MUTEX_LOCK_WAIT (5000)
 #define Q_MUTEX_ENTER(m) do {                                           \
         if(m == NULL) break;                                            \
-        qmutex_t *x = (qmutex_t *)m;                                    \
         while(true) {                                                   \
             int _ret, i;                                                \
-            for(i = 0; (_ret = pthread_mutex_trylock(&(x->mutex))) != 0 \
+            for(i = 0; (_ret = pthread_mutex_trylock(&(((qmutex_t *)m)->mutex))) != 0 \
                         && i < MAX_MUTEX_LOCK_WAIT; i++) {              \
                 if(i == 0) {                                            \
                     DEBUG("Q_MUTEX: mutex is already locked - retrying"); \
@@ -116,22 +114,21 @@ struct qmutex_s {
             if(_ret == 0) break;                                        \
             DEBUG("Q_MUTEX: can't get lock - force to unlock. [%d]",    \
                   _ret);                                                \
-            Q_MUTEX_LEAVE(x);                                           \
+            Q_MUTEX_LEAVE(m);                                           \
         }                                                               \
-        x->count++;                                                     \
-        x->owner = pthread_self();                                      \
+        ((qmutex_t *)m)->count++;                                       \
+        ((qmutex_t *)m)->owner = pthread_self();                        \
     } while(0)
 
 #define Q_MUTEX_DESTROY(m) do {                                         \
         if(m == NULL) break;                                            \
-        qmutex_t *x = (qmutex_t *)m;                                    \
-        if(x->count != 0) DEBUG("Q_MUTEX: mutex counter is not 0.");    \
+        if(((qmutex_t *)m)->count != 0) DEBUG("Q_MUTEX: mutex counter is not 0."); \
         int _ret;                                                       \
-        while((_ret = pthread_mutex_destroy(&(x->mutex))) != 0) {       \
+        while((_ret = pthread_mutex_destroy(&(((qmutex_t *)m)->mutex))) != 0) { \
             DEBUG("Q_MUTEX: force to unlock mutex. [%d]", _ret);        \
-            Q_MUTEX_LEAVE(x);                                           \
+            Q_MUTEX_LEAVE(m);                                           \
         }                                                               \
-        free(x);                                                        \
+        free(m);                                                        \
     } while(0)
 
 /*
