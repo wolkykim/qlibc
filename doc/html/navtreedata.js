@@ -25,7 +25,7 @@
 var NAVTREE =
 [
   [ "qLibc", "index.html", [
-    [ "What's qLibc?", "index.html", [
+    [ "What's qLibc?  <a href=\"https://github.com/wolkykim/qlibc/actions\" ><img src=\"https://github.com/wolkykim/qlibc/workflows/CI/badge.svg\" alt=\"Actions Status\"/></a>", "index.html", [
       [ "qLibc Copyright", "index.html#autotoc_md0", null ],
       [ "API Reference", "index.html#autotoc_md1", null ],
       [ "qLibc Tables at a Glance", "index.html#autotoc_md2", null ],

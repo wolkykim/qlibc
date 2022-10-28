@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>qLibc: What&#39;s qLibc?</title>
+<title>qLibc: What&#39;s qLibc?  &lt;a href=&quot;https://github.com/wolkykim/qlibc/actions&quot; &gt;&lt;img src=&quot;https://github.com/wolkykim/qlibc/workflows/CI/badge.svg&quot; alt=&quot;Actions Status&quot;/&gt;&lt;/a&gt;</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -59,7 +59,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </script>
 <div id="doc-content">
 <div><div class="header">
-  <div class="headertitle"><div class="title">What's qLibc? </div></div>
+  <div class="headertitle"><div class="title">What's qLibc? <a href="https://github.com/wolkykim/qlibc/actions"><img src="https://github.com/wolkykim/qlibc/workflows/CI/badge.svg" alt="Actions Status" style="pointer-events: none;" class="inline"/></a> </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p ><a class="anchor" id="md__Users_seungyou_github_qlibc_README"></a></p>
@@ -149,14 +149,14 @@ Consistent API Look</h1>
 <p >So, regardless of which container you use, you can simply put elements into a list with <code>container-&gt;put(container, ...)</code> or you can call them using direct API like qtreetbl_pub(container, ...).</p>
 <p >An examples below illustrates how it looks like.</p>
 <div class="fragment"><div class="line"><span class="comment">// create a hash-table.</span></div>
-<div class="line">qhashtbl_t *tbl = <a class="code hl_function" href="qhashtbl_8c.html#a7a2314dcb8381b4599e8050becad2268">qhashtbl</a>(0, QHASHTBL_OPT_THREADSAFE);</div>
+<div class="line">qhashtbl_t *tbl = <a class="code hl_function" href="qhashtbl_8c.html#a7a2314dcb8381b4599e8050becad2268">qhashtbl</a>(0, QHASHTBL_THREADSAFE);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// add an element which key name is &quot;score&quot;.</span></div>
 <div class="line"><span class="keywordtype">int</span> x = 12345;</div>
 <div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;score&quot;</span>, &amp;x, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// get the value of the element.</span></div>
-<div class="line"><span class="keywordtype">int</span> *px = tbl-&gt;get(tbl, <span class="stringliteral">&quot;score&quot;</span>);</div>
+<div class="line"><span class="keywordtype">int</span> *px = tbl-&gt;get(tbl, <span class="stringliteral">&quot;score&quot;</span>, NULL, <span class="keyword">true</span>);</div>
 <div class="line"><span class="keywordflow">if</span>(px != NULL) {</div>
 <div class="line">  printf(<span class="stringliteral">&quot;%d\n&quot;</span>, *px);</div>
 <div class="line">  free(px);</div>
@@ -167,14 +167,14 @@ Consistent API Look</h1>
 <div class="ttc" id="aqhashtbl_8c_html_a7a2314dcb8381b4599e8050becad2268"><div class="ttname"><a href="qhashtbl_8c.html#a7a2314dcb8381b4599e8050becad2268">qhashtbl</a></div><div class="ttdeci">qhashtbl_t * qhashtbl(size_t range, int options)</div><div class="ttdoc">Initialize hash table.</div><div class="ttdef"><b>Definition:</b> <a href="qhashtbl_8c_source.html#l00127">qhashtbl.c:127</a></div></div>
 </div><!-- fragment --><p >Here is an identical implementation with a Linked-List-Table container. You may notice that there aren't any code changes at all, except for 1 line in the table creation. This is why qLibc encapsulates corresponding function pointers inside of the container object.</p>
 <div class="fragment"><div class="line"><span class="comment">// create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.</span></div>
-<div class="line">qlisttbl_t *tbl = <a class="code hl_function" href="qlisttbl_8c.html#a0df1c9358a8712794a8a0030a1687f62">qlisttbl</a>(QLISTTBL_OPT_THREADSAFE);</div>
+<div class="line">qlisttbl_t *tbl = <a class="code hl_function" href="qlisttbl_8c.html#a0df1c9358a8712794a8a0030a1687f62">qlisttbl</a>(QLISTTBL_THREADSAFE);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// add an element which key name is &quot;score&quot;.</span></div>
 <div class="line"><span class="keywordtype">int</span> x = 12345;</div>
 <div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;score&quot;</span>, &amp;x, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// get the value of the element.</span></div>
-<div class="line"><span class="keywordtype">int</span> *px = tbl-&gt;get(tbl, <span class="stringliteral">&quot;score&quot;</span>);</div>
+<div class="line"><span class="keywordtype">int</span> *px = tbl-&gt;get(tbl, <span class="stringliteral">&quot;score&quot;</span>, NULL, <span class="keyword">true</span>);</div>
 <div class="line"><span class="keywordflow">if</span>(px != NULL) {</div>
 <div class="line">  printf(<span class="stringliteral">&quot;%d\n&quot;</span>, *px);             </div>
 <div class="line">  free(px);</div>
@@ -204,6 +204,7 @@ Contributors</h1>
 <li><a href="https://github.com/Charles0429">Charles</a></li>
 <li><a href="https://github.com/demitsuri">Dmitry Vorobiev</a></li>
 <li><a href="https://github.com/ffontaine">Fabrice Fontaine</a></li>
+<li><a href="https://github.com/Fullaxx">Fullaxx</a></li>
 <li>HyoSup Woo</li>
 <li><a href="https://github.com/netpoetica">Keith Rosenberg</a></li>
 <li>Krishna</li>
