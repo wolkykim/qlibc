@@ -39,8 +39,7 @@ QUNIT_START("Test qhasharr.c by darkdh");
 qhasharr_t *tbl;
 char *memory;
 
-TEST("qhasharr()")
-{
+TEST("qhasharr()") {
     int memsize = qhasharr_calculate_memsize(5);
     memory = (char*) malloc(memsize * sizeof(char));
     tbl = qhasharr(memory, memsize);
@@ -69,8 +68,7 @@ for (i = 0; i < EXTRA_NUM; i++) {
     extra_valuesize[i] = strlen(extra_value[i]);
 }
 
-TEST("put() to full")
-{
+TEST("put() to full") {
     size_t size;
     for (i = 0; i < TARGET_NUM; i++) {
         ASSERT_TRUE(tbl->put(tbl, key[i], value[i], valuesize[i]));
@@ -86,15 +84,13 @@ TEST("put() to full")
     ASSERT_EQUAL_INT(tbl->size(tbl, NULL, NULL), TARGET_NUM);
 }
 
-TEST("get() non-exist key")
-{
+TEST("get() non-exist key") {
     size_t size;
     char *target_got = (char*) tbl->get(tbl, extra_key[0], &size);
     ASSERT_NULL(target_got);
 }
 
-TEST("remove() to empty")
-{
+TEST("remove() to empty") {
     for (i = 0; i < TARGET_NUM; i++) {
         ASSERT_TRUE(tbl->remove(tbl, key[i]));
     }
@@ -103,8 +99,7 @@ TEST("remove() to empty")
     ASSERT_EQUAL_INT(tbl->size(tbl, NULL, NULL), 0);
 }
 
-TEST("add() same key")
-{
+TEST("add() same key") {
     size_t size;
     ASSERT_TRUE(tbl->put(tbl, key[0], value[0], valuesize[0]));
     ASSERT_TRUE(tbl->put(tbl, key[0], value[1], valuesize[1]));
@@ -115,8 +110,7 @@ TEST("add() same key")
     ASSERT_TRUE(tbl->remove(tbl, key[0]));
 }
 
-TEST("getnext()")
-{
+TEST("getnext()") {
     size_t size;
     for (i = 0; i < TARGET_NUM; i++) {
         ASSERT_TRUE(tbl->put(tbl, key[i], value[i], valuesize[i]));

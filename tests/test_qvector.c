@@ -33,10 +33,11 @@
 #include "qunit.h"
 #include "qlibc.h"
 
+void test_thousands_of_values(int num_values, int options, char *prefix, char *postfix);
+
 QUNIT_START("Test qvector.c");
 
-TEST("Test basic features")
-{
+TEST("Test basic features") {
     const int values[] = {0, 1, 2};
 
     qvector_t *vector = qvector(3, sizeof(int), 0);
@@ -80,8 +81,7 @@ TEST("Test basic features")
     vector->free(vector);
 }
 
-TEST("Test boundary conditions")
-{
+TEST("Test boundary conditions") {
     int values[] = {1000, 1001, 1002};
     
     /*test when vector is empty*/
@@ -194,102 +194,11 @@ TEST("Test boundary conditions")
     vector->free(vector);
 }
 
-void test_thousands_of_values(int num_values, int options, char *prefix, char *postfix) {
-    struct test_obj {
-        char *prefix;
-        int value;
-        char *postfix;
-    };
-    
-    qvector_t *vector = qvector(0, sizeof(struct test_obj), options);
-    ASSERT_EQUAL_INT(0, vector->size(vector));
-
-    int i;
-    struct test_obj obj_value;
-    for (i = 0; i < num_values; i++) {
-        obj_value.prefix = qstrdupf("%s", prefix);
-        obj_value.postfix = qstrdupf("%s", postfix);
-        obj_value.value = i;
-
-        bool result = vector->addlast(vector, &obj_value);
-        ASSERT_EQUAL_BOOL(result, true);
-        ASSERT_EQUAL_INT(i + 1, vector->size(vector));
-    }
-
-    /*test iteration*/
-    qvector_obj_t obj;
-    memset((void *) &obj, 0, sizeof(obj));
-    i = 0;
-    while (vector->getnext(vector, &obj, true)) {
-        struct test_obj value;
-        value.prefix = qstrdupf("%s", prefix);
-        value.postfix = qstrdupf("%s", postfix);
-        value.value = i;
-        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->prefix, value.prefix);
-        ASSERT_EQUAL_INT(((struct test_obj *)obj.data)->value, value.value);
-        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->postfix, value.postfix);
-        
-        free(value.prefix);
-        free(value.postfix);
-        free(obj.data);
-        i++;
-    }
-   
-    /*test reverse()*/
-    vector->reverse(vector);
-    i = num_values - 1;
-    memset((void *) &obj, 0, sizeof(obj));
-    while (vector->getnext(vector, &obj, false)) {
-        struct test_obj value;
-        value.prefix = qstrdupf("%s", prefix);
-        value.postfix = qstrdupf("%s", postfix);
-        value.value = i;
-
-        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->prefix, value.prefix);
-        ASSERT_EQUAL_INT(((struct test_obj *)obj.data)->value, value.value);
-        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->postfix, value.postfix);
-        
-        free(value.prefix);
-        free(value.postfix);
-        
-        i--;
-    }
-
-    /*test toarray()*/
-    vector->reverse(vector);
-    void *to_array = vector->toarray(vector, NULL);
-    i = 0;
-    memset((void *) &obj, 0, sizeof(obj));
-    while (vector->getnext(vector, &obj, false)) { 
-        struct test_obj value;
-        value.prefix = qstrdupf("%s", prefix);
-        value.postfix = qstrdupf("%s", postfix);
-        value.value = i;
-
-        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->prefix, value.prefix);
-        ASSERT_EQUAL_INT(((struct test_obj *)obj.data)->value, value.value);
-        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->postfix, value.postfix);
-        
-        free(value.prefix);
-        free(value.postfix);
-        free(((struct test_obj *)obj.data)->prefix);
-        free(((struct test_obj *)obj.data)->postfix);
-
-        i++;
-    }
-    
-    free(to_array);
-
-    vector->free(vector);
-}
-
-TEST("Test thousands of values: without prefix and postfix")
-{
+TEST("Test thousands of values: without prefix and postfix") {
     test_thousands_of_values(10000, 0, "", "");
 }
 
-TEST("Test thousands of values: with prefix and without postfix")
-{
+TEST("Test thousands of values: with prefix and without postfix") {
     test_thousands_of_values(
             10000,
             QVECTOR_RESIZE_DOUBLE,
@@ -297,8 +206,7 @@ TEST("Test thousands of values: with prefix and without postfix")
             "");
 }
 
-TEST("Test thousands of values: without prefix and with postfix")
-{
+TEST("Test thousands of values: without prefix and with postfix") {
     test_thousands_of_values(
             10000,
             QVECTOR_RESIZE_LINEAR,
@@ -306,8 +214,7 @@ TEST("Test thousands of values: without prefix and with postfix")
             "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
 }
 
-TEST("Test thousands of values: with prefix and postfix")
-{
+TEST("Test thousands of values: with prefix and postfix") {
     test_thousands_of_values(
             10000,
             QVECTOR_RESIZE_EXACT,
@@ -315,8 +222,7 @@ TEST("Test thousands of values: with prefix and postfix")
             "1a087a6982371bbfc9d4e14ae    76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
 }
 
-TEST("Test resize")
-{
+TEST("Test resize") {
     qvector_t *vector = qvector(10, sizeof(int), 0);
     ASSERT_EQUAL_INT(0, vector->size(vector));
 
@@ -342,3 +248,91 @@ TEST("Test resize")
 
 QUNIT_END();
 
+void test_thousands_of_values(int num_values, int options, char *prefix, char *postfix) {
+    struct test_obj {
+        char *prefix;
+        int value;
+        char *postfix;
+    };
+
+    qvector_t *vector = qvector(0, sizeof(struct test_obj), options);
+    ASSERT_EQUAL_INT(0, vector->size(vector));
+
+    int i;
+    struct test_obj obj_value;
+    for (i = 0; i < num_values; i++) {
+        obj_value.prefix = qstrdupf("%s", prefix);
+        obj_value.postfix = qstrdupf("%s", postfix);
+        obj_value.value = i;
+
+        bool result = vector->addlast(vector, &obj_value);
+        ASSERT_EQUAL_BOOL(result, true);
+        ASSERT_EQUAL_INT(i + 1, vector->size(vector));
+    }
+
+    /* test iteration */
+    qvector_obj_t obj;
+    memset((void *) &obj, 0, sizeof(obj));
+    i = 0;
+    while (vector->getnext(vector, &obj, true)) {
+        struct test_obj value;
+        value.prefix = qstrdupf("%s", prefix);
+        value.postfix = qstrdupf("%s", postfix);
+        value.value = i;
+        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->prefix, value.prefix);
+        ASSERT_EQUAL_INT(((struct test_obj *)obj.data)->value, value.value);
+        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->postfix, value.postfix);
+
+        free(value.prefix);
+        free(value.postfix);
+        free(obj.data);
+        i++;
+    }
+
+    /* test reverse() */
+    vector->reverse(vector);
+    i = num_values - 1;
+    memset((void *) &obj, 0, sizeof(obj));
+    while (vector->getnext(vector, &obj, false)) {
+        struct test_obj value;
+        value.prefix = qstrdupf("%s", prefix);
+        value.postfix = qstrdupf("%s", postfix);
+        value.value = i;
+
+        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->prefix, value.prefix);
+        ASSERT_EQUAL_INT(((struct test_obj *)obj.data)->value, value.value);
+        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->postfix, value.postfix);
+
+        free(value.prefix);
+        free(value.postfix);
+
+        i--;
+    }
+
+    /* test toarray() */
+    vector->reverse(vector);
+    void *to_array = vector->toarray(vector, NULL);
+    i = 0;
+    memset((void *) &obj, 0, sizeof(obj));
+    while (vector->getnext(vector, &obj, false)) {
+        struct test_obj value;
+        value.prefix = qstrdupf("%s", prefix);
+        value.postfix = qstrdupf("%s", postfix);
+        value.value = i;
+
+        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->prefix, value.prefix);
+        ASSERT_EQUAL_INT(((struct test_obj *)obj.data)->value, value.value);
+        ASSERT_EQUAL_STR(((struct test_obj *)obj.data)->postfix, value.postfix);
+
+        free(value.prefix);
+        free(value.postfix);
+        free(((struct test_obj *)obj.data)->prefix);
+        free(((struct test_obj *)obj.data)->postfix);
+
+        i++;
+    }
+
+    free(to_array);
+
+    vector->free(vector);
+}

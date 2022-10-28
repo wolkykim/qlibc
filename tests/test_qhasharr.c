@@ -129,7 +129,6 @@ TEST("Test remove_by_idx()") {
 
 QUNIT_END();
 
-
 void test_thousands_of_keys(size_t memsize, int num_keys, char *key_postfix, char *value_postfix) {
     char memory[memsize];
     qhasharr_t *tbl = qhasharr(memory, sizeof(memory));
