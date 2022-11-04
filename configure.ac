@@ -100,9 +100,9 @@ AC_PREFIX_DEFAULT([/usr/local])
 ## Checks for programs.
 AC_PROG_CC
 if test $ac_compiler_gnu = yes; then
-	CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -fPIC"
-#else
-#	AC_MSG_FAILURE([GCC is required.])
+	CFLAGS="$CFLAGS -Wall -Wstrict-prototypes"
+	CFLAGS_LIB="$CFLAGS -fPIC"
+	AC_SUBST(CFLAGS_LIB)
 fi
 AC_PROG_CC_C99
 if test $ac_cv_prog_cc_c99 = no; then
@@ -163,12 +163,6 @@ Q_ARG_DISABLE([ext-qaconf], [Disable qaconf extension in qlibext library.], [-DD
 Q_ARG_DISABLE([ext-qlog], [Disable qlog extension in qlibext library.], [-DDISABLE_QLOG])
 Q_ARG_DISABLE([ext-qhttpclient], [Disable qhttpclient extension in qlibext library.], [-DDISABLE_QHTTPCLIENT])
 Q_ARG_DISABLE([ext-qdatabase], [Disable qdatabase extension in qlibext library.], [-DDISABLE_QDATABASE])
-
-if test "$enableval" = yes; then
-	CFLAGS="$CFLAGS -g -O2"
-else
-	CFLAGS="$CFLAGS -g -O2"
-fi
 
 ##
 ## --with section

@@ -40,7 +40,7 @@ CPPFLAGS	= @CPPFLAGS@ -I${QLIBC_INCDIR}
 RM		= @RM@
 DEPLIBS		= @DEPLIBS@
 
-TARGETS1	= \
+TARGETS		= \
 		test_qstring		\
 		test_qhashtbl		\
 		test_qhasharr		\
@@ -52,8 +52,6 @@ TARGETS1	= \
 		test_qstack		\
 		test_qhash
 
-TARGETS2	= ${TARGETS1}
-TARGETS		= ${@EXAMPLES_TARGETS@}
 LIBQLIBC	= ${QLIBC_LIBDIR}/libqlibc.a ${DEPLIBS}
 LIBQLIBCEXT	= ${QLIBC_LIBDIR}/libqlibcext.a
 
