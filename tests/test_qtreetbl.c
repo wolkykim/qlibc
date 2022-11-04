@@ -410,12 +410,15 @@ static bool drawtree(qtreetbl_t *tbl) {
         pos = print_pos[PARENT(i)]
                 + (i % 2 ? -1 : 1) * (LINE_WIDTH / (pow(2, level + 1)) + 1);
 
-        for (k = 0; k < pos - x; k++)
+        for (k = 0; k < pos - x; k++) {
             printf("%c", i == 0 || i % 2 ? ' ' : '`');
-        printf("%c%s%c", (obj->red) ? '[' : ' ', ((char*)obj->name),
-               (obj->red) ? ']' : ' ');
-        if (obj->red)
+        }
+        printf("%c%s%c",
+            (obj->red) ? '[' : ' ', ((char*)obj->name),
+            (obj->red) ? ']' : ' ');
+        if (obj->red) {
             redcnt++;
+        }
 
         print_pos[i] = x = pos + 1;
         x += 2;
@@ -440,8 +443,8 @@ static bool drawtree(qtreetbl_t *tbl) {
     tbl->unlock(tbl);
 
     printf("\n           Tree Info : #nodes=%d, #red=%d, #black=-%d, root=%s\n",
-           (int)tbl->size(tbl), redcnt, ((int)tbl->size(tbl) - redcnt),
-           (char*)tbl->root->name);
+        (int)tbl->size(tbl), redcnt, ((int)tbl->size(tbl) - redcnt),
+        (char*)tbl->root->name);
 
     return true;
 }
