@@ -69,29 +69,26 @@ TEST("Test growth of tree") {
     printf("\n");
     drawtree(tbl);
 
-    ASSERT(((char* )tbl->root->name)[0] == 'E');
+    ASSERT(((char*)tbl->root->name)[0] == 'E');
     ASSERT((tbl->root->red) == false);
-    ASSERT(((char* )tbl->root->left->name)[0] == 'C');
+    ASSERT(((char*)tbl->root->left->name)[0] == 'C');
     ASSERT((tbl->root->left->red) == false);
-    ASSERT(((char* )tbl->root->right->name)[0] == 'R');
+    ASSERT(((char*)tbl->root->right->name)[0] == 'R');
     ASSERT((tbl->root->right->red) == false);
-    ASSERT(((char* )tbl->root->left->left->name)[0] == 'B');
+    ASSERT(((char*)tbl->root->left->left->name)[0] == 'B');
     ASSERT((tbl->root->left->left->red) == false);
-    ASSERT(((char* )tbl->root->left->right->name)[0] == 'D');
+    ASSERT(((char*)tbl->root->left->right->name)[0] == 'D');
     ASSERT((tbl->root->left->right->red) == false);
-    ASSERT(((char* )tbl->root->right->left->name)[0] == 'N');
+    ASSERT(((char*)tbl->root->right->left->name)[0] == 'N');
     ASSERT((tbl->root->right->left->red) == false);
-    ASSERT(((char* )tbl->root->right->right->name)[0] == 'X');
+    ASSERT(((char*)tbl->root->right->right->name)[0] == 'X');
     ASSERT((tbl->root->right->right->red) == false);
-    ASSERT(((char* )tbl->root->left->left->left->name)[0] == 'A');
+    ASSERT(((char*)tbl->root->left->left->left->name)[0] == 'A');
     ASSERT((tbl->root->left->left->left->red) == true);
-    ASSERT(((char* )tbl->root->right->left->left->name)[0] == 'I');
+    ASSERT(((char*)tbl->root->right->left->left->name)[0] == 'I');
     ASSERT((tbl->root->right->left->left->red) == true);
-    ASSERT(((char* )tbl->root->right->right->left->name)[0] == 'S');
+    ASSERT(((char*)tbl->root->right->right->left->name)[0] == 'S');
     ASSERT((tbl->root->right->right->left->red) == true);
-
-    //printf("\n======================================================================\n");
-    //printf("======================================================================\n");
 
     tbl->free(tbl);
 }
@@ -172,17 +169,17 @@ TEST("Test find_nearest()") {
     }
 
     obj = tbl->find_nearest(tbl, "0", 2, false);
-    ASSERT_EQUAL_STR("A", (char* )obj.name);
+    ASSERT_EQUAL_STR("A", (char*)obj.name);
     obj = tbl->find_nearest(tbl, "F", 2, false);
-    ASSERT_EQUAL_STR("E", (char* )obj.name);
+    ASSERT_EQUAL_STR("E", (char*)obj.name);
     obj = tbl->find_nearest(tbl, "J", 2, false);
-    ASSERT_EQUAL_STR("I", (char* )obj.name);
+    ASSERT_EQUAL_STR("I", (char*)obj.name);
     obj = tbl->find_nearest(tbl, "O", 2, false);
-    ASSERT_EQUAL_STR("N", (char* )obj.name);
+    ASSERT_EQUAL_STR("N", (char*)obj.name);
     obj = tbl->find_nearest(tbl, "T", 2, false);
-    ASSERT_EQUAL_STR("S", (char* )obj.name);
+    ASSERT_EQUAL_STR("S", (char*)obj.name);
     obj = tbl->find_nearest(tbl, "Z", 2, false);
-    ASSERT_EQUAL_STR("X", (char* )obj.name);
+    ASSERT_EQUAL_STR("X", (char*)obj.name);
 
     tbl->free(tbl);
 }
@@ -200,8 +197,8 @@ TEST("Test getnext()") {
     memset((void*) &obj, 0, sizeof(obj));  // must be cleared before call
     tbl->lock(tbl);  // lock it when thread condition is expected
     while (tbl->getnext(tbl, &obj, false) == true) {  // newmem is false
-        printf(">%s", (char*) obj.name);
-        qstrcatf(buf, "%s", (char*) obj.name);
+        printf(">%s", (char*)obj.name);
+        qstrcatf(buf, "%s", (char*)obj.name);
     }
     tbl->unlock(tbl);
     ASSERT_EQUAL_STR("ABCDEINRSX", buf);
@@ -221,8 +218,8 @@ TEST("Test getnext() from find_nearest(N)") {
     tbl->lock(tbl);  // lock it when thread condition is expected
     qtreetbl_obj_t obj = tbl->find_nearest(tbl, "N", 2, false);
     while (tbl->getnext(tbl, &obj, false) == true) {  // newmem is false
-        printf(">%s", (char*) obj.name);
-        qstrcatf(buf, "%s", (char*) obj.name);
+        printf(">%s", (char*)obj.name);
+        qstrcatf(buf, "%s", (char*)obj.name);
     }
     tbl->unlock(tbl);
     ASSERT_EQUAL_STR("INRSXABCDE", buf);
@@ -246,10 +243,10 @@ TEST("Test deletion in getnext() loop") {
 
     tbl->lock(tbl);  // lock it when thread condition is expected
     while (tbl->getnext(tbl, &obj, false) == true) {
-        printf(">%s", (char*) obj.name);
+        printf(">%s", (char*)obj.name);
         if (!memcmp(obj.data, "B", 2) || !memcmp(obj.data, "S", 2)) {
             printf("*");
-            qstrcatf(buf, "%s", (char*) obj.name);
+            qstrcatf(buf, "%s", (char*)obj.name);
 
             // 1. Keep the key name
             char *name = qmemdup(obj.name, obj.namesize);
@@ -413,12 +410,16 @@ static bool drawtree(qtreetbl_t *tbl) {
         pos = print_pos[PARENT(i)]
                 + (i % 2 ? -1 : 1) * (LINE_WIDTH / (pow(2, level + 1)) + 1);
 
-        for (k = 0; k < pos - x; k++)
+        for (k = 0; k < pos - x; k++) {
             printf("%c", i == 0 || i % 2 ? ' ' : '`');
-        printf("%c%s%c", (obj->red) ? '[' : ' ', ((char*) obj->name),
-               (obj->red) ? ']' : ' ');
-        if (obj->red)
+        }
+        printf("%c%s%c",
+            (obj->red) ? '[' : ' ',
+            (char*)obj->name,
+            (obj->red) ? ']' : ' ');
+        if (obj->red) {
             redcnt++;
+        }
 
         print_pos[i] = x = pos + 1;
         x += 2;
@@ -429,7 +430,7 @@ static bool drawtree(qtreetbl_t *tbl) {
             j = 0;
         }
 
-        if (((char*) obj->name)[0] != ' ') {
+        if (((char*)obj->name)[0] != ' ') {
             q->push(q, (obj->left) ? obj->left : &nullobj,
                     sizeof(qtreetbl_obj_t));
             q->push(q, (obj->right) ? obj->right : &nullobj,
@@ -443,8 +444,8 @@ static bool drawtree(qtreetbl_t *tbl) {
     tbl->unlock(tbl);
 
     printf("\n           Tree Info : #nodes=%d, #red=%d, #black=-%d, root=%s\n",
-           (int) tbl->size(tbl), redcnt, ((int) tbl->size(tbl) - redcnt),
-           (char*) tbl->root->name);
+        (int)tbl->size(tbl), redcnt, ((int)tbl->size(tbl) - redcnt),
+        (char*)tbl->root->name);
 
     return true;
 }
