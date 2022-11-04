@@ -100,9 +100,9 @@ AC_PREFIX_DEFAULT([/usr/local])
 ## Checks for programs.
 AC_PROG_CC
 if test $ac_compiler_gnu = yes; then
-	CFLAGS_NONPIC="$CFLAGS -Wall -Wstrict-prototypes"
-	AC_SUBST(CFLAGS_NONPIC)
-	CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -fPIC"
+	CFLAGS="$CFLAGS -Wall -Wstrict-prototypes"
+	CFLAGS_LIB="$CFLAGS -fPIC"
+	AC_SUBST(CFLAGS_LIB)
 fi
 AC_PROG_CC_C99
 if test $ac_cv_prog_cc_c99 = no; then
