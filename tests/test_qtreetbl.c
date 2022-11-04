@@ -441,7 +441,7 @@ static bool drawtree(qtreetbl_t *tbl) {
 
     printf("\n           Tree Info : #nodes=%d, #red=%d, #black=-%d, root=%s\n",
            (int)tbl->size(tbl), redcnt, ((int)tbl->size(tbl) - redcnt),
-           (char*) tbl->root->name);
+           (char*)tbl->root->name);
 
     return true;
 }
