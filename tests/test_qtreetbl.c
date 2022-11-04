@@ -414,7 +414,8 @@ static bool drawtree(qtreetbl_t *tbl) {
             printf("%c", i == 0 || i % 2 ? ' ' : '`');
         }
         printf("%c%s%c",
-            (obj->red) ? '[' : ' ', ((char*)obj->name),
+            (obj->red) ? '[' : ' ',
+            ((char*)obj->name),
             (obj->red) ? ']' : ' ');
         if (obj->red) {
             redcnt++;
