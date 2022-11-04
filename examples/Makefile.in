@@ -35,7 +35,7 @@ QLIBC_LIBDIR		= ../lib
 
 ## Compiler options
 CC		= @CC@
-CFLAGS		= @CFLAGS@
+CFLAGS		= @CFLAGS_NONPIC@
 CPPFLAGS	= @CPPFLAGS@ -I${QLIBC_INCDIR}
 RM		= @RM@
 DEPLIBS		= @DEPLIBS@

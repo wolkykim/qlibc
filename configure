@@ -669,6 +669,7 @@ MKDIR_P
 INSTALL_DATA
 INSTALL_SCRIPT
 INSTALL_PROGRAM
+CFLAGS_NONPIC
 OBJEXT
 EXEEXT
 ac_ct_CC
@@ -3131,9 +3132,9 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 if test $ac_compiler_gnu = yes; then
+	CFLAGS_NONPIC="$CFLAGS -Wall -Wstrict-prototypes"
+
 	CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -fPIC"
-#else
-#	AC_MSG_FAILURE([GCC is required.])
 fi
    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $CC option to accept ISO C99" >&5
 $as_echo_n "checking for $CC option to accept ISO C99... " >&6; }
@@ -4741,12 +4742,6 @@ $as_echo "$as_me: 'ext-qdatabase' feature is disabled" >&6;}
 		CPPFLAGS="$CPPFLAGS -DDISABLE_QDATABASE"
 	fi
 
-
-if test "$enableval" = yes; then
-	CFLAGS="$CFLAGS -g -O2"
-else
-	CFLAGS="$CFLAGS -g -O2"
-fi
 
 ##
 ## --with section
