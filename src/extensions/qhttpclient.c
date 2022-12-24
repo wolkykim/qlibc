@@ -485,10 +485,15 @@ static bool open_(qhttpclient_t *client) {
             return false;
         }
 
-        // set options
+        // set ssl to work in client mode
         SSL_set_connect_state(ssl->ssl);
 
-        // handshake
+#ifndef OPENSSL_NO_TLSEXT
+        // set server name indication extension for the handshake
+        ssl->ssl->tlsext_hostname = client->hostname;
+#endif
+
+        // do handshake
         if (SSL_connect(ssl->ssl) != 1) {
             DEBUG("OpenSSL: %s", ERR_reason_error_string(ERR_get_error()));
             _close(client);
@@ -497,7 +502,7 @@ static bool open_(qhttpclient_t *client) {
 
         DEBUG("ssl initialized");
     }
-#endif
+#endif /* ENABLE_OPENSSL */
 
     return true;
 }
