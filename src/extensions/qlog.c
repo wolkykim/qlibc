@@ -134,8 +134,8 @@ qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval,
 
     // try to open the log file.
     if (_real_open(log) == false) {
-        free(log);
         Q_MUTEX_DESTROY(log->qmutex);
+        free(log);
         return NULL;
     }
 
