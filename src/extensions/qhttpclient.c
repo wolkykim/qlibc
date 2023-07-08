@@ -790,7 +790,10 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
 
             // parse chunk size
             unsigned int recvsize;  // this time chunk size
-            sscanf(buf, "%x", &recvsize);
+            if (sscanf(buf, "%x", &recvsize) != 1) {
+                break;
+            }
+
             if (recvsize == 0) {
                 // end of transfer
                 completed = true;
