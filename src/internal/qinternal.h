@@ -41,7 +41,7 @@
         size_t _strsize;                                                \
         for(_strsize = 1024; ; _strsize *= 2) {                         \
             s = (char*)malloc(_strsize);                                \
-            if(s == NULL) {                                             \
+            if (s == NULL) {                                             \
                 DEBUG("DYNAMIC_VSPRINTF(): can't allocate memory.");    \
                 break;                                                  \
             }                                                           \
@@ -49,7 +49,7 @@
             va_start(_arglist, f);                                      \
             int _n = vsnprintf(s, _strsize, f, _arglist);               \
             va_end(_arglist);                                           \
-            if(_n >= 0 && _n < _strsize) break;                         \
+            if (_n >= 0 && _n < _strsize) break;                         \
             free(s);                                                    \
         }                                                               \
     } while(0)
@@ -76,12 +76,12 @@ struct qmutex_s {
         qmutex_t *x = (qmutex_t *)calloc(1, sizeof(qmutex_t));          \
         pthread_mutexattr_t _mutexattr;                                 \
         pthread_mutexattr_init(&_mutexattr);                            \
-        if(r == true) {                                                 \
+        if (r == true) {                                                 \
             pthread_mutexattr_settype(&_mutexattr, PTHREAD_MUTEX_RECURSIVE); \
         }                                                               \
         int _ret = pthread_mutex_init(&(x->mutex), &_mutexattr);        \
         pthread_mutexattr_destroy(&_mutexattr);                         \
-        if(_ret == 0) {                                                 \
+        if (_ret == 0) {                                                 \
             m = x;                                                      \
         } else {                                                        \
             DEBUG("Q_MUTEX: can't initialize mutex. [%d]", _ret);       \
@@ -91,27 +91,27 @@ struct qmutex_s {
     } while(0)
 
 #define Q_MUTEX_LEAVE(m) do {                                           \
-        if(m == NULL) break;                                            \
-        if(!pthread_equal(((qmutex_t *)m)->owner, pthread_self())) {    \
+        if (m == NULL) break;                                            \
+        if (!pthread_equal(((qmutex_t *)m)->owner, pthread_self())) {    \
             DEBUG("Q_MUTEX: unlock - owner mismatch.");                 \
         }                                                               \
-        if((((qmutex_t *)m)->count--) < 0) ((qmutex_t *)m)->count = 0;  \
+        if ((((qmutex_t *)m)->count--) < 0) ((qmutex_t *)m)->count = 0;  \
         pthread_mutex_unlock(&(((qmutex_t *)m)->mutex));                \
     } while(0)
 
 #define MAX_MUTEX_LOCK_WAIT (5000)
 #define Q_MUTEX_ENTER(m) do {                                           \
-        if(m == NULL) break;                                            \
+        if (m == NULL) break;                                            \
         while(true) {                                                   \
             int _ret, i;                                                \
             for(i = 0; (_ret = pthread_mutex_trylock(&(((qmutex_t *)m)->mutex))) != 0 \
                         && i < MAX_MUTEX_LOCK_WAIT; i++) {              \
-                if(i == 0) {                                            \
+                if (i == 0) {                                            \
                     DEBUG("Q_MUTEX: mutex is already locked - retrying"); \
                 }                                                       \
                 usleep(1);                                              \
             }                                                           \
-            if(_ret == 0) break;                                        \
+            if (_ret == 0) break;                                        \
             DEBUG("Q_MUTEX: can't get lock - force to unlock. [%d]",    \
                   _ret);                                                \
             Q_MUTEX_LEAVE(m);                                           \
@@ -121,8 +121,8 @@ struct qmutex_s {
     } while(0)
 
 #define Q_MUTEX_DESTROY(m) do {                                         \
-        if(m == NULL) break;                                            \
-        if(((qmutex_t *)m)->count != 0) DEBUG("Q_MUTEX: mutex counter is not 0."); \
+        if (m == NULL) break;                                            \
+        if (((qmutex_t *)m)->count != 0) DEBUG("Q_MUTEX: mutex counter is not 0."); \
         int _ret;                                                       \
         while((_ret = pthread_mutex_destroy(&(((qmutex_t *)m)->mutex))) != 0) { \
             DEBUG("Q_MUTEX: force to unlock mutex. [%d]", _ret);        \
