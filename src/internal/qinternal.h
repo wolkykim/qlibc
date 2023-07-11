@@ -39,7 +39,7 @@
 
 #define DYNAMIC_VSPRINTF(s, f) do {                                     \
         size_t _strsize;                                                \
-        for(_strsize = 1024; ; _strsize *= 2) {                         \
+        for (_strsize = 1024; ; _strsize *= 2) {                         \
             s = (char*)malloc(_strsize);                                \
             if (s == NULL) {                                             \
                 DEBUG("DYNAMIC_VSPRINTF(): can't allocate memory.");    \
@@ -104,7 +104,7 @@ struct qmutex_s {
         if (m == NULL) break;                                            \
         while(true) {                                                   \
             int _ret, i;                                                \
-            for(i = 0; (_ret = pthread_mutex_trylock(&(((qmutex_t *)m)->mutex))) != 0 \
+            for (i = 0; (_ret = pthread_mutex_trylock(&(((qmutex_t *)m)->mutex))) != 0 \
                         && i < MAX_MUTEX_LOCK_WAIT; i++) {              \
                 if (i == 0) {                                            \
                     DEBUG("Q_MUTEX: mutex is already locked - retrying"); \
