@@ -397,7 +397,7 @@ char *qstrdup_between(const char *str, const char *start, const char *end) {
     if (buf == NULL)
         return NULL;
 
-    memcpy(buf, s, len);
+    strncpy(buf, s, len);
     buf[len] = '\0';
     return buf;
 }

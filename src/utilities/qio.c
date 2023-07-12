@@ -303,7 +303,7 @@ ssize_t qio_puts(int fd, const char *str, int timeoutms) {
     char *newstr = (char *) malloc(strsize + 1 + 1);
     if (newstr == NULL)
         return -1;
-    memcpy(newstr, str, strsize);
+    strncpy(newstr, str, strsize);
     newstr[strsize] = '\n';
     newstr[strsize + 1] = '\0';
     ssize_t ret = qio_write(fd, newstr, strsize + 1, timeoutms);
