@@ -103,6 +103,9 @@ char *qtime_localtime_strf(char *buf, int size, time_t utctime,
 char *qtime_localtime_str(time_t utctime) {
     int size = sizeof(char) * (CONST_STRLEN("00-Jan-0000 00:00:00 +0000") + 1);
     char *timestr = (char *) malloc(size);
+	if (timestr == NULL)
+		return NULL;
+
     qtime_localtime_strf(timestr, size, utctime, "%d-%b-%Y %H:%M:%S %z");
     return timestr;
 }
@@ -172,6 +175,9 @@ char *qtime_gmt_str(time_t utctime) {
     int size = sizeof(char)
             * (CONST_STRLEN("Mon, 00 Jan 0000 00:00:00 GMT") + 1);
     char *timestr = (char *) malloc(size);
+	if (timestr == NULL)
+		return NULL;
+
     qtime_gmt_strf(timestr, size, utctime, "%a, %d %b %Y %H:%M:%S GMT");
     return timestr;
 }
