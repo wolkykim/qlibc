@@ -112,7 +112,7 @@ bool qsocket_close(int sockfd, int timeoutms) {
         char buf[1024];
         while (true) {
             ssize_t read = qio_read(sockfd, buf, sizeof(buf), timeoutms);
-			DEBUG("Throw %zu bytes from dummy input stream.", read);
+            DEBUG("Throw %zu bytes from dummy input stream.", read);
             if (read <= 0)
                 break;
         }
