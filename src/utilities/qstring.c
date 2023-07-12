@@ -251,6 +251,8 @@ char *qstrreplace(const char *mode, char *srcstr, const char *tokstr,
     if (method == 't') { /* Token replace */
         maxstrlen = strlen(srcstr) * ((strlen(word) > 0) ? strlen(word) : 1);
         newstr = (char *) malloc(maxstrlen + 1);
+        if (newstr == NULL)
+            return NULL;
 
         for (srcp = (char *) srcstr, newp = newstr; *srcp; srcp++) {
             for (tokenp = (char *) tokstr; *tokenp; tokenp++) {
@@ -274,6 +276,9 @@ char *qstrreplace(const char *mode, char *srcstr, const char *tokstr,
             maxstrlen = strlen(srcstr);
         }
         newstr = (char *) malloc(maxstrlen + 1);
+        if (newstr == NULL)
+            return NULL;
+
         tokstrlen = strlen(tokstr);
 
         for (srcp = srcstr, newp = newstr; *srcp; srcp++) {
@@ -389,9 +394,11 @@ char *qstrdup_between(const char *str, const char *start, const char *end) {
     int len = e - s;
 
     char *buf = (char *) malloc(sizeof(char) * (len + 1));
+    if (buf == NULL)
+        return NULL;
+
     strncpy(buf, s, len);
     buf[len] = '\0';
-
     return buf;
 }
 
@@ -869,6 +876,7 @@ char *qstr_conv_encoding(const char *str, const char *fromcode,
     char *tostr = (char *) malloc(tosize);
     if (tostr == NULL)
         return NULL;
+
     char *tostr1 = tostr;
 
     iconv_t it = iconv_open(tocode, fromcode);
