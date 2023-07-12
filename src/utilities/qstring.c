@@ -393,7 +393,11 @@ char *qstrdup_between(const char *str, const char *start, const char *end) {
 
     int len = e - s;
 
-    char *buf = qmemdup(s, len);
+    char *buf = (char *) malloc(sizeof(char) * (len + 1));
+    if (buf == NULL)
+        return NULL;
+
+    memcpy(buf, s, len);
     buf[len] = '\0';
     return buf;
 }
