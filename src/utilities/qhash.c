@@ -118,7 +118,7 @@ bool qhashmd5_file(const char *filepath, off_t offset, ssize_t nbytes,
     }
 
     // if requested to digest until the end of file, set nbytes to the remaining size
-    if(nbytes == 0) {
+    if (nbytes == 0) {
         nbytes = size - offset;
     }
 

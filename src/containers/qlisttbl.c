@@ -599,7 +599,7 @@ size_t qlisttbl_remove(qlisttbl_t *tbl, const char *name)
     qlisttbl_obj_t obj;
     memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
     qlisttbl_lock(tbl);
-    while(qlisttbl_getnext(tbl, &obj, name, false) == true) {
+    while (qlisttbl_getnext(tbl, &obj, name, false) == true) {
         qlisttbl_removeobj(tbl, &obj);
         numremoved++;
     }

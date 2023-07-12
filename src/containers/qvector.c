@@ -133,7 +133,7 @@ qvector_t *qvector(size_t max, size_t objsize, int options) {
         vector->objsize = objsize;
     } else {
         void *data = malloc(max * objsize);
-        if(data == NULL) {
+        if (data == NULL) {
             free(vector);
             errno = ENOMEM;
             return NULL;
@@ -148,7 +148,7 @@ qvector_t *qvector(size_t max, size_t objsize, int options) {
     //handle options
     if (options & QVECTOR_THREADSAFE) {
         Q_MUTEX_NEW(vector->qmutex, true);
-        if(vector->qmutex == NULL) {
+        if (vector->qmutex == NULL) {
             free(vector);
             errno = ENOMEM;
             return NULL;
@@ -322,7 +322,7 @@ bool qvector_addat(qvector_t *vector, int index, const void *data) {
             newmax = vector->max + 1;
         }
         bool result = vector->resize(vector, newmax);
-        if(result == false)
+        if (result == false)
         {
             vector->unlock(vector);
             errno = ENOMEM;
@@ -687,7 +687,7 @@ void qvector_free(qvector_t *vector) {
     vector->clear(vector);
     Q_MUTEX_DESTROY(vector->qmutex);
 
-    if(vector->data != NULL) {
+    if (vector->data != NULL) {
         free(vector->data);
     }
 
