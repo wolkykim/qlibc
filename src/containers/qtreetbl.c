@@ -1002,7 +1002,7 @@ int qtreetbl_check(qtreetbl_t *tbl) {
     if (node_check_rule5(tbl, tbl->root, &path_len))
         return 1;
     
-    
+    printf("No rules are violated.\n"); 
     
     print_node(tbl->root, 0);
     
@@ -1042,17 +1042,20 @@ static qtreetbl_obj_t *rotate_right(qtreetbl_obj_t *obj) {
 
 static qtreetbl_obj_t *move_red_left(qtreetbl_obj_t *obj) {
     flip_color(obj);
-    if (obj->right && is_red(obj->right->left)) {
+    if (is_red(obj->right->left)) {
         obj->right = rotate_right(obj->right);
         obj = rotate_left(obj);
         flip_color(obj);
+        if (is_red(obj->right->right)) {
+            obj->right = rotate_left(obj->right);
+        }
     }
     return obj;
 }
 
 static qtreetbl_obj_t *move_red_right(qtreetbl_obj_t *obj) {
     flip_color(obj);
-    if (obj->left && is_red(obj->left->left)) {
+    if (is_red(obj->left->left)) {
         obj = rotate_right(obj);
         flip_color(obj);
     }
@@ -1062,15 +1065,13 @@ static qtreetbl_obj_t *move_red_right(qtreetbl_obj_t *obj) {
 static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj) {
     // rotate right red to left
     if (is_red(obj->right)) {
+        if (is_red(obj->right->left))
+            obj->right = rotate_right(obj->right);
         obj = rotate_left(obj);
     }
     // rotate left red-red to right
-    if (obj->left && is_red(obj->left) && is_red(obj->left->left)) {
+    if (is_red(obj->left) && is_red(obj->left->left)) {
         obj = rotate_right(obj);
-    }
-    // split 4-nodes
-    if (is_red(obj->left) && is_red(obj->right)) {
-        flip_color(obj);
     }
     return obj;
 }
@@ -1214,12 +1215,12 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         // keep going down to the left
         obj->left = remove_obj(tbl, obj->left, name, namesize);
     } else {  // right or equal
-        if (is_red(obj->left) && !is_red(obj->right)) {
+        if (is_red(obj->left)) {
             obj = rotate_right(obj);
         }
         // remove if equal at the bottom
-        if (tbl->compare(name, namesize, obj->name, obj->namesize)
-                == 0&& obj->right == NULL) {
+        if (tbl->compare(name, namesize, obj->name, obj->namesize) == 0
+                && obj->right == NULL) {
             free(obj->name);
             free(obj->data);
             free(obj);
