@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2023 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,14 +39,8 @@
  * red–black tree which was invented in 1972 by Rudolf Bayer.
  *
  * References:
- * - http://www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf
- * - http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf
  * - http://en.wikipedia.org/wiki/Left-leaning_red-black_tree
- *
- * Following example code will construct the data structure shown in below
- * diagram. This example is quoted from the inventor's presentation slide
- * p24-p25, http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf and
- * used in unit tests for verification purpose.
+ * - https://sedgewick.io/wp-content/uploads/2022/03/2008-09LLRB.pdf
  *
  *                                (E)
  *                   ______________|______________
@@ -67,24 +61,20 @@
  *      //                              //                //
  *     A*                              I*                S*
  *
- *            Tree Info : tot=10, red=3, black=-7, root=E
+ *            <Left-Leaning Red-Black Tree Data Structure>
  *     Nodes A, I and S are nodes with RED upper link. Others are BLACK
  *
- *            <Left-Leaning Red-Black Tree Data Structure>
  *
- * The Red-Black BST algorithm has been one of the famous BST algorithms
- * especially for in-memory operation. It's been widely used in all the
- * computing areas. I was very impressed about this variant, the Left-Leaning
- * version of Red-Black about how it improves performance and reduces overall
- * complexity.
+ * The Red-Black BST algorithm has been one of the popular BST algorithms
+ * especially for in-memory operation. The Left-Leaning version of Red-Black
+ * especially improves performance and reduces overall complexity.
  *
  * Since it's relatively new algorithm, there's not many practically functional
  * working codes yet other than proof of concept kinds. Here's one of fully
  * functional codes and I, Seungyoung Kim, would like to dedicate this code to
  * the genius inventor Robert Sedgewick and to all the great qLibc users.
- * Cheers!
  *
- * Unique features:
+ * Additional features:
  *   - iterator.
  *   - find nearest key.
  *   - iteration from given key.
