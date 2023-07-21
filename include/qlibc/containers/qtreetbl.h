@@ -163,12 +163,12 @@ struct qtreetbl_s {
  * qtreetbl object data structure
  */
 struct qtreetbl_obj_s {
-    void *name;         /*!< name of key */
-    size_t namesize;    /*!< name size */
-    void *data;         /*!< data */
-    size_t datasize;    /*!< data size */
+    void *name;             /*!< name of key */
+    size_t namesize;        /*!< name size */
+    void *data;             /*!< data */
+    size_t datasize;        /*!< data size */
 
-    bool red;           /*!< true if upper link is red */
+    bool red;               /*!< true if upper link is red */
     qtreetbl_obj_t *left;   /*!< left node */
     qtreetbl_obj_t *right;  /*!< right node */
 
