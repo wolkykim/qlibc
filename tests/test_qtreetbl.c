@@ -57,7 +57,7 @@ QUNIT_START("Test qtreetbl.c");
  *
  * The nodes A I and S are nodes with RED upper link. Others are BLACK.
  */
-TEST("Test growth of tree") {
+TEST("Test growth of tree / A S E R C D I N B X") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
@@ -95,8 +95,54 @@ TEST("Test growth of tree") {
     tbl->free(tbl);
 }
 
-TEST("Test tree with deletion") {
+TEST("Test tree with deletion / 0 1 2 3 4 5 6 7 8 9 0") {
     const char *KEY[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "" };
+    qtreetbl_t *tbl = qtreetbl(0);
+
+    DISABLE_PROGRESS_DOT();
+    int i;
+    for (i = 0; KEY[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, KEY[i], "");
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        printf("\n");
+        drawtree(tbl);
+    }
+    for (i = 0; KEY[i][0] != '\0'; i++) {
+        tbl->remove(tbl, KEY[i]);
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        printf("\n");
+        drawtree(tbl);
+    }
+    ENABLE_PROGRESS_DOT();
+
+    tbl->free(tbl);
+}
+
+TEST("Test tree with deletion / 3 7 0 2 9 5 1 6 8 4") {
+    const char *KEY[] = { "3", "7", "0", "2", "9", "5", "1", "6", "8", "4", "" };
+    qtreetbl_t *tbl = qtreetbl(0);
+
+    DISABLE_PROGRESS_DOT();
+    int i;
+    for (i = 0; KEY[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, KEY[i], "");
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        printf("\n");
+        drawtree(tbl);
+    }
+    for (i = 0; KEY[i][0] != '\0'; i++) {
+        tbl->remove(tbl, KEY[i]);
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        printf("\n");
+        drawtree(tbl);
+    }
+    ENABLE_PROGRESS_DOT();
+
+    tbl->free(tbl);
+}
+
+TEST("Test tree with deletion / 9 8 7 6 5 4 3 2 1 0") {
+    const char *KEY[] = { "9", "8", "7", "6", "5", "4", "3", "2", "1", "0", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
     DISABLE_PROGRESS_DOT();
@@ -393,8 +439,8 @@ static bool drawtree(qtreetbl_t *tbl) {
     qqueue_t *q = qqueue(0);
     q->push(q, tbl->root, sizeof(qtreetbl_obj_t));
 
-    int i, j, k, pos, e = 0, x = 1, level = 0, redcnt = 0;
-    int print_pos[tbl->size(tbl) * 2];
+    int i, j, pos, e = 0, x = 1, level = 0, redcnt = 0;
+    int print_pos[tbl->size(tbl) * 4];
     for (print_pos[0] = 0, i = 0, j = 1; q->size(q) > 0; i++, j++) {
         qtreetbl_obj_t *obj = q->pop(q, NULL);
         if (obj == NULL) {
@@ -404,7 +450,7 @@ static bool drawtree(qtreetbl_t *tbl) {
         pos = print_pos[PARENT(i)]
                 + (i % 2 ? -1 : 1) * (LINE_WIDTH / (pow(2, level + 1)) + 1);
 
-        for (k = 0; k < pos - x; k++) {
+        for (int k = 0; k < pos - x; k++) {
             printf("%c", i == 0 || i % 2 ? ' ' : '`');
         }
         printf("%c%s%c",
