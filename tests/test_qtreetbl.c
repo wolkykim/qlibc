@@ -61,13 +61,15 @@ TEST("Test growth of tree") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
+    DISABLE_PROGRESS_DOT();
     int i;
     for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->putstr(tbl, KEY[i], "DATA");
+        tbl->putstr(tbl, KEY[i], "");
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        printf("\n");
+        drawtree(tbl);
     }
-
-    printf("\n");
-    drawtree(tbl);
+    ENABLE_PROGRESS_DOT();
 
     ASSERT(((char*)tbl->root->name)[0] == 'E');
     ASSERT((tbl->root->red) == false);
@@ -93,6 +95,30 @@ TEST("Test growth of tree") {
     tbl->free(tbl);
 }
 
+TEST("Test tree with deletion") {
+    const char *KEY[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "" };
+    qtreetbl_t *tbl = qtreetbl(0);
+
+    DISABLE_PROGRESS_DOT();
+    int i;
+    for (i = 0; KEY[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, KEY[i], "");
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        printf("\n");
+        drawtree(tbl);
+    }
+    for (i = 0; KEY[i][0] != '\0'; i++) {
+        tbl->remove(tbl, KEY[i]);
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        printf("\n");
+        drawtree(tbl);
+    }
+    ENABLE_PROGRESS_DOT();
+
+    tbl->free(tbl);
+}
+
+
 TEST("Test basic but complete") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
 
@@ -104,7 +130,9 @@ TEST("Test basic but complete") {
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->putstr(tbl, KEY[i], KEY[i]);
         ASSERT_EQUAL_STR(KEY[i], tbl->getstr(tbl, KEY[i], false));
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
     }
+    ASSERT_EQUAL_INT(i, tbl->size(tbl));
 
     // verify
     for (i = 0; KEY[i][0] != '\0'; i++) {
@@ -117,8 +145,26 @@ TEST("Test basic but complete") {
     // delete
     for (i = 0; KEY[i][0] != '\0'; i++) {
         ASSERT_EQUAL_BOOL(true, tbl->remove(tbl, KEY[i]));
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
     }
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
+
+    tbl->free(tbl);
+}
+
+TEST("Test duplicated key insertions()") {
+    qtreetbl_t *tbl = qtreetbl(0);
+    ASSERT_EQUAL_INT(0, tbl->size(tbl));
+
+    ASSERT_EQUAL_INT(0, tbl->size(tbl));
+    for (int i = 1; i < 100; i++ ) {
+        char *key = qstrdupf("K%03d", i);
+        tbl->putstr(tbl, key, "");
+        ASSERT_EQUAL_INT(i, tbl->size(tbl));
+        tbl->putstr(tbl, key, "");
+        ASSERT_EQUAL_INT(i, tbl->size(tbl));
+        free(key);
+    }
 
     tbl->free(tbl);
 }
@@ -282,77 +328,21 @@ TEST("Test thousands of keys put/delete: short key + long value") {
     test_thousands_of_keys(
             10000,
             "",
-            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
+            "long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value");
 }
 
 TEST("Test thousands of keys put/delete: long key + short value") {
     test_thousands_of_keys(
             10000,
-            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
+            "long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key",
             "");
 }
 
 TEST("Test thousands of keys put/delete: long key + long value") {
     test_thousands_of_keys(
             10000,
-            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866",
-            "1a087a6982371bbfc9d4e14ae76e05ddd784a5d9c6b0fc9e6cd715baab66b90987b2ee054764e58fc04e449dfa060a68398601b64cf470cb6f0a260ec6539866");
-}
-
-TEST("Test rule 4 and 5") {
-    qtreetbl_t *tbl = qtreetbl(0);
-    
-    size_t siz = sizeof(int);
-    int val = 0;
-    
-    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 0 0", &val, siz);
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    tbl->remove(tbl, "0 0 0 0 0 0 0 0 0 0 0 0");
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 0 0", &val, siz); 
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    
-    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 1 0", &val, siz); 
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    tbl->remove(tbl, "0 0 0 0 0 0 0 0 0 0 1 0");  
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 1 0", &val, siz); 
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-
-    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 1 1 0", &val, siz); 
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    
-    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 1 1", &val, siz); 
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    tbl->remove(tbl, "0 0 0 0 0 0 0 0 0 0 1 1");
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 0 1 1", &val, siz); 
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    
-    tbl->put(tbl, "0 0 1 0 0 0 0 0 0 0 1 1", &val, siz);
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    
-    tbl->put(tbl, "0 0 0 0 0 0 1 0 0 0 1 1", &val, siz); 
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    
-    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 1 1 1", &val, siz);
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    
-    tbl->remove(tbl, "0 0 0 0 0 0 0 0 0 1 1 0");
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    
-    tbl->put(tbl, "0 0 0 0 0 0 0 0 0 1 1 0", &val, siz);
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    
-    tbl->put(tbl, "1 0 0 0 0 0 0 0 0 1 1 0", &val, siz);
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    
-    tbl->put(tbl, "0 0 0 0 0 0 0 0 1 1 1 0", &val, siz);
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-    tbl->remove(tbl, "0 0 0 0 0 0 0 0 1 1 1 0");
-    ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-
-    tbl->free(tbl);
+            "long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key",
+            "long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value");
 }
 
 QUNIT_END();
@@ -364,23 +354,22 @@ static void test_thousands_of_keys(int num_keys, char *key_postfix,
 
     int i;
     for (i = 0; i < num_keys; i++) {
-        char *key = qstrdupf("key%d%s", i, key_postfix);
-        char *value = qstrdupf("value%d%s", i, value_postfix);
-
+        char *key = qstrdupf("K%05d%s", i, key_postfix);
+        char *value = qstrdupf("V%05%s", i, value_postfix);
         ASSERT_EQUAL_BOOL(true, tbl->putstr(tbl, key, value));
-        ASSERT_EQUAL_INT(i + 1, tbl->size(tbl));
         ASSERT_EQUAL_STR(value, tbl->getstr(tbl, key, false));
-
         free(key);
         free(value);
+        ASSERT_EQUAL_INT(i + 1, tbl->size(tbl));
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
     }
 
     for (i--; i >= 0; i--) {
-        char *key = qstrdupf("key%d%s", i, key_postfix);
+        char *key = qstrdupf("K%05d%s", i, key_postfix);
         ASSERT_EQUAL_BOOL(true, tbl->remove(tbl, key));
-        ASSERT_EQUAL_INT(i, tbl->size(tbl));
         ASSERT_NULL(tbl->getstr(tbl, key, false));
         free(key);
+        ASSERT_EQUAL_INT(i, tbl->size(tbl));
     }
 
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
@@ -390,16 +379,21 @@ static void test_thousands_of_keys(int num_keys, char *key_postfix,
 #define PARENT(i) ((i-1) / 2)
 #define LINE_WIDTH 70
 static bool drawtree(qtreetbl_t *tbl) {
+    if (tbl == NULL || tbl->root == NULL) {
+        return false;
+    }
+
     tbl->lock(tbl);
     qtreetbl_obj_t nullobj;
-    nullobj.name = strdup(" ");
+    nullobj.name = strdup("_");
     nullobj.red = false;
+    nullobj.left = NULL;
+    nullobj.right = NULL;
 
     qqueue_t *q = qqueue(0);
     q->push(q, tbl->root, sizeof(qtreetbl_obj_t));
 
-    int i, j, k, pos, x = 1, level = 0;
-    int redcnt = 0;
+    int i, j, k, pos, e = 0, x = 1, level = 0, redcnt = 0;
     int print_pos[tbl->size(tbl) * 2];
     for (print_pos[0] = 0, i = 0, j = 1; q->size(q) > 0; i++, j++) {
         qtreetbl_obj_t *obj = q->pop(q, NULL);
@@ -421,21 +415,26 @@ static bool drawtree(qtreetbl_t *tbl) {
             redcnt++;
         }
 
+        // to keep the drawing indentation, push even null children
+        q->push(q, (obj->left) ? obj->left : &nullobj, sizeof(qtreetbl_obj_t));
+        if (!obj->left) e++;
+        q->push(q, (obj->right) ? obj->right : &nullobj, sizeof(qtreetbl_obj_t));
+        if (!obj->right) e++;
+
         print_pos[i] = x = pos + 1;
         x += 2;
         if (j == pow(2, level)) {
+            if (e == pow(2, level + 1)) {
+                break; // all children pushed are null reference
+            }
+
             printf("\n");
             level++;
             x = 1;
             j = 0;
+            e = 0;
         }
 
-        if (((char*)obj->name)[0] != ' ') {
-            q->push(q, (obj->left) ? obj->left : &nullobj,
-                    sizeof(qtreetbl_obj_t));
-            q->push(q, (obj->right) ? obj->right : &nullobj,
-                    sizeof(qtreetbl_obj_t));
-        }
         free(obj);
     }
     q->free(q);
@@ -443,7 +442,7 @@ static bool drawtree(qtreetbl_t *tbl) {
 
     tbl->unlock(tbl);
 
-    printf("\n           Tree Info : #nodes=%d, #red=%d, #black=-%d, root=%s\n",
+    printf("                   (#nodes=%d, #red=%d, #black=%d, root=%s)\n",
         (int)tbl->size(tbl), redcnt, ((int)tbl->size(tbl) - redcnt),
         (char*)tbl->root->name);
 
