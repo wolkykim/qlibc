@@ -119,6 +119,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdarg.h>
+#include <ctype.h>
 #include <errno.h>
 #include <assert.h>
 #include "qinternal.h"
@@ -844,7 +845,42 @@ int qtreetbl_byte_cmp(const void *name1, size_t namesize1, const void *name2,
 }
 
 /**
- * qtreetbl->debug(): Print hash table for debugging purpose
+ * Display the tree structure from the node pointed by `obj` and down.
+ *
+ * @param tbl   A pointer to a node of the tree.
+ * @param depth The depth of the node in the tree.
+ *              The depth of the tree root is 0.
+ *
+ */
+void print_node(qtreetbl_obj_t *obj, FILE *out, int depth) {
+    if (!obj) return;
+
+    // 4-spaces indentation for each node level
+    for (int i = 0; i < depth; i++) {
+        fprintf(out, "    ");
+    }
+
+     // Print the key name of the node
+    for (int i = 0; i < obj->namesize; i++) {
+        if (isprint(((char *)obj->name)[i]))
+            fprintf(out, "%c", ((char *) obj->name)[i]);
+        else
+            fprintf(out, ".");
+    }
+
+    // Print the red-ness of the node
+    if (obj->red) {
+        fprintf(out, " (R)");
+    }
+    fprintf(out, "\n");
+
+    // Recursive call to display the children
+    print_node(obj->left, out, depth + 1);
+    print_node(obj->right, out, depth + 1);
+}
+
+/**
+ * qtreetbl->debug(): Print the table for debugging purpose
  *
  * @param tbl   qtreetbl_t container pointer.
  * @param out   output stream
@@ -861,57 +897,11 @@ bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
 
     qtreetbl_lock(tbl);
 
+    print_node(tbl->root, out, 0);
+
     qtreetbl_unlock(tbl);
 
     return true;
-}
-
-/**
- * Display the tree structure from the node pointed by `obj` and down.
- *
- * @param tbl   A pointer to a node of the tree.
- * @param depth The depth of the node in the tree.
- *              The depth of the tree root is 0.
- *
- */
-void print_node(qtreetbl_obj_t *obj, int depth) {
-    // Skip tree-leaves
-    if (!obj) return;
-
-    // 4-spaces indentation for each node level
-    for (int i = 0; i < depth; i++) {
-        printf("    ");
-    }
-
-    // Print the red-ness of the node
-    printf("R=%c W= ", (obj->red) ? 'Y' : 'N');
-
-    // Print the content of the node
-    for (int i = 0; i < obj->namesize; i++) {
-        printf("%c", ((char *) obj->name)[i]);
-    }
-
-    // No more data to print for this node, go to next line.
-    printf("\n");
-
-    // Recursive call to display the children
-    print_node(obj->left, depth + 1);
-    print_node(obj->right, depth + 1);
-}
-
-/**
- * Display the tree structure.
- *
- * @param tbl   qtreetbl_t container pointer.
- *
- */
-void qtreetbl_print(qtreetbl_t *tbl) {
-
-    qtreetbl_lock(tbl);
-
-    print_node(tbl->root, 0);
-
-    qtreetbl_unlock(tbl);
 }
 
 /**
@@ -928,15 +918,6 @@ int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
 
     if (is_red(obj)) {
         if (is_red(obj->right) || is_red(obj->left)) {
-            printf("ERROR: Rule 4 violated.\n");
-            printf("Red node with key '");
-            // Print the name
-            for (int i = 0; i < obj->namesize; i++) {
-                printf("%c", ((char *) obj->name)[i]);
-            }
-            printf("' has at least one red child.\n");
-            print_node(tbl->root, 0);
-
             return 1;
         }
     }
@@ -972,12 +953,9 @@ int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
             return 1;
 
         if (right_path_len != left_path_len) {
-            printf("ERROR: Rule 5 violated.");
-            print_node(tbl->root, 0);
             return 1;
         } else {
             *path_len = right_path_len;
-
             if (!is_red(obj)) (*path_len)++;
         }
     }
@@ -991,16 +969,13 @@ int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
  * @param tbl A pointer to the tree object to check.
  */
 int qtreetbl_check(qtreetbl_t *tbl) {
-    printf("Checking tree... \n");
     if (tbl == NULL) return 0;
 
     if (node_check_rule4(tbl, tbl->root)) 
-        return 1;
+        return 4;
     int path_len = 0;
     if (node_check_rule5(tbl, tbl->root, &path_len))
-        return 1;
-
-    print_node(tbl->root, 0);
+        return 5;
 
     return 0;
 }
