@@ -27,15 +27,15 @@
  *****************************************************************************/
 
 /**
- * @file qtreetbl.c Tree Table container that implements "Left-Leaning Red-Black"
- * BST algorithm.
+ * @file qtreetbl.c Tree Table container that implements the Left-Leaning
+ * Red-Black BST algorithm.
  *
- * qtreetbl implements a binary search tree that allows efficient in-order traversal
- * with O(log n) search time.
+ * qtreetbl implements a binary search tree that allows efficient in-order
+ * traversal with O(log n) search time.
  *
- * The algorithm qtreetbl specifically implements is left-leaning red-black tree
- * algorithm invented in 2008 by Robert Sedgewick. A left-leaning red–black tree
- * is a type of self-balancing binary search tree and it is a variant of the
+ * The algorithm qtreetbl specifically implements is the left-leaning red-black
+ * tree algorithm invented in 2008 by Robert Sedgewick. A left-leaning red–black
+ * tree is a type of self-balancing binary search tree and it is a variant of the
  * red–black tree which was invented in 1972 by Rudolf Bayer.
  *
  * References:
@@ -72,19 +72,21 @@
  *
  *            <Left-Leaning Red-Black Tree Data Structure>
  *
- * Red-Black BST algorithm has been one of the famous BST algorithm especially
- * for in-memory operation. It's been using in all around the computing area.
- * I was very impressed about this variant, Left-Leaning version of Red-Black
- * about how it improves the performance and reduces the overall complexity.
- * Since it's relatively new algorithm, there's not many of practically functional
+ * The Red-Black BST algorithm has been one of the famous BST algorithms
+ * especially for in-memory operation. It's been widely used in all the
+ * computing areas. I was very impressed about this variant, the Left-Leaning
+ * version of Red-Black about how it improves performance and reduces overall
+ * complexity.
+ *
+ * Since it's relatively new algorithm, there's not many practically functional
  * working codes yet other than proof of concept kinds. Here's one of fully
  * functional codes and I, Seungyoung Kim, would like to dedicate this code to
  * the genius inventor Robert Sedgewick and to all the great qLibc users.
  * Cheers!
  *
  * Unique features:
- *   - iterator. (have you ever seen iterator implementation in LLRB tree?)
- *   - find nearest key. (have you ever seen this as well? :)
+ *   - iterator.
+ *   - find nearest key.
  *   - iteration from given key.
  *   - find min/max key.
  *
@@ -922,8 +924,6 @@ void qtreetbl_print(qtreetbl_t *tbl) {
  * @param obj A pointer to a node of the tree object.
  */
 int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
-    // RULE 4: No red node has a red child
-
     if (obj == NULL) return 0;
 
     if (is_red(obj)) {
@@ -945,7 +945,7 @@ int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
         return 1;
     if (node_check_rule4(tbl, obj->left))
         return 1;
-    
+
     return 0;
 }
 
@@ -960,14 +960,13 @@ int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
  * @param obj A pointer to a node of the tree object.
  */
 int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
-
     if (obj == NULL) {
         *path_len = 0;
     } else {
         int right_path_len;
         if (node_check_rule5(tbl, obj->right, &right_path_len))
             return 1;
-        
+
         int left_path_len;
         if (node_check_rule5(tbl, obj->left, &left_path_len))
             return 1;
@@ -992,7 +991,6 @@ int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
  * @param tbl A pointer to the tree object to check.
  */
 int qtreetbl_check(qtreetbl_t *tbl) {
-
     printf("Checking tree... \n");
     if (tbl == NULL) return 0;
 
@@ -1001,11 +999,9 @@ int qtreetbl_check(qtreetbl_t *tbl) {
     int path_len = 0;
     if (node_check_rule5(tbl, tbl->root, &path_len))
         return 1;
-    
-    
-    
+
     print_node(tbl->root, 0);
-    
+
     return 0;
 }
 
@@ -1195,7 +1191,7 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
     if (is_red(obj->left) && is_red(obj->left->left)) {
         obj = rotate_right(obj);
     }
-    
+
     return obj;
 }
 
