@@ -39,8 +39,8 @@ QUNIT_START("Test qtreetbl.c");
 
 /* Test growth of tree
  *
- * Example from the slide p24-p25.
- * http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf
+ * Example taken from the inventor's presentation slide p24-p25.
+ * https://sedgewick.io/wp-content/uploads/2022/03/2008-09LLRB.pdf
  *
  * Key insertion sequence : A S E R C D I N B X
  * After all the insertions, the data structure must be like this.
@@ -71,26 +71,72 @@ TEST("Test growth of tree / A S E R C D I N B X") {
     }
     ENABLE_PROGRESS_DOT();
 
-    ASSERT(((char*)tbl->root->name)[0] == 'E');
+    ASSERT_EQUAL_STR((char*)tbl->root->name, "E");
     ASSERT((tbl->root->red) == false);
-    ASSERT(((char*)tbl->root->left->name)[0] == 'C');
+    ASSERT_EQUAL_STR((char*)tbl->root->left->name, "C");
     ASSERT((tbl->root->left->red) == false);
-    ASSERT(((char*)tbl->root->right->name)[0] == 'R');
+    ASSERT_EQUAL_STR((char*)tbl->root->right->name, "R");
     ASSERT((tbl->root->right->red) == false);
-    ASSERT(((char*)tbl->root->left->left->name)[0] == 'B');
+    ASSERT_EQUAL_STR((char*)tbl->root->left->left->name, "B");
     ASSERT((tbl->root->left->left->red) == false);
-    ASSERT(((char*)tbl->root->left->right->name)[0] == 'D');
+    ASSERT_EQUAL_STR((char*)tbl->root->left->right->name, "D");
     ASSERT((tbl->root->left->right->red) == false);
-    ASSERT(((char*)tbl->root->right->left->name)[0] == 'N');
+    ASSERT_EQUAL_STR((char*)tbl->root->right->left->name, "N");
     ASSERT((tbl->root->right->left->red) == false);
-    ASSERT(((char*)tbl->root->right->right->name)[0] == 'X');
+    ASSERT_EQUAL_STR((char*)tbl->root->right->right->name, "X");
     ASSERT((tbl->root->right->right->red) == false);
-    ASSERT(((char*)tbl->root->left->left->left->name)[0] == 'A');
+    ASSERT_EQUAL_STR((char*)tbl->root->left->left->left->name, "A");
     ASSERT((tbl->root->left->left->left->red) == true);
-    ASSERT(((char*)tbl->root->right->left->left->name)[0] == 'I');
+    ASSERT_EQUAL_STR((char*)tbl->root->right->left->left->name, "I");
     ASSERT((tbl->root->right->left->left->red) == true);
-    ASSERT(((char*)tbl->root->right->right->left->name)[0] == 'S');
+    ASSERT_EQUAL_STR((char*)tbl->root->right->right->left->name, "S");
     ASSERT((tbl->root->right->right->left->red) == true);
+
+    tbl->free(tbl);
+}
+
+/*
+ * Example taken from
+ * https://media.geeksforgeeks.org/wp-content/uploads/LLRB-Example-001.jpg
+ *
+ * Key insertion sequence : 10 20 30 40 50 25
+ *
+ *                                40
+ *                   ______________|______________
+ *                 //                             \
+ *                20                               50
+ *          _______|_______
+ *         /               \
+ *        10               30
+ *                        //
+ *                       25*
+ */
+TEST("Test insertion / 10 20 30 40 50 25") {
+    const char *KEY[] = { "10", "20", "30", "40", "50", "25", "" };
+    qtreetbl_t *tbl = qtreetbl(0);
+
+    DISABLE_PROGRESS_DOT();
+    int i;
+    for (i = 0; KEY[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, KEY[i], "");
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        printf("\n");
+        drawtree(tbl);
+    }
+    ENABLE_PROGRESS_DOT();
+
+    ASSERT_EQUAL_STR((char*)tbl->root->name, "40");
+    ASSERT((tbl->root->red) == false);
+    ASSERT_EQUAL_STR((char*)tbl->root->left->name, "20");
+    ASSERT((tbl->root->left->red) == true);
+    ASSERT_EQUAL_STR((char*)tbl->root->right->name, "50");
+    ASSERT((tbl->root->right->red) == false);
+    ASSERT_EQUAL_STR((char*)tbl->root->left->left->name, "10");
+    ASSERT((tbl->root->left->left->red) == false);
+    ASSERT_EQUAL_STR((char*)tbl->root->left->right->name, "30");
+    ASSERT((tbl->root->left->right->red) == false);
+    ASSERT_EQUAL_STR((char*)tbl->root->left->right->left->name, "25");
+    ASSERT((tbl->root->left->right->left->red) == true);
 
     tbl->free(tbl);
 }
