@@ -83,22 +83,34 @@
  * @code
  *  qtreetbl_t *tbl = qtreetbl(QTREETBL_THREADSAFE);
  *
- *  tbl->put(tbl, "key", "DATA", 4);          // use put_by_obj() for binary keys.
- *  void *data = tbl->get(tbl, "key", false); // use get_by_obj() for binary keys.
- *  tbl->remove(tbl, "key");                  // use remove_by_key() for binary keys.
+ *  tbl->put(tbl, "KEY", "DATA", 4);          // use put_by_obj() for binary keys.
+ *  void *data = tbl->get(tbl, "KEY", false); // use get_by_obj() for binary keys.
+ *  tbl->remove(tbl, "KEY");                  // use remove_by_key() for binary keys.
  *
  *  // iteration example
- *  tbl->lock(tbl);
- *  qtreetbl_obj_t obj = tbl->find_nearest(tbl, "k", 2, false);
+ *  qtreetbl_obj_t obj;
+ *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
+ *  tbl->lock(tbl);  // for thread safety
  *  while (tbl->getnext(tbl, &obj, false) == true) {
  *    ...
  *  }
  *  tbl->unlock(tbl);
  *
- *  tbl->set_compare(tbl, my_compare_func);
- *  size_t num = tbl->size(tbl);
+ *  // find a nearest key then iterate from there
+ *  tbl->lock(tbl);
+ *  qtreetbl_obj_t obj = tbl->find_nearest(tbl, "K", sizeof("K"), false);
+ *  tbl->lock(tbl);  // for thread safety
+ *  while (tbl->getnext(tbl, &obj, false) == true) {
+ *    ...
+ *  }
+ *  tbl->unlock(tbl);
+ *
+ *  // find minimum value using custom comparator
+ *  tbl->set_compare(tbl, my_compare_func); // default is byte comparator
  *  void *min = tbl->find_min(tbl, &keysize);
- *  qtree_clean();
+ * 
+ *  // get total number of objects in the table
+ *  size_t num = tbl->size(tbl);
  *
  *  tbl->free(tbl);
  * @endcode
@@ -687,13 +699,10 @@ void *qtreetbl_find_max(qtreetbl_t *tbl, size_t *namesize) {
  *  - ENOMEM : Memory allocation failure.
  *
  * @code
- *  [Some examples here]
  *  Data Set : A B C D E I N R S X
  *  find_nearest("0") => "A" // no smaller key available, so "A"
  *  find_nearest("C") => "C" // matching key found
  *  find_nearest("F") => "E" // "E" is nearest smaller key from "F"
- *  find_nearest("M") => "N" // "N" is nearest smaller key from "M"
- *  find_nearest("Z") => "X" // "X" is nearest smaller key from "Z"
  * @endcode
  *
  * @note
@@ -847,7 +856,6 @@ int qtreetbl_byte_cmp(const void *name1, size_t namesize1, const void *name2,
  * 
  * @code
  * Example output:
- * 
  *         .- 9
  *        |    `=[8]
  *     .- 7
@@ -876,16 +884,35 @@ bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
 }
 
 /**
- * Verifies that RULE 4 of the red-black tree is verified for the node pointed
- * by `obj` and all its children.
+ * Verifies that property 2 of the red-black tree is conserved
  *
- * Rule 4 states that no red node shall have a red child.
+ * Property 2:  The root node of the tree is always black
+ *
+ * @param tbl A pointer to the tree object.
+ */
+int node_check_rule2(qtreetbl_t *tbl) {
+    if (tbl == NULL) {
+        return 1;
+    }
+
+    if (is_red(tbl->root)) {
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ * Verifies that property 3 of the red-black tree is conserved
+ *
+ * Property 3: Red nodes cannot have red children
  *
  * @param tbl A pointer to the tree object.
  * @param obj A pointer to a node of the tree object.
  */
-int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
-    if (obj == NULL) return 0;
+int node_check_rule3(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
+    if (obj == NULL) {
+        return 0;
+    }
 
     if (is_red(obj)) {
         if (is_red(obj->right) || is_red(obj->left)) {
@@ -893,37 +920,36 @@ int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
         }
     }
 
-    if (node_check_rule4(tbl, obj->right)) {
+    if (node_check_rule3(tbl, obj->right)) {
         return 1;
     }
-    if (node_check_rule4(tbl, obj->left)) {
+    if (node_check_rule3(tbl, obj->left)) {
         return 1;
     }
     return 0;
 }
 
 /**
- * Verifies that RULE 5 of the red-black tree is verified for the node pointed
- * by `obj` and all its children.
+ * Verifies that property 4 of the red-black tree is conserved
  *
- * Rule 5 states that every path from the root of the tree to any leaf of the
- * tree has the same number of black nodes.
+ * Property 4: Every path from the root of the tree to any leaf of the
+ *             tree has the same number of black nodes.
  *
  * @param tbl A pointer to the tree object.
  * @param obj A pointer to a node of the tree object.
  */
-int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
+int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
     if (obj == NULL) {
-        *path_len = 0;
+        *path_len = 1;
         return 0;
     }
 
     int right_path_len;
-    if (node_check_rule5(tbl, obj->right, &right_path_len)) {
+    if (node_check_rule4(tbl, obj->right, &right_path_len)) {
         return 1;
     }
     int left_path_len;
-    if (node_check_rule5(tbl, obj->left, &left_path_len)) {
+    if (node_check_rule4(tbl, obj->left, &left_path_len)) {
         return 1;
     }
 
@@ -938,6 +964,14 @@ int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
 /**
  * Verifies that the (some) invariants of the red-black tree are satisfied.
  *
+ *  Property 1. Every node is either red or black.
+ *  Property 2. The root node is always black.
+ *  Property 3: Red nodes cannot have red children (no consecutive red nodes).
+ *  Property 4: Every leaf (null) node is considered black.
+ *  Property 5: Every path from the root of the tree to any leaf of the tree
+ *              has the same number of black nodes.
+ *  Property 6: A red link is allowed to the left child. (LLRB specific)
+
  * @param tbl A pointer to the tree object to check.
  */
 int qtreetbl_check(qtreetbl_t *tbl) {
@@ -945,12 +979,15 @@ int qtreetbl_check(qtreetbl_t *tbl) {
         return 0;
     }
 
-    if (node_check_rule4(tbl, tbl->root)) {
-        return 4;
+    if (node_check_rule2(tbl)) {
+        return 2;
+    }
+    if (node_check_rule3(tbl, tbl->root)) {
+        return 3;
     }
     int path_len = 0;
-    if (node_check_rule5(tbl, tbl->root, &path_len)) {
-        return 5;
+    if (node_check_rule4(tbl, tbl->root, &path_len)) {
+        return 4;
     }
 
     return 0;
@@ -1266,7 +1303,6 @@ void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev, bool 
         prev->s = prev_s;
     }
     branch.s = "   |";
-
     print_node(obj->left, out, &branch, true);
 }
 
