@@ -163,10 +163,10 @@ TEST("Test tree with deletion / 0 1 2 3 4 5 6 7 8 9 0") {
 }
 
 /*
- * Example taken from Stroh Snow's finding about Rule 4 violation case.
+ * Example taken from Stroh Snow's finding about red property violation case.
  * https://github.com/wolkykim/qlibc/pull/106#issuecomment-1646521205
  */
-TEST("Test tree with deletion / Stroh Snow's test for rule 4 violation") {
+TEST("Test tree with deletion / Stroh Snow's test for red property violation") {
     const char *KEY[] = {
         "J", "E", "O", "C", "L", "H", "Q", "B", "G", "K", "P", "D", "I",
         "N", "S", "A", "M", "F", "R",""
