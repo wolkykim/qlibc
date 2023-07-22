@@ -1240,34 +1240,35 @@ void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev, bool 
     branch.p = prev;
     branch.s = prev_s;
 
-    print_node(obj->right, out, &branch, true);
+    print_node(obj->right, out, &branch, false);
 
     if (!prev) {
-        branch.s = "---";
-    } else if (left) {
-        branch.s = (obj->red) ? ".==" : ".--";
+        branch.s = "-- ";
+    } else if (!left) {
+        branch.s = (obj->red) ? ".=" : ".- ";
         prev_s = "   |";
     } else {
-        branch.s = (obj->red) ? "`==" : "`--";
+        branch.s = (obj->red) ? "`=" : "`- ";
         prev->s = prev_s;
     }
     print_branch(&branch, out);
 
      // Print the key name of the node
+    fprintf(out, "%s", (obj->red) ? "[" : "");
     for (int i = 0; i < obj->namesize; i++) {
         if (isprint(((char *)obj->name)[i]))
             fprintf(out, "%c", ((char *) obj->name)[i]);
         else if ((((char *)obj->name)[i]) != '\0')
             fprintf(out, ".");
     }
-    fprintf(out, "\n");
+    fprintf(out, "%s", (obj->red) ? "]\n" : "\n");
 
     if (prev) {
         prev->s = prev_s;
     }
     branch.s = "   |";
 
-    print_node(obj->left, out, &branch, false);
+    print_node(obj->left, out, &branch, true);
 }
 
 #endif
