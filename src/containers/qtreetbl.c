@@ -512,9 +512,9 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
 }
 
 /**
- * qhashtbl->getnext(): Get next element.
+ * qtreetbl->getnext(): Get next element.
  *
- * @param tbl       qhashtbl_t container pointer.
+ * @param tbl       qtreetbl_t container pointer.
  * @param obj       found data will be stored in this object
  * @param newmem    whether or not to allocate memory for the data.
  *
