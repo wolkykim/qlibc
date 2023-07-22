@@ -1229,7 +1229,7 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
     if (tbl->compare(name, namesize, obj->name, obj->namesize) < 0) {  // left
         // move red left
         if (obj->left != NULL
-                && (!is_red(obj->left) && !is_red(obj->left->left))) {
+            && (!is_red(obj->left) && !is_red(obj->left->left))) {
             obj = move_red_left(obj);
         }
         // keep going down to the left
@@ -1240,7 +1240,7 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         }
         // remove if equal at the bottom
         if (tbl->compare(name, namesize, obj->name, obj->namesize) == 0
-                && obj->right == NULL) {
+            && obj->right == NULL) {
             free(obj->name);
             free(obj->data);
             free(obj);
@@ -1250,7 +1250,7 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         }
         // move red right
         if (obj->right != NULL
-                && (!is_red(obj->right) && !is_red(obj->right->left))) {
+            && (!is_red(obj->right) && !is_red(obj->right->left))) {
             obj = move_red_right(obj);
         }
         // found in the middle
@@ -1315,11 +1315,7 @@ static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev
     struct branch_obj_s branch;
     branch.p = prev;
 
-    if (prev != NULL) {
-        branch.s = right ? "    " : " │  ";
-    } else {
-        branch.s = "";
-    }
+    branch.s = (prev != NULL) ? (right) ?  "    " : " │  " : "";
     print_node(obj->right, out, &branch, true);
 
     print_branch(prev, out);
@@ -1334,14 +1330,9 @@ static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev
             fprintf(out, ".");
         }
     }
-    fprintf(out, "%c", obj->red ? ']' : ' ');
-    fprintf(out, "\n");
+    fprintf(out, "%s", obj->red ? "]\n" : " \n");
 
-    if (prev != NULL) {
-        branch.s = right ? " │  " : "    ";
-    } else {
-        branch.s = "";
-    }
+    branch.s = (prev != NULL) ? (right) ? " │  " : "    " : "";
     print_node(obj->left, out, &branch, false);
 }
 
