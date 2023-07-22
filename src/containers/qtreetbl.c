@@ -1254,10 +1254,11 @@ void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev, bool 
      // Print the key name of the node
     fprintf(out, "%s", (obj->red) ? "[" : "");
     for (int i = 0; i < obj->namesize; i++) {
-        if (isprint(((char *)obj->name)[i]))
+        if (isprint(((char *)obj->name)[i])) {
             fprintf(out, "%c", ((char *) obj->name)[i]);
-        else if ((((char *)obj->name)[i]) != '\0')
+        } else if ((((char *)obj->name)[i]) != '\0') {
             fprintf(out, ".");
+        }
     }
     fprintf(out, "%s", (obj->red) ? "]\n" : "\n");
 
