@@ -159,7 +159,7 @@ struct branch_obj_s {
 };
 static void print_branch(struct branch_obj_s *branch, FILE *out);
 static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev,
-                       bool left);
+                       bool right);
 
 #endif
 
@@ -882,7 +882,7 @@ bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
     }
 
     qtreetbl_lock(tbl);
-    print_node(tbl->root, out, NULL, true);
+    print_node(tbl->root, out, NULL, false);
     qtreetbl_unlock(tbl);
     return true;
 }
