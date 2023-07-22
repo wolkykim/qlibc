@@ -139,7 +139,6 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
 static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
                                   const void *name, size_t namesize);
 static void free_objs(qtreetbl_obj_t *obj);
-static void free_obj(qtreetbl_obj_t *obj);
 static uint8_t reset_iterator(qtreetbl_t *tbl);
 
 struct branch_obj_s {
@@ -1210,13 +1209,7 @@ static void free_objs(qtreetbl_obj_t *obj) {
     if (obj->right) {
         free_objs(obj->right);
     }
-    free_obj(obj);
-}
 
-static void free_obj(qtreetbl_obj_t *obj) {
-    if (obj == NULL) {
-        return;
-    }
     free(obj->name);
     free(obj->data);
     free(obj);
