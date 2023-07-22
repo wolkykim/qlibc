@@ -158,7 +158,8 @@ struct branch_obj_s {
     char *s;
 };
 static void print_branch(struct branch_obj_s *branch, FILE *out);
-static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev, bool left);
+static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev,
+                       bool left);
 
 #endif
 
@@ -856,19 +857,20 @@ int qtreetbl_byte_cmp(const void *name1, size_t namesize1, const void *name2,
  * 
  * @code
  * Example output:
- *         .- 9
- *        |    `=[8]
- *     .- 7
- *    |   |    .- 6
- *    |    `=[5]
- *    |        `- 4
- * -- 3
- *    |    .- 2
- *     `- 1
- *         `- 0
+ * 
+ *     ┌── 9 
+ *     │   └──[8]
+ * ┌── 7 
+ * │   │   ┌── 6 
+ * │   └──[5]
+ * │       └── 4 
+ * 3 
+ * │   ┌── 2 
+ * └── 1 
+ *     └── 0 
  * @endcode
  * @note
- * Red nodes are connected with `=`, Black nodes are with `-`.
+ * Red nodes are wrapped in `[]`.
  * In this example, 5 and 8 are Red nodes.
  */
 bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
@@ -878,7 +880,7 @@ bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
     }
 
     qtreetbl_lock(tbl);
-    print_node(tbl->root, out, NULL, false);
+    print_node(tbl->root, out, NULL, true);
     qtreetbl_unlock(tbl);
     return true;
 }
@@ -1290,51 +1292,51 @@ static uint8_t reset_iterator(qtreetbl_t *tbl) {
     return (++tbl->tid);
 }
 
-void print_branch(struct branch_obj_s *branch, FILE *out) {
-    if (branch == NULL) return;
+static void print_branch(struct branch_obj_s *branch, FILE *out) {
+    if (branch == NULL) {
+        return;
+    }
     print_branch(branch->p, out);
     fprintf(out, "%s", branch->s);
 }
 
-void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev, bool left) {
-    if (!obj) {
+static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev,
+                       bool right) {
+    if (obj == NULL) {
         return;
     }
 
-    char *prev_s = "    ";
     struct branch_obj_s branch;
     branch.p = prev;
-    branch.s = prev_s;
 
-    print_node(obj->right, out, &branch, false);
-
-    if (!prev) {
-        branch.s = "-- ";
-    } else if (!left) {
-        branch.s = (obj->red) ? ".=" : ".- ";
-        prev_s = "   |";
+    if (prev != NULL) {
+        branch.s = right ? "    " : " │  ";
     } else {
-        branch.s = (obj->red) ? "`=" : "`- ";
-        prev->s = prev_s;
+        branch.s = "";
     }
-    print_branch(&branch, out);
+    print_node(obj->right, out, &branch, true);
 
-     // Print the key name of the node
-    fprintf(out, "%s", (obj->red) ? "[" : "");
+    print_branch(prev, out);
+    if (prev != NULL) {
+        fprintf(out, "%s", right ? " ┌──" : " └──");
+    }
+    fprintf(out, "%c", obj->red ? '[' : ' ');
     for (int i = 0; i < obj->namesize; i++) {
         if (isprint(((char *)obj->name)[i])) {
-            fprintf(out, "%c", ((char *) obj->name)[i]);
+            fprintf(out, "%c", ((char *)obj->name)[i]);
         } else if ((((char *)obj->name)[i]) != '\0') {
             fprintf(out, ".");
         }
     }
-    fprintf(out, "%s", (obj->red) ? "]\n" : "\n");
+    fprintf(out, "%c", obj->red ? ']' : ' ');
+    fprintf(out, "\n");
 
-    if (prev) {
-        prev->s = prev_s;
+    if (prev != NULL) {
+        branch.s = right ? " │  " : "    ";
+    } else {
+        branch.s = "";
     }
-    branch.s = "   |";
-    print_node(obj->left, out, &branch, true);
+    print_node(obj->left, out, &branch, false);
 }
 
 #endif
