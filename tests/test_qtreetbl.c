@@ -472,7 +472,7 @@ static bool print_tree(qtreetbl_t *tbl) {
 static void ASSERT_TABLE_CHECK(qtreetbl_t *tbl, bool verbose) {
     int ret = qtreetbl_check(tbl);
     if (ret != 0) {
-        printf("\nVIOLATION of property %d found.\n", ret);
+        printf("\n\nVIOLATION of property %d found.\n", ret);
         verbose = true;
         ASSERT_EQUAL_INT(0, ret);
     }
