@@ -166,7 +166,7 @@ static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev
 /**
  * Initialize a tree table.
  *
- * @param options   combination of initialization options.
+ * @param options    combination of initialization options.
  *
  * @return a pointer of malloced qtreetbl_t, otherwise returns NULL.
  * @retval errno will be set in error condition.
@@ -177,7 +177,7 @@ static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev
  * @endcode
  *
  * @note
- *   Available options:
+ *  Available options:
  *   - QTREETBL_THREADSAFE - make it thread-safe.
  */
 qtreetbl_t *qtreetbl(int options) {
@@ -241,13 +241,13 @@ qtreetbl_t *qtreetbl(int options) {
 /**
  * qtreetbl->set_compare(): Set user comparator.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param cmp       a pointer to the user comparator function.
+ * @param tbl   qtreetbl_t container pointer.
+ * @param cmp   a pointer to the user comparator function.
  *
  * @note
- * By default, qtreetbl uses byte comparator that works for
- * both binary type key and string type key. Please refer
- * qtreetbl_byte_cmp() for your idea to make your own comparator,
+ *  By default, qtreetbl uses byte comparator that works for
+ *  both binary type key and string type key. Please refer
+ *  qtreetbl_byte_cmp() for your idea to make your own comparator.
  */
 void qtreetbl_set_compare(
         qtreetbl_t *tbl,
@@ -259,12 +259,12 @@ void qtreetbl_set_compare(
 /**
  * qtreetbl->put(): Put an object into this table with string type key.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param name      key name
- * @param data      data object
- * @param datasize  size of data object
+ * @param tbl         qtreetbl_t container pointer.
+ * @param name        key name.
+ * @param data        data object.
+ * @param datasize    size of data object.
  *
- * @return true if successful, otherwise returns false
+ * @return true if successful, otherwise returns false.
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
@@ -279,9 +279,9 @@ bool qtreetbl_put(qtreetbl_t *tbl, const char *name, const void *data,
 /**
  * qtreetbl->putstr(): Put a string into this table.
  *
- * @param tbl       qtreetbl container pointer.
- * @param name      key name.
- * @param str       string data.
+ * @param tbl     qtreetbl container pointer.
+ * @param name    key name.
+ * @param str     string data.
  *
  * @return true if successful, otherwise returns false.
  * @retval errno will be set in error condition.
@@ -323,13 +323,13 @@ bool qtreetbl_putstrf(qtreetbl_t *tbl, const char *name, const char *format,
 /**
  * qtreetbl->put_by_obj(): Put an object data into this table with an object name.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param name      key name
- * @param namesize  key size
- * @param data      data object
- * @param datasize  size of data object
+ * @param tbl         qtreetbl_t container pointer.
+ * @param name        key name.
+ * @param namesize    key size.
+ * @param data        data object.
+ * @param datasize    size of data object.
  *
- * @return true if successful, otherwise returns false
+ * @return true if successful, otherwise returns false.
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
@@ -362,10 +362,10 @@ bool qtreetbl_put_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize,
 /**
  * qtreetbl->get(): Get an object from this table.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param name      key name.
- * @param datasize  if not NULL, oject size will be stored.
- * @param newmem    whether or not to allocate memory for the data.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param name        key name.
+ * @param datasize    if not NULL, object size will be stored.
+ * @param newmem      whether or not to allocate memory for the data.
  *
  * @return a pointer of data if the key is found, otherwise returns NULL.
  * @retval errno will be set in error condition.
@@ -401,13 +401,13 @@ void *qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize,
 }
 
 /**
- * qtreetbl->getstr(): Finds an object and returns as string type.
+ * qtreetbl->getstr(): Finds an object and returns it as string type.
  *
  * @param tbl       qtreetbl_t container pointer.
- * @param name      key name
+ * @param name      key name.
  * @param newmem    whether or not to allocate memory for the data.
  *
- * @return a pointer of data if the key is found, otherwise returns NULL.
+ * @return a pointer to data if the key is found, otherwise returns NULL.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -428,11 +428,11 @@ char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem) {
 /**
  * qtreetbl->get_by_obj(): Get an object from this table with an object name.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param name      key name
- * @param namesize  key size
- * @param datasize  if not NULL, oject size will be stored.
- * @param newmem    whether or not to allocate memory for the data.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param name        key name.
+ * @param namesize    key size.
+ * @param datasize    if not NULL, oject size will be stored.
+ * @param newmem      whether or not to allocate memory for the data.
  *
  * @return a pointer of data if the key is found, otherwise returns NULL.
  * @retval errno will be set in error condition.
@@ -469,10 +469,10 @@ void *qtreetbl_get_by_obj(qtreetbl_t *tbl, const char *name, size_t namesize,
 /**
  * qtreetbl->remove(): Remove an object from this table.
  *
- * @param tbl   qtreetbl_t container pointer.
- * @param name  key name
+ * @param tbl     qtreetbl_t container pointer.
+ * @param name    key name.
  *
- * @return true if successful, otherwise(not found) returns false
+ * @return true if successful, otherwise(not found) returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -485,11 +485,11 @@ bool qtreetbl_remove(qtreetbl_t *tbl, const char *name) {
 /**
  * qtreetbl->remove(): Remove an object from this table with an object name.
  *
- * @param tbl   qtreetbl_t container pointer.
- * @param name  key name
- * @param name  key size
+ * @param tbl     qtreetbl_t container pointer.
+ * @param name    key name.
+ * @param name    key size.
  *
- * @return true if successful, otherwise(not found) returns false
+ * @return true if successful, otherwise(not found) returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -516,10 +516,10 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
  * qtreetbl->getnext(): Get next element.
  *
  * @param tbl       qtreetbl_t container pointer.
- * @param obj       found data will be stored in this object
+ * @param obj       found data will be stored in this object.
  * @param newmem    whether or not to allocate memory for the data.
  *
- * @return true if found otherwise returns false
+ * @return true if found otherwise returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT : No next element.
  *  - EINVAL : Invalid argument.
@@ -527,6 +527,7 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
  *
  * @code
  *  [Iteration example from the beginning]
+ * 
  *  qtreetbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  tbl->lock(tbl);  // lock it when thread condition is expected
@@ -556,21 +557,22 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
  * @endcode
  *
  * @code
- * [Removal example in iteration loop]
- *   qtreetbl_obj_t obj;
- *   memset((void*)&obj, 0, sizeof(obj));
- *   tbl->lock(tbl);
- *   while (tbl->getnext(tbl, &obj, false) == true) {
- *       if (...condition...) {
- *           char *name = qmemdup(obj.name, obj.namesize);  // keep the name
- *           size_t namesize = obj.namesize;                // for removal argument
- *           tbl->remove_by_obj(tbl, obj.name, obj.namesize);  // remove
- *           obj = tbl->find_nearest(tbl, name, namesize, false); // rewind one step back
- *           free(name);  // clean up
- *       }
- *   }
- *   tbl->unlock(tbl);
- *  @endcode
+ *  [Removal example in iteration loop]
+ * 
+ *  qtreetbl_obj_t obj;
+ *  memset((void*)&obj, 0, sizeof(obj));
+ *  tbl->lock(tbl);
+ *  while (tbl->getnext(tbl, &obj, false) == true) {
+ *      if (...condition...) {
+ *          char *name = qmemdup(obj.name, obj.namesize);  // keep the name
+ *          size_t namesize = obj.namesize;                // for removal argument
+ *          tbl->remove_by_obj(tbl, obj.name, obj.namesize);  // remove
+ *          obj = tbl->find_nearest(tbl, name, namesize, false); // rewind one step back
+ *          free(name);  // clean up
+ *      }
+ *  }
+ *  tbl->unlock(tbl);
+ * @endcode
  *
  * @note
  *  - Data insertion or deletion can be made during the traversal, but in that
@@ -625,10 +627,10 @@ bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem) {
 }
 
 /**
- * qtreetbl->find_min(): Find the name of very left object.
+ * qtreetbl->find_min(): Find the name of the leftmost object.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param namesize  if not NULL, the size of key name will be stored.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param namesize    if not NULL, the size of key name will be stored.
  *
  * @return malloced memory copying the key name.
  *
@@ -653,10 +655,10 @@ void *qtreetbl_find_min(qtreetbl_t *tbl, size_t *namesize) {
 }
 
 /**
- * qtreetbl->find_max(): Find the name of very right object.
+ * qtreetbl->find_max(): Find the name of the rightmost object.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param namesize  if not NULL, the size of key name will be stored.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param namesize    if not NULL, the size of key name will be stored.
  *
  * @return malloced memory copying the key name.
  *
@@ -687,10 +689,10 @@ void *qtreetbl_find_max(qtreetbl_t *tbl, size_t *namesize) {
  * no keys in the table. It'll return empty qtreetbl_obj_t object
  * with errno ENOENT.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param name      key name
- * @param namesize  key size
- * @param newmem    whether or not to allocate memory for the data.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param name        key name.
+ * @param namesize    key size.
+ * @param newmem      whether or not to allocate memory for the data.
  *
  * @return qtreetbl_obj_t object.
  *
@@ -773,9 +775,9 @@ qtreetbl_obj_t qtreetbl_find_nearest(qtreetbl_t *tbl, const void *name,
 /**
  * qtreetbl->size(): Returns the number of keys in the table.
  *
- * @param tbl   qtreetbl_t container pointer.
+ * @param tbl    qtreetbl_t container pointer.
  *
- * @return number of elements stored
+ * @return number of elements stored.
  */
 size_t qtreetbl_size(qtreetbl_t *tbl) {
     return tbl->num;
@@ -784,7 +786,7 @@ size_t qtreetbl_size(qtreetbl_t *tbl) {
 /**
  * qtreetbl->clear(): Clears the table so that it contains no keys.
  *
- * @param tbl   qtreetbl_t container pointer.
+ * @param tbl    qtreetbl_t container pointer.
  */
 void qtreetbl_clear(qtreetbl_t *tbl) {
     qtreetbl_lock(tbl);
@@ -797,7 +799,7 @@ void qtreetbl_clear(qtreetbl_t *tbl) {
 /**
  * qtreetbl->lock(): Enter critical section.
  *
- * @param tbl   qtreetbl_t container pointer.
+ * @param tbl    qtreetbl_t container pointer.
  *
  * @note
  *  From user side, normally locking operation is only needed when traverse
@@ -814,7 +816,7 @@ void qtreetbl_lock(qtreetbl_t *tbl) {
 /**
  * qtreetbl->unlock(): Leave critical section.
  *
- * @param tbl   qtreetbl_t container pointer.
+ * @param tbl    qtreetbl_t container pointer.
  *
  * @note
  *  This operation will do nothing if QTREETBL_THREADSAFE option was not
@@ -825,9 +827,9 @@ void qtreetbl_unlock(qtreetbl_t *tbl) {
 }
 
 /**
- * qtreetbl->free(): De-allocate the table
+ * qtreetbl->free(): De-allocate the table.
  *
- * @param tbl   qtreetbl_t container pointer.
+ * @param tbl    qtreetbl_t container pointer.
  */
 void qtreetbl_free(qtreetbl_t *tbl) {
     qtreetbl_clear(tbl);
@@ -846,32 +848,32 @@ int qtreetbl_byte_cmp(const void *name1, size_t namesize1, const void *name2,
 }
 
 /**
- * qtreetbl->debug(): Print the internal tree structure in text
+ * qtreetbl->debug(): Print the internal tree structure in text.
  *
- * @param tbl   qtreetbl_t container pointer.
- * @param out   output stream
+ * @param tbl    qtreetbl_t container pointer.
+ * @param out    output stream.
  *
  * @return true if successful, otherwise returns false.
  * @retval errno will be set in error condition.
  *  - EIO : Invalid output stream.
  * 
  * @code
- * Example output:
- * 
- *     ┌── 9 
- *     │   └──[8]
- * ┌── 7 
- * │   │   ┌── 6 
- * │   └──[5]
- * │       └── 4 
- * 3 
- * │   ┌── 2 
- * └── 1 
- *     └── 0 
+ *  Example output:
+ *  
+ *      ┌── 9 
+ *      │   └──[8]
+ *  ┌── 7 
+ *  │   │   ┌── 6 
+ *  │   └──[5]
+ *  │       └── 4 
+ *  3 
+ *  │   ┌── 2 
+ *  └── 1 
+ *      └── 0 
  * @endcode
  * @note
- * Red nodes are wrapped in `[]`.
- * In this example, 5 and 8 are Red nodes.
+ *  Red nodes are wrapped in `[]`.
+ *  In this example, 5 and 8 are Red nodes.
  */
 bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
     if (out == NULL) {
@@ -890,7 +892,7 @@ bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
  *
  * Root property: The root of the red-black tree is black.
  *
- * @param tbl A pointer to the tree object.
+ * @param tbl    qtreetbl_t container pointer.
  */
 int node_check_root(qtreetbl_t *tbl) {
     if (tbl == NULL) {
@@ -908,8 +910,8 @@ int node_check_root(qtreetbl_t *tbl) {
  *
  * Red property: The children of a red node are black.
  *
- * @param tbl A pointer to the tree object.
- * @param obj A pointer to a node of the tree object.
+ * @param tbl    qtreetbl_t container pointer.
+ * @param obj    qtreetbl_obj_t object pointer.
  */
 int node_check_red(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
     if (obj == NULL) {
@@ -939,8 +941,9 @@ int node_check_red(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
  *                 the number of black nodes on the path from the root
  *                 to the null child is the same.
  *
- * @param tbl A pointer to the tree object.
- * @param obj A pointer to a node of the tree object.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param obj         qtreetbl_obj_t object pointer.
+ * @param path_len    black path length.
  */
 int node_check_black(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
     if (obj == NULL) {
@@ -970,8 +973,8 @@ int node_check_black(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
  *
  * LLRB property: 3-nodes always lean to the left and 4-nodes are balanced.
  *
- * @param tbl A pointer to the tree object.
- * @param obj A pointer to a node of the tree object.
+ * @param tbl    qtreetbl_t container pointer.
+ * @param obj    qtreetbl_obj_t object pointer.
  */
 int node_check_llrb(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
     if (obj == NULL) {
@@ -1002,7 +1005,7 @@ int node_check_llrb(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
  *                  to the null child is the same.
  * LLRB property: 3-nodes always lean to the left and 4-nodes are balanced.
  *
- * @param tbl A pointer to the tree object to check.
+ * @param tbl    qtreetbl_t container pointer.
  */
 int qtreetbl_check(qtreetbl_t *tbl) {
     if (tbl == NULL) {
