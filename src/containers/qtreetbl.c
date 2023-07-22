@@ -886,17 +886,17 @@ bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
 }
 
 /**
- * Verifies that property 2 of the red-black tree is satisfied.
+ * Verifies that root property of the red-black tree is satisfied.
  *
- * Property 2:  The root node of the tree is always black.
+ * Root property: The root of the red-black tree is black.
  *
  * @param tbl A pointer to the tree object.
  */
-int node_check_rule2(qtreetbl_t *tbl) {
+int node_check_root(qtreetbl_t *tbl) {
     if (tbl == NULL) {
         return 1;
     }
-
+    
     if (is_red(tbl->root)) {
         return 1;
     }
@@ -904,14 +904,14 @@ int node_check_rule2(qtreetbl_t *tbl) {
 }
 
 /**
- * Verifies that property 4 of the red-black tree is satisfied.
+ * Verifies that red property of the red-black tree is satisfied.
  *
- * Property 4: Red nodes cannot have red children.
+ * Red property: The children of a red node are black.
  *
  * @param tbl A pointer to the tree object.
  * @param obj A pointer to a node of the tree object.
  */
-int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
+int node_check_red(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
     if (obj == NULL) {
         return 0;
     }
@@ -922,36 +922,38 @@ int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
         }
     }
 
-    if (node_check_rule4(tbl, obj->right)) {
+    if (node_check_red(tbl, obj->right)) {
         return 1;
     }
-    if (node_check_rule4(tbl, obj->left)) {
+    if (node_check_red(tbl, obj->left)) {
         return 1;
     }
+
     return 0;
 }
 
 /**
- * Verifies that property 5 of the red-black tree is satisfied.
+ * Verifies that black property of the red-black tree is satisfied.
  *
- * Property 5: Every path from the root of the tree to any leaf of the
- *             tree has the same number of black nodes.
+ * Black property: For each node with at least one null child,
+ *                 the number of black nodes on the path from the root
+ *                 to the null child is the same.
  *
  * @param tbl A pointer to the tree object.
  * @param obj A pointer to a node of the tree object.
  */
-int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
+int node_check_black(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
     if (obj == NULL) {
         *path_len = 1;
         return 0;
     }
 
     int right_path_len;
-    if (node_check_rule5(tbl, obj->right, &right_path_len)) {
+    if (node_check_black(tbl, obj->right, &right_path_len)) {
         return 1;
     }
     int left_path_len;
-    if (node_check_rule5(tbl, obj->left, &left_path_len)) {
+    if (node_check_black(tbl, obj->left, &left_path_len)) {
         return 1;
     }
 
@@ -964,15 +966,14 @@ int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
 }
 
 /**
- * Verifies that property 6 of the red-black tree is satisfied.
+ * Verifies that LLRB property of the left-leaning red-black tree is satisfied.
  *
- * Property 6: Instead of having a red link to the right child, a red link
- *             is allowed to the left child.
+ * LLRB property: 3-nodes always lean to the left and 4-nodes are balanced.
  *
  * @param tbl A pointer to the tree object.
  * @param obj A pointer to a node of the tree object.
  */
-int node_check_rule6(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
+int node_check_llrb(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
     if (obj == NULL) {
         return 0;
     }
@@ -981,26 +982,25 @@ int node_check_rule6(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
         return 1;
     }
 
-    if (node_check_rule6(tbl, obj->right)) {
+    if (node_check_llrb(tbl, obj->right)) {
         return 1;
     }
-    if (node_check_rule6(tbl, obj->left)) {
+    if (node_check_llrb(tbl, obj->left)) {
         return 1;
     }
+
     return 0;
 }
 
 /**
  * Verifies that the invariants of the red-black tree are satisfied.
  *
- *  Property 1. Every node is either red or black.
- *  Property 2. The root node is always black.
- *  Property 3: Every leaf (null) node is considered black.
- *  Property 4: Red nodes cannot have red children (no consecutive red nodes).
- *  Property 5: Every path from the root of the tree to any leaf of the tree
- *              has the same number of black nodes.
- *  Property 6: Instead of having a red link to the right child, a red link
- *              is allowed to the left child. (LLRB specific)
+ * Root property: The root of the red-black tree is black.
+ * Red property: The children of a red node are black.
+ * Black property: For each node with at least one null child,
+ *                  the number of black nodes on the path from the root
+ *                  to the null child is the same.
+ * LLRB property: 3-nodes always lean to the left and 4-nodes are balanced.
  *
  * @param tbl A pointer to the tree object to check.
  */
@@ -1009,18 +1009,18 @@ int qtreetbl_check(qtreetbl_t *tbl) {
         return 0;
     }
 
-    if (node_check_rule2(tbl)) {
+    if (node_check_root(tbl)) {
+        return 1;
+    }
+    if (node_check_red(tbl, tbl->root)) {
         return 2;
     }
-    if (node_check_rule4(tbl, tbl->root)) {
-        return 4;
-    }
     int path_len = 0;
-    if (node_check_rule5(tbl, tbl->root, &path_len)) {
-        return 5;
+    if (node_check_black(tbl, tbl->root, &path_len)) {
+        return 3;
     }
-    if (node_check_rule6(tbl, tbl->root)) {
-        return 6;
+    if (node_check_llrb(tbl, tbl->root)) {
+        return 4;
     }
 
     return 0;
