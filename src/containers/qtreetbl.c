@@ -142,6 +142,13 @@ static void free_objs(qtreetbl_obj_t *obj);
 static void free_obj(qtreetbl_obj_t *obj);
 static uint8_t reset_iterator(qtreetbl_t *tbl);
 
+struct branch_obj_s {
+    struct branch_obj_s *p;
+    char *s;
+};
+static void print_branch(struct branch_obj_s *branch, FILE *out);
+static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev, bool left);
+
 #endif
 
 /**
@@ -525,13 +532,11 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
  * @code
  *  [Iteration example from given point]
  *
- *  qtreetbl_obj_t obj;
- *  memset((void*)&obj, 0, sizeof(obj));
- *  tbl->lock(tbl);  // lock must be raised before find_nearest() call.
- *  qtreetbl_obj_t obj = tbl->find_nearest(tbl, "F", 2, false); // here we go!
+ *  tbl->lock(tbl);  // to guarantee no table update during the run
+ *  qtreetbl_obj_t obj = tbl->find_nearest(tbl, "F", sizeof("F"), false);
  *  while (tbl->getnext(tbl, &obj, false) == true) {  // newmem is false
- *      //If tree has 5 objects, A, C, E, G and I.
- *      //Iteration sequence from nearest "F" will be: E->G->I->A->C
+ *      // If a tree has 5 objects, A, C, E, G and I.
+ *      // The iteration sequence from nearest "F" will be: E->G->I->A->C
  *  }
  *  tbl->unlock(tbl);
  *
@@ -540,17 +545,14 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
  * @code
  * [Removal example in iteration loop]
  *   qtreetbl_obj_t obj;
- *   memset((void*) &obj, 0, sizeof(obj));  // start from the minimum.
+ *   memset((void*)&obj, 0, sizeof(obj));
  *   tbl->lock(tbl);
  *   while (tbl->getnext(tbl, &obj, false) == true) {
  *       if (...condition...) {
  *           char *name = qmemdup(obj.name, obj.namesize);  // keep the name
  *           size_t namesize = obj.namesize;                // for removal argument
- *
  *           tbl->remove_by_obj(tbl, obj.name, obj.namesize);  // remove
- *
  *           obj = tbl->find_nearest(tbl, name, namesize, false); // rewind one step back
- *
  *           free(name);  // clean up
  *       }
  *   }
@@ -558,8 +560,6 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
  *  @endcode
  *
  * @note
- *  - locking must be provided on user code when thread condition is expected
- *  because entire traversal needs to be running under read-only mode.
  *  - Data insertion or deletion can be made during the traversal, but in that
  *  case iterator doesn't guarantee full sweep and possibly skip some visits.
  *  When deletion happens in getnext() loop, use find_nearest() to rewind the
@@ -606,8 +606,8 @@ bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem) {
         cursor = cursor->next;
     }
 
-    // end of travel
-    reset_iterator(tbl);  // to allow iteration start over directly from find_nearest()
+    // end of travel, reset iterator to allow iteration start over in next call
+    reset_iterator(tbl);  // 
     return false;
 }
 
@@ -835,42 +835,7 @@ int qtreetbl_byte_cmp(const void *name1, size_t namesize1, const void *name2,
 }
 
 /**
- * Display the tree structure from the node pointed by `obj` and down.
- *
- * @param tbl   A pointer to a node of the tree.
- * @param depth The depth of the node in the tree.
- *              The depth of the tree root is 0.
- *
- */
-void print_node(qtreetbl_obj_t *obj, FILE *out, int depth) {
-    if (!obj) return;
-
-    // 4-spaces indentation for each node level
-    for (int i = 0; i < depth; i++) {
-        fprintf(out, "    ");
-    }
-
-     // Print the key name of the node
-    for (int i = 0; i < obj->namesize; i++) {
-        if (isprint(((char *)obj->name)[i]))
-            fprintf(out, "%c", ((char *) obj->name)[i]);
-        else
-            fprintf(out, ".");
-    }
-
-    // Print the red-ness of the node
-    if (obj->red) {
-        fprintf(out, " (R)");
-    }
-    fprintf(out, "\n");
-
-    // Recursive call to display the children
-    print_node(obj->left, out, depth + 1);
-    print_node(obj->right, out, depth + 1);
-}
-
-/**
- * qtreetbl->debug(): Print the table for debugging purpose
+ * qtreetbl->debug(): Print the internal tree structure in text
  *
  * @param tbl   qtreetbl_t container pointer.
  * @param out   output stream
@@ -878,6 +843,24 @@ void print_node(qtreetbl_obj_t *obj, FILE *out, int depth) {
  * @return true if successful, otherwise returns false.
  * @retval errno will be set in error condition.
  *  - EIO : Invalid output stream.
+ * 
+ * @code
+ * Example output:
+ * 
+ *         .--9
+ *        |    `==8
+ *     .--7
+ *    |   |    .--6
+ *    |    `==5
+ *    |        `--4
+ * ---3
+ *    |    .--2
+ *     `--1
+ *         `--0
+ * @endcode
+ * @note
+ * Red nodes are connected with `=`, Black nodes are with `-`.
+ * In this example, 5 and 8 are Red nodes.
  */
 bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
     if (out == NULL) {
@@ -886,8 +869,7 @@ bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
     }
 
     qtreetbl_lock(tbl);
-
-    print_node(tbl->root, out, 0);
+    print_node(tbl->root, out, NULL, false);
 
     qtreetbl_unlock(tbl);
 
@@ -1238,7 +1220,54 @@ static void free_obj(qtreetbl_obj_t *obj) {
 }
 
 static uint8_t reset_iterator(qtreetbl_t *tbl) {
+    if (tbl->root) {
+        tbl->root->next = NULL;
+    }
     return (++tbl->tid);
+}
+
+void print_branch(struct branch_obj_s *branch, FILE *out) {
+    if (branch == NULL) return;
+    print_branch(branch->p, out);
+    fprintf(out, "%s", branch->s);
+}
+
+void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev, bool left) {
+    if (!obj) return;
+
+    char *prev_s = "    ";
+    struct branch_obj_s branch;
+    branch.p = prev;
+    branch.s = prev_s;
+
+    print_node(obj->right, out, &branch, true);
+
+    if (!prev) {
+        branch.s = "---";
+    } else if (left) {
+        branch.s = (obj->red) ? ".==" : ".--";
+        prev_s = "   |";
+    } else {
+        branch.s = (obj->red) ? "`==" : "`--";
+        prev->s = prev_s;
+    }
+    print_branch(&branch, out);
+
+     // Print the key name of the node
+    for (int i = 0; i < obj->namesize; i++) {
+        if (isprint(((char *)obj->name)[i]))
+            fprintf(out, "%c", ((char *) obj->name)[i]);
+        else if ((((char *)obj->name)[i]) != '\0')
+            fprintf(out, ".");
+    }
+    fprintf(out, "\n");
+
+    if (prev) {
+        prev->s = prev_s;
+    }
+    branch.s = "   |";
+
+    print_node(obj->left, out, &branch, false);
 }
 
 #endif
