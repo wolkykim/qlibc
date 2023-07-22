@@ -31,7 +31,7 @@
 #include "qunit.h"
 #include "qlibc.h"
 
-static bool drawtree(qtreetbl_t *tbl);
+static bool print_tree(qtreetbl_t *tbl);
 static void test_thousands_of_keys(int num_keys, char *key_postfix,
                                    char *value_postfix);
 
@@ -67,7 +67,7 @@ TEST("Test growth of tree / A S E R C D I N B X") {
         tbl->putstr(tbl, KEY[i], "");
         ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
         printf("\n");
-        drawtree(tbl);
+        print_tree(tbl);
     }
     ENABLE_PROGRESS_DOT();
 
@@ -121,7 +121,7 @@ TEST("Test insertion / 10 20 30 40 50 25") {
         tbl->putstr(tbl, KEY[i], "");
         ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
         printf("\n");
-        drawtree(tbl);
+        print_tree(tbl);
     }
     ENABLE_PROGRESS_DOT();
 
@@ -151,13 +151,13 @@ TEST("Test tree with deletion / 0 1 2 3 4 5 6 7 8 9 0") {
         tbl->putstr(tbl, KEY[i], "");
         ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
         printf("\n");
-        drawtree(tbl);
+        print_tree(tbl);
     }
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->remove(tbl, KEY[i]);
         ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
         printf("\n");
-        drawtree(tbl);
+        print_tree(tbl);
     }
     ENABLE_PROGRESS_DOT();
 
@@ -174,13 +174,13 @@ TEST("Test tree with deletion / 3 7 0 2 9 5 1 6 8 4") {
         tbl->putstr(tbl, KEY[i], "");
         ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
         printf("\n");
-        drawtree(tbl);
+        print_tree(tbl);
     }
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->remove(tbl, KEY[i]);
         ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
         printf("\n");
-        drawtree(tbl);
+        print_tree(tbl);
     }
     ENABLE_PROGRESS_DOT();
 
@@ -197,13 +197,13 @@ TEST("Test tree with deletion / 9 8 7 6 5 4 3 2 1 0") {
         tbl->putstr(tbl, KEY[i], "");
         ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
         printf("\n");
-        drawtree(tbl);
+        print_tree(tbl);
     }
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->remove(tbl, KEY[i]);
         ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
         printf("\n");
-        drawtree(tbl);
+        print_tree(tbl);
     }
     ENABLE_PROGRESS_DOT();
 
@@ -470,73 +470,19 @@ static void test_thousands_of_keys(int num_keys, char *key_postfix,
 
 #define PARENT(i) ((i-1) / 2)
 #define LINE_WIDTH 70
-static bool drawtree(qtreetbl_t *tbl) {
-    if (tbl == NULL || tbl->root == NULL) {
-        return false;
-    }
+static bool print_tree(qtreetbl_t *tbl) {
+    tbl->debug(tbl, stdout);
 
-    tbl->lock(tbl);
-    qtreetbl_obj_t nullobj;
-    nullobj.name = strdup("_");
-    nullobj.red = false;
-    nullobj.left = NULL;
-    nullobj.right = NULL;
-
-    qqueue_t *q = qqueue(0);
-    q->push(q, tbl->root, sizeof(qtreetbl_obj_t));
-
-    int i, j, pos, e = 0, x = 1, level = 0, redcnt = 0;
-    int print_pos[tbl->size(tbl) * 4];
-    for (print_pos[0] = 0, i = 0, j = 1; q->size(q) > 0; i++, j++) {
-        qtreetbl_obj_t *obj = q->pop(q, NULL);
-        if (obj == NULL) {
-            break;
-        }
-
-        pos = print_pos[PARENT(i)]
-                + (i % 2 ? -1 : 1) * (LINE_WIDTH / (pow(2, level + 1)) + 1);
-
-        for (int k = 0; k < pos - x; k++) {
-            printf("%c", i == 0 || i % 2 ? ' ' : '`');
-        }
-        printf("%c%s%c",
-            (obj->red) ? '[' : ' ',
-            (char*)obj->name,
-            (obj->red) ? ']' : ' ');
-        if (obj->red) {
+    int redcnt = 0;
+    qtreetbl_obj_t obj;
+    memset((void*) &obj, 0, sizeof(obj));
+    while (tbl->getnext(tbl, &obj, false) == true) {
+        if (obj.red) {
             redcnt++;
         }
-
-        // to keep the drawing indentation, push even null children
-        q->push(q, (obj->left) ? obj->left : &nullobj, sizeof(qtreetbl_obj_t));
-        if (!obj->left) e++;
-        q->push(q, (obj->right) ? obj->right : &nullobj, sizeof(qtreetbl_obj_t));
-        if (!obj->right) e++;
-
-        print_pos[i] = x = pos + 1;
-        x += 2;
-        if (j == pow(2, level)) {
-            if (e == pow(2, level + 1)) {
-                break; // all children pushed are null reference
-            }
-
-            printf("\n");
-            level++;
-            x = 1;
-            j = 0;
-            e = 0;
-        }
-
-        free(obj);
     }
-    q->free(q);
-    printf("\n");
 
-    tbl->unlock(tbl);
-
-    printf("                   (#nodes=%d, #red=%d, #black=%d, root=%s)\n",
-        (int)tbl->size(tbl), redcnt, ((int)tbl->size(tbl) - redcnt),
-        (char*)tbl->root->name);
-
+    printf("(#nodes=%d, #red=%d, #black=%d)\n",
+        (int)tbl->size(tbl), redcnt, ((int)tbl->size(tbl) - redcnt));
     return true;
 }
