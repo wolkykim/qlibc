@@ -847,16 +847,16 @@ int qtreetbl_byte_cmp(const void *name1, size_t namesize1, const void *name2,
  * @code
  * Example output:
  * 
- *         .--9
- *        |    `==8
- *     .--7
- *    |   |    .--6
- *    |    `==5
- *    |        `--4
- * ---3
- *    |    .--2
- *     `--1
- *         `--0
+ *         .- 9
+ *        |    `=[8]
+ *     .- 7
+ *    |   |    .- 6
+ *    |    `=[5]
+ *    |        `- 4
+ * -- 3
+ *    |    .- 2
+ *     `- 1
+ *         `- 0
  * @endcode
  * @note
  * Red nodes are connected with `=`, Black nodes are with `-`.
