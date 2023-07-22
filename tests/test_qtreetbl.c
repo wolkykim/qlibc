@@ -44,20 +44,21 @@ QUNIT_START("Test qtreetbl.c");
  * https://sedgewick.io/wp-content/uploads/2022/03/2008-09LLRB.pdf
  *
  * Key insertion sequence : A S E R C D I N B X
- * After all the insertions, the data structure must be like this.
  *
- *         .- X
- *        |    `=[S]
- *     .- R
- *    |    `- N
- *    |        `=[I]
- * -- E
- *    |    .- D
- *     `- C
- *         `- B
- *             `=[A]
- *
- * The nodes A I and S are nodes with RED upper link. Others are BLACK.
+ * @code
+ *     ┌── X
+ *     │   └──[S]
+ * ┌── R
+ * │   └── N
+ * │       └──[I]
+ * E
+ * │   ┌── D
+ * └── C
+ *     └── B
+ *         └──[A] 
+ * @endcode
+ * 
+ * The nodes A, I and S are Red. Others are Black.
  */
 TEST("Test growth of tree / A S E R C D I N B X") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
@@ -102,13 +103,15 @@ TEST("Test growth of tree / A S E R C D I N B X") {
  * Key insertion sequence : 10 20 30 40 50 25
  *
  * @code
- *     .- 50
- * -- 40
- *    |    .- 30
- *    |   |    `=[25]
- *     `=[20]
- *         `- 10
+ * ┌── 50
+ * 40
+ * │   ┌── 30
+ * │   │   └──[25]
+ * └──[20]
+ *     └── 10
  * @endcode
+ * 
+ * The nodes 20 and 25 are Red. Others are Black.
  */
 TEST("Test insertion / 10 20 30 40 50 25") {
     const char *KEY[] = { "10", "20", "30", "40", "50", "25", "" };
