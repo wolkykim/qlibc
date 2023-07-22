@@ -34,7 +34,7 @@
 static bool print_tree(qtreetbl_t *tbl);
 static void test_thousands_of_keys(int num_keys, char *key_postfix,
                                    char *value_postfix);
-static void ASSERT_TABLE_CHECK(qtreetbl_t *tbl, bool verbose);
+static void ASSERT_TREE_CHECK(qtreetbl_t *tbl, bool verbose);
 
 QUNIT_START("Test qtreetbl.c");
 
@@ -68,7 +68,7 @@ TEST("Test growth of tree / A S E R C D I N B X") {
     int i;
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->putstr(tbl, KEY[i], "");
-        ASSERT_TABLE_CHECK(tbl, true);
+        ASSERT_TREE_CHECK(tbl, true);
     }
     ENABLE_PROGRESS_DOT();
 
@@ -121,7 +121,7 @@ TEST("Test insertion / 10 20 30 40 50 25") {
     int i;
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->putstr(tbl, KEY[i], "");
-        ASSERT_TABLE_CHECK(tbl, true);
+        ASSERT_TREE_CHECK(tbl, true);
     }
     ENABLE_PROGRESS_DOT();
 
@@ -151,11 +151,11 @@ TEST("Test tree with deletion / 0 1 2 3 4 5 6 7 8 9 0") {
     int i;
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->putstr(tbl, KEY[i], "");
-        ASSERT_TABLE_CHECK(tbl, true);
+        ASSERT_TREE_CHECK(tbl, true);
     }
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->remove(tbl, KEY[i]);
-        ASSERT_TABLE_CHECK(tbl, true);
+        ASSERT_TREE_CHECK(tbl, true);
     }
     ENABLE_PROGRESS_DOT();
 
@@ -181,15 +181,15 @@ TEST("Test tree with deletion / Stroh Snow's test for red property violation") {
     for (i = 0; KEY[i][0] != '\0'; i++) {
         printf(" %s", KEY[i]);
         tbl->putstr(tbl, KEY[i], "");
-        ASSERT_TABLE_CHECK(tbl, false);
+        ASSERT_TREE_CHECK(tbl, false);
     }
     
-    ASSERT_TABLE_CHECK(tbl, true);
+    ASSERT_TREE_CHECK(tbl, true);
 
     for (i = 0; KEY2[i][0] != '\0'; i++) {
         printf("\nKey deleted: %s", KEY2[i]);
         tbl->remove(tbl, KEY2[i]);
-        ASSERT_TABLE_CHECK(tbl, true);
+        ASSERT_TREE_CHECK(tbl, true);
     }
 
     ENABLE_PROGRESS_DOT();
@@ -399,26 +399,26 @@ TEST("Test deletion in getnext() loop") {
 }
 
 TEST("Test thousands of keys put/delete: short key + short value") {
-    test_thousands_of_keys(1000, "", "");
+    test_thousands_of_keys(10000, "", "");
 }
 
 TEST("Test thousands of keys put/delete: short key + long value") {
     test_thousands_of_keys(
-            1000,
+            10000,
             "",
             "long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value");
 }
 
 TEST("Test thousands of keys put/delete: long key + short value") {
     test_thousands_of_keys(
-            1000,
+            10000,
             "long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key",
             "");
 }
 
 TEST("Test thousands of keys put/delete: long key + long value") {
     test_thousands_of_keys(
-            1000,
+            10000,
             "long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key",
             "long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value");
 }
@@ -439,7 +439,7 @@ static void test_thousands_of_keys(int num_keys, char *key_postfix,
         free(key);
         free(value);
         ASSERT_EQUAL_INT(i + 1, tbl->size(tbl));
-        ASSERT_TABLE_CHECK(tbl, false);
+        ASSERT_TREE_CHECK(tbl, false);
     }
 
     for (i--; i >= 0; i--) {
@@ -448,7 +448,7 @@ static void test_thousands_of_keys(int num_keys, char *key_postfix,
         ASSERT_NULL(tbl->getstr(tbl, key, false));
         free(key);
         ASSERT_EQUAL_INT(i, tbl->size(tbl));
-        ASSERT_TABLE_CHECK(tbl, false);
+        ASSERT_TREE_CHECK(tbl, false);
     }
 
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
@@ -472,7 +472,7 @@ static bool print_tree(qtreetbl_t *tbl) {
     return true;
 }
 
-static void ASSERT_TABLE_CHECK(qtreetbl_t *tbl, bool verbose) {
+static void ASSERT_TREE_CHECK(qtreetbl_t *tbl, bool verbose) {
     int ret = qtreetbl_check(tbl);
     if (ret != 0) {
         printf("\n\nVIOLATION of property %d found.\n", ret);
