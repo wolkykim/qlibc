@@ -491,8 +491,9 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
     qtreetbl_lock(tbl);
     errno = 0;
     tbl->root = remove_obj(tbl, tbl->root, name, namesize);
-    if (tbl->root)
+    if (tbl->root) {
         tbl->root->red = false;
+    }
     bool removed = (errno != ENOENT) ? true : false;
     qtreetbl_unlock(tbl);
 
@@ -607,7 +608,7 @@ bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem) {
     }
 
     // end of travel, reset iterator to allow iteration start over in next call
-    reset_iterator(tbl);  // 
+    reset_iterator(tbl);
     return false;
 }
 
@@ -721,22 +722,22 @@ qtreetbl_obj_t qtreetbl_find_nearest(qtreetbl_t *tbl, const void *name,
         }
         lastobj = obj;
         if (cmp < 0) {
-            if (obj->left)
+            if (obj->left) {
                 obj->left->next = obj;
+            }
             obj = obj->left;
         } else {
-            if (obj->right)
+            if (obj->right) {
                 obj->right->next = obj;
+            }
             obj = obj->right;
         }
     }
 
     if (obj == NULL) {
         for (obj = lastobj;
-                obj != NULL
-                        && (tbl->compare(name, namesize, obj->name,
-                                         obj->namesize) < 0); obj = obj->next)
-            ;
+            obj != NULL && (tbl->compare(name, namesize, obj->name, obj->namesize) < 0);
+            obj = obj->next);
         if (obj == NULL) {
             obj = lastobj;
         }
@@ -829,8 +830,9 @@ int qtreetbl_byte_cmp(const void *name1, size_t namesize1, const void *name2,
                       size_t namesize2) {
     size_t minsize = (namesize1 < namesize2) ? namesize1 : namesize2;
     int cmp = memcmp(name1, name2, minsize);
-    if (cmp != 0 || namesize1 == namesize2)
+    if (cmp != 0 || namesize1 == namesize2) {
         return cmp;
+    }
     return (namesize1 < namesize2) ? -1 : +1;
 }
 
@@ -870,9 +872,7 @@ bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
 
     qtreetbl_lock(tbl);
     print_node(tbl->root, out, NULL, false);
-
     qtreetbl_unlock(tbl);
-
     return true;
 }
 
@@ -894,11 +894,12 @@ int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
         }
     }
 
-    if (node_check_rule4(tbl, obj->right))
+    if (node_check_rule4(tbl, obj->right)) {
         return 1;
-    if (node_check_rule4(tbl, obj->left))
+    }
+    if (node_check_rule4(tbl, obj->left)) {
         return 1;
-
+    }
     return 0;
 }
 
@@ -915,22 +916,22 @@ int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
 int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
     if (obj == NULL) {
         *path_len = 0;
-    } else {
-        int right_path_len;
-        if (node_check_rule5(tbl, obj->right, &right_path_len))
-            return 1;
-
-        int left_path_len;
-        if (node_check_rule5(tbl, obj->left, &left_path_len))
-            return 1;
-
-        if (right_path_len != left_path_len) {
-            return 1;
-        } else {
-            *path_len = right_path_len;
-            if (!is_red(obj)) (*path_len)++;
-        }
+        return 0;
     }
+
+    int right_path_len;
+    if (node_check_rule5(tbl, obj->right, &right_path_len)) {
+        return 1;
+    }
+    int left_path_len;
+    if (node_check_rule5(tbl, obj->left, &left_path_len)) {
+        return 1;
+    }
+
+    if (right_path_len != left_path_len) {
+        return 1;
+    }
+    *path_len = (!is_red(obj)) ? (right_path_len + 1) : right_path_len;
 
     return 0;
 }
@@ -941,13 +942,17 @@ int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
  * @param tbl A pointer to the tree object to check.
  */
 int qtreetbl_check(qtreetbl_t *tbl) {
-    if (tbl == NULL) return 0;
+    if (tbl == NULL) {
+        return 0;
+    }
 
-    if (node_check_rule4(tbl, tbl->root)) 
+    if (node_check_rule4(tbl, tbl->root)) {
         return 4;
+    }
     int path_len = 0;
-    if (node_check_rule5(tbl, tbl->root, &path_len))
+    if (node_check_rule5(tbl, tbl->root, &path_len)) {
         return 5;
+    }
 
     return 0;
 }
@@ -1025,8 +1030,7 @@ static qtreetbl_obj_t *find_min(qtreetbl_obj_t *obj) {
     }
 
     qtreetbl_obj_t *o;
-    for (o = obj; o->left != NULL; o = o->left)
-        ;
+    for (o = obj; o->left != NULL; o = o->left);
     return o;
 }
 
@@ -1037,8 +1041,7 @@ static qtreetbl_obj_t *find_max(qtreetbl_obj_t *obj) {
     }
 
     qtreetbl_obj_t *o;
-    for (o = obj; o->right != NULL; o = o->right)
-        ;
+    for (o = obj; o->right != NULL; o = o->right);
     return o;
 }
 
@@ -1233,7 +1236,9 @@ void print_branch(struct branch_obj_s *branch, FILE *out) {
 }
 
 void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev, bool left) {
-    if (!obj) return;
+    if (!obj) {
+        return;
+    }
 
     char *prev_s = "    ";
     struct branch_obj_s branch;
