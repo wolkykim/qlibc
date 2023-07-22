@@ -394,7 +394,7 @@ bool qtreetbl_put_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize,
  *  newmem flag must be set to true always.
  */
 void *qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize,
-bool newmem) {
+                   bool newmem) {
     return qtreetbl_get_by_obj(tbl, name,
                                (name != NULL) ? (strlen(name) + 1) : 0,
                                datasize, newmem);
