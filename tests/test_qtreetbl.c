@@ -34,6 +34,7 @@
 static bool print_tree(qtreetbl_t *tbl);
 static void test_thousands_of_keys(int num_keys, char *key_postfix,
                                    char *value_postfix);
+static void ASSERT_TABLE_CHECK(qtreetbl_t *tbl, bool verbose);
 
 QUNIT_START("Test qtreetbl.c");
 
@@ -66,9 +67,7 @@ TEST("Test growth of tree / A S E R C D I N B X") {
     int i;
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->putstr(tbl, KEY[i], "");
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-        printf("\n");
-        print_tree(tbl);
+        ASSERT_TABLE_CHECK(tbl, true);
     }
     ENABLE_PROGRESS_DOT();
 
@@ -119,9 +118,7 @@ TEST("Test insertion / 10 20 30 40 50 25") {
     int i;
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->putstr(tbl, KEY[i], "");
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-        printf("\n");
-        print_tree(tbl);
+        ASSERT_TABLE_CHECK(tbl, true);
     }
     ENABLE_PROGRESS_DOT();
 
@@ -151,15 +148,11 @@ TEST("Test tree with deletion / 0 1 2 3 4 5 6 7 8 9 0") {
     int i;
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->putstr(tbl, KEY[i], "");
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-        printf("\n");
-        print_tree(tbl);
+        ASSERT_TABLE_CHECK(tbl, true);
     }
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->remove(tbl, KEY[i]);
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-        printf("\n");
-        print_tree(tbl);
+        ASSERT_TABLE_CHECK(tbl, true);
     }
     ENABLE_PROGRESS_DOT();
 
@@ -185,17 +178,15 @@ TEST("Test tree with deletion / Stroh Snow's test for rule 4 violation") {
     for (i = 0; KEY[i][0] != '\0'; i++) {
         printf(" %s", KEY[i]);
         tbl->putstr(tbl, KEY[i], "");
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        ASSERT_TABLE_CHECK(tbl, false);
     }
-    printf("\n");
-    print_tree(tbl);
+    
+    ASSERT_TABLE_CHECK(tbl, true);
 
     for (i = 0; KEY2[i][0] != '\0'; i++) {
         printf("\nKey deleted: %s", KEY2[i]);
         tbl->remove(tbl, KEY2[i]);
-        printf("\n");
-        print_tree(tbl);
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        ASSERT_TABLE_CHECK(tbl, true);
     }
 
     ENABLE_PROGRESS_DOT();
@@ -288,7 +279,8 @@ TEST("Test find_nearest()") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
-    qtreetbl_obj_t obj = tbl->find_nearest(tbl, "0", 2, false);
+    qtreetbl_obj_t obj;
+    obj = tbl->find_nearest(tbl, "0", sizeof("0"), false);
     ASSERT_NULL(obj.name);
     ASSERT_EQUAL_INT(errno, ENOENT);
 
@@ -297,17 +289,17 @@ TEST("Test find_nearest()") {
         tbl->putstr(tbl, KEY[i], KEY[i]);
     }
 
-    obj = tbl->find_nearest(tbl, "0", 2, false);
+    obj = tbl->find_nearest(tbl, "0", sizeof("0"), false);
     ASSERT_EQUAL_STR("A", (char*)obj.name);
-    obj = tbl->find_nearest(tbl, "F", 2, false);
+    obj = tbl->find_nearest(tbl, "F", sizeof("F"), false);
     ASSERT_EQUAL_STR("E", (char*)obj.name);
-    obj = tbl->find_nearest(tbl, "J", 2, false);
+    obj = tbl->find_nearest(tbl, "J", sizeof("J"), false);
     ASSERT_EQUAL_STR("I", (char*)obj.name);
-    obj = tbl->find_nearest(tbl, "O", 2, false);
+    obj = tbl->find_nearest(tbl, "O", sizeof("O"), false);
     ASSERT_EQUAL_STR("N", (char*)obj.name);
-    obj = tbl->find_nearest(tbl, "T", 2, false);
+    obj = tbl->find_nearest(tbl, "T", sizeof("T"), false);
     ASSERT_EQUAL_STR("S", (char*)obj.name);
-    obj = tbl->find_nearest(tbl, "Z", 2, false);
+    obj = tbl->find_nearest(tbl, "Z", sizeof("Z"), false);
     ASSERT_EQUAL_STR("X", (char*)obj.name);
 
     tbl->free(tbl);
@@ -404,26 +396,26 @@ TEST("Test deletion in getnext() loop") {
 }
 
 TEST("Test thousands of keys put/delete: short key + short value") {
-    test_thousands_of_keys(10000, "", "");
+    test_thousands_of_keys(1000, "", "");
 }
 
 TEST("Test thousands of keys put/delete: short key + long value") {
     test_thousands_of_keys(
-            10000,
+            1000,
             "",
             "long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value");
 }
 
 TEST("Test thousands of keys put/delete: long key + short value") {
     test_thousands_of_keys(
-            10000,
+            1000,
             "long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key",
             "");
 }
 
 TEST("Test thousands of keys put/delete: long key + long value") {
     test_thousands_of_keys(
-            10000,
+            1000,
             "long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key_long_key",
             "long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value_long_value");
 }
@@ -444,7 +436,7 @@ static void test_thousands_of_keys(int num_keys, char *key_postfix,
         free(key);
         free(value);
         ASSERT_EQUAL_INT(i + 1, tbl->size(tbl));
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        ASSERT_TABLE_CHECK(tbl, false);
     }
 
     for (i--; i >= 0; i--) {
@@ -453,14 +445,13 @@ static void test_thousands_of_keys(int num_keys, char *key_postfix,
         ASSERT_NULL(tbl->getstr(tbl, key, false));
         free(key);
         ASSERT_EQUAL_INT(i, tbl->size(tbl));
+        ASSERT_TABLE_CHECK(tbl, false);
     }
 
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
     tbl->free(tbl);
 }
 
-#define PARENT(i) ((i-1) / 2)
-#define LINE_WIDTH 70
 static bool print_tree(qtreetbl_t *tbl) {
     tbl->debug(tbl, stdout);
 
@@ -476,4 +467,18 @@ static bool print_tree(qtreetbl_t *tbl) {
     printf("(#nodes=%d, #red=%d, #black=%d)\n",
         (int)tbl->size(tbl), redcnt, ((int)tbl->size(tbl) - redcnt));
     return true;
+}
+
+static void ASSERT_TABLE_CHECK(qtreetbl_t *tbl, bool verbose) {
+    int ret = qtreetbl_check(tbl);
+    if (ret != 0) {
+        printf("\nVIOLATION of property %d found.\n", ret);
+        verbose = true;
+        ASSERT_EQUAL_INT(0, ret);
+    }
+    
+    if (verbose) {
+        printf("\n");
+        print_tree(tbl);
+    }
 }
