@@ -45,15 +45,16 @@ QUNIT_START("Test qtreetbl.c");
  * Key insertion sequence : A S E R C D I N B X
  * After all the insertions, the data structure must be like this.
  *
- *                                 E
- *                   ______________|______________
- *                  /                             \
- *                 C                               R
- *          _______|_______                 _______|_______
- *         /               \               /               \
- *        B                 D             N                 X
- *      //                              //                //
- *    [A]                             [I]               [S]
+ *         .- X
+ *        |    `=[S]
+ *     .- R
+ *    |    `- N
+ *    |        `=[I]
+ * -- E
+ *    |    .- D
+ *     `- C
+ *         `- B
+ *             `=[A]
  *
  * The nodes A I and S are nodes with RED upper link. Others are BLACK.
  */
@@ -101,15 +102,14 @@ TEST("Test growth of tree / A S E R C D I N B X") {
  *
  * Key insertion sequence : 10 20 30 40 50 25
  *
- *                                40
- *                   ______________|______________
- *                 //                             \
- *                20                               50
- *          _______|_______
- *         /               \
- *        10               30
- *                        //
- *                       25*
+ * @code
+ *     .- 50
+ * -- 40
+ *    |    .- 30
+ *    |   |    `=[25]
+ *     `=[20]
+ *         `- 10
+ * @endcode
  */
 TEST("Test insertion / 10 20 30 40 50 25") {
     const char *KEY[] = { "10", "20", "30", "40", "50", "25", "" };
@@ -142,7 +142,9 @@ TEST("Test insertion / 10 20 30 40 50 25") {
 }
 
 TEST("Test tree with deletion / 0 1 2 3 4 5 6 7 8 9 0") {
-    const char *KEY[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "" };
+    const char *KEY[] = {
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "" 
+    };
     qtreetbl_t *tbl = qtreetbl(0);
 
     DISABLE_PROGRESS_DOT();
@@ -164,54 +166,43 @@ TEST("Test tree with deletion / 0 1 2 3 4 5 6 7 8 9 0") {
     tbl->free(tbl);
 }
 
-TEST("Test tree with deletion / 3 7 0 2 9 5 1 6 8 4") {
-    const char *KEY[] = { "3", "7", "0", "2", "9", "5", "1", "6", "8", "4", "" };
+/*
+ * Example taken from Stroh Snow's finding about Rule 4 violation case.
+ * https://github.com/wolkykim/qlibc/pull/106#issuecomment-1646521205
+ */
+TEST("Test tree with deletion / Stroh Snow's test for rule 4 violation") {
+    const char *KEY[] = {
+        "J", "E", "O", "C", "L", "H", "Q", "B", "G", "K", "P", "D", "I",
+        "N", "S", "A", "M", "F", "R",""
+    };
+    const char *KEY2[] = { "A", "M", "" };
+
     qtreetbl_t *tbl = qtreetbl(0);
 
     DISABLE_PROGRESS_DOT();
     int i;
+    printf("\n\nInserting keys:");
     for (i = 0; KEY[i][0] != '\0'; i++) {
+        printf(" %s", KEY[i]);
         tbl->putstr(tbl, KEY[i], "");
         ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-        printf("\n");
-        print_tree(tbl);
     }
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->remove(tbl, KEY[i]);
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-        printf("\n");
-        print_tree(tbl);
-    }
-    ENABLE_PROGRESS_DOT();
+    printf("\n");
+    print_tree(tbl);
 
+    for (i = 0; KEY2[i][0] != '\0'; i++) {
+        printf("\nKey deleted: %s", KEY2[i]);
+        tbl->remove(tbl, KEY2[i]);
+        printf("\n");
+        print_tree(tbl);
+        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+    }
+
+    ENABLE_PROGRESS_DOT();
     tbl->free(tbl);
 }
 
-TEST("Test tree with deletion / 9 8 7 6 5 4 3 2 1 0") {
-    const char *KEY[] = { "9", "8", "7", "6", "5", "4", "3", "2", "1", "0", "" };
-    qtreetbl_t *tbl = qtreetbl(0);
-
-    DISABLE_PROGRESS_DOT();
-    int i;
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->putstr(tbl, KEY[i], "");
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-        printf("\n");
-        print_tree(tbl);
-    }
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->remove(tbl, KEY[i]);
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
-        printf("\n");
-        print_tree(tbl);
-    }
-    ENABLE_PROGRESS_DOT();
-
-    tbl->free(tbl);
-}
-
-
-TEST("Test basic but complete") {
+TEST("Test basics") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
 
     qtreetbl_t *tbl = qtreetbl(0);
