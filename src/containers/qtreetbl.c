@@ -998,12 +998,12 @@ int node_check_llrb(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
 /**
  * Verifies that the invariants of the red-black tree are satisfied.
  *
- * Root property: The root of the red-black tree is black.
- * Red property: The children of a red node are black.
+ * Root property:  The root of the red-black tree is black.
+ * Red property:   The children of a red node are black.
  * Black property: For each node with at least one null child,
- *                  the number of black nodes on the path from the root
- *                  to the null child is the same.
- * LLRB property: 3-nodes always lean to the left and 4-nodes are balanced.
+ *                 the number of black nodes on the path from the root
+ *                 to the null child is the same.
+ * LLRB property:  3-nodes always lean to the left and 4-nodes are balanced.
  *
  * @param tbl    qtreetbl_t container pointer.
  */
