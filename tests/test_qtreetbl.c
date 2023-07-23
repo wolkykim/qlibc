@@ -32,8 +32,6 @@
 #include "qlibc.h"
 
 static bool print_tree(qtreetbl_t *tbl);
-static void test_tree_integrity(int num_keys, char *key_postfix,
-                                char *value_postfix);
 static void ASSERT_TREE_CHECK(qtreetbl_t *tbl, bool verbose);
 
 QUNIT_START("Test qtreetbl.c");
@@ -351,7 +349,7 @@ TEST("Test getnext() from find_nearest(N)") {
     tbl->free(tbl);
 }
 
-TEST("Test deletion in getnext() loop") {
+TEST("Test remove() in getnext() loop") {
     const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
     int i;
@@ -376,7 +374,7 @@ TEST("Test deletion in getnext() loop") {
             char *name = qmemdup(obj.name, obj.namesize);
             size_t namesize = obj.namesize;
 
-            // 2. Remove the object
+            // 2. Delete the object
             tbl->remove_by_obj(tbl, obj.name, obj.namesize);  // remove
 
             // 3. Rewind iterator one step back.
@@ -399,7 +397,77 @@ TEST("Test deletion in getnext() loop") {
 }
 
 TEST("Test integrity of tree structure") {
-    test_tree_integrity(10000, "", "");
+    int num_keys = 10000;
+    
+    qtreetbl_t *tbl = qtreetbl(0);
+    ASSERT_EQUAL_INT(0, tbl->size(tbl));
+
+    int i;
+    for (i = 0; i < num_keys; i++) {
+        char *key = qstrdupf("K%05d", i);
+        char *value = qstrdupf("V%05", i);
+        ASSERT_EQUAL_BOOL(true, tbl->putstr(tbl, key, value));
+        ASSERT_EQUAL_STR(value, tbl->getstr(tbl, key, false));
+        free(key);
+        free(value);
+        ASSERT_EQUAL_INT(i + 1, tbl->size(tbl));
+        ASSERT_TREE_CHECK(tbl, false);
+    }
+    ASSERT_EQUAL_INT(num_keys, tbl->size(tbl));
+
+    for (i--; i >= 0; i--) {
+        char *key = qstrdupf("K%05d", i);
+        ASSERT_EQUAL_BOOL(true, tbl->remove(tbl, key));
+        ASSERT_NULL(tbl->getstr(tbl, key, false));
+        free(key);
+        ASSERT_EQUAL_INT(i, tbl->size(tbl));
+        ASSERT_TREE_CHECK(tbl, false);
+    }
+
+    ASSERT_EQUAL_INT(0, tbl->size(tbl));
+    tbl->free(tbl);
+}
+
+TEST("Test integrity of tree structure with random keys") {
+    qtreetbl_t *tbl = qtreetbl(0);
+    int num_loop = 30000;
+    int key_range = 100; // random key range
+    int fillup_max_percent = 50; // 0~50% from the key range
+    int delete_percent = 50; // delete 50% keys in the table
+    int insert_cnt = 0, remove_cnt = 0;
+
+    #define GET_RAND_NUM() (rand() % key_range)
+    srand((unsigned) time(NULL));
+    for (int i = 0; i < num_loop; i++) {
+        // insert some keys until total number of keys reaches enough
+        int fill_upto = GET_RAND_NUM() * fillup_max_percent / 100;
+        while (tbl->size(tbl) < fill_upto) {
+            char *key = qstrdupf("K%05d", GET_RAND_NUM());
+            if (tbl->getstr(tbl, key, false) != NULL) {
+                free(key);
+                continue;
+            }
+            ASSERT_EQUAL_BOOL(true, tbl->putstr(tbl, key, ""));
+            free(key);
+            insert_cnt++;
+            ASSERT_TREE_CHECK(tbl, false);
+        }
+
+        // delete keys until total number of keys drops enough
+        int delete_upto = tbl->size(tbl) * delete_percent / 100;
+        while (tbl->size(tbl) > delete_upto) {
+            char *key = qstrdupf("K%05d", GET_RAND_NUM());
+            if (tbl->getstr(tbl, key, false) == NULL) {
+                free(key);
+                continue;
+            }
+            ASSERT_EQUAL_BOOL(true, tbl->remove(tbl, key));
+            free(key);
+            remove_cnt++;
+            ASSERT_TREE_CHECK(tbl, false);
+        }
+    }
+    printf("\n  #loop %d, #tot_insert %d, #tot_delete %d\n", num_loop, insert_cnt, remove_cnt);
 }
 
 TEST("Test tree performance / 1 million keys") {
@@ -431,7 +499,7 @@ TEST("Test tree performance / 1 million keys") {
     TIMER_STOP(t);
     printf("\n  Lookup %d keys: %ldms", num_keys, t);
 
-    // delete
+    // remove
     TIMER_START(t);
     for (int i = 0; i < num_keys; i++) {
         char *key = qstrdupf("K%05d", i);
@@ -447,37 +515,6 @@ TEST("Test tree performance / 1 million keys") {
 }
 
 QUNIT_END();
-
-static void test_tree_integrity(int num_keys, char *key_postfix,
-                                   char *value_postfix) {
-    qtreetbl_t *tbl = qtreetbl(0);
-    ASSERT_EQUAL_INT(0, tbl->size(tbl));
-
-    int i;
-    for (i = 0; i < num_keys; i++) {
-        char *key = qstrdupf("K%05d%s", i, key_postfix);
-        char *value = qstrdupf("V%05%s", i, value_postfix);
-        ASSERT_EQUAL_BOOL(true, tbl->putstr(tbl, key, value));
-        ASSERT_EQUAL_STR(value, tbl->getstr(tbl, key, false));
-        free(key);
-        free(value);
-        ASSERT_EQUAL_INT(i + 1, tbl->size(tbl));
-        ASSERT_TREE_CHECK(tbl, false);
-    }
-    ASSERT_EQUAL_INT(num_keys, tbl->size(tbl));
-
-    for (i--; i >= 0; i--) {
-        char *key = qstrdupf("K%05d%s", i, key_postfix);
-        ASSERT_EQUAL_BOOL(true, tbl->remove(tbl, key));
-        ASSERT_NULL(tbl->getstr(tbl, key, false));
-        free(key);
-        ASSERT_EQUAL_INT(i, tbl->size(tbl));
-        ASSERT_TREE_CHECK(tbl, false);
-    }
-
-    ASSERT_EQUAL_INT(0, tbl->size(tbl));
-    tbl->free(tbl);
-}
 
 static bool print_tree(qtreetbl_t *tbl) {
     tbl->debug(tbl, stdout);
