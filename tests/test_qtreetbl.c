@@ -430,7 +430,7 @@ TEST("Test integrity of tree structure") {
 
 TEST("Test integrity of tree structure with random keys") {
     qtreetbl_t *tbl = qtreetbl(0);
-    int num_loop = 10;
+    int num_loop = 30000;
     int key_range = 100; // random key range
     int fillup_max_percent = 50; // 0~50% from the key range
     int delete_percent = 50; // delete 50% keys in the table
