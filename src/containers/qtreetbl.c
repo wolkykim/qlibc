@@ -1187,13 +1187,13 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         return new_obj(true, name, namesize, data, datasize);
     }
 
-    // split 4-nodes on the way down.
+    // split 4-nodes on the way down
     if (is_red(obj->left) && is_red(obj->right)) {
         flip_color(obj);
     }
 
     int cmp = tbl->compare(obj->name, obj->namesize, name, namesize);
-    if (cmp == 0) {  // existing key found.
+    if (cmp == 0) {  // existing key found
         void *copydata = qmemdup(data, datasize);
         if (copydata != NULL) {
             free(obj->data);
@@ -1255,7 +1255,7 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         }
         // found in the middle
         if (tbl->compare(name, namesize, obj->name, obj->namesize) == 0) {
-            // copy min to this then remove min. What a genius inventor!
+            // copy min to this then remove min
             qtreetbl_obj_t *minobj = find_min(obj->right);
             assert(minobj != NULL);
             free(obj->name);
@@ -1271,7 +1271,7 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
             obj->right = remove_obj(tbl, obj->right, name, namesize);
         }
     }
-    // Fix right-leaning red nodes on the way up.
+    // fix right-leaning red nodes on the way up
     return fix(obj);
 }
 
