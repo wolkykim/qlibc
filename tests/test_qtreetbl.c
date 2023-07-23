@@ -405,7 +405,7 @@ TEST("Test integrity of tree structure") {
     int i;
     for (i = 0; i < num_keys; i++) {
         char *key = qstrdupf("K%05d", i);
-        char *value = qstrdupf("V%05", i);
+        char *value = qstrdupf("V%05d", i);
         ASSERT_EQUAL_BOOL(true, tbl->putstr(tbl, key, value));
         ASSERT_EQUAL_STR(value, tbl->getstr(tbl, key, false));
         free(key);
@@ -426,6 +426,48 @@ TEST("Test integrity of tree structure") {
 
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
     tbl->free(tbl);
+}
+
+TEST("Test integrity of tree structure with random keys") {
+    qtreetbl_t *tbl = qtreetbl(0);
+    int num_loop = 10;
+    int key_range = 100; // random key range
+    int fillup_max_percent = 50; // 0~50% from the key range
+    int delete_percent = 50; // delete 50% keys in the table
+    int insert_cnt = 0, remove_cnt = 0;
+
+    #define GET_RAND_NUM() (rand() % key_range)
+    srand((unsigned) time(NULL));
+    for (int i = 0; i < num_loop; i++) {
+        // insert some keys until total number of keys reaches enough
+        int fill_upto = GET_RAND_NUM() * fillup_max_percent / 100;
+        while (tbl->size(tbl) < fill_upto) {
+            char *key = qstrdupf("K%05d", GET_RAND_NUM());
+            if (tbl->getstr(tbl, key, false) != NULL) {
+                free(key);
+                continue;
+            }
+            ASSERT_EQUAL_BOOL(true, tbl->putstr(tbl, key, ""));
+            free(key);
+            insert_cnt++;
+            ASSERT_TREE_CHECK(tbl, false);
+        }
+
+        // delete keys until total number of keys drops enough
+        int delete_upto = tbl->size(tbl) * delete_percent / 100;
+        while (tbl->size(tbl) > delete_upto) {
+            char *key = qstrdupf("K%05d", GET_RAND_NUM());
+            if (tbl->getstr(tbl, key, false) == NULL) {
+                free(key);
+                continue;
+            }
+            ASSERT_EQUAL_BOOL(true, tbl->remove(tbl, key));
+            free(key);
+            remove_cnt++;
+            ASSERT_TREE_CHECK(tbl, false);
+        }
+    }
+    printf("\n  #loop %d, #tot_insert %d, #tot_delete %d\n", num_loop, insert_cnt, remove_cnt);
 }
 
 TEST("Test tree performance / 1 million keys") {
