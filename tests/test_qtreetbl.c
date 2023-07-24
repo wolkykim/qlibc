@@ -494,8 +494,8 @@ TEST("Test tree performance / 1 million keys / ascending") {
 TEST("Test tree performance / 1 million keys / descending") {
     int num_keys = 1000000;
     uint32_t keys[num_keys];
-    for (int i = num_keys; i > 0; i--) {
-        keys[i] = i;
+    for (uint32_t i = num_keys; i > 0; i--) {
+        keys[i] = (uint32_t)i;
     }
     perf_test(keys, num_keys);
 }
@@ -557,6 +557,9 @@ int uint32_cmp(const void *name1, size_t namesize1, const void *name2, size_t na
 }
 
 
+extern uint32_t _q_treetbl_flip_color_cnt;
+extern uint32_t _q_treetbl_rotate_left_cnt;
+extern uint32_t _q_treetbl_rotate_right_cnt;
 static void perf_test(uint32_t keys[], int num_keys) {
     DISABLE_PROGRESS_DOT();
     qtreetbl_t *tbl = qtreetbl(0);
@@ -566,6 +569,7 @@ static void perf_test(uint32_t keys[], int num_keys) {
     tbl->set_compare(tbl, uint32_cmp);
 
     // insert
+    _q_treetbl_flip_color_cnt = 0, _q_treetbl_rotate_left_cnt = 0, _q_treetbl_rotate_right_cnt = 0;
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
     TIMER_START(t);
     for (int i = 0; i < num_keys; i++) {
@@ -575,8 +579,14 @@ static void perf_test(uint32_t keys[], int num_keys) {
     ASSERT(tbl->size(tbl) > 0);
     ASSERT_TREE_CHECK(tbl, false);
     printf("\n  Insert %d keys: %ldms", num_keys, t);
+    printf(" - flip %.2f, rotate %.2f (L %.2f, R %.2f)",
+        (float)_q_treetbl_flip_color_cnt / num_keys,
+        (float)(_q_treetbl_rotate_left_cnt + _q_treetbl_rotate_right_cnt) / num_keys,
+        (float)_q_treetbl_rotate_left_cnt / num_keys,
+        (float)_q_treetbl_rotate_right_cnt / num_keys);
 
     // find
+    _q_treetbl_flip_color_cnt = 0, _q_treetbl_rotate_left_cnt = 0, _q_treetbl_rotate_right_cnt = 0;
     TIMER_START(t);
     for (int i = 0; i < num_keys; i++) {
         errno = 0;
@@ -585,8 +595,14 @@ static void perf_test(uint32_t keys[], int num_keys) {
     }
     TIMER_STOP(t);
     printf("\n  Lookup %d keys: %ldms", num_keys, t);
+    printf(" - flip %.2f, rotate %.2f (L %.2f, R %.2f)",
+        (float)_q_treetbl_flip_color_cnt / num_keys,
+        (float)(_q_treetbl_rotate_left_cnt + _q_treetbl_rotate_right_cnt) / num_keys,
+        (float)_q_treetbl_rotate_left_cnt / num_keys,
+        (float)_q_treetbl_rotate_right_cnt / num_keys);
 
     // remove
+    _q_treetbl_flip_color_cnt = 0, _q_treetbl_rotate_left_cnt = 0, _q_treetbl_rotate_right_cnt = 0;
     TIMER_START(t);
     for (int i = 0; i < num_keys; i++) {
         tbl->removeobj(tbl, &(keys[i]), sizeof(uint32_t));
@@ -594,6 +610,11 @@ static void perf_test(uint32_t keys[], int num_keys) {
     TIMER_STOP(t);
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
     printf("\n  Delete %d keys: %ldms", num_keys, t);
+    printf(" - flip %.2f, rotate %.2f (L %.2f, R %.2f)",
+        (float)_q_treetbl_flip_color_cnt / num_keys,
+        (float)(_q_treetbl_rotate_left_cnt + _q_treetbl_rotate_right_cnt) / num_keys,
+        (float)_q_treetbl_rotate_left_cnt / num_keys,
+        (float)_q_treetbl_rotate_right_cnt / num_keys);
     printf("\n");
 
     tbl->free(tbl);

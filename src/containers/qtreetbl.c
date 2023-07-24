@@ -1031,28 +1031,34 @@ static bool is_red(qtreetbl_obj_t *obj) {
     return (obj != NULL) ? obj->red : false;
 }
 
+uint32_t _q_treetbl_flip_color_cnt = 0;
 static qtreetbl_obj_t *flip_color(qtreetbl_obj_t *obj) {
     obj->red = !(obj->red);
     obj->left->red = !(obj->left->red);
     obj->right->red = !(obj->right->red);
+    _q_treetbl_flip_color_cnt++;
     return obj;
 }
 
+uint32_t _q_treetbl_rotate_left_cnt = 0;
 static qtreetbl_obj_t *rotate_left(qtreetbl_obj_t *obj) {
     qtreetbl_obj_t *x = obj->right;
     obj->right = x->left;
     x->left = obj;
     x->red = x->left->red;
     x->left->red = true;
+    _q_treetbl_rotate_left_cnt++;
     return x;
 }
 
+uint32_t _q_treetbl_rotate_right_cnt = 0;
 static qtreetbl_obj_t *rotate_right(qtreetbl_obj_t *obj) {
     qtreetbl_obj_t *x = obj->left;
     obj->left = x->right;
     x->right = obj;
     x->red = x->right->red;
     x->right->red = true;
+    _q_treetbl_rotate_right_cnt++;
     return x;
 }
 
