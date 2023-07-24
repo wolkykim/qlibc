@@ -504,7 +504,7 @@ TEST("Test tree performance / 1 million keys / 4 ascending + 1 random mix") {
     int num_keys = 1000000;
     uint32_t keys[num_keys];
     for (int i = 0; i < num_keys; i++) {
-        keys[i] = (i % 5 == 0) ? qhashmurmur3_32(&i, sizeof(i)) : i;
+        keys[i] = (i % 3 == 0) ? (qhashmurmur3_32(&i, sizeof(i)) % (10 * num_keys)) : i * 10;
     }
     perf_test(keys, num_keys);
 }
@@ -513,7 +513,7 @@ TEST("Test tree performance / 1 million keys / 2 ascending + 1 random mix") {
     int num_keys = 1000000;
     uint32_t keys[num_keys];
     for (int i = 0; i < num_keys; i++) {
-        keys[i] = (i % 3 == 0) ? qhashmurmur3_32(&i, sizeof(i)) : i;
+        keys[i] = (i % 3 == 0) ? (qhashmurmur3_32(&i, sizeof(i)) % (10 * num_keys)) : i * 10;
     }
     perf_test(keys, num_keys);
 }
