@@ -77,7 +77,7 @@ extern bool qtreetbl_putobj(qtreetbl_t *tbl, const void *name, size_t namesize,
 extern void *qtreetbl_get(qtreetbl_t *tbl,
                           const char *name, size_t *datasize, bool newmem);
 extern char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem);
-extern void *qtreetbl_getobj(qtreetbl_t *tbl, const char *name, size_t namesize,
+extern void *qtreetbl_getobj(qtreetbl_t *tbl, const void *name, size_t namesize,
                              size_t *datasize, bool newmem);
 
 extern bool qtreetbl_remove(qtreetbl_t *tbl, const char *name);
@@ -120,7 +120,7 @@ struct qtreetbl_s {
     void *(*get)(qtreetbl_t *tbl, const char *name, size_t *datasize,
     bool newmem);
     char *(*getstr)(qtreetbl_t *tbl, const char *name, bool newmem);
-    void *(*getobj)(qtreetbl_t *tbl, const char *name, size_t namesize,
+    void *(*getobj)(qtreetbl_t *tbl, const void *name, size_t namesize,
                     size_t *datasize, bool newmem);
 
     bool (*remove)(qtreetbl_t *tbl, const char *name);

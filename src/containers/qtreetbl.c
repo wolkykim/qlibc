@@ -337,7 +337,7 @@ bool qtreetbl_putstrf(qtreetbl_t *tbl, const char *name, const char *format,
  */
 bool qtreetbl_putobj(qtreetbl_t *tbl, const void *name, size_t namesize,
                      const void *data, size_t datasize) {
-    if (name == NULL || namesize == 0 || data == NULL || datasize == 0) {
+    if (name == NULL || namesize == 0) {
         errno = EINVAL;
         return false;
     }
@@ -442,7 +442,7 @@ char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem) {
  *  directly and should not be de-allocated by user. In thread-safe mode,
  *  newmem flag must be set to true always.
  */
-void *qtreetbl_getobj(qtreetbl_t *tbl, const char *name, size_t namesize,
+void *qtreetbl_getobj(qtreetbl_t *tbl, const void *name, size_t namesize,
                       size_t *datasize, bool newmem) {
     if (name == NULL || namesize == 0) {
         errno = EINVAL;
@@ -454,8 +454,8 @@ void *qtreetbl_getobj(qtreetbl_t *tbl, const char *name, size_t namesize,
     void *data = NULL;
     if (obj != NULL) {
         data = (newmem) ? qmemdup(obj->data, obj->datasize) : obj->data;
-        if (data != NULL && datasize != NULL) {
-            *datasize = obj->datasize;
+        if (datasize != NULL) {
+            *datasize = (data != NULL) ? obj->datasize : 0;
         }
     }
     qtreetbl_unlock(tbl);
@@ -679,9 +679,9 @@ void *qtreetbl_find_max(qtreetbl_t *tbl, size_t *namesize) {
 }
 
 /**
- * qtreetbl->find_nearest(): Find equal or nearest object.
+ * qtreetbl->find_nearest(): Find an object with matching key or nearest.
  *
- * find_nearest() returns matching key or nearest key. If there's
+ * find_nearest() returns matching key or nearest key object. If there's
  * no keys in the table. It'll return empty qtreetbl_obj_t object
  * with errno ENOENT.
  *
@@ -1158,7 +1158,7 @@ static qtreetbl_obj_t *new_obj(bool red, const void *name, size_t namesize,
     void *copyname = qmemdup(name, namesize);
     void *copydata = qmemdup(data, datasize);
 
-    if (obj == NULL || copyname == NULL || copydata == NULL) {
+    if (obj == NULL || copyname == NULL) {
         errno = ENOMEM;
         free(obj);
         free(copyname);
@@ -1212,6 +1212,7 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         obj = rotate_right(obj);
     }
 
+    // return new root
     return obj;
 }
 
