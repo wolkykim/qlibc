@@ -26,6 +26,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
+/*
+ * Use '-v' option for more visual outputs.
+ */
+
 #include <math.h>
 #include <errno.h>
 #include "qunit.h"
@@ -113,7 +117,7 @@ TEST("Test growth of tree / A S E R C D I N B X") {
  *
  * The nodes 20 and 25 are Red. Others are Black.
  */
-TEST("Test insertion / 10 20 30 40 50 25") {
+TEST("Test insert / 10 20 30 40 50 25") {
     const char *KEY[] = { "10", "20", "30", "40", "50", "25", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
@@ -141,17 +145,15 @@ TEST("Test insertion / 10 20 30 40 50 25") {
     tbl->free(tbl);
 }
 
-TEST("Test tree with deletion / 0 1 2 3 4 5 6 7 8 9 0") {
-    const char *KEY[] = {
-        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ""
-    };
+TEST("Test remove / 10 20 30 40 50 25") {
+    const char *KEY[] = { "10", "20", "30", "40", "50", "25", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
     DISABLE_PROGRESS_DOT();
     int i;
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->putstr(tbl, KEY[i], "");
-        ASSERT_TREE_CHECK(tbl, true);
+        ASSERT_TREE_CHECK(tbl, false);
     }
     for (i = 0; KEY[i][0] != '\0'; i++) {
         tbl->remove(tbl, KEY[i]);
@@ -177,7 +179,7 @@ TEST("Test tree with deletion / Stroh Snow's test for red property violation") {
 
     DISABLE_PROGRESS_DOT();
     int i;
-    printf("\n\nInserting keys:");
+    printf("\nKeys inserted:");
     for (i = 0; KEY[i][0] != '\0'; i++) {
         printf(" %s", KEY[i]);
         tbl->putstr(tbl, KEY[i], "");
@@ -581,8 +583,10 @@ static void perf_test(uint32_t keys[], int num_keys) {
     TIMER_START(t);
     for (int i = 0; i < num_keys; i++) {
         ASSERT_EQUAL_BOOL(true, tbl->putobj(tbl, &(keys[i]), sizeof(uint32_t), NULL, 0));
-        if (i == 30) {
-            tbl->debug(tbl, stdout); // for visual inspection how the tree grows
+        IF_VERBOSE {
+            if (i == 50) {
+                ASSERT_TREE_CHECK(tbl, true); // for visual inspection how the tree grows
+            }
         }
     }
     TIMER_STOP(t);
@@ -616,6 +620,11 @@ static void perf_test(uint32_t keys[], int num_keys) {
     TIMER_START(t);
     for (int i = 0; i < num_keys; i++) {
         tbl->removeobj(tbl, &(keys[i]), sizeof(uint32_t));
+        IF_VERBOSE {
+            if (tbl->size(tbl) == 50) {
+                ASSERT_TREE_CHECK(tbl, true);
+            }
+        }
     }
     TIMER_STOP(t);
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
