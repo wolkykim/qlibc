@@ -83,8 +83,8 @@
  * @code
  *  qtreetbl_t *tbl = qtreetbl(QTREETBL_THREADSAFE);
  *
- *  tbl->put(tbl, "KEY", "DATA", 4);          // use put_by_obj() for binary keys.
- *  void *data = tbl->get(tbl, "KEY", false); // use get_by_obj() for binary keys.
+ *  tbl->put(tbl, "KEY", "DATA", 4);          // use putobj() for binary keys.
+ *  void *data = tbl->get(tbl, "KEY", false); // use getobj() for binary keys.
  *  tbl->remove(tbl, "KEY");                  // use remove_by_key() for binary keys.
  *
  *  // iteration example
@@ -198,15 +198,14 @@ qtreetbl_t *qtreetbl(int options) {
     tbl->put = qtreetbl_put;
     tbl->putstr = qtreetbl_putstr;
     tbl->putstrf = qtreetbl_putstrf;
-    tbl->put_by_obj = qtreetbl_put_by_obj;
+    tbl->putobj = qtreetbl_putobj;
 
     tbl->get = qtreetbl_get;
     tbl->getstr = qtreetbl_getstr;
-    //tbl->getint = qtreetbl_getint;
-    tbl->get_by_obj = qtreetbl_get_by_obj;
+    tbl->getobj = qtreetbl_getobj;
 
     tbl->remove = qtreetbl_remove;
-    tbl->remove_by_obj = qtreetbl_remove_by_obj;
+    tbl->removeobj = qtreetbl_removeobj;
 
     tbl->getnext = qtreetbl_getnext;
 
@@ -271,9 +270,8 @@ void qtreetbl_set_compare(
  */
 bool qtreetbl_put(qtreetbl_t *tbl, const char *name, const void *data,
                   size_t datasize) {
-    return qtreetbl_put_by_obj(tbl, name,
-                               (name != NULL) ? (strlen(name) + 1) : 0, data,
-                               datasize);
+    return qtreetbl_putobj(tbl,
+        name, (name != NULL) ? (strlen(name) + 1) : 0, data, datasize);
 }
 
 /**
@@ -289,9 +287,9 @@ bool qtreetbl_put(qtreetbl_t *tbl, const char *name, const void *data,
  *  - ENOMEM : Memory allocation failure.
  */
 bool qtreetbl_putstr(qtreetbl_t *tbl, const char *name, const char *str) {
-    return qtreetbl_put_by_obj(tbl, name,
-                               (name != NULL) ? (strlen(name) + 1) : 0, str,
-                               (str != NULL) ? (strlen(str) + 1) : 0);
+    return qtreetbl_putobj(tbl,
+                           name, (name != NULL) ? (strlen(name) + 1) : 0,
+                           str, (str != NULL) ? (strlen(str) + 1) : 0);
 }
 
 /**
@@ -321,7 +319,7 @@ bool qtreetbl_putstrf(qtreetbl_t *tbl, const char *name, const char *format,
 }
 
 /**
- * qtreetbl->put_by_obj(): Put an object data into this table with an object name.
+ * qtreetbl->putobj(): Put an object data into this table with an object key.
  *
  * @param tbl         qtreetbl_t container pointer.
  * @param name        key name.
@@ -337,8 +335,8 @@ bool qtreetbl_putstrf(qtreetbl_t *tbl, const char *name, const char *format,
  * @note
  *  This is the underlying put function which all other put methods use.
  */
-bool qtreetbl_put_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize,
-                         const void *data, size_t datasize) {
+bool qtreetbl_putobj(qtreetbl_t *tbl, const void *name, size_t namesize,
+                     const void *data, size_t datasize) {
     if (name == NULL || namesize == 0 || data == NULL || datasize == 0) {
         errno = EINVAL;
         return false;
@@ -395,9 +393,8 @@ bool qtreetbl_put_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize,
  */
 void *qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize,
                    bool newmem) {
-    return qtreetbl_get_by_obj(tbl, name,
-                               (name != NULL) ? (strlen(name) + 1) : 0,
-                               datasize, newmem);
+    return qtreetbl_getobj(tbl,
+        name, (name != NULL) ? (strlen(name) + 1) : 0, datasize, newmem);
 }
 
 /**
@@ -420,13 +417,12 @@ void *qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize,
  *  newmem flag must be set to true always.
  */
 char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem) {
-    return qtreetbl_get_by_obj(tbl, name,
-                               (name != NULL) ? (strlen(name) + 1) : 0, NULL,
-                               newmem);
+    return qtreetbl_getobj(tbl,
+        name, (name != NULL) ? (strlen(name) + 1) : 0, NULL, newmem);
 }
 
 /**
- * qtreetbl->get_by_obj(): Get an object from this table with an object name.
+ * qtreetbl->getobj(): Get an object from this table with an object name.
  *
  * @param tbl         qtreetbl_t container pointer.
  * @param name        key name.
@@ -446,8 +442,8 @@ char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem) {
  *  directly and should not be de-allocated by user. In thread-safe mode,
  *  newmem flag must be set to true always.
  */
-void *qtreetbl_get_by_obj(qtreetbl_t *tbl, const char *name, size_t namesize,
-                          size_t *datasize, bool newmem) {
+void *qtreetbl_getobj(qtreetbl_t *tbl, const char *name, size_t namesize,
+                      size_t *datasize, bool newmem) {
     if (name == NULL || namesize == 0) {
         errno = EINVAL;
         return NULL;
@@ -478,8 +474,8 @@ void *qtreetbl_get_by_obj(qtreetbl_t *tbl, const char *name, size_t namesize,
  *  - EINVAL : Invalid argument.
  */
 bool qtreetbl_remove(qtreetbl_t *tbl, const char *name) {
-    return qtreetbl_remove_by_obj(tbl, name,
-                                  (name != NULL) ? strlen(name) + 1 : 0);
+    return qtreetbl_removeobj(tbl,
+        name, (name != NULL) ? strlen(name) + 1 : 0);
 }
 
 /**
@@ -494,7 +490,7 @@ bool qtreetbl_remove(qtreetbl_t *tbl, const char *name) {
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
  */
-bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) {
+bool qtreetbl_removeobj(qtreetbl_t *tbl, const void *name, size_t namesize) {
     if (name == NULL) {
         errno = EINVAL;
         return false;
@@ -566,7 +562,7 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
  *      if (...condition...) {
  *          char *name = qmemdup(obj.name, obj.namesize);  // keep the name
  *          size_t namesize = obj.namesize;                // for removal argument
- *          tbl->remove_by_obj(tbl, obj.name, obj.namesize);  // remove
+ *          tbl->removeobj(tbl, obj.name, obj.namesize);   // remove
  *          obj = tbl->find_nearest(tbl, name, namesize, false); // rewind one step back
  *          free(name);  // clean up
  *      }

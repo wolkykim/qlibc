@@ -71,23 +71,19 @@ extern bool qtreetbl_put(qtreetbl_t *tbl, const char *name, const void *data,
 extern bool qtreetbl_putstr(qtreetbl_t *tbl, const char *name, const char *str);
 extern bool qtreetbl_putstrf(qtreetbl_t *tbl, const char *name,
                              const char *format, ...);
-extern bool qtreetbl_put_by_obj(qtreetbl_t *tbl, const void *name,
-                                size_t namesize, const void *data,
-                                size_t datasize);
+extern bool qtreetbl_putobj(qtreetbl_t *tbl, const void *name, size_t namesize,
+                            const void *data, size_t datasize);
 
-extern void *qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize,
-bool newmem);
-extern char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name,
-                             const bool newmem);
-extern void *qtreetbl_get_by_obj(qtreetbl_t *tbl, const char *name,
-                                 size_t namesize, size_t *datasize, bool newmem);
+extern void *qtreetbl_get(qtreetbl_t *tbl,
+                          const char *name, size_t *datasize, bool newmem);
+extern char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem);
+extern void *qtreetbl_getobj(qtreetbl_t *tbl, const char *name, size_t namesize,
+                             size_t *datasize, bool newmem);
 
 extern bool qtreetbl_remove(qtreetbl_t *tbl, const char *name);
-extern bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name,
-                                   size_t namesize);
+extern bool qtreetbl_removeobj(qtreetbl_t *tbl, const void *name, size_t namesize);
 
-extern bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
-                             const bool newmem);
+extern bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem);
 
 extern void *qtreetbl_find_min(qtreetbl_t *tbl, size_t *namesize);
 extern void *qtreetbl_find_max(qtreetbl_t *tbl, size_t *namesize);
@@ -112,25 +108,23 @@ extern int qtreetbl_check(qtreetbl_t *tbl);
  */
 struct qtreetbl_s {
     /* encapsulated member functions */
-    void (*set_compare)(
-            qtreetbl_t *tbl,
-            int (*cmp)(const void *name1, size_t namesize1, const void *name2,
-                       size_t namesize2));
-    bool (*put)(qtreetbl_t *tbl, const char *name, const void *data,
-                size_t size);
+    void (*set_compare)(qtreetbl_t *tbl,
+        int (*cmp)(const void *name1, size_t namesize1, const void *name2,
+        size_t namesize2));
+    bool (*put)(qtreetbl_t *tbl, const char *name, const void *data, size_t size);
     bool (*putstr)(qtreetbl_t *tbl, const char *name, const char *str);
     bool (*putstrf)(qtreetbl_t *tbl, const char *name, const char *format, ...);
-    bool (*put_by_obj)(qtreetbl_t *tbl, const void *name, size_t namesize,
-                       const void *data, size_t datasize);
+    bool (*putobj)(qtreetbl_t *tbl, const void *name, size_t namesize,
+                   const void *data, size_t datasize);
 
     void *(*get)(qtreetbl_t *tbl, const char *name, size_t *datasize,
     bool newmem);
     char *(*getstr)(qtreetbl_t *tbl, const char *name, bool newmem);
-    void *(*get_by_obj)(qtreetbl_t *tbl, const char *name, size_t namesize,
-                        size_t *datasize, bool newmem);
+    void *(*getobj)(qtreetbl_t *tbl, const char *name, size_t namesize,
+                    size_t *datasize, bool newmem);
 
     bool (*remove)(qtreetbl_t *tbl, const char *name);
-    bool (*remove_by_obj)(qtreetbl_t *tbl, const void *name, size_t namesize);
+    bool (*removeobj)(qtreetbl_t *tbl, const void *name, size_t namesize);
 
     bool (*getnext)(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem);
 
