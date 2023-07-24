@@ -573,7 +573,7 @@ static void perf_test(uint32_t keys[], int num_keys) {
     for (int i = 0; i < num_keys && i < 10; i++) {
         printf("%s %u", (i > 0) ? "," : "", keys[i]);
     }
-    printf(", ...(Total %d)...\n", num_keys);
+    printf(", ... (Total %d)\n", num_keys);
 
     // insert
     _q_treetbl_flip_color_cnt = 0, _q_treetbl_rotate_left_cnt = 0, _q_treetbl_rotate_right_cnt = 0;
