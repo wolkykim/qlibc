@@ -473,7 +473,7 @@ TEST("Test integrity of tree structure with random keys") {
     tbl->free(tbl);
 }
 
-TEST("Test tree performance / 1 million keys / random") {
+TEST("Test tree performance / random") {
     int num_keys = 1000000;
     uint32_t keys[num_keys];
     for (int i = 0; i < num_keys; i++) {
@@ -482,7 +482,7 @@ TEST("Test tree performance / 1 million keys / random") {
     perf_test(keys, num_keys);
 }
 
-TEST("Test tree performance / 1 million keys / ascending") {
+TEST("Test tree performance / ascending") {
     int num_keys = 1000000;
     uint32_t keys[num_keys];
     for (int i = 0; i < num_keys; i++) {
@@ -491,29 +491,29 @@ TEST("Test tree performance / 1 million keys / ascending") {
     perf_test(keys, num_keys);
 }
 
-TEST("Test tree performance / 1 million keys / descending") {
+TEST("Test tree performance / descending") {
     int num_keys = 1000000;
     uint32_t keys[num_keys];
-    for (uint32_t i = num_keys; i > 0; i--) {
-        keys[i] = (uint32_t)i;
+    for (int i = 0; i < num_keys; i++) {
+        keys[i] = num_keys - i;
     }
     perf_test(keys, num_keys);
 }
 
-TEST("Test tree performance / 1 million keys / 4 ascending + 1 random mix") {
+TEST("Test tree performance / 1 random + 3 ascending mix") {
     int num_keys = 1000000;
     uint32_t keys[num_keys];
     for (int i = 0; i < num_keys; i++) {
-        keys[i] = (i % 3 == 0) ? (qhashmurmur3_32(&i, sizeof(i)) % (10 * num_keys)) : i * 10;
+        keys[i] = (i % 4 == 0) ? (qhashmurmur3_32(&i, sizeof(i)) % (10 * num_keys)) : i * 10;
     }
     perf_test(keys, num_keys);
 }
 
-TEST("Test tree performance / 1 million keys / 2 ascending + 1 random mix") {
+TEST("Test tree performance / low high low high") {
     int num_keys = 1000000;
     uint32_t keys[num_keys];
     for (int i = 0; i < num_keys; i++) {
-        keys[i] = (i % 3 == 0) ? (qhashmurmur3_32(&i, sizeof(i)) % (10 * num_keys)) : i * 10;
+        keys[i] = (i % 2 == 0) ? i : num_keys - i;
     }
     perf_test(keys, num_keys);
 }
@@ -568,6 +568,13 @@ static void perf_test(uint32_t keys[], int num_keys) {
     // set integer comparator
     tbl->set_compare(tbl, uint32_cmp);
 
+    // print key samples
+    printf("\n  Workload:");
+    for (int i = 0; i < num_keys && i < 10; i++) {
+        printf("%s %u", (i > 0) ? "," : "", keys[i]);
+    }
+    printf(", ...(Total %d)...\n", num_keys);
+
     // insert
     _q_treetbl_flip_color_cnt = 0, _q_treetbl_rotate_left_cnt = 0, _q_treetbl_rotate_right_cnt = 0;
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
@@ -578,8 +585,8 @@ static void perf_test(uint32_t keys[], int num_keys) {
     TIMER_STOP(t);
     ASSERT(tbl->size(tbl) > 0);
     ASSERT_TREE_CHECK(tbl, false);
-    printf("\n  Insert %d keys: %ldms", num_keys, t);
-    printf(" - flip %.2f, rotate %.2f (L %.2f, R %.2f)",
+    printf("  Insert %d keys: %ldms", num_keys, t);
+    printf(" - flip %.2f, rotate %.2f (L %.2f, R %.2f)\n",
         (float)_q_treetbl_flip_color_cnt / num_keys,
         (float)(_q_treetbl_rotate_left_cnt + _q_treetbl_rotate_right_cnt) / num_keys,
         (float)_q_treetbl_rotate_left_cnt / num_keys,
@@ -594,8 +601,8 @@ static void perf_test(uint32_t keys[], int num_keys) {
         ASSERT_EQUAL_INT(errno, 0);
     }
     TIMER_STOP(t);
-    printf("\n  Lookup %d keys: %ldms", num_keys, t);
-    printf(" - flip %.2f, rotate %.2f (L %.2f, R %.2f)",
+    printf("  Lookup %d keys: %ldms", num_keys, t);
+    printf(" - flip %.2f, rotate %.2f (L %.2f, R %.2f)\n",
         (float)_q_treetbl_flip_color_cnt / num_keys,
         (float)(_q_treetbl_rotate_left_cnt + _q_treetbl_rotate_right_cnt) / num_keys,
         (float)_q_treetbl_rotate_left_cnt / num_keys,
@@ -609,13 +616,12 @@ static void perf_test(uint32_t keys[], int num_keys) {
     }
     TIMER_STOP(t);
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
-    printf("\n  Delete %d keys: %ldms", num_keys, t);
-    printf(" - flip %.2f, rotate %.2f (L %.2f, R %.2f)",
+    printf("  Delete %d keys: %ldms", num_keys, t);
+    printf(" - flip %.2f, rotate %.2f (L %.2f, R %.2f)\n",
         (float)_q_treetbl_flip_color_cnt / num_keys,
         (float)(_q_treetbl_rotate_left_cnt + _q_treetbl_rotate_right_cnt) / num_keys,
         (float)_q_treetbl_rotate_left_cnt / num_keys,
         (float)_q_treetbl_rotate_right_cnt / num_keys);
-    printf("\n");
 
     tbl->free(tbl);
     ENABLE_PROGRESS_DOT();
