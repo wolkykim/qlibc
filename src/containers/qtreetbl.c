@@ -1320,14 +1320,14 @@ static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev
 
     print_branch(prev, out);
     if (prev != NULL) {
-        fprintf(out, "%s%s", right ? "┌──" : "└──", obj->red ? "[" : "─");
+        fprintf(out, "%s%s", (right) ? "┌──" : "└──", (obj->red) ? "[" : "─");
     }
     if (obj->data == NULL && obj->namesize == sizeof(uint32_t)) {
         fprintf(out, "%u", *(uint32_t *)obj->name);
     } else {
         _q_textout(out, obj->name, obj->namesize, 15);
     }
-    fprintf(out, "%s", obj->red ? "]\n" : "\n");
+    fprintf(out, "%s", (obj->red) ? "]\n" : "\n");
 
     branch.s = (prev != NULL) ? (right) ? "│   " : "    " : "";
     print_node(obj->left, out, &branch, false);
