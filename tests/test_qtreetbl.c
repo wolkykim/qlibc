@@ -569,7 +569,7 @@ static void perf_test(uint32_t keys[], int num_keys) {
     tbl->set_compare(tbl, uint32_cmp);
 
     // print key samples
-    printf("\n  Workload:");
+    printf("\n  Sample");
     for (int i = 0; i < num_keys && i < 10; i++) {
         printf("%s %u", (i > 0) ? "," : "", keys[i]);
     }
