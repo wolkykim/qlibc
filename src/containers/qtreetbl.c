@@ -1208,7 +1208,7 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
     }
 
     // fix right-leaning reds on the way up
-    if (is_red(obj->right)) {
+    if (is_red(obj->right) && !is_red(obj->left)) {
         obj = rotate_left(obj);
     }
 
@@ -1228,7 +1228,8 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         return NULL;
     }
 
-    if (tbl->compare(name, namesize, obj->name, obj->namesize) < 0) {  // left
+    int cmp;
+    if ((cmp = tbl->compare(name, namesize, obj->name, obj->namesize)) < 0) {  // left
         // move red left
         if (obj->left != NULL
             && (!is_red(obj->left) && !is_red(obj->left->left))) {
@@ -1237,26 +1238,32 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         // keep going down to the left
         obj->left = remove_obj(tbl, obj->left, name, namesize);
     } else {  // right or equal
+        bool recmp = false; // optimization to reduce duplicated comparisions
         if (is_red(obj->left)) {
             obj = rotate_right(obj);
+            recmp = true;
         }
         // remove if equal at the bottom
-        if (tbl->compare(name, namesize, obj->name, obj->namesize) == 0
-            && obj->right == NULL) {
-            free(obj->name);
-            free(obj->data);
-            free(obj);
-            tbl->num--;
-            assert(tbl->num >= 0);
-            return NULL;
+        if (obj->right == NULL) {
+            if ((!recmp && cmp == 0)
+                || (recmp && (cmp = tbl->compare(name, namesize, obj->name, obj->namesize))) == 0) {
+                free(obj->name);
+                free(obj->data);
+                free(obj);
+                tbl->num--;
+                return NULL;
+            }
+            recmp = false;
         }
         // move red right
         if (obj->right != NULL
             && (!is_red(obj->right) && !is_red(obj->right->left))) {
             obj = move_red_right(obj);
+            recmp = true;
         }
         // found in the middle
-        if (tbl->compare(name, namesize, obj->name, obj->namesize) == 0) {
+        if ((!recmp && cmp == 0)
+            || (recmp && tbl->compare(name, namesize, obj->name, obj->namesize) == 0)) {
             // copy min to this then remove min
             qtreetbl_obj_t *minobj = find_min(obj->right);
             assert(minobj != NULL);
