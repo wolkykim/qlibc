@@ -42,7 +42,8 @@ static void perf_test(uint32_t keys[], int num_keys);
 
 QUNIT_START("Test qtreetbl.c");
 
-/* Test growth of tree
+/*
+ * Test growth of tree
  *
  * Example taken from the inventor's presentation slide p24-p25.
  * https://sedgewick.io/wp-content/uploads/2022/03/2008-09LLRB.pdf
@@ -65,13 +66,13 @@ QUNIT_START("Test qtreetbl.c");
  * The nodes A, I and S are Red. Others are Black.
  */
 TEST("Test growth of tree / A S E R C D I N B X") {
-    const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
+    const char *keys[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
     DISABLE_PROGRESS_DOT();
     int i;
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->putstr(tbl, KEY[i], "");
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, keys[i], "");
         ASSERT_TREE_CHECK(tbl, true);
     }
     ENABLE_PROGRESS_DOT();
@@ -118,13 +119,13 @@ TEST("Test growth of tree / A S E R C D I N B X") {
  * The nodes 20 and 25 are Red. Others are Black.
  */
 TEST("Test insert / 10 20 30 40 50 25") {
-    const char *KEY[] = { "10", "20", "30", "40", "50", "25", "" };
+    const char *keys[] = { "10", "20", "30", "40", "50", "25", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
     DISABLE_PROGRESS_DOT();
     int i;
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->putstr(tbl, KEY[i], "");
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, keys[i], "");
         ASSERT_TREE_CHECK(tbl, true);
     }
     ENABLE_PROGRESS_DOT();
@@ -146,17 +147,17 @@ TEST("Test insert / 10 20 30 40 50 25") {
 }
 
 TEST("Test remove / 10 20 30 40 50 25") {
-    const char *KEY[] = { "10", "20", "30", "40", "50", "25", "" };
+    const char *keys[] = { "10", "20", "30", "40", "50", "25", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
     DISABLE_PROGRESS_DOT();
     int i;
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->putstr(tbl, KEY[i], "");
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, keys[i], "");
         ASSERT_TREE_CHECK(tbl, false);
     }
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->remove(tbl, KEY[i]);
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        tbl->remove(tbl, keys[i]);
         ASSERT_TREE_CHECK(tbl, true);
     }
     ENABLE_PROGRESS_DOT();
@@ -169,28 +170,28 @@ TEST("Test remove / 10 20 30 40 50 25") {
  * https://github.com/wolkykim/qlibc/pull/106#issuecomment-1646521205
  */
 TEST("Test tree with deletion / Stroh Snow's test for red property violation") {
-    const char *KEY[] = {
+    const char *keys[] = {
         "J", "E", "O", "C", "L", "H", "Q", "B", "G", "K", "P", "D", "I",
         "N", "S", "A", "M", "F", "R",""
     };
-    const char *KEY2[] = { "A", "M", "" };
+    const char *keys2[] = { "A", "M", "" };
 
     qtreetbl_t *tbl = qtreetbl(0);
 
     DISABLE_PROGRESS_DOT();
     int i;
     printf("\nKeys inserted:");
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        printf(" %s", KEY[i]);
-        tbl->putstr(tbl, KEY[i], "");
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        printf(" %s", keys[i]);
+        tbl->putstr(tbl, keys[i], "");
         ASSERT_TREE_CHECK(tbl, false);
     }
 
     ASSERT_TREE_CHECK(tbl, true);
 
-    for (i = 0; KEY2[i][0] != '\0'; i++) {
-        printf("\nKey deleted: %s", KEY2[i]);
-        tbl->remove(tbl, KEY2[i]);
+    for (i = 0; keys2[i][0] != '\0'; i++) {
+        printf("\nKey deleted: %s", keys2[i]);
+        tbl->remove(tbl, keys2[i]);
         ASSERT_TREE_CHECK(tbl, true);
     }
 
@@ -199,31 +200,31 @@ TEST("Test tree with deletion / Stroh Snow's test for red property violation") {
 }
 
 TEST("Test basics") {
-    const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
+    const char *keys[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
 
     qtreetbl_t *tbl = qtreetbl(0);
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
 
     // insert
     int i;
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->putstr(tbl, KEY[i], KEY[i]);
-        ASSERT_EQUAL_STR(KEY[i], tbl->getstr(tbl, KEY[i], false));
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, keys[i], keys[i]);
+        ASSERT_EQUAL_STR(keys[i], tbl->getstr(tbl, keys[i], false));
         ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
     }
     ASSERT_EQUAL_INT(i, tbl->size(tbl));
 
     // verify
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        ASSERT_EQUAL_STR(KEY[i], tbl->getstr(tbl, KEY[i], false));
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        ASSERT_EQUAL_STR(keys[i], tbl->getstr(tbl, keys[i], false));
     }
 
     // not found case
     ASSERT_NULL(tbl->getstr(tbl, "_NOT_EXIST_", false));  // not found
 
     // delete
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        ASSERT_EQUAL_BOOL(true, tbl->remove(tbl, KEY[i]));
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        ASSERT_EQUAL_BOOL(true, tbl->remove(tbl, keys[i]));
         ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
     }
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
@@ -249,11 +250,11 @@ TEST("Test duplicated key insertions()") {
 }
 
 TEST("Test clear()") {
-    const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
+    const char *keys[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
     int i;
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->putstr(tbl, KEY[i], KEY[i]);
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, keys[i], keys[i]);
     }
     ASSERT_EQUAL_INT(i, tbl->size(tbl));
     tbl->clear(tbl);
@@ -281,7 +282,7 @@ TEST("Test putstrf() / getstr()") {
 }
 
 TEST("Test find_nearest()") {
-    const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
+    const char *keys[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
 
     qtreetbl_obj_t obj;
@@ -290,8 +291,8 @@ TEST("Test find_nearest()") {
     ASSERT_EQUAL_INT(errno, ENOENT);
 
     int i;
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->putstr(tbl, KEY[i], KEY[i]);
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, keys[i], keys[i]);
     }
 
     obj = tbl->find_nearest(tbl, "0", sizeof("0"), false);
@@ -311,11 +312,11 @@ TEST("Test find_nearest()") {
 }
 
 TEST("Test getnext()") {
-    const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
+    const char *keys[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
     int i;
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->putstr(tbl, KEY[i], KEY[i]);
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, keys[i], keys[i]);
     }
 
     char buf[1024] = "";
@@ -333,11 +334,11 @@ TEST("Test getnext()") {
 }
 
 TEST("Test getnext() from find_nearest(N)") {
-    const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
+    const char *keys[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
     int i;
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->putstr(tbl, KEY[i], KEY[i]);
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, keys[i], keys[i]);
     }
 
     char buf[1024] = "";
@@ -354,11 +355,11 @@ TEST("Test getnext() from find_nearest(N)") {
 }
 
 TEST("Test remove() in getnext() loop") {
-    const char *KEY[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
+    const char *keys[] = { "A", "S", "E", "R", "C", "D", "I", "N", "B", "X", "" };
     qtreetbl_t *tbl = qtreetbl(0);
     int i;
-    for (i = 0; KEY[i][0] != '\0'; i++) {
-        tbl->putstr(tbl, KEY[i], KEY[i]);
+    for (i = 0; keys[i][0] != '\0'; i++) {
+        tbl->putstr(tbl, keys[i], keys[i]);
     }
 
     char buf[1024] = "";
