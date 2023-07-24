@@ -108,7 +108,7 @@
  *  // find minimum value using custom comparator
  *  tbl->set_compare(tbl, my_compare_func); // default is byte comparator
  *  void *min = tbl->find_min(tbl, &keysize);
- * 
+ *
  *  // get total number of objects in the table
  *  size_t num = tbl->size(tbl);
  *
@@ -523,7 +523,7 @@ bool qtreetbl_removeobj(qtreetbl_t *tbl, const void *name, size_t namesize) {
  *
  * @code
  *  [Iteration example from the beginning]
- * 
+ *
  *  qtreetbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  tbl->lock(tbl);  // lock it when thread condition is expected
@@ -554,7 +554,7 @@ bool qtreetbl_removeobj(qtreetbl_t *tbl, const void *name, size_t namesize) {
  *
  * @code
  *  [Removal example in iteration loop]
- * 
+ *
  *  qtreetbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj));
  *  tbl->lock(tbl);
@@ -852,20 +852,20 @@ int qtreetbl_byte_cmp(const void *name1, size_t namesize1, const void *name2,
  * @return true if successful, otherwise returns false.
  * @retval errno will be set in error condition.
  *  - EIO : Invalid output stream.
- * 
+ *
  * @code
  *  Example output:
- *  
- *      ┌── 9 
+ *
+ *      ┌── 9
  *      │   └──[8]
- *  ┌── 7 
- *  │   │   ┌── 6 
+ *  ┌── 7
+ *  │   │   ┌── 6
  *  │   └──[5]
- *  │       └── 4 
- *  3 
- *  │   ┌── 2 
- *  └── 1 
- *      └── 0 
+ *  │       └── 4
+ *  3
+ *  │   ┌── 2
+ *  └── 1
+ *      └── 0
  * @endcode
  * @note
  *  Red nodes are wrapped in `[]`.
@@ -894,7 +894,7 @@ int node_check_root(qtreetbl_t *tbl) {
     if (tbl == NULL) {
         return 1;
     }
-    
+
     if (is_red(tbl->root)) {
         return 1;
     }
