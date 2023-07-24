@@ -1104,9 +1104,8 @@ static qtreetbl_obj_t *find_min(qtreetbl_obj_t *obj) {
         return NULL;
     }
 
-    qtreetbl_obj_t *o;
-    for (o = obj; o->left != NULL; o = o->left);
-    return o;
+    for (; obj->left != NULL; obj = obj->left);
+    return obj;
 }
 
 static qtreetbl_obj_t *find_max(qtreetbl_obj_t *obj) {
@@ -1115,9 +1114,8 @@ static qtreetbl_obj_t *find_max(qtreetbl_obj_t *obj) {
         return NULL;
     }
 
-    qtreetbl_obj_t *o;
-    for (o = obj; o->right != NULL; o = o->right);
-    return o;
+    for (; obj->right != NULL; obj = obj->right);
+    return obj;
 }
 
 static qtreetbl_obj_t *find_obj(qtreetbl_t *tbl, const void *name,
@@ -1324,22 +1322,21 @@ static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev
     struct branch_obj_s branch;
     branch.p = prev;
 
-    branch.s = (prev != NULL) ? (right) ?  "    " : " │  " : "";
+    branch.s = (prev != NULL) ? (right) ?  "    " : "│   " : "";
     print_node(obj->right, out, &branch, true);
 
     print_branch(prev, out);
     if (prev != NULL) {
-        fprintf(out, "%s", (right) ? " ┌──" : " └──");
+        fprintf(out, "%s%s", (right) ? "┌──" : "└──", (obj->red) ? "[" : "─");
     }
-    fprintf(out, "%c", obj->red ? '[' : ' ');
     if (obj->data == NULL && obj->namesize == sizeof(uint32_t)) {
         fprintf(out, "%u", *(uint32_t *)obj->name);
     } else {
         _q_textout(out, obj->name, obj->namesize, 15);
     }
-    fprintf(out, "%s", obj->red ? "]\n" : " \n");
+    fprintf(out, "%s", (obj->red) ? "]\n" : "\n");
 
-    branch.s = (prev != NULL) ? (right) ? " │  " : "    " : "";
+    branch.s = (prev != NULL) ? (right) ? "│   " : "    " : "";
     print_node(obj->left, out, &branch, false);
 }
 
