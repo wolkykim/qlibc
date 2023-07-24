@@ -121,7 +121,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdarg.h>
-#include <ctype.h>
 #include <errno.h>
 #include <assert.h>
 #include "qinternal.h"
@@ -1326,12 +1325,10 @@ static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev
         fprintf(out, "%s", right ? " ┌──" : " └──");
     }
     fprintf(out, "%c", obj->red ? '[' : ' ');
-    for (int i = 0; i < obj->namesize; i++) {
-        if (isprint(((char *)obj->name)[i])) {
-            fprintf(out, "%c", ((char *)obj->name)[i]);
-        } else if ((((char *)obj->name)[i]) != '\0') {
-            fprintf(out, ".");
-        }
+    if (obj->data == NULL && obj->namesize == sizeof(uint32_t)) {
+        fprintf(out, "%u", *(uint32_t *)obj->name);
+    } else {
+        _q_textout(out, obj->name, obj->namesize, 15);
     }
     fprintf(out, "%s", obj->red ? "]\n" : " \n");
 
