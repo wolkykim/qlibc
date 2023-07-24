@@ -581,6 +581,9 @@ static void perf_test(uint32_t keys[], int num_keys) {
     TIMER_START(t);
     for (int i = 0; i < num_keys; i++) {
         ASSERT_EQUAL_BOOL(true, tbl->putobj(tbl, &(keys[i]), sizeof(uint32_t), NULL, 0));
+        if (i == 30) {
+            tbl->debug(tbl, stdout); // for visual inspection how the tree grows
+        }
     }
     TIMER_STOP(t);
     ASSERT(tbl->size(tbl) > 0);
