@@ -1104,9 +1104,8 @@ static qtreetbl_obj_t *find_min(qtreetbl_obj_t *obj) {
         return NULL;
     }
 
-    qtreetbl_obj_t *o;
-    for (o = obj; o->left != NULL; o = o->left);
-    return o;
+    for (; obj->left != NULL; obj = obj->left);
+    return obj;
 }
 
 static qtreetbl_obj_t *find_max(qtreetbl_obj_t *obj) {
@@ -1115,9 +1114,8 @@ static qtreetbl_obj_t *find_max(qtreetbl_obj_t *obj) {
         return NULL;
     }
 
-    qtreetbl_obj_t *o;
-    for (o = obj; o->right != NULL; o = o->right);
-    return o;
+    for (; obj->right != NULL; obj = obj->right);
+    return obj;
 }
 
 static qtreetbl_obj_t *find_obj(qtreetbl_t *tbl, const void *name,
