@@ -31,8 +31,10 @@
 #include "qunit.h"
 #include "qlibc.h"
 
-static bool print_tree(qtreetbl_t *tbl);
 static void ASSERT_TREE_CHECK(qtreetbl_t *tbl, bool verbose);
+static bool print_tree(qtreetbl_t *tbl);
+int uint32_cmp(const void *name1, size_t namesize1, const void *name2, size_t namesize2);
+static void perf_test(uint32_t keys[], int num_keys);
 
 QUNIT_START("Test qtreetbl.c");
 
@@ -53,9 +55,9 @@ QUNIT_START("Test qtreetbl.c");
  * │   ┌── D
  * └── C
  *     └── B
- *         └──[A] 
+ *         └──[A]
  * @endcode
- * 
+ *
  * The nodes A, I and S are Red. Others are Black.
  */
 TEST("Test growth of tree / A S E R C D I N B X") {
@@ -108,7 +110,7 @@ TEST("Test growth of tree / A S E R C D I N B X") {
  * └──[20]
  *     └── 10
  * @endcode
- * 
+ *
  * The nodes 20 and 25 are Red. Others are Black.
  */
 TEST("Test insertion / 10 20 30 40 50 25") {
@@ -141,7 +143,7 @@ TEST("Test insertion / 10 20 30 40 50 25") {
 
 TEST("Test tree with deletion / 0 1 2 3 4 5 6 7 8 9 0") {
     const char *KEY[] = {
-        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "" 
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ""
     };
     qtreetbl_t *tbl = qtreetbl(0);
 
@@ -181,7 +183,7 @@ TEST("Test tree with deletion / Stroh Snow's test for red property violation") {
         tbl->putstr(tbl, KEY[i], "");
         ASSERT_TREE_CHECK(tbl, false);
     }
-    
+
     ASSERT_TREE_CHECK(tbl, true);
 
     for (i = 0; KEY2[i][0] != '\0'; i++) {
@@ -257,13 +259,13 @@ TEST("Test clear()") {
     tbl->free(tbl);
 }
 
-TEST("Test put_by_obj() / get_by_obj()") {
+TEST("Test putobj() / getobj()") {
     qtreetbl_t *tbl = qtreetbl(0);
-    ASSERT_EQUAL_BOOL(true, tbl->put_by_obj(tbl, "bin_name", 8, "bin_data", 8));
+    ASSERT_EQUAL_BOOL(true, tbl->putobj(tbl, "bin_name", 8, "bin_data", 8));
     size_t datasize = 0;
-    void *data = tbl->get_by_obj(tbl, "bin_name", 8, &datasize, false);
+    void *data = tbl->getobj(tbl, "bin_name", 8, &datasize, false);
     ASSERT(data != NULL && datasize == 8 && !memcmp(data, "bin_data", datasize));
-    data = tbl->get_by_obj(tbl, "bin_name", 8, &datasize, true);
+    data = tbl->getobj(tbl, "bin_name", 8, &datasize, true);
     ASSERT(data != NULL && datasize == 8 && !memcmp(data, "bin_data", datasize));
     free(data);
     tbl->free(tbl);
@@ -375,7 +377,7 @@ TEST("Test remove() in getnext() loop") {
             size_t namesize = obj.namesize;
 
             // 2. Delete the object
-            tbl->remove_by_obj(tbl, obj.name, obj.namesize);  // remove
+            tbl->removeobj(tbl, obj.name, obj.namesize);
 
             // 3. Rewind iterator one step back.
             // Note that this allows the iterator to continue traveling but
@@ -398,7 +400,7 @@ TEST("Test remove() in getnext() loop") {
 
 TEST("Test integrity of tree structure") {
     int num_keys = 10000;
-    
+
     qtreetbl_t *tbl = qtreetbl(0);
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
 
@@ -468,53 +470,69 @@ TEST("Test integrity of tree structure with random keys") {
         }
     }
     printf("\n  #loop %d, #tot_insert %d, #tot_delete %d\n", num_loop, insert_cnt, remove_cnt);
+    tbl->free(tbl);
 }
 
-TEST("Test tree performance / 1 million keys") {
-    DISABLE_PROGRESS_DOT();
-
-    qtreetbl_t *tbl = qtreetbl(0);
+TEST("Test tree performance / 1 million keys / random") {
     int num_keys = 1000000;
-    long t;
-
-    // insert
-    ASSERT_EQUAL_INT(0, tbl->size(tbl));
-    TIMER_START(t);
+    uint32_t keys[num_keys];
     for (int i = 0; i < num_keys; i++) {
-        char *key = qstrdupf("K%05d", i);
-        ASSERT_EQUAL_BOOL(true, tbl->putstr(tbl, key, ""));
-        free(key);
+        keys[i] = qhashmurmur3_32(&i, sizeof(i));
     }
-    TIMER_STOP(t);
-    ASSERT_EQUAL_INT(num_keys, tbl->size(tbl));
-    printf("\n  Insert %d keys: %ldms", num_keys, t);
+    perf_test(keys, num_keys);
+}
 
-    // get
-    TIMER_START(t);
+TEST("Test tree performance / 1 million keys / ascending") {
+    int num_keys = 1000000;
+    uint32_t keys[num_keys];
     for (int i = 0; i < num_keys; i++) {
-        char *key = qstrdupf("K%05d", i);
-        ASSERT_EQUAL_STR("", tbl->getstr(tbl, key, false));
-        free(key);
+        keys[i] = i;
     }
-    TIMER_STOP(t);
-    printf("\n  Lookup %d keys: %ldms", num_keys, t);
+    perf_test(keys, num_keys);
+}
 
-    // remove
-    TIMER_START(t);
+TEST("Test tree performance / 1 million keys / descending") {
+    int num_keys = 1000000;
+    uint32_t keys[num_keys];
+    for (int i = num_keys; i > 0; i--) {
+        keys[i] = i;
+    }
+    perf_test(keys, num_keys);
+}
+
+TEST("Test tree performance / 1 million keys / 4 ascending + 1 random mix") {
+    int num_keys = 1000000;
+    uint32_t keys[num_keys];
     for (int i = 0; i < num_keys; i++) {
-        char *key = qstrdupf("K%05d", i);
-        ASSERT_EQUAL_BOOL(true, tbl->remove(tbl, key));
-        free(key);
+        keys[i] = (i % 5 == 0) ? qhashmurmur3_32(&i, sizeof(i)) : i;
     }
-    TIMER_STOP(t);
-    ASSERT_EQUAL_INT(0, tbl->size(tbl));
-    printf("\n  Delete %d keys: %ldms", num_keys, t);
-    printf("\n");
+    perf_test(keys, num_keys);
+}
 
-    ENABLE_PROGRESS_DOT();
+TEST("Test tree performance / 1 million keys / 2 ascending + 1 random mix") {
+    int num_keys = 1000000;
+    uint32_t keys[num_keys];
+    for (int i = 0; i < num_keys; i++) {
+        keys[i] = (i % 3 == 0) ? qhashmurmur3_32(&i, sizeof(i)) : i;
+    }
+    perf_test(keys, num_keys);
 }
 
 QUNIT_END();
+
+static void ASSERT_TREE_CHECK(qtreetbl_t *tbl, bool verbose) {
+    int ret = qtreetbl_check(tbl);
+    if (ret != 0) {
+        printf("\n\nVIOLATION of property %d found.\n", ret);
+        verbose = true;
+        ASSERT_EQUAL_INT(0, ret);
+    }
+
+    if (verbose) {
+        printf("\n");
+        print_tree(tbl);
+    }
+}
 
 static bool print_tree(qtreetbl_t *tbl) {
     tbl->debug(tbl, stdout);
@@ -533,16 +551,51 @@ static bool print_tree(qtreetbl_t *tbl) {
     return true;
 }
 
-static void ASSERT_TREE_CHECK(qtreetbl_t *tbl, bool verbose) {
-    int ret = qtreetbl_check(tbl);
-    if (ret != 0) {
-        printf("\n\nVIOLATION of property %d found.\n", ret);
-        verbose = true;
-        ASSERT_EQUAL_INT(0, ret);
+int uint32_cmp(const void *name1, size_t namesize1, const void *name2, size_t namesize2) {
+    return (*(uint32_t *)name1 == *(uint32_t *)name2) ? 0 :
+        (*(uint32_t *)name1 < *(uint32_t *)name2) ? -1 : +1;
+}
+
+
+static void perf_test(uint32_t keys[], int num_keys) {
+    DISABLE_PROGRESS_DOT();
+    qtreetbl_t *tbl = qtreetbl(0);
+    long t;
+
+    // set integer comparator
+    tbl->set_compare(tbl, uint32_cmp);
+
+    // insert
+    ASSERT_EQUAL_INT(0, tbl->size(tbl));
+    TIMER_START(t);
+    for (int i = 0; i < num_keys; i++) {
+        ASSERT_EQUAL_BOOL(true, tbl->putobj(tbl, &(keys[i]), sizeof(uint32_t), NULL, 0));
     }
-    
-    if (verbose) {
-        printf("\n");
-        print_tree(tbl);
+    TIMER_STOP(t);
+    ASSERT(tbl->size(tbl) > 0);
+    ASSERT_TREE_CHECK(tbl, false);
+    printf("\n  Insert %d keys: %ldms", num_keys, t);
+
+    // find
+    TIMER_START(t);
+    for (int i = 0; i < num_keys; i++) {
+        errno = 0;
+        tbl->getobj(tbl, &(keys[i]), sizeof(uint32_t), NULL, false);
+        ASSERT_EQUAL_INT(errno, 0);
     }
+    TIMER_STOP(t);
+    printf("\n  Lookup %d keys: %ldms", num_keys, t);
+
+    // remove
+    TIMER_START(t);
+    for (int i = 0; i < num_keys; i++) {
+        tbl->removeobj(tbl, &(keys[i]), sizeof(uint32_t));
+    }
+    TIMER_STOP(t);
+    ASSERT_EQUAL_INT(0, tbl->size(tbl));
+    printf("\n  Delete %d keys: %ldms", num_keys, t);
+    printf("\n");
+
+    tbl->free(tbl);
+    ENABLE_PROGRESS_DOT();
 }
