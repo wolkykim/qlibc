@@ -1229,7 +1229,7 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
     }
 
     int cmp;
-    if ((cmp = tbl->compare(name, namesize, obj->name, obj->namesize)) < 0) {  // left
+    if ((cmp = tbl->compare(name, namesize, obj->name, obj->namesize)) < 0) {
         // move red left
         if (obj->left != NULL
             && (!is_red(obj->left) && !is_red(obj->left->left))) {
