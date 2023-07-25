@@ -1191,7 +1191,7 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         flip_color(obj);
     }
 
-    int cmp = tbl->compare(obj->name, obj->namesize, name, namesize);
+    int cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
     if (cmp == 0) {  // existing key found
         void *copydata = qmemdup(data, datasize);
         if (copydata != NULL) {
@@ -1200,9 +1200,9 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
             obj->datasize = datasize;
         }
     } else if (cmp < 0) {
-        obj->right = put_obj(tbl, obj->right, name, namesize, data, datasize);
-    } else {
         obj->left = put_obj(tbl, obj->left, name, namesize, data, datasize);
+    } else {
+        obj->right = put_obj(tbl, obj->right, name, namesize, data, datasize);
     }
 
     // fix right-leaning reds on the way up
@@ -1243,15 +1243,17 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         }
         // remove if equal at the bottom
         if (obj->right == NULL) {
-            if ((!recmp && cmp == 0)
-                || (recmp && (cmp = tbl->compare(name, namesize, obj->name, obj->namesize))) == 0) {
+            if (recmp) {
+                cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
+                recmp = false;
+            }
+            if (cmp == 0) {
                 free(obj->name);
                 free(obj->data);
                 free(obj);
                 tbl->num--;
                 return NULL;
             }
-            recmp = false;
         }
         // move red right
         if (obj->right != NULL
@@ -1260,8 +1262,10 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
             recmp = true;
         }
         // found in the middle
-        if ((!recmp && cmp == 0)
-            || (recmp && tbl->compare(name, namesize, obj->name, obj->namesize) == 0)) {
+        if (recmp) {
+            cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
+        }
+        if (cmp == 0) {
             // copy min to this then remove min
             qtreetbl_obj_t *minobj = find_min(obj->right);
             assert(minobj != NULL);
