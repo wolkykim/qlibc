@@ -210,7 +210,7 @@ TEST("Test basics") {
     for (i = 0; keys[i][0] != '\0'; i++) {
         tbl->putstr(tbl, keys[i], keys[i]);
         ASSERT_EQUAL_STR(keys[i], tbl->getstr(tbl, keys[i], false));
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        ASSERT_TREE_CHECK(tbl, false);
     }
     ASSERT_EQUAL_INT(i, tbl->size(tbl));
 
@@ -225,7 +225,7 @@ TEST("Test basics") {
     // delete
     for (i = 0; keys[i][0] != '\0'; i++) {
         ASSERT_EQUAL_BOOL(true, tbl->remove(tbl, keys[i]));
-        ASSERT_EQUAL_INT(0, qtreetbl_check(tbl));
+        ASSERT_TREE_CHECK(tbl, false);
     }
     ASSERT_EQUAL_INT(0, tbl->size(tbl));
 
