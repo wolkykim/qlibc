@@ -1067,6 +1067,7 @@ static qtreetbl_obj_t *move_red_left(qtreetbl_obj_t *obj) {
         obj->right = rotate_right(obj->right);
         obj = rotate_left(obj);
         flip_color(obj);
+        // 2-3-4 exclusive
         if (is_red(obj->right->right)) {
             obj->right = rotate_left(obj->right);
         }
@@ -1086,6 +1087,7 @@ static qtreetbl_obj_t *move_red_right(qtreetbl_obj_t *obj) {
 static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj) {
     // rotate right red to left
     if (is_red(obj->right)) {
+        // 2-3-4 exclusive
         if (is_red(obj->right->left)) {
             obj->right = rotate_right(obj->right);
         }
@@ -1095,6 +1097,10 @@ static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj) {
     if (is_red(obj->left) && is_red(obj->left->left)) {
         obj = rotate_right(obj);
     }
+    // split 4-nodes (2-3 exclusive)
+    // if (is_red(obj->left) && is_red(obj->right)) {
+    //     flip_color(obj);
+    // }
     return obj;
 }
 
@@ -1125,17 +1131,14 @@ static qtreetbl_obj_t *find_obj(qtreetbl_t *tbl, const void *name,
         return NULL;
     }
 
-    qtreetbl_lock(tbl);
     qtreetbl_obj_t *obj;
     for (obj = tbl->root; obj != NULL;) {
         int cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
         if (cmp == 0) {
-            qtreetbl_unlock(tbl);
             return obj;
         }
         obj = (cmp < 0) ? obj->left : obj->right;
     }
-    qtreetbl_unlock(tbl);
 
     errno = ENOENT;
     return NULL;
@@ -1186,7 +1189,7 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         return new_obj(true, name, namesize, data, datasize);
     }
 
-    // split 4-nodes on the way down
+    // split 4-nodes on the way down (2-3-4 exclusive)
     if (is_red(obj->left) && is_red(obj->right)) {
         flip_color(obj);
     }
@@ -1214,6 +1217,11 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
     if (is_red(obj->left) && is_red(obj->left->left)) {
         obj = rotate_right(obj);
     }
+
+    // split 4-nodes on the way up (2-3 exclusive)
+    // if (is_red(obj->left) && is_red(obj->right)) {
+    //     flip_color(obj);
+    // }
 
     // return new root
     return obj;
