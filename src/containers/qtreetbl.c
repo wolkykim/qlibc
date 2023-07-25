@@ -130,7 +130,7 @@
 #ifndef _DOXYGEN_SKIP
 
 /* internal functions */
-#define LLRB234  // uncomment to build 2-3 variant
+#define LLRB234  // comment to build 2-3 variant
 static bool is_red(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *flip_color(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *rotate_left(qtreetbl_obj_t *obj);
