@@ -130,6 +130,7 @@
 #ifndef _DOXYGEN_SKIP
 
 /* internal functions */
+#define LLRB234  // uncomment to build 2-3 variant
 static bool is_red(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *flip_color(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *rotate_left(qtreetbl_obj_t *obj);
@@ -159,7 +160,6 @@ struct branch_obj_s {
 static void print_branch(struct branch_obj_s *branch, FILE *out);
 static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev,
                        bool right);
-
 #endif
 
 /**
@@ -1067,10 +1067,12 @@ static qtreetbl_obj_t *move_red_left(qtreetbl_obj_t *obj) {
         obj->right = rotate_right(obj->right);
         obj = rotate_left(obj);
         flip_color(obj);
+#ifdef LLRB234
         // 2-3-4 exclusive
         if (is_red(obj->right->right)) {
             obj->right = rotate_left(obj->right);
         }
+#endif
     }
     return obj;
 }
@@ -1087,20 +1089,25 @@ static qtreetbl_obj_t *move_red_right(qtreetbl_obj_t *obj) {
 static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj) {
     // rotate right red to left
     if (is_red(obj->right)) {
+#ifdef LLRB234
         // 2-3-4 exclusive
         if (is_red(obj->right->left)) {
             obj->right = rotate_right(obj->right);
         }
+#endif
         obj = rotate_left(obj);
     }
     // rotate left red-red to right
     if (is_red(obj->left) && is_red(obj->left->left)) {
         obj = rotate_right(obj);
     }
+
+#ifndef LLRB234
     // split 4-nodes (2-3 exclusive)
-    // if (is_red(obj->left) && is_red(obj->right)) {
-    //     flip_color(obj);
-    // }
+    if (is_red(obj->left) && is_red(obj->right)) {
+        flip_color(obj);
+    }
+#endif
     return obj;
 }
 
@@ -1189,10 +1196,12 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         return new_obj(true, name, namesize, data, datasize);
     }
 
+#ifdef LLRB234
     // split 4-nodes on the way down (2-3-4 exclusive)
     if (is_red(obj->left) && is_red(obj->right)) {
         flip_color(obj);
     }
+#endif
 
     int cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
     if (cmp == 0) {  // existing key found
@@ -1218,10 +1227,12 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         obj = rotate_right(obj);
     }
 
+#ifndef LLRB234
     // split 4-nodes on the way up (2-3 exclusive)
-    // if (is_red(obj->left) && is_red(obj->right)) {
-    //     flip_color(obj);
-    // }
+    if (is_red(obj->left) && is_red(obj->right)) {
+        flip_color(obj);
+    }
+#endif
 
     // return new root
     return obj;
