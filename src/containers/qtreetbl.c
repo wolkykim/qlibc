@@ -1131,17 +1131,14 @@ static qtreetbl_obj_t *find_obj(qtreetbl_t *tbl, const void *name,
         return NULL;
     }
 
-    qtreetbl_lock(tbl);
     qtreetbl_obj_t *obj;
     for (obj = tbl->root; obj != NULL;) {
         int cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
         if (cmp == 0) {
-            qtreetbl_unlock(tbl);
             return obj;
         }
         obj = (cmp < 0) ? obj->left : obj->right;
     }
-    qtreetbl_unlock(tbl);
 
     errno = ENOENT;
     return NULL;
