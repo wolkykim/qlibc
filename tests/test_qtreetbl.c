@@ -220,7 +220,7 @@ TEST("Test basics") {
     }
 
     // not found case
-    ASSERT_NULL(tbl->getstr(tbl, "_NOT_EXIST_", false));  // not found
+    ASSERT_NULL(tbl->getstr(tbl, "_NOT_EXIST_", false));
 
     // delete
     for (i = 0; keys[i][0] != '\0'; i++) {
