@@ -137,12 +137,12 @@ static qtreetbl_obj_t *rotate_left(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *rotate_right(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *move_red_left(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *move_red_right(qtreetbl_obj_t *obj);
-static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *find_min(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *find_max(qtreetbl_obj_t *obj);
+static qtreetbl_obj_t *remove_min(qtreetbl_obj_t *obj);
+static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *find_obj(qtreetbl_t *tbl, const void *name,
                                 size_t namesize);
-static qtreetbl_obj_t *remove_min(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *new_obj(bool red, const void *name, size_t namesize,
                                const void *data, size_t datasize);
 static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
@@ -1086,6 +1086,40 @@ static qtreetbl_obj_t *move_red_right(qtreetbl_obj_t *obj) {
     return obj;
 }
 
+static qtreetbl_obj_t *find_min(qtreetbl_obj_t *obj) {
+    if (obj == NULL) {
+        errno = ENOENT;
+        return NULL;
+    }
+
+    for (; obj->left != NULL; obj = obj->left);
+    return obj;
+}
+
+static qtreetbl_obj_t *find_max(qtreetbl_obj_t *obj) {
+    if (obj == NULL) {
+        errno = ENOENT;
+        return NULL;
+    }
+
+    for (; obj->right != NULL; obj = obj->right);
+    return obj;
+}
+
+static qtreetbl_obj_t *remove_min(qtreetbl_obj_t *obj) {
+    if (obj->left == NULL) {
+        // 3-nodes are left-leaning, so this is a leaf.
+        free(obj->name);
+        free(obj->data);
+        return NULL;
+    }
+    if (!is_red(obj->left) && !is_red(obj->left->left)) {
+        obj = move_red_left(obj);
+    }
+    obj->left = remove_min(obj->left);
+    return fix(obj);
+}
+
 static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj) {
     // rotate right red to left
     if (is_red(obj->right)) {
@@ -1111,26 +1145,6 @@ static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj) {
     return obj;
 }
 
-static qtreetbl_obj_t *find_min(qtreetbl_obj_t *obj) {
-    if (obj == NULL) {
-        errno = ENOENT;
-        return NULL;
-    }
-
-    for (; obj->left != NULL; obj = obj->left);
-    return obj;
-}
-
-static qtreetbl_obj_t *find_max(qtreetbl_obj_t *obj) {
-    if (obj == NULL) {
-        errno = ENOENT;
-        return NULL;
-    }
-
-    for (; obj->right != NULL; obj = obj->right);
-    return obj;
-}
-
 static qtreetbl_obj_t *find_obj(qtreetbl_t *tbl, const void *name,
                                 size_t namesize) {
     if (name == NULL || namesize == 0) {
@@ -1149,20 +1163,6 @@ static qtreetbl_obj_t *find_obj(qtreetbl_t *tbl, const void *name,
 
     errno = ENOENT;
     return NULL;
-}
-
-static qtreetbl_obj_t *remove_min(qtreetbl_obj_t *obj) {
-    if (obj->left == NULL) {
-        // 3-nodes are left-leaning, so this is a leaf.
-        free(obj->name);
-        free(obj->data);
-        return NULL;
-    }
-    if (!is_red(obj->left) && !is_red(obj->left->left)) {
-        obj = move_red_left(obj);
-    }
-    obj->left = remove_min(obj->left);
-    return fix(obj);
 }
 
 static qtreetbl_obj_t *new_obj(bool red, const void *name, size_t namesize,
