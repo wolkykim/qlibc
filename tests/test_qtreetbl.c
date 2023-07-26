@@ -51,15 +51,15 @@ QUNIT_START("Test qtreetbl.c");
  * Key insertion sequence : A S E R C D I N B X
  *
  * @code
- *     ┌── X
+ *     ┌───X
  *     │   └──[S]
- * ┌── R
- * │   └── N
+ * ┌───R
+ * │   └───N
  * │       └──[I]
  * E
- * │   ┌── D
- * └── C
- *     └── B
+ * │   ┌───D
+ * └───C
+ *     └───B
  *         └──[A]
  * @endcode
  *
@@ -108,12 +108,12 @@ TEST("Test growth of tree / A S E R C D I N B X") {
  * Key insertion sequence : 10 20 30 40 50 25
  *
  * @code
- * ┌── 50
+ * ┌───50
  * 40
- * │   ┌── 30
+ * │   ┌───30
  * │   │   └──[25]
  * └──[20]
- *     └── 10
+ *     └───10
  * @endcode
  *
  * The nodes 20 and 25 are Red. Others are Black.
