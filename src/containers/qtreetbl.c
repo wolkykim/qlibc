@@ -269,8 +269,7 @@ void qtreetbl_set_compare(qtreetbl_t *tbl,
 bool qtreetbl_put(qtreetbl_t *tbl, const char *name, const void *data,
                   size_t datasize) {
     return qtreetbl_putobj(tbl,
-                           name, (name != NULL) ? (strlen(name) + 1) : 0,
-                           data, datasize);
+        name, (name != NULL) ? (strlen(name) + 1) : 0, data, datasize);
 }
 
 /**
@@ -287,8 +286,8 @@ bool qtreetbl_put(qtreetbl_t *tbl, const char *name, const void *data,
  */
 bool qtreetbl_putstr(qtreetbl_t *tbl, const char *name, const char *str) {
     return qtreetbl_putobj(tbl,
-                           name, (name != NULL) ? (strlen(name) + 1) : 0,
-                           str, (str != NULL) ? (strlen(str) + 1) : 0);
+        name, (name != NULL) ? (strlen(name) + 1) : 0,
+        str, (str != NULL) ? (strlen(str) + 1) : 0);
 }
 
 /**
@@ -393,8 +392,7 @@ bool qtreetbl_putobj(qtreetbl_t *tbl, const void *name, size_t namesize,
 void *qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize,
                    bool newmem) {
     return qtreetbl_getobj(tbl,
-                           name, (name != NULL) ? (strlen(name) + 1) : 0,
-                           datasize, newmem);
+        name, (name != NULL) ? (strlen(name) + 1) : 0, datasize, newmem);
 }
 
 /**
@@ -418,8 +416,7 @@ void *qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize,
  */
 char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem) {
     return qtreetbl_getobj(tbl,
-                           name, (name != NULL) ? (strlen(name) + 1) : 0,
-                           NULL, newmem);
+        name, (name != NULL) ? (strlen(name) + 1) : 0, NULL, newmem);
 }
 
 /**
@@ -1307,7 +1304,7 @@ static void free_objs(qtreetbl_obj_t *obj) {
     if (obj == NULL) {
         return;
     }
-    
+
     free_objs(obj->left);
     free_objs(obj->right);
 

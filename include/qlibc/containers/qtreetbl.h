@@ -61,10 +61,9 @@ extern qtreetbl_t *qtreetbl(int options); /*!< qtreetbl constructor */
  *  - tbl->put(tbl, ...);      // easier to switch the container type to other kinds.
  *  - qtreetbl_put(tbl, ...);  // where avoiding pointer overhead is preferred.
  */
-extern void qtreetbl_set_compare(
-        qtreetbl_t *tbl,
-        int (*cmp)(const void *name1, size_t namesize1, const void *name2,
-                   size_t namesize2));
+extern void qtreetbl_set_compare(qtreetbl_t *tbl,
+                                 int (*cmp)(const void *name1, size_t namesize1,
+                                            const void *name2, size_t namesize2));
 
 extern bool qtreetbl_put(qtreetbl_t *tbl, const char *name, const void *data,
                          size_t datasize);
