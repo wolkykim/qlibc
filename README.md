@@ -151,6 +151,7 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * Maik Beckmann
 * RQ
 * [Ryan Gonzalez](https://github.com/kirbyfan64)
+* [Stroh Snow](https://github.com/strohsnow)
 * Umesh
 
 If we have forgotten or misspelled your name, please let us know.

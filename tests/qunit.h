@@ -39,6 +39,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <unistd.h>
 #include <sys/time.h>
 
 #ifdef __cplusplus
@@ -54,21 +55,29 @@ extern "C" {
     } while(0)
 
 #define QUNIT_START(title)                                                  \
+bool _q_verbose = false; /* CLI parameter, -v option is on */               \
 char *_q_title = title;                                                     \
 int _q_tot_tests = 0;                                                       \
 int _q_tot_failed = 0;                                                      \
 int _q_this_failed = 0;                                                     \
 int _q_errcnt = 0;                                                          \
-int _q_assert_cnt = 0;  /* number of assert test in a test */               \
-int _q_assert_dot_cnt = 0;  /* number of dots printed out in a test. */     \
+int _q_assert_cnt = 0; /* number of assert test in a test */                \
+int _q_assert_dot_cnt = 0; /* number of dots printed out in a test */       \
+bool _q_disable_progress_dot = false; /* disable printing dots */           \
 long _q_timer;                                                              \
-int main(int argc, char **argv) {                                           \
+int main(int argc, char *argv[]) {                                          \
+    int _q_opt;                                                             \
+    while ((_q_opt = getopt(argc, argv, "v")) != -1) {                      \
+        if (_q_opt == 'v') {                                                \
+            _q_verbose = true;                                              \
+        }                                                                   \
+    }                                                                       \
     PRINTLN("%s", _q_title);                                                \
-    PRINTLN("======================================================================");  \
+    PRINTLN("======================================================================");
 
 #define QUNIT_END()                                                         \
     _TEST_RESULT();                                                         \
-    PRINTLN("======================================================================");  \
+    PRINTLN("======================================================================"); \
     PRINTLN("%s - %d/%d tests passed.",                                     \
         ((_q_tot_failed == 0) ? "PASS" : "FAIL"),                           \
         (_q_tot_tests - _q_tot_failed), _q_tot_tests);                      \
@@ -95,7 +104,7 @@ int main(int argc, char **argv) {                                           \
     if (! (expr))  {                                                        \
         _q_this_failed++;                                                   \
         PRINTLN("\nAssertion '%s' failed (%s:%d)", #expr, __FILE__, __LINE__); \
-    } else if (_q_assert_dot_cnt < 30) {                                    \
+    } else if (!_q_disable_progress_dot && _q_assert_dot_cnt < 30) {        \
         PRINT(".");                                                         \
         _q_assert_dot_cnt++;                                                \
     }
@@ -117,6 +126,16 @@ int main(int argc, char **argv) {                                           \
 #define TIMER_STOP(x) do {                                                  \
         x = qtime_current_milli() - x;                                      \
     } while(0)
+
+#define DISABLE_PROGRESS_DOT() do {                                         \
+        _q_disable_progress_dot = true;                                     \
+    } while(0)
+
+#define ENABLE_PROGRESS_DOT() do {                                          \
+        _q_disable_progress_dot = false;                                    \
+    } while(0)
+
+#define IF_VERBOSE if (_q_verbose)                                          \
 
 #ifdef __cplusplus
 }

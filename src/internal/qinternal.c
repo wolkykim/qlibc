@@ -51,8 +51,7 @@ char *_q_makeword(char *str, char stop) {
     char *word;
     int len, i;
 
-    for (len = 0; ((str[len] != stop) && (str[len])); len++)
-        ;
+    for (len = 0; ((str[len] != stop) && (str[len])); len++);
     word = (char *) malloc(sizeof(char) * (len + 1));
     if (word == NULL)
         return NULL;
@@ -71,14 +70,13 @@ char *_q_makeword(char *str, char stop) {
 }
 
 void _q_textout(FILE *fp, void *data, size_t size, size_t max) {
-    size_t i;
-    for (i = 0; i < size && i < max; i++) {
+    for (size_t i = 0; i < size && i < max; i++) {
         int c = ((char *) data)[i];
-        if (isprint(c) == 0)
-            c = '?';
-        fputc(c, fp);
+        if (c == 0 && i == size - 1) {
+            break;
+        }
+        fputc((isprint(c)) ? c : '.', fp);
     }
-
     if (size > max)
         fputs("...", fp);
 }

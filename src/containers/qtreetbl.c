@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2023 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,14 +39,8 @@
  * red–black tree which was invented in 1972 by Rudolf Bayer.
  *
  * References:
- * - http://www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf
- * - http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf
  * - http://en.wikipedia.org/wiki/Left-leaning_red-black_tree
- *
- * Following example code will construct the data structure shown in below
- * diagram. This example is quoted from the inventor's presentation slide
- * p24-p25, http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf and
- * used in unit tests for verification purpose.
+ * - https://sedgewick.io/wp-content/uploads/2022/03/2008-09LLRB.pdf
  *
  *                                (E)
  *                   ______________|______________
@@ -67,24 +61,20 @@
  *      //                              //                //
  *     A*                              I*                S*
  *
- *            Tree Info : tot=10, red=3, black=-7, root=E
+ *            <Left-Leaning Red-Black Tree Data Structure>
  *     Nodes A, I and S are nodes with RED upper link. Others are BLACK
  *
- *            <Left-Leaning Red-Black Tree Data Structure>
  *
- * The Red-Black BST algorithm has been one of the famous BST algorithms
- * especially for in-memory operation. It's been widely used in all the
- * computing areas. I was very impressed about this variant, the Left-Leaning
- * version of Red-Black about how it improves performance and reduces overall
- * complexity.
+ * The Red-Black BST algorithm has been one of the popular BST algorithms
+ * especially for in-memory operation. The Left-Leaning version of Red-Black
+ * especially improves performance and reduces overall complexity.
  *
  * Since it's relatively new algorithm, there's not many practically functional
  * working codes yet other than proof of concept kinds. Here's one of fully
  * functional codes and I, Seungyoung Kim, would like to dedicate this code to
  * the genius inventor Robert Sedgewick and to all the great qLibc users.
- * Cheers!
  *
- * Unique features:
+ * Additional features:
  *   - iterator.
  *   - find nearest key.
  *   - iteration from given key.
@@ -93,22 +83,34 @@
  * @code
  *  qtreetbl_t *tbl = qtreetbl(QTREETBL_THREADSAFE);
  *
- *  tbl->put(tbl, "key", "DATA", 4);          // use put_by_obj() for binary keys.
- *  void *data = tbl->get(tbl, "key", false); // use get_by_obj() for binary keys.
- *  tbl->remove(tbl, "key");                  // use remove_by_key() for binary keys.
+ *  tbl->put(tbl, "KEY", "DATA", 4);          // use putobj() for binary keys.
+ *  void *data = tbl->get(tbl, "KEY", false); // use getobj() for binary keys.
+ *  tbl->remove(tbl, "KEY");                  // use remove_by_key() for binary keys.
  *
  *  // iteration example
- *  tbl->lock(tbl);
- *  qtreetbl_obj_t obj = tbl->find_nearest(tbl, "k", 2, false);
+ *  qtreetbl_obj_t obj;
+ *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
+ *  tbl->lock(tbl);  // for thread safety
  *  while (tbl->getnext(tbl, &obj, false) == true) {
  *    ...
  *  }
  *  tbl->unlock(tbl);
  *
- *  tbl->set_compare(tbl, my_compare_func);
- *  size_t num = tbl->size(tbl);
+ *  // find a nearest key then iterate from there
+ *  tbl->lock(tbl);
+ *  qtreetbl_obj_t obj = tbl->find_nearest(tbl, "K", sizeof("K"), false);
+ *  tbl->lock(tbl);  // for thread safety
+ *  while (tbl->getnext(tbl, &obj, false) == true) {
+ *    ...
+ *  }
+ *  tbl->unlock(tbl);
+ *
+ *  // find minimum value using custom comparator
+ *  tbl->set_compare(tbl, my_compare_func); // default is byte comparator
  *  void *min = tbl->find_min(tbl, &keysize);
- *  qtree_clean();
+ *
+ *  // get total number of objects in the table
+ *  size_t num = tbl->size(tbl);
  *
  *  tbl->free(tbl);
  * @endcode
@@ -128,18 +130,19 @@
 #ifndef _DOXYGEN_SKIP
 
 /* internal functions */
+#define LLRB234  // comment to build 2-3 variant
 static bool is_red(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *flip_color(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *rotate_left(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *rotate_right(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *move_red_left(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *move_red_right(qtreetbl_obj_t *obj);
-static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *find_min(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *find_max(qtreetbl_obj_t *obj);
+static qtreetbl_obj_t *remove_min(qtreetbl_obj_t *obj);
+static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *find_obj(qtreetbl_t *tbl, const void *name,
                                 size_t namesize);
-static qtreetbl_obj_t *remove_min(qtreetbl_obj_t *obj);
 static qtreetbl_obj_t *new_obj(bool red, const void *name, size_t namesize,
                                const void *data, size_t datasize);
 static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
@@ -148,15 +151,21 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
 static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
                                   const void *name, size_t namesize);
 static void free_objs(qtreetbl_obj_t *obj);
-static void free_obj(qtreetbl_obj_t *obj);
 static uint8_t reset_iterator(qtreetbl_t *tbl);
 
+struct branch_obj_s {
+    struct branch_obj_s *p;
+    char *s;
+};
+static void print_branch(struct branch_obj_s *branch, FILE *out);
+static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev,
+                       bool right);
 #endif
 
 /**
  * Initialize a tree table.
  *
- * @param options   combination of initialization options.
+ * @param options    combination of initialization options.
  *
  * @return a pointer of malloced qtreetbl_t, otherwise returns NULL.
  * @retval errno will be set in error condition.
@@ -167,7 +176,7 @@ static uint8_t reset_iterator(qtreetbl_t *tbl);
  * @endcode
  *
  * @note
- *   Available options:
+ *  Available options:
  *   - QTREETBL_THREADSAFE - make it thread-safe.
  */
 qtreetbl_t *qtreetbl(int options) {
@@ -188,15 +197,14 @@ qtreetbl_t *qtreetbl(int options) {
     tbl->put = qtreetbl_put;
     tbl->putstr = qtreetbl_putstr;
     tbl->putstrf = qtreetbl_putstrf;
-    tbl->put_by_obj = qtreetbl_put_by_obj;
+    tbl->putobj = qtreetbl_putobj;
 
     tbl->get = qtreetbl_get;
     tbl->getstr = qtreetbl_getstr;
-    //tbl->getint = qtreetbl_getint;
-    tbl->get_by_obj = qtreetbl_get_by_obj;
+    tbl->getobj = qtreetbl_getobj;
 
     tbl->remove = qtreetbl_remove;
-    tbl->remove_by_obj = qtreetbl_remove_by_obj;
+    tbl->removeobj = qtreetbl_removeobj;
 
     tbl->getnext = qtreetbl_getnext;
 
@@ -221,7 +229,7 @@ qtreetbl_t *qtreetbl(int options) {
 
     malloc_failure:
     errno = ENOMEM;
-    if (tbl) {
+    if (tbl != NULL) {
         assert(tbl->qmutex == NULL);
         qtreetbl_free(tbl);
     }
@@ -231,47 +239,45 @@ qtreetbl_t *qtreetbl(int options) {
 /**
  * qtreetbl->set_compare(): Set user comparator.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param cmp       a pointer to the user comparator function.
+ * @param tbl   qtreetbl_t container pointer.
+ * @param cmp   a pointer to the user comparator function.
  *
  * @note
- * By default, qtreetbl uses byte comparator that works for
- * both binary type key and string type key. Please refer
- * qtreetbl_byte_cmp() for your idea to make your own comparator,
+ *  By default, qtreetbl uses byte comparator that works for
+ *  both binary type key and string type key. Please refer
+ *  qtreetbl_byte_cmp() for your idea to make your own comparator.
  */
-void qtreetbl_set_compare(
-        qtreetbl_t *tbl,
-        int (*cmp)(const void *name1, size_t namesize1, const void *name2,
-                   size_t namesize2)) {
+void qtreetbl_set_compare(qtreetbl_t *tbl,
+                          int (*cmp)(const void *name1, size_t namesize1,
+                                     const void *name2, size_t namesize2)) {
     tbl->compare = cmp;
 }
 
 /**
  * qtreetbl->put(): Put an object into this table with string type key.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param name      key name
- * @param data      data object
- * @param datasize  size of data object
+ * @param tbl         qtreetbl_t container pointer.
+ * @param name        key name.
+ * @param data        data object.
+ * @param datasize    size of data object.
  *
- * @return true if successful, otherwise returns false
+ * @return true if successful, otherwise returns false.
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  */
 bool qtreetbl_put(qtreetbl_t *tbl, const char *name, const void *data,
                   size_t datasize) {
-    return qtreetbl_put_by_obj(tbl, name,
-                               (name != NULL) ? (strlen(name) + 1) : 0, data,
-                               datasize);
+    return qtreetbl_putobj(tbl,
+        name, (name != NULL) ? (strlen(name) + 1) : 0, data, datasize);
 }
 
 /**
  * qtreetbl->putstr(): Put a string into this table.
  *
- * @param tbl       qtreetbl container pointer.
- * @param name      key name.
- * @param str       string data.
+ * @param tbl     qtreetbl container pointer.
+ * @param name    key name.
+ * @param str     string data.
  *
  * @return true if successful, otherwise returns false.
  * @retval errno will be set in error condition.
@@ -279,9 +285,9 @@ bool qtreetbl_put(qtreetbl_t *tbl, const char *name, const void *data,
  *  - ENOMEM : Memory allocation failure.
  */
 bool qtreetbl_putstr(qtreetbl_t *tbl, const char *name, const char *str) {
-    return qtreetbl_put_by_obj(tbl, name,
-                               (name != NULL) ? (strlen(name) + 1) : 0, str,
-                               (str != NULL) ? (strlen(str) + 1) : 0);
+    return qtreetbl_putobj(tbl,
+        name, (name != NULL) ? (strlen(name) + 1) : 0,
+        str, (str != NULL) ? (strlen(str) + 1) : 0);
 }
 
 /**
@@ -311,15 +317,15 @@ bool qtreetbl_putstrf(qtreetbl_t *tbl, const char *name, const char *format,
 }
 
 /**
- * qtreetbl->put_by_obj(): Put an object data into this table with an object name.
+ * qtreetbl->putobj(): Put an object data into this table with an object key.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param name      key name
- * @param namesize  key size
- * @param data      data object
- * @param datasize  size of data object
+ * @param tbl         qtreetbl_t container pointer.
+ * @param name        key name.
+ * @param namesize    key size.
+ * @param data        data object.
+ * @param datasize    size of data object.
  *
- * @return true if successful, otherwise returns false
+ * @return true if successful, otherwise returns false.
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
@@ -327,9 +333,9 @@ bool qtreetbl_putstrf(qtreetbl_t *tbl, const char *name, const char *format,
  * @note
  *  This is the underlying put function which all other put methods use.
  */
-bool qtreetbl_put_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize,
-                         const void *data, size_t datasize) {
-    if (name == NULL || namesize == 0 || data == NULL || datasize == 0) {
+bool qtreetbl_putobj(qtreetbl_t *tbl, const void *name, size_t namesize,
+                     const void *data, size_t datasize) {
+    if (name == NULL || namesize == 0) {
         errno = EINVAL;
         return false;
     }
@@ -352,10 +358,10 @@ bool qtreetbl_put_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize,
 /**
  * qtreetbl->get(): Get an object from this table.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param name      key name.
- * @param datasize  if not NULL, oject size will be stored.
- * @param newmem    whether or not to allocate memory for the data.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param name        key name.
+ * @param datasize    if not NULL, object size will be stored.
+ * @param newmem      whether or not to allocate memory for the data.
  *
  * @return a pointer of data if the key is found, otherwise returns NULL.
  * @retval errno will be set in error condition.
@@ -384,20 +390,19 @@ bool qtreetbl_put_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize,
  *  newmem flag must be set to true always.
  */
 void *qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize,
-bool newmem) {
-    return qtreetbl_get_by_obj(tbl, name,
-                               (name != NULL) ? (strlen(name) + 1) : 0,
-                               datasize, newmem);
+                   bool newmem) {
+    return qtreetbl_getobj(tbl,
+        name, (name != NULL) ? (strlen(name) + 1) : 0, datasize, newmem);
 }
 
 /**
- * qtreetbl->getstr(): Finds an object and returns as string type.
+ * qtreetbl->getstr(): Finds an object and returns it as string type.
  *
  * @param tbl       qtreetbl_t container pointer.
- * @param name      key name
+ * @param name      key name.
  * @param newmem    whether or not to allocate memory for the data.
  *
- * @return a pointer of data if the key is found, otherwise returns NULL.
+ * @return a pointer to data if the key is found, otherwise returns NULL.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -410,19 +415,18 @@ bool newmem) {
  *  newmem flag must be set to true always.
  */
 char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem) {
-    return qtreetbl_get_by_obj(tbl, name,
-                               (name != NULL) ? (strlen(name) + 1) : 0, NULL,
-                               newmem);
+    return qtreetbl_getobj(tbl,
+        name, (name != NULL) ? (strlen(name) + 1) : 0, NULL, newmem);
 }
 
 /**
- * qtreetbl->get_by_obj(): Get an object from this table with an object name.
+ * qtreetbl->getobj(): Get an object from this table with an object name.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param name      key name
- * @param namesize  key size
- * @param datasize  if not NULL, oject size will be stored.
- * @param newmem    whether or not to allocate memory for the data.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param name        key name.
+ * @param namesize    key size.
+ * @param datasize    if not NULL, oject size will be stored.
+ * @param newmem      whether or not to allocate memory for the data.
  *
  * @return a pointer of data if the key is found, otherwise returns NULL.
  * @retval errno will be set in error condition.
@@ -436,8 +440,8 @@ char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem) {
  *  directly and should not be de-allocated by user. In thread-safe mode,
  *  newmem flag must be set to true always.
  */
-void *qtreetbl_get_by_obj(qtreetbl_t *tbl, const char *name, size_t namesize,
-                          size_t *datasize, bool newmem) {
+void *qtreetbl_getobj(qtreetbl_t *tbl, const void *name, size_t namesize,
+                      size_t *datasize, bool newmem) {
     if (name == NULL || namesize == 0) {
         errno = EINVAL;
         return NULL;
@@ -448,8 +452,8 @@ void *qtreetbl_get_by_obj(qtreetbl_t *tbl, const char *name, size_t namesize,
     void *data = NULL;
     if (obj != NULL) {
         data = (newmem) ? qmemdup(obj->data, obj->datasize) : obj->data;
-        if (data != NULL && datasize != NULL) {
-            *datasize = obj->datasize;
+        if (datasize != NULL) {
+            *datasize = (data != NULL) ? obj->datasize : 0;
         }
     }
     qtreetbl_unlock(tbl);
@@ -459,32 +463,32 @@ void *qtreetbl_get_by_obj(qtreetbl_t *tbl, const char *name, size_t namesize,
 /**
  * qtreetbl->remove(): Remove an object from this table.
  *
- * @param tbl   qtreetbl_t container pointer.
- * @param name  key name
+ * @param tbl     qtreetbl_t container pointer.
+ * @param name    key name.
  *
- * @return true if successful, otherwise(not found) returns false
+ * @return true if successful, otherwise(not found) returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
  */
 bool qtreetbl_remove(qtreetbl_t *tbl, const char *name) {
-    return qtreetbl_remove_by_obj(tbl, name,
-                                  (name != NULL) ? strlen(name) + 1 : 0);
+    return qtreetbl_removeobj(tbl,
+                              name, (name != NULL) ? strlen(name) + 1 : 0);
 }
 
 /**
  * qtreetbl->remove(): Remove an object from this table with an object name.
  *
- * @param tbl   qtreetbl_t container pointer.
- * @param name  key name
- * @param name  key size
+ * @param tbl     qtreetbl_t container pointer.
+ * @param name    key name.
+ * @param name    key size.
  *
- * @return true if successful, otherwise(not found) returns false
+ * @return true if successful, otherwise(not found) returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
  */
-bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) {
+bool qtreetbl_removeobj(qtreetbl_t *tbl, const void *name, size_t namesize) {
     if (name == NULL) {
         errno = EINVAL;
         return false;
@@ -493,8 +497,9 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
     qtreetbl_lock(tbl);
     errno = 0;
     tbl->root = remove_obj(tbl, tbl->root, name, namesize);
-    if (tbl->root)
+    if (tbl->root != NULL) {
         tbl->root->red = false;
+    }
     bool removed = (errno != ENOENT) ? true : false;
     qtreetbl_unlock(tbl);
 
@@ -502,13 +507,13 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
 }
 
 /**
- * qhashtbl->getnext(): Get next element.
+ * qtreetbl->getnext(): Get next element.
  *
- * @param tbl       qhashtbl_t container pointer.
- * @param obj       found data will be stored in this object
+ * @param tbl       qtreetbl_t container pointer.
+ * @param obj       found data will be stored in this object.
  * @param newmem    whether or not to allocate memory for the data.
  *
- * @return true if found otherwise returns false
+ * @return true if found otherwise returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT : No next element.
  *  - EINVAL : Invalid argument.
@@ -516,6 +521,7 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
  *
  * @code
  *  [Iteration example from the beginning]
+ *
  *  qtreetbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  tbl->lock(tbl);  // lock it when thread condition is expected
@@ -534,41 +540,35 @@ bool qtreetbl_remove_by_obj(qtreetbl_t *tbl, const void *name, size_t namesize) 
  * @code
  *  [Iteration example from given point]
  *
- *  qtreetbl_obj_t obj;
- *  memset((void*)&obj, 0, sizeof(obj));
- *  tbl->lock(tbl);  // lock must be raised before find_nearest() call.
- *  qtreetbl_obj_t obj = tbl->find_nearest(tbl, "F", 2, false); // here we go!
+ *  tbl->lock(tbl);  // to guarantee no table update during the run
+ *  qtreetbl_obj_t obj = tbl->find_nearest(tbl, "F", sizeof("F"), false);
  *  while (tbl->getnext(tbl, &obj, false) == true) {  // newmem is false
- *      //If tree has 5 objects, A, C, E, G and I.
- *      //Iteration sequence from nearest "F" will be: E->G->I->A->C
+ *      // If a tree has 5 objects, A, C, E, G and I.
+ *      // The iteration sequence from nearest "F" will be: E->G->I->A->C
  *  }
  *  tbl->unlock(tbl);
  *
  * @endcode
  *
  * @code
- * [Removal example in iteration loop]
- *   qtreetbl_obj_t obj;
- *   memset((void*) &obj, 0, sizeof(obj));  // start from the minimum.
- *   tbl->lock(tbl);
- *   while (tbl->getnext(tbl, &obj, false) == true) {
- *       if (...condition...) {
- *           char *name = qmemdup(obj.name, obj.namesize);  // keep the name
- *           size_t namesize = obj.namesize;                // for removal argument
+ *  [Removal example in iteration loop]
  *
- *           tbl->remove_by_obj(tbl, obj.name, obj.namesize);  // remove
- *
- *           obj = tbl->find_nearest(tbl, name, namesize, false); // rewind one step back
- *
- *           free(name);  // clean up
- *       }
- *   }
- *   tbl->unlock(tbl);
- *  @endcode
+ *  qtreetbl_obj_t obj;
+ *  memset((void*)&obj, 0, sizeof(obj));
+ *  tbl->lock(tbl);
+ *  while (tbl->getnext(tbl, &obj, false) == true) {
+ *      if (...condition...) {
+ *          char *name = qmemdup(obj.name, obj.namesize);  // keep the name
+ *          size_t namesize = obj.namesize;                // for removal argument
+ *          tbl->removeobj(tbl, obj.name, obj.namesize);   // remove
+ *          obj = tbl->find_nearest(tbl, name, namesize, false); // rewind one step back
+ *          free(name);  // clean up
+ *      }
+ *  }
+ *  tbl->unlock(tbl);
+ * @endcode
  *
  * @note
- *  - locking must be provided on user code when thread condition is expected
- *  because entire traversal needs to be running under read-only mode.
  *  - Data insertion or deletion can be made during the traversal, but in that
  *  case iterator doesn't guarantee full sweep and possibly skip some visits.
  *  When deletion happens in getnext() loop, use find_nearest() to rewind the
@@ -594,7 +594,7 @@ bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem) {
 
     qtreetbl_obj_t *cursor = ((obj->next != NULL) ? obj->next : tbl->root);
     while (cursor != NULL) {
-        if (cursor->left && cursor->left->tid != tid) {
+        if (cursor->left != NULL && cursor->left->tid != tid) {
             cursor->left->next = cursor;
             cursor = cursor->left;
             continue;
@@ -607,7 +607,7 @@ bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem) {
             }
             obj->next = cursor;  // store original address in tree for next iteration
             return true;
-        } else if (cursor->right && cursor->right->tid != tid) {
+        } else if (cursor->right != NULL && cursor->right->tid != tid) {
             cursor->right->next = cursor;
             cursor = cursor->right;
             continue;
@@ -615,16 +615,16 @@ bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem) {
         cursor = cursor->next;
     }
 
-    // end of travel
-    reset_iterator(tbl);  // to allow iteration start over directly from find_nearest()
+    // end of travel, reset iterator to allow iteration start over in next call
+    reset_iterator(tbl);
     return false;
 }
 
 /**
- * qtreetbl->find_min(): Find the name of very left object.
+ * qtreetbl->find_min(): Find the name of the leftmost object.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param namesize  if not NULL, the size of key name will be stored.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param namesize    if not NULL, the size of key name will be stored.
  *
  * @return malloced memory copying the key name.
  *
@@ -649,10 +649,10 @@ void *qtreetbl_find_min(qtreetbl_t *tbl, size_t *namesize) {
 }
 
 /**
- * qtreetbl->find_max(): Find the name of very right object.
+ * qtreetbl->find_max(): Find the name of the rightmost object.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param namesize  if not NULL, the size of key name will be stored.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param namesize    if not NULL, the size of key name will be stored.
  *
  * @return malloced memory copying the key name.
  *
@@ -677,16 +677,16 @@ void *qtreetbl_find_max(qtreetbl_t *tbl, size_t *namesize) {
 }
 
 /**
- * qtreetbl->find_nearest(): Find equal or nearest object.
+ * qtreetbl->find_nearest(): Find an object with matching key or nearest.
  *
- * find_nearest() returns matching key or nearest key. If there's
+ * find_nearest() returns matching key or nearest key object. If there's
  * no keys in the table. It'll return empty qtreetbl_obj_t object
  * with errno ENOENT.
  *
- * @param tbl       qtreetbl_t container pointer.
- * @param name      key name
- * @param namesize  key size
- * @param newmem    whether or not to allocate memory for the data.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param name        key name.
+ * @param namesize    key size.
+ * @param newmem      whether or not to allocate memory for the data.
  *
  * @return qtreetbl_obj_t object.
  *
@@ -696,13 +696,10 @@ void *qtreetbl_find_max(qtreetbl_t *tbl, size_t *namesize) {
  *  - ENOMEM : Memory allocation failure.
  *
  * @code
- *  [Some examples here]
  *  Data Set : A B C D E I N R S X
  *  find_nearest("0") => "A" // no smaller key available, so "A"
  *  find_nearest("C") => "C" // matching key found
  *  find_nearest("F") => "E" // "E" is nearest smaller key from "F"
- *  find_nearest("M") => "N" // "N" is nearest smaller key from "M"
- *  find_nearest("Z") => "X" // "X" is nearest smaller key from "Z"
  * @endcode
  *
  * @note
@@ -730,28 +727,28 @@ qtreetbl_obj_t qtreetbl_find_nearest(qtreetbl_t *tbl, const void *name,
         }
         lastobj = obj;
         if (cmp < 0) {
-            if (obj->left)
+            if (obj->left != NULL) {
                 obj->left->next = obj;
+            }
             obj = obj->left;
         } else {
-            if (obj->right)
+            if (obj->right != NULL) {
                 obj->right->next = obj;
+            }
             obj = obj->right;
         }
     }
 
     if (obj == NULL) {
         for (obj = lastobj;
-                obj != NULL
-                        && (tbl->compare(name, namesize, obj->name,
-                                         obj->namesize) < 0); obj = obj->next)
-            ;
+            obj != NULL && (tbl->compare(name, namesize, obj->name, obj->namesize) < 0);
+            obj = obj->next);
         if (obj == NULL) {
             obj = lastobj;
         }
     }
 
-    if (obj) {
+    if (obj != NULL) {
         retobj = *obj;
         if (newmem) {
             retobj.name = qmemdup(obj->name, obj->namesize);
@@ -760,7 +757,6 @@ qtreetbl_obj_t qtreetbl_find_nearest(qtreetbl_t *tbl, const void *name,
         // set travel info to be used for iteration in getnext()
         retobj.tid = tbl->tid;
         retobj.next = obj;
-
     } else {
         errno = ENOENT;
     }
@@ -772,9 +768,9 @@ qtreetbl_obj_t qtreetbl_find_nearest(qtreetbl_t *tbl, const void *name,
 /**
  * qtreetbl->size(): Returns the number of keys in the table.
  *
- * @param tbl   qtreetbl_t container pointer.
+ * @param tbl    qtreetbl_t container pointer.
  *
- * @return number of elements stored
+ * @return number of elements stored.
  */
 size_t qtreetbl_size(qtreetbl_t *tbl) {
     return tbl->num;
@@ -783,7 +779,7 @@ size_t qtreetbl_size(qtreetbl_t *tbl) {
 /**
  * qtreetbl->clear(): Clears the table so that it contains no keys.
  *
- * @param tbl   qtreetbl_t container pointer.
+ * @param tbl    qtreetbl_t container pointer.
  */
 void qtreetbl_clear(qtreetbl_t *tbl) {
     qtreetbl_lock(tbl);
@@ -796,7 +792,7 @@ void qtreetbl_clear(qtreetbl_t *tbl) {
 /**
  * qtreetbl->lock(): Enter critical section.
  *
- * @param tbl   qtreetbl_t container pointer.
+ * @param tbl    qtreetbl_t container pointer.
  *
  * @note
  *  From user side, normally locking operation is only needed when traverse
@@ -813,7 +809,7 @@ void qtreetbl_lock(qtreetbl_t *tbl) {
 /**
  * qtreetbl->unlock(): Leave critical section.
  *
- * @param tbl   qtreetbl_t container pointer.
+ * @param tbl    qtreetbl_t container pointer.
  *
  * @note
  *  This operation will do nothing if QTREETBL_THREADSAFE option was not
@@ -824,9 +820,9 @@ void qtreetbl_unlock(qtreetbl_t *tbl) {
 }
 
 /**
- * qtreetbl->free(): De-allocate the table
+ * qtreetbl->free(): De-allocate the table.
  *
- * @param tbl   qtreetbl_t container pointer.
+ * @param tbl    qtreetbl_t container pointer.
  */
 void qtreetbl_free(qtreetbl_t *tbl) {
     qtreetbl_clear(tbl);
@@ -838,20 +834,39 @@ int qtreetbl_byte_cmp(const void *name1, size_t namesize1, const void *name2,
                       size_t namesize2) {
     size_t minsize = (namesize1 < namesize2) ? namesize1 : namesize2;
     int cmp = memcmp(name1, name2, minsize);
-    if (cmp != 0 || namesize1 == namesize2)
+    if (cmp != 0 || namesize1 == namesize2) {
         return cmp;
+    }
     return (namesize1 < namesize2) ? -1 : +1;
 }
 
 /**
- * qtreetbl->debug(): Print hash table for debugging purpose
+ * qtreetbl->debug(): Print the internal tree structure in text.
  *
- * @param tbl   qtreetbl_t container pointer.
- * @param out   output stream
+ * @param tbl    qtreetbl_t container pointer.
+ * @param out    output stream.
  *
  * @return true if successful, otherwise returns false.
  * @retval errno will be set in error condition.
  *  - EIO : Invalid output stream.
+ *
+ * @code
+ * Example output:
+ *
+ *     ┌───9
+ *     │   └──[8]
+ * ┌───7
+ * │   │   ┌───6
+ * │   └──[5]
+ * │       └───4
+ * 3
+ * │   ┌───2
+ * └───1
+ *     └───0
+ * @endcode
+ * @note
+ *  Red nodes are wrapped in `[]`.
+ *  In this example, 5 and 8 are Red nodes.
  */
 bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
     if (out == NULL) {
@@ -860,147 +875,147 @@ bool qtreetbl_debug(qtreetbl_t *tbl, FILE *out) {
     }
 
     qtreetbl_lock(tbl);
-
+    print_node(tbl->root, out, NULL, false);
     qtreetbl_unlock(tbl);
-
     return true;
 }
 
 /**
- * Display the tree structure from the node pointed by `obj` and down.
+ * Verifies that root property of the red-black tree is satisfied.
  *
- * @param tbl   A pointer to a node of the tree.
- * @param depth The depth of the node in the tree.
- *              The depth of the tree root is 0.
+ * Root property: The root is black.
  *
+ * @param tbl    qtreetbl_t container pointer.
  */
-void print_node(qtreetbl_obj_t *obj, int depth) {
-    // Skip tree-leaves
-    if (!obj) return;
-
-    // 4-spaces indentation for each node level
-    for (int i = 0; i < depth; i++) {
-        printf("    ");
+int node_check_root(qtreetbl_t *tbl) {
+    if (tbl == NULL) {
+        return 1;
     }
 
-    // Print the red-ness of the node
-    printf("R=%c W= ", (obj->red) ? 'Y' : 'N');
-
-    // Print the content of the node
-    for (int i = 0; i < obj->namesize; i++) {
-        printf("%c", ((char *) obj->name)[i]);
+    if (is_red(tbl->root)) {
+        return 1;
     }
-
-    // No more data to print for this node, go to next line.
-    printf("\n");
-
-    // Recursive call to display the children
-    print_node(obj->left, depth + 1);
-    print_node(obj->right, depth + 1);
+    return 0;
 }
 
 /**
- * Display the tree structure.
+ * Verifies that red property of the red-black tree is satisfied.
  *
- * @param tbl   qtreetbl_t container pointer.
+ * Red property: If a node is red, then both its children are black.
  *
+ * @param tbl    qtreetbl_t container pointer.
+ * @param obj    qtreetbl_obj_t object pointer.
  */
-void qtreetbl_print(qtreetbl_t *tbl) {
-
-    qtreetbl_lock(tbl);
-
-    print_node(tbl->root, 0);
-
-    qtreetbl_unlock(tbl);
-}
-
-/**
- * Verifies that RULE 4 of the red-black tree is verified for the node pointed
- * by `obj` and all its children.
- *
- * Rule 4 states that no red node shall have a red child.
- *
- * @param tbl A pointer to the tree object.
- * @param obj A pointer to a node of the tree object.
- */
-int node_check_rule4(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
-    if (obj == NULL) return 0;
+int node_check_red(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
+    if (obj == NULL) {
+        return 0;
+    }
 
     if (is_red(obj)) {
         if (is_red(obj->right) || is_red(obj->left)) {
-            printf("ERROR: Rule 4 violated.\n");
-            printf("Red node with key '");
-            // Print the name
-            for (int i = 0; i < obj->namesize; i++) {
-                printf("%c", ((char *) obj->name)[i]);
-            }
-            printf("' has at least one red child.\n");
-            print_node(tbl->root, 0);
-
             return 1;
         }
     }
 
-    if (node_check_rule4(tbl, obj->right))
+    if (node_check_red(tbl, obj->right)) {
         return 1;
-    if (node_check_rule4(tbl, obj->left))
+    }
+    if (node_check_red(tbl, obj->left)) {
         return 1;
+    }
 
     return 0;
 }
 
 /**
- * Verifies that RULE 5 of the red-black tree is verified for the node pointed
- * by `obj` and all its children.
+ * Verifies that black property of the red-black tree is satisfied.
  *
- * Rule 5 states that every path from the root of the tree to any leaf of the
- * tree has the same number of black nodes.
+ * Black property: For each node, all simple paths from the node to
+ *                 descendant leaves contain the same number of black nodes.
  *
- * @param tbl A pointer to the tree object.
- * @param obj A pointer to a node of the tree object.
+ * @param tbl         qtreetbl_t container pointer.
+ * @param obj         qtreetbl_obj_t object pointer.
+ * @param path_len    black path length.
  */
-int node_check_rule5(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
+int node_check_black(qtreetbl_t *tbl, qtreetbl_obj_t *obj, int *path_len) {
     if (obj == NULL) {
-        *path_len = 0;
-    } else {
-        int right_path_len;
-        if (node_check_rule5(tbl, obj->right, &right_path_len))
-            return 1;
+        *path_len = 1;
+        return 0;
+    }
 
-        int left_path_len;
-        if (node_check_rule5(tbl, obj->left, &left_path_len))
-            return 1;
+    int right_path_len;
+    if (node_check_black(tbl, obj->right, &right_path_len)) {
+        return 1;
+    }
+    int left_path_len;
+    if (node_check_black(tbl, obj->left, &left_path_len)) {
+        return 1;
+    }
 
-        if (right_path_len != left_path_len) {
-            printf("ERROR: Rule 5 violated.");
-            print_node(tbl->root, 0);
-            return 1;
-        } else {
-            *path_len = right_path_len;
+    if (right_path_len != left_path_len) {
+        return 1;
+    }
+    *path_len = (!is_red(obj)) ? (right_path_len + 1) : right_path_len;
 
-            if (!is_red(obj)) (*path_len)++;
-        }
+    return 0;
+}
+
+/**
+ * Verifies that LLRB property of the left-leaning red-black tree is satisfied.
+ *
+ * LLRB property: 3-nodes always lean to the left and 4-nodes are balanced.
+ *
+ * @param tbl    qtreetbl_t container pointer.
+ * @param obj    qtreetbl_obj_t object pointer.
+ */
+int node_check_llrb(qtreetbl_t *tbl, qtreetbl_obj_t *obj) {
+    if (obj == NULL) {
+        return 0;
+    }
+
+    if (is_red(obj->right) && !is_red(obj->left)) {
+        return 1;
+    }
+
+    if (node_check_llrb(tbl, obj->right)) {
+        return 1;
+    }
+    if (node_check_llrb(tbl, obj->left)) {
+        return 1;
     }
 
     return 0;
 }
 
 /**
- * Verifies that the (some) invariants of the red-black tree are satisfied.
+ * Verifies that the invariants of the red-black tree are satisfied.
  *
- * @param tbl A pointer to the tree object to check.
+ * Root property:  The root is black.
+ * Red property:   If a node is red, then both its children are black.
+ * Black property: For each node, all simple paths from the node to
+ *                 descendant leaves contain the same number of black nodes.
+ * LLRB property:  3-nodes always lean to the left and 4-nodes are balanced.
+ *
+ * @param tbl    qtreetbl_t container pointer.
  */
 int qtreetbl_check(qtreetbl_t *tbl) {
-    printf("Checking tree... \n");
-    if (tbl == NULL) return 0;
+    if (tbl == NULL) {
+        return 0;
+    }
 
-    if (node_check_rule4(tbl, tbl->root)) 
+    if (node_check_root(tbl)) {
         return 1;
+    }
+    if (node_check_red(tbl, tbl->root)) {
+        return 2;
+    }
     int path_len = 0;
-    if (node_check_rule5(tbl, tbl->root, &path_len))
-        return 1;
-
-    print_node(tbl->root, 0);
+    if (node_check_black(tbl, tbl->root, &path_len)) {
+        return 3;
+    }
+    if (node_check_llrb(tbl, tbl->root)) {
+        return 4;
+    }
 
     return 0;
 }
@@ -1011,61 +1026,57 @@ static bool is_red(qtreetbl_obj_t *obj) {
     return (obj != NULL) ? obj->red : false;
 }
 
+uint32_t _q_treetbl_flip_color_cnt = 0;
 static qtreetbl_obj_t *flip_color(qtreetbl_obj_t *obj) {
     obj->red = !(obj->red);
     obj->left->red = !(obj->left->red);
     obj->right->red = !(obj->right->red);
+    _q_treetbl_flip_color_cnt++;
     return obj;
 }
 
+uint32_t _q_treetbl_rotate_left_cnt = 0;
 static qtreetbl_obj_t *rotate_left(qtreetbl_obj_t *obj) {
     qtreetbl_obj_t *x = obj->right;
     obj->right = x->left;
     x->left = obj;
     x->red = x->left->red;
     x->left->red = true;
+    _q_treetbl_rotate_left_cnt++;
     return x;
 }
 
+uint32_t _q_treetbl_rotate_right_cnt = 0;
 static qtreetbl_obj_t *rotate_right(qtreetbl_obj_t *obj) {
     qtreetbl_obj_t *x = obj->left;
     obj->left = x->right;
     x->right = obj;
     x->red = x->right->red;
     x->right->red = true;
+    _q_treetbl_rotate_right_cnt++;
     return x;
 }
 
 static qtreetbl_obj_t *move_red_left(qtreetbl_obj_t *obj) {
     flip_color(obj);
-    if (obj->right && is_red(obj->right->left)) {
+    if (is_red(obj->right->left)) {
         obj->right = rotate_right(obj->right);
         obj = rotate_left(obj);
         flip_color(obj);
+#ifdef LLRB234
+        // 2-3-4 exclusive
+        if (is_red(obj->right->right)) {
+            obj->right = rotate_left(obj->right);
+        }
+#endif
     }
     return obj;
 }
 
 static qtreetbl_obj_t *move_red_right(qtreetbl_obj_t *obj) {
     flip_color(obj);
-    if (obj->left && is_red(obj->left->left)) {
+    if (is_red(obj->left->left)) {
         obj = rotate_right(obj);
-        flip_color(obj);
-    }
-    return obj;
-}
-
-static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj) {
-    // rotate right red to left
-    if (is_red(obj->right)) {
-        obj = rotate_left(obj);
-    }
-    // rotate left red-red to right
-    if (obj->left && is_red(obj->left) && is_red(obj->left->left)) {
-        obj = rotate_right(obj);
-    }
-    // split 4-nodes
-    if (is_red(obj->left) && is_red(obj->right)) {
         flip_color(obj);
     }
     return obj;
@@ -1077,10 +1088,8 @@ static qtreetbl_obj_t *find_min(qtreetbl_obj_t *obj) {
         return NULL;
     }
 
-    qtreetbl_obj_t *o;
-    for (o = obj; o->left != NULL; o = o->left)
-        ;
-    return o;
+    for (; obj->left != NULL; obj = obj->left);
+    return obj;
 }
 
 static qtreetbl_obj_t *find_max(qtreetbl_obj_t *obj) {
@@ -1089,33 +1098,8 @@ static qtreetbl_obj_t *find_max(qtreetbl_obj_t *obj) {
         return NULL;
     }
 
-    qtreetbl_obj_t *o;
-    for (o = obj; o->right != NULL; o = o->right)
-        ;
-    return o;
-}
-
-static qtreetbl_obj_t *find_obj(qtreetbl_t *tbl, const void *name,
-                                size_t namesize) {
-    if (name == NULL || namesize == 0) {
-        errno = EINVAL;
-        return NULL;
-    }
-
-    qtreetbl_lock(tbl);
-    qtreetbl_obj_t *obj;
-    for (obj = tbl->root; obj != NULL;) {
-        int cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
-        if (cmp == 0) {
-            qtreetbl_unlock(tbl);
-            return obj;
-        }
-        obj = (cmp < 0) ? obj->left : obj->right;
-    }
-    qtreetbl_unlock(tbl);
-
-    errno = ENOENT;
-    return NULL;
+    for (; obj->right != NULL; obj = obj->right);
+    return obj;
 }
 
 static qtreetbl_obj_t *remove_min(qtreetbl_obj_t *obj) {
@@ -1132,13 +1116,57 @@ static qtreetbl_obj_t *remove_min(qtreetbl_obj_t *obj) {
     return fix(obj);
 }
 
+static qtreetbl_obj_t *fix(qtreetbl_obj_t *obj) {
+    // rotate right red to left
+    if (is_red(obj->right)) {
+#ifdef LLRB234
+        // 2-3-4 exclusive
+        if (is_red(obj->right->left)) {
+            obj->right = rotate_right(obj->right);
+        }
+#endif
+        obj = rotate_left(obj);
+    }
+    // rotate left red-red to right
+    if (is_red(obj->left) && is_red(obj->left->left)) {
+        obj = rotate_right(obj);
+    }
+#ifndef LLRB234
+    // split 4-nodes (2-3 exclusive)
+    if (is_red(obj->left) && is_red(obj->right)) {
+        flip_color(obj);
+    }
+#endif
+    return obj;
+}
+
+static qtreetbl_obj_t *find_obj(qtreetbl_t *tbl, const void *name,
+                                size_t namesize) {
+    if (name == NULL || namesize == 0) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    qtreetbl_obj_t *obj;
+    for (obj = tbl->root; obj != NULL;) {
+        int cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
+        if (cmp == 0) {
+            return obj;
+        }
+        obj = (cmp < 0) ? obj->left : obj->right;
+    }
+
+    errno = ENOENT;
+    return NULL;
+}
+
 static qtreetbl_obj_t *new_obj(bool red, const void *name, size_t namesize,
                                const void *data, size_t datasize) {
     qtreetbl_obj_t *obj = (qtreetbl_obj_t *) calloc(1, sizeof(qtreetbl_obj_t));
     void *copyname = qmemdup(name, namesize);
     void *copydata = qmemdup(data, datasize);
 
-    if (obj == NULL || copyname == NULL || copydata == NULL) {
+    if (obj == NULL || copyname == NULL) {
         errno = ENOMEM;
         free(obj);
         free(copyname);
@@ -1163,13 +1191,15 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         return new_obj(true, name, namesize, data, datasize);
     }
 
-    // split 4-nodes on the way down.
+#ifdef LLRB234
+    // split 4-nodes on the way down (2-3-4 exclusive)
     if (is_red(obj->left) && is_red(obj->right)) {
         flip_color(obj);
     }
+#endif
 
-    int cmp = tbl->compare(obj->name, obj->namesize, name, namesize);
-    if (cmp == 0) {  // existing key found.
+    int cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
+    if (cmp == 0) {  // existing key found
         void *copydata = qmemdup(data, datasize);
         if (copydata != NULL) {
             free(obj->data);
@@ -1177,13 +1207,13 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
             obj->datasize = datasize;
         }
     } else if (cmp < 0) {
-        obj->right = put_obj(tbl, obj->right, name, namesize, data, datasize);
-    } else {
         obj->left = put_obj(tbl, obj->left, name, namesize, data, datasize);
+    } else {
+        obj->right = put_obj(tbl, obj->right, name, namesize, data, datasize);
     }
 
     // fix right-leaning reds on the way up
-    if (is_red(obj->right)) {
+    if (is_red(obj->right) && !is_red(obj->left)) {
         obj = rotate_left(obj);
     }
 
@@ -1192,6 +1222,14 @@ static qtreetbl_obj_t *put_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         obj = rotate_right(obj);
     }
 
+#ifndef LLRB234
+    // split 4-nodes on the way up (2-3 exclusive)
+    if (is_red(obj->left) && is_red(obj->right)) {
+        flip_color(obj);
+    }
+#endif
+
+    // return new root
     return obj;
 }
 
@@ -1202,35 +1240,47 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         return NULL;
     }
 
-    if (tbl->compare(name, namesize, obj->name, obj->namesize) < 0) {  // left
+    int cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
+    if (cmp < 0) {
         // move red left
-        if (obj->left && (!is_red(obj->left) && !is_red(obj->left->left))) {
+        if (obj->left != NULL
+            && (!is_red(obj->left) && !is_red(obj->left->left))) {
             obj = move_red_left(obj);
         }
         // keep going down to the left
         obj->left = remove_obj(tbl, obj->left, name, namesize);
     } else {  // right or equal
-        if (is_red(obj->left) && !is_red(obj->right)) {
+        bool recmp = false;  // optimization to reduce duplicated comparisions
+        if (is_red(obj->left)) {
             obj = rotate_right(obj);
+            recmp = true;
         }
         // remove if equal at the bottom
-        if (tbl->compare(name, namesize, obj->name, obj->namesize)
-                == 0&& obj->right == NULL) {
-            free(obj->name);
-            free(obj->data);
-            free(obj);
-            tbl->num--;
-            assert(tbl->num >= 0);
-            return NULL;
+        if (obj->right == NULL) {
+            if (recmp) {
+                cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
+                recmp = false;
+            }
+            if (cmp == 0) {
+                free(obj->name);
+                free(obj->data);
+                free(obj);
+                tbl->num--;
+                return NULL;
+            }
         }
         // move red right
         if (obj->right != NULL
-                && (!is_red(obj->right) && !is_red(obj->right->left))) {
+            && (!is_red(obj->right) && !is_red(obj->right->left))) {
             obj = move_red_right(obj);
+            recmp = true;
         }
         // found in the middle
-        if (tbl->compare(name, namesize, obj->name, obj->namesize) == 0) {
-            // copy min to this then remove min. What a genius inventor!
+        if (recmp) {
+            cmp = tbl->compare(name, namesize, obj->name, obj->namesize);
+        }
+        if (cmp == 0) {
+            // copy min to this then remove min
             qtreetbl_obj_t *minobj = find_min(obj->right);
             assert(minobj != NULL);
             free(obj->name);
@@ -1246,7 +1296,7 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
             obj->right = remove_obj(tbl, obj->right, name, namesize);
         }
     }
-    // Fix right-leaning red nodes on the way up.
+    // fix right-leaning red nodes on the way up
     return fix(obj);
 }
 
@@ -1254,26 +1304,55 @@ static void free_objs(qtreetbl_obj_t *obj) {
     if (obj == NULL) {
         return;
     }
-    if (obj->left) {
-        free_objs(obj->left);
-    }
-    if (obj->right) {
-        free_objs(obj->right);
-    }
-    free_obj(obj);
-}
 
-static void free_obj(qtreetbl_obj_t *obj) {
-    if (obj == NULL) {
-        return;
-    }
+    free_objs(obj->left);
+    free_objs(obj->right);
+
     free(obj->name);
     free(obj->data);
     free(obj);
 }
 
 static uint8_t reset_iterator(qtreetbl_t *tbl) {
+    if (tbl->root != NULL) {
+        tbl->root->next = NULL;
+    }
     return (++tbl->tid);
+}
+
+static void print_branch(struct branch_obj_s *branch, FILE *out) {
+    if (branch == NULL) {
+        return;
+    }
+    print_branch(branch->p, out);
+    fprintf(out, "%s", branch->s);
+}
+
+static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev,
+                       bool right) {
+    if (obj == NULL) {
+        return;
+    }
+
+    struct branch_obj_s branch;
+    branch.p = prev;
+
+    branch.s = (prev != NULL) ? (right) ?  "    " : "│   " : "";
+    print_node(obj->right, out, &branch, true);
+
+    print_branch(prev, out);
+    if (prev != NULL) {
+        fprintf(out, "%s%s", (right) ? "┌──" : "└──", (obj->red) ? "[" : "─");
+    }
+    if (obj->data == NULL && obj->namesize == sizeof(uint32_t)) {
+        fprintf(out, "%u", *(uint32_t *)obj->name);
+    } else {
+        _q_textout(out, obj->name, obj->namesize, 15);
+    }
+    fprintf(out, "%s", (obj->red) ? "]\n" : "\n");
+
+    branch.s = (prev != NULL) ? (right) ? "│   " : "    " : "";
+    print_node(obj->left, out, &branch, false);
 }
 
 #endif
