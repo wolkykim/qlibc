@@ -1,0 +1,166 @@
+# This starter workflow is for a CMake project running on multiple platforms. There is a different starter workflow if you just want a single platform.
+# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
+name: CMake on multiple platforms
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test-on-ubuntu-2204:
+    name: test-on-ubuntu-22.04
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/ubuntu:22.04
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }}
+
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Intall Deps
+      run: |
+        apt-get update
+        apt-get install -y gcc make cmake
+
+    - name: Configure CMake And Build
+      working-directory: ${{ github.workspace }}
+      run: |
+        mkdir build && cd build
+        cmake .. && make && make install
+
+    - name: Test
+      working-directory: ${{ github.workspace }}
+      run: |
+        echo "TODO"
+
+  test-on-ubuntu-2004:
+    name: test-on-ubuntu-20.04
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/ubuntu:20.04
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }}
+
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Intall Deps
+      run: |
+        apt-get update
+        apt-get install -y gcc make cmake
+
+    - name: Configure CMake And Build
+      working-directory: ${{ github.workspace }}
+      run: |
+        mkdir build && cd build
+        cmake .. && make && make install
+
+    - name: Test
+      working-directory: ${{ github.workspace }}
+      run: |
+        echo "TODO"
+
+  test-on-ubuntu-1804:
+    name: test-on-ubuntu-18.04
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/ubuntu:18.04
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }}
+
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Intall Deps
+      run: |
+        apt-get update
+        apt-get install -y gcc make cmake
+
+    - name: Configure CMake And Build
+      working-directory: ${{ github.workspace }}
+      run: |
+        mkdir build && cd build
+        cmake .. && make && make install
+
+    - name: Test
+      working-directory: ${{ github.workspace }}
+      run: |
+        echo "TODO"
+
+  test-on-centos-792009:
+    name: test-on-centos-7.9.2009
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/centos:7.9.2009
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }}
+
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Intall Deps
+      run: |
+        yum install -y gcc make cmake
+
+    - name: Configure CMake And Build
+      working-directory: ${{ github.workspace }}
+      run: |
+        mkdir build && cd build
+        cmake .. && make && make install
+
+    - name: Test
+      working-directory: ${{ github.workspace }}
+      run: |
+        echo "TODO"
+
+  test-on-centos-731611:
+    name: test-on-centos-7.3.1611
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/centos:7.3.1611
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }}
+
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Intall Deps
+      run: |
+        yum install -y gcc make cmake
+
+    - name: Configure CMake And Build
+      working-directory: ${{ github.workspace }}
+      run: |
+        mkdir build && cd build
+        cmake .. && make && make install
+
+    - name: Test
+      working-directory: ${{ github.workspace }}
+      run: |
+        echo "TODO"
