@@ -152,6 +152,7 @@ The following people have helped with suggestions, ideas, code or fixing bugs:
 * RQ
 * [Ryan Gonzalez](https://github.com/kirbyfan64)
 * [Stroh Snow](https://github.com/strohsnow)
+* [SunBeau](https://github.com/SunBeau)
 * Umesh
 
 If we have forgotten or misspelled your name, please let us know.
