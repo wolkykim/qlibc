@@ -46,19 +46,45 @@
 extern "C" {
 #endif
 
-/* database header files should be included before this header file. */
-#ifdef _mysql_h
-#define Q_ENABLE_MYSQL  (1)
-#endif /* _mysql_h */
-
 /* types */
 typedef struct qdbresult_s qdbresult_t;
 typedef struct qdb_s qdb_t;
 
+/* database header files should be included before this header file. */
+#ifdef _mysql_h
+#define Q_ENABLE_MYSQL  (1)
+extern qdb_t *qdb_mysql(const char *dbtype, const char *addr, int port, const char *database,
+                        const char *username, const char *password, bool autocommit);
+#endif /* _mysql_h */
+
+#ifdef LIBPQ_FE_H
+#define Q_ENABLE_PGSQL  (1)
+extern qdb_t *qdb_pgsql(const char *dbtype, const char *addr, int port, const char *database,
+                        const char *username, const char *password, bool autocommit);
+#endif /* LIBPQ_FE_H */
+
 /* public functions */
-extern qdb_t *qdb(const char *dbtype,
-                  const char *addr, int port, const char *database,
-                  const char *username, const char *password, bool autocommit);
+static inline qdb_t *qdb(const char *dbtype, const char *addr, int port, const char *database,
+                         const char *username, const char *password, bool autocommit)
+{
+    qdb_t *db = NULL;
+
+#ifdef Q_ENABLE_MYSQL
+    db = qdb_mysql(dbtype, addr, port, database, username, password, autocommit);
+    if (db) {
+        return db;
+    }
+#endif /* Q_ENABLE_MYSQL */
+
+#ifdef Q_ENABLE_PGSQL
+    db = qdb_pgsql(dbtype, addr, port, database, username, password, autocommit);
+    if (db) {
+        return db;
+    }
+#endif /* Q_ENABLE_PGSQL */
+
+    return db;
+}
 
 /**
  * qdbresult object structure
@@ -85,6 +111,11 @@ struct qdbresult_s {
     MYSQL_ROW  row;
     int cols;
     int cursor;
+#endif
+
+#ifdef Q_ENABLE_PGSQL
+    /* private variables for pgsql database - do not access directly */
+    void  *pgsql;
 #endif
 };
 
@@ -130,6 +161,11 @@ struct qdb_s {
 #ifdef Q_ENABLE_MYSQL
     /* private variables for mysql database - do not access directly */
     MYSQL  *mysql;
+#endif
+
+#ifdef Q_ENABLE_PGSQL
+    /* private variables for pgsql database - do not access directly */
+    void  *pgsql;
 #endif
 };
 

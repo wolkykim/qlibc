@@ -39,7 +39,7 @@ Please refer the LICENSE document included in the package for more details.
   * INI-style Configuration File Parser.
   * HTTP client.
   * Rotating File Logger.
-  * Database(MySQL) interface.
+  * Database(MySQL/PostgreSQL) interface.
   * [Token-Bucket](https://en.wikipedia.org/wiki/Token_bucket)
 
 ## qLibc Tables at a Glance

@@ -1,0 +1,89 @@
+# This starter workflow is for a CMake project running on multiple platforms. There is a different starter workflow if you just want a single platform.
+# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
+name: ci-run-test-extensions
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test-on-ubuntu-2204:
+    name: test-on-ubuntu-22.04
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/ubuntu:22.04
+      env:
+        TZ: Asia/Shanghai
+        DEBIAN_FRONTEND: noninteractive
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }}
+
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Intall Deps
+      run: |
+        export DEBIAN_FRONTEND=noninteractive
+        echo "Asia/Shanghai" > /etc/timezone
+        apt-get update
+        apt-get install -y gcc make cmake autoconf sudo lsb-release curl ca-certificates tzdata
+        dpkg-reconfigure --frontend noninteractive tzdata
+
+    - name: Install database
+      run: |
+        install -d /usr/share/postgresql-common/pgdg
+        curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+        apt-get update
+        apt-get install -y postgresql-15 libpq-dev
+
+    - name: Start database
+      run: |
+        sudo -u postgres echo "123456" > /tmp/pg.pwfile
+        sudo -u postgres /usr/lib/postgresql/15/bin/initdb -D /tmp/data -U postgres -A md5 --pwfile=/tmp/pg.pwfile
+        sudo -u postgres /usr/lib/postgresql/15/bin/pg_ctl -D /tmp/data -l /tmp/data/logfile start
+        PGPASSWORD=123456 psql -h 127.0.0.1 -U postgres -c "SELECT 1"
+
+    - name: Configure And make
+      working-directory: ${{ github.workspace }}
+      run: |
+        autoconf
+        ./configure --with-pgsql \
+        --with-pgsql-incdir=/usr/include/postgresql \
+        --with-pgsql-libdir=/usr/lib/x86_64-linux-gnu
+        make
+
+    - name: Test
+      working-directory: ${{ github.workspace }}
+      run: |
+        cd tests/
+        make test
+        make test-ext
+        make clean
+        cd ../
+        make clean
+
+    - name: Cmake And make
+      working-directory: ${{ github.workspace }}
+      run: |
+        mkdir build/ && cd build/
+        cmake .. \
+        -DWITH_PGSQL=ON \
+        -DWITH_PGSQL_INCLUDE_DIR=/usr/include/postgresql \
+        -DWITH_PGSQL_LIBRARY_DIR=/usr/lib/x86_64-linux-gnu
+        make && make install
+
+    - name: Cmake Test
+      working-directory: ${{ github.workspace }}
+      run: |
+        cd build/
+        make test

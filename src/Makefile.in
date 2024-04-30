@@ -97,6 +97,7 @@ QLIBCEXT_OBJS	= \
 		extensions/qlog.o		\
 		extensions/qhttpclient.o	\
 		extensions/qdatabase_mysql.o		\
+		extensions/qdatabase_pgsql.o		\
 		extensions/qtokenbucket.o
 
 ## Which compiler & options for release
