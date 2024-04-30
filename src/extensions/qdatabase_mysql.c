@@ -27,7 +27,7 @@
  *****************************************************************************/
 
 /**
- * @file qdatabase.c Database wrapper.
+ * @file qdatabase_mysql.c Database wrapper.
  *
  * Database header files should be included prior to qlibcext.h in your source
  * codes like below.
