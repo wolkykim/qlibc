@@ -56,7 +56,7 @@ jobs:
     - name: Configure And make
       working-directory: ${{ github.workspace }}
       run: |
-        autoconf
+        # autoconf
         ./configure --with-pgsql \
         --with-pgsql-incdir=/usr/include/postgresql \
         --with-pgsql-libdir=/usr/lib/x86_64-linux-gnu
