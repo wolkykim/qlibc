@@ -12,6 +12,10 @@ SET(test_list
   test_qhash
 )
 
+IF(NOT "${WITH_PGSQL}" STREQUAL "")
+  LIST(APPEND test_list test_qdatabase_pgsql)
+ENDIF()
+
 SET(test_file_list
   test_qhash_data_1.bin
   test_qhash_data_2.bin

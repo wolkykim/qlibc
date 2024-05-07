@@ -198,6 +198,28 @@ if test "$withval" = yes; then
 	fi
 fi
 
+AC_ARG_WITH([pgsql],[AS_HELP_STRING([--with-pgsql], [This will enable PostgreSQL database support in qdatabase extension API. When it's enabled, user applications need to link libpq library. (ex: -lpq)])],[],[withval=no])
+if test "$withval" = yes; then
+	# check libpq-fe.h
+	AC_CHECK_FILE([$with_pgsql_incdir/libpq-fe.h],[withval=yes],[withval=no])
+	if test "$withval" = yes; then
+		AC_MSG_NOTICE([find '$with_pgsql_incdir/libpq-fe.h'])
+		CPPFLAGS="$CPPFLAGS -DENABLE_PGSQL -I$with_pgsql_incdir"
+	else
+		AC_MSG_FAILURE([Cannot find 'libpq-fe.h' header. Use --with-pgsql-incdir=DIR to specify the directory where 'libpq-fe.h' is located.])
+	fi
+	# check libpq.so
+	AC_CHECK_FILE([$with_pgsql_libdir/libpq.so],[withval=yes],[withval=no])
+	if test "$withval" = yes; then
+		AC_MSG_NOTICE([find '$with_pgsql_libdir/libpq.so'])
+		CPPFLAGS="$CPPFLAGS -Wl,-rpath,$with_pgsql_libdir -L$with_pgsql_libdir -lpq"
+	else
+		AC_MSG_FAILURE([Cannot find 'libpq.so' library. Use --with-pgsql-libdir=DIR to specify the directory where 'libpq.so' is located.])
+	fi
+fi
+AC_ARG_WITH([pgsql_incdir],[AS_HELP_STRING([--with-pgsql-incdir=DIR], [site header files for PostgreSQL in DIR.])],[],[withval=no])
+AC_ARG_WITH([pgsql_libdir],[AS_HELP_STRING([--with-pgsql-libdir=DIR], [site library files for PostgreSQL in DIR])],[],[withval=no])
+
 AC_MSG_NOTICE([CFLAGS $CFLAGS])
 AC_MSG_NOTICE([CPPFLAGS $CPPFLAGS])
 #AC_MSG_NOTICE([LIBS $LIBS])

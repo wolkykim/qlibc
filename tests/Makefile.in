@@ -52,13 +52,18 @@ TARGETS		= \
 		test_qstack		\
 		test_qhash
 
+TARGETS_EXT		= \
+		test_qdatabase_pgsql
+
 LIBQLIBC	= ${QLIBC_LIBDIR}/libqlibc.a ${DEPLIBS}
 LIBQLIBCEXT	= ${QLIBC_LIBDIR}/libqlibcext.a
 
 ## Main
 all:	${TARGETS}
+ext:	${TARGETS_EXT}
 
-run:	test
+run:	test test-ext
+
 test:	all
 	@./launcher.sh ${TARGETS}
 
@@ -92,9 +97,19 @@ test_qvector: test_qvector.o
 test_qhash: test_qhash.o
 	${CC} ${CFLAGS} ${CPPFLAGS} -g -o $@ test_qhash.o ${LIBQLIBC}
 
+## Test extensions
+test-ext:	ext
+	@./launcher.sh ${TARGETS_EXT}
+
+test_qdatabase_pgsql: test_qdatabase_pgsql.o
+	${CC} -o $@ test_qdatabase_pgsql.o ${LIBQLIBCEXT} ${LIBQLIBC} ${CFLAGS} ${CPPFLAGS}
+
 ## Clear Module
 clean:
 	${RM} -f *.o ${TARGETS}
+
+clean-ext:
+	${RM} -f *.o ${TARGETS_EXT}
 
 ## Compile Module
 .c.o:

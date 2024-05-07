@@ -51,6 +51,10 @@ extern "C" {
 #define Q_ENABLE_MYSQL  (1)
 #endif /* _mysql_h */
 
+#ifdef LIBPQ_FE_H
+#define Q_ENABLE_PGSQL  (1)
+#endif /* LIBPQ_FE_H */
+
 /* types */
 typedef struct qdbresult_s qdbresult_t;
 typedef struct qdb_s qdb_t;
@@ -65,11 +69,11 @@ extern qdb_t *qdb(const char *dbtype,
  */
 struct qdbresult_s {
     /* encapsulated member functions */
-    const char *(*getstr) (qdbresult_t *result, const char *field);
+    const char *(*get_str) (qdbresult_t *result, const char *field);
     const char *(*get_str_at) (qdbresult_t *result, int idx);
-    int (*getint) (qdbresult_t *result, const char *field);
+    int (*get_int) (qdbresult_t *result, const char *field);
     int (*get_int_at) (qdbresult_t *result, int idx);
-    bool (*getnext) (qdbresult_t *result);
+    bool (*get_next) (qdbresult_t *result);
 
     int (*get_cols) (qdbresult_t *result);
     int (*get_rows) (qdbresult_t *result);
@@ -85,6 +89,11 @@ struct qdbresult_s {
     MYSQL_ROW  row;
     int cols;
     int cursor;
+#endif
+
+#ifdef Q_ENABLE_PGSQL
+    /* private variables for pgsql database - do not access directly */
+    void *pgsql;
 #endif
 };
 
@@ -130,6 +139,11 @@ struct qdb_s {
 #ifdef Q_ENABLE_MYSQL
     /* private variables for mysql database - do not access directly */
     MYSQL  *mysql;
+#endif
+
+#ifdef Q_ENABLE_PGSQL
+    /* private variables for pgsql database - do not access directly */
+    void  *pgsql;
 #endif
 };
 

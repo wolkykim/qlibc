@@ -732,6 +732,9 @@ enable_ext_qhttpclient
 enable_ext_qdatabase
 with_openssl
 with_mysql
+with_pgsql
+with_pgsql_incdir
+with_pgsql_libdir
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1372,6 +1375,11 @@ Optional Packages:
                           extension API. When it's enabled, user applications
                           need to link mysql client library. (ex:
                           -lmysqlclient)
+  --with-pgsql            This will enable PostgreSQL database support in
+                          qdatabase extension API. When it's enabled, user
+                          applications need to link libpq library. (ex: -lpq)
+  --with-pgsql-incdir=DIR site header files for PostgreSQL in DIR.
+  --with-pgsql-libdir=DIR site library files for PostgreSQL in DIR
 
 Some influential environment variables:
   CC          C compiler command
@@ -4842,6 +4850,101 @@ as_fn_error $? "Cannot find '$with_mysql/mysql.h' header. Use --with-mysql=/PATH
 See \`config.log' for more details" "$LINENO" 5; }
 	fi
 fi
+
+
+# Check whether --with-pgsql was given.
+if test "${with_pgsql+set}" = set; then :
+  withval=$with_pgsql;
+else
+  withval=no
+fi
+
+if test "$withval" = yes; then
+	# check libpq-fe.h
+	as_ac_File=`$as_echo "ac_cv_file_$with_pgsql_incdir/libpq-fe.h" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $with_pgsql_incdir/libpq-fe.h" >&5
+$as_echo_n "checking for $with_pgsql_incdir/libpq-fe.h... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "$with_pgsql_incdir/libpq-fe.h"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  withval=yes
+else
+  withval=no
+fi
+
+	if test "$withval" = yes; then
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: find '$with_pgsql_incdir/libpq-fe.h'" >&5
+$as_echo "$as_me: find '$with_pgsql_incdir/libpq-fe.h'" >&6;}
+		CPPFLAGS="$CPPFLAGS -DENABLE_PGSQL -I$with_pgsql_incdir"
+	else
+		{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "Cannot find 'libpq-fe.h' header. Use --with-pgsql-incdir=DIR to specify the directory where 'libpq-fe.h' is located.
+See \`config.log' for more details" "$LINENO" 5; }
+	fi
+	# check libpq.so
+	as_ac_File=`$as_echo "ac_cv_file_$with_pgsql_libdir/libpq.so" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $with_pgsql_libdir/libpq.so" >&5
+$as_echo_n "checking for $with_pgsql_libdir/libpq.so... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "$with_pgsql_libdir/libpq.so"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  withval=yes
+else
+  withval=no
+fi
+
+	if test "$withval" = yes; then
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: find '$with_pgsql_libdir/libpq.so'" >&5
+$as_echo "$as_me: find '$with_pgsql_libdir/libpq.so'" >&6;}
+		CPPFLAGS="$CPPFLAGS -Wl,-rpath,$with_pgsql_libdir -L$with_pgsql_libdir -lpq"
+	else
+		{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "Cannot find 'libpq.so' library. Use --with-pgsql-libdir=DIR to specify the directory where 'libpq.so' is located.
+See \`config.log' for more details" "$LINENO" 5; }
+	fi
+fi
+
+# Check whether --with-pgsql_incdir was given.
+if test "${with_pgsql_incdir+set}" = set; then :
+  withval=$with_pgsql_incdir;
+else
+  withval=no
+fi
+
+
+# Check whether --with-pgsql_libdir was given.
+if test "${with_pgsql_libdir+set}" = set; then :
+  withval=$with_pgsql_libdir;
+else
+  withval=no
+fi
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: CFLAGS $CFLAGS" >&5
 $as_echo "$as_me: CFLAGS $CFLAGS" >&6;}
