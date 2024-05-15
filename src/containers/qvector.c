@@ -958,13 +958,10 @@ static bool remove_at(qvector_t *vector, int index) {
         }
     }
 
-    int i;
-    for (i = index + 1; i < vector->num; i++) {
-        void *src = (unsigned char *)vector->data + i * vector->objsize;
-        void *dst = (unsigned char *)vector->data + (i - 1) * vector->objsize;
-
-        memcpy(dst, src, vector->objsize);
-    }
+    void *src = (unsigned char *)vector->data + (index + 1) * vector->objsize;
+    void *dst = (unsigned char *)vector->data + index * vector->objsize;
+    int size = (vector->num - (index + 1)) * vector->objsize;
+    memcpy(dst, src, size);
 
     return true;
 }
