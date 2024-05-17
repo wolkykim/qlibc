@@ -55,6 +55,10 @@ extern "C" {
 #define Q_ENABLE_PGSQL  (1)
 #endif /* LIBPQ_FE_H */
 
+#if defined(Q_ENABLE_MYSQL) && defined(Q_ENABLE_PGSQL)
+#error "only can enable one in the same time"
+#endif
+
 /* types */
 typedef struct qdbresult_s qdbresult_t;
 typedef struct qdb_s qdb_t;
