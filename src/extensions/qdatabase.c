@@ -322,7 +322,16 @@ static void result_free(qdbresult_t *result);
  *     return -1;
  *   }
  * @endcode
-
+ *
+ * @note
+ *  The pgsql server and libpq library does not provide a setting for autocommit.<br>
+ *  The following instructions are from the official manual(https://www.postgresql.org/docs/15/sql-begin.html):<br>
+ *  BEGIN initiates a transaction block, that is, all statements after a BEGIN command
+ *  will be executed in a single transaction until an explicit COMMIT or ROLLBACK is given.
+ *  By default (without BEGIN), PostgreSQL executes transactions in “autocommit” mode,
+ *  that is, each statement is executed in its own transaction
+ *  and a commit is implicitly performed at the end of the statement
+ *  (if execution was successful, otherwise a rollback is done).
  */
 qdb_t *qdb(const char *dbtype,
            const char *addr, int port, const char *database,
@@ -520,9 +529,6 @@ static bool open_(qdb_t *db)
     }
 
     qtype_cast(pgsql_t*, db->pgsql)->pgconn = pgconn;
-
-    // set auto-commit
-    /* do nothing */
 
     // set flag
     db->connected = true;
