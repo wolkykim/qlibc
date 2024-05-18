@@ -273,6 +273,43 @@ TEST("Test5: autocommit") {
     ASSERT_NULL(db);
 }
 
+TEST("Test6: fetchtype") {
+    qdb_t *default_db = test_connect_database(default_database);
+    ASSERT_TRUE(default_db->connected);
+    qdb_t *test_db = test_connect_testdb(default_db);
+    test_create_table_animals(test_db);
+
+    /* test: set_fetchtype true */
+    ASSERT_TRUE(test_db->set_fetchtype(test_db, true));
+
+    /* test: execute_queryf in fetchtype mode  */
+    qdbresult_t *qrst = test_db->execute_queryf(test_db, "SELECT * FROM %s;", "animals");
+    ASSERT_EQUAL_INT(qrst->get_rows(qrst), 1);
+    ASSERT_EQUAL_INT(qrst->get_cols(qrst), 7);
+    ASSERT_EQUAL_INT(qrst->get_row(qrst),  0);
+    ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Dog");
+    ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Canis lupus familiaris");
+    ASSERT_TRUE(qrst->get_next(qrst));
+    ASSERT_EQUAL_INT(qrst->get_row(qrst),  1);
+    ASSERT_TRUE(qrst->get_next(qrst));
+    ASSERT_EQUAL_INT(qrst->get_row(qrst),  2);
+
+    ASSERT_EQUAL_INT(qrst->get_int(qrst, "animal_id"), 3);
+    ASSERT_EQUAL_INT(qrst->get_int_at(qrst, 5), 1);
+    qrst->free(qrst);
+
+    /* test: set_fetchtype false */
+    ASSERT_TRUE(test_db->set_fetchtype(test_db, false));
+
+    /* disconnect */
+    ASSERT_TRUE(test_db->close(test_db));
+    ASSERT_TRUE(default_db->close(default_db));
+
+    /* free */
+    test_db->free(test_db);
+    default_db->free(default_db);
+}
+
 TEST("Test6: other") {
     qdb_t *default_db = test_connect_database(default_database);
     ASSERT_TRUE(default_db->connected);
@@ -281,8 +318,6 @@ TEST("Test6: other") {
 
     /* test:get_error  */
     ASSERT_EQUAL_STR(test_db->get_error(test_db, NULL), "(no error)");
-    ASSERT_FALSE(test_db->set_fetchtype(test_db, true));
-    ASSERT_EQUAL_STR(test_db->get_error(test_db, NULL), "unsupported operation");
 
     /* test: ping */
     ASSERT_TRUE(test_db->ping(test_db));
