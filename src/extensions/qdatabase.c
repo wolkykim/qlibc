@@ -84,6 +84,7 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <string.h>
+#include <errno.h>
 
 #define qtype_cast(_type, _src) ((_type)_src)
 
@@ -383,9 +384,15 @@ qdb_t *qdb(const char *dbtype,
 {
     // check db type
 #ifdef Q_ENABLE_MYSQL
-    if (strcmp(dbtype, "MYSQL")) return NULL;
+    if (strcmp(dbtype, "MYSQL")) {
+        errno = ENOTSUP;
+        return NULL;
+    }
 #elif defined(Q_ENABLE_PGSQL)
-    if (strcmp(dbtype, "PGSQL")) return NULL;
+    if (strcmp(dbtype, "PGSQL")) {
+        errno = ENOTSUP;
+        return NULL;
+    }
 #else
     return NULL;
 #endif
@@ -399,6 +406,7 @@ qdb_t *qdb(const char *dbtype,
 
 #ifdef Q_ENABLE_PGSQL
     if (autocommit == false) {
+        errno = EINVAL;
         return NULL;
     }
 #endif
