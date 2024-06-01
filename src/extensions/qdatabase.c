@@ -77,7 +77,17 @@
 
 #ifndef DISABLE_QDATABASE
 
-#if defined(ENABLE_MYSQL) || defined( _DOXYGEN_SKIP)
+#if defined(ENABLE_MYSQL) || defined(ENABLE_PGSQL) ||defined( _DOXYGEN_SKIP)
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdarg.h>
+#include <string.h>
+#include <errno.h>
+
+#define qtype_cast(_type, _src) ((_type)_src)
 
 #ifdef ENABLE_MYSQL
 #include "mysql.h"
@@ -86,13 +96,245 @@
 #define Q_MYSQL_OPT_CONNECT_TIMEOUT    (10)
 #define Q_MYSQL_OPT_READ_TIMEOUT       (30)
 #define Q_MYSQL_OPT_WRITE_TIMEOUT      (30)
-#endif
+#endif /* ENABLE_MYSQL */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <stdarg.h>
-#include <string.h>
+#ifdef ENABLE_PGSQL
+#include "libpq-fe.h"
+
+/*
+Wrap the low-level functions of the libpq library.
+Provide interfaces with naming convention similar to mysql_xyz().
+*/
+
+typedef enum {
+    PQ_UNKNOWN,
+    PQ_PING,
+    PQ_QUERY,
+    PQ_UPDATE,
+    PQ_TRANSACTION,
+} pgquery_t;
+
+typedef struct {
+    PGresult *pgresult_ref;
+    int idx;
+} qpgrow_t;
+
+typedef struct {
+    PGconn *pgconn_ref;
+    PGresult *pgresult;
+    int cursor;
+    qpgrow_t qpgrow;
+} qpgresult_t;
+
+typedef struct {
+    bool fetchtype;
+    PGconn *pgconn;
+    qpgresult_t qpgresult;
+} qpgsql_t;
+
+static inline char* pgsql_row_get_str_at(const qpgrow_t *qpgrow, int field_idx)
+{
+    if (qpgrow == NULL ||
+        qpgrow->idx < 0 ||
+        qpgrow->pgresult_ref == NULL) {
+        return NULL;
+    }
+
+    return PQgetvalue(qpgrow->pgresult_ref, qpgrow->idx, field_idx);
+}
+
+static inline void pgsql_free_result(qpgresult_t* qpgresult)
+{
+    if (qpgresult == NULL) {
+        return;
+    }
+
+    if (qpgresult->pgresult) {
+        PQclear(qpgresult->pgresult);
+        qpgresult->pgresult = NULL;
+    }
+
+    qpgresult->pgconn_ref = NULL;
+    qpgresult->cursor = 0;
+
+    qpgresult->qpgrow.pgresult_ref = NULL;
+    qpgresult->qpgrow.idx = 0;
+}
+
+static inline qpgsql_t* pgsql_init(void)
+{
+    return calloc(1, sizeof(qpgsql_t));
+}
+
+static inline const char* pgsql_error(qpgsql_t* qpgsql)
+{
+    if (qpgsql == NULL || qpgsql->pgconn == NULL) {
+        return "(connection error)";
+    }
+
+    return PQerrorMessage(qpgsql->pgconn);
+}
+
+static inline uint32_t pgsql_errno(qpgsql_t* qpgsql)
+{
+    const char* emsg = pgsql_error(qpgsql);
+    if (strlen(emsg) > 0) {
+        return 1;
+    }
+
+    return 0;
+}
+
+static inline void pgsql_close(qpgsql_t* qpgsql)
+{
+    if (qpgsql == NULL) {
+        return;
+    }
+
+    pgsql_free_result(&qpgsql->qpgresult);
+
+    if (qpgsql->pgconn) {
+        PQfinish(qpgsql->pgconn);
+        qpgsql->pgconn = NULL;
+    }
+
+    free(qpgsql);
+}
+
+static inline int pgsql_query(qpgsql_t* qpgsql, const char *query, pgquery_t type)
+{
+    if (qpgsql == NULL || qpgsql->pgconn == NULL) {
+        return -1; /* error */
+    }
+
+    PGresult *pgresult = NULL;
+    ExecStatusType status = -1;
+    PGconn *pgconn = qpgsql->pgconn;
+
+    /* free previous query results */
+    pgsql_free_result(&qpgsql->qpgresult);
+
+    if (type == PQ_PING) {
+        query = "";
+    }
+
+    if (qpgsql->fetchtype && type == PQ_QUERY) {
+        if (PQsendQuery(pgconn, query) && PQsetSingleRowMode(pgconn)) {
+            pgresult = PQgetResult(pgconn);
+        } else {
+            return -1; /* error */
+        }
+    } else {
+        pgresult = PQexec(pgconn, query);
+    }
+
+    if (pgresult == NULL) {
+        return -1; /* error */
+    }
+
+    status = PQresultStatus(pgresult);
+
+    switch (type) {
+        case PQ_PING: {
+            if (status != PGRES_EMPTY_QUERY) {
+                return -1; /* error */
+            }
+            break;
+        }
+
+        case PQ_QUERY: {
+            if (status != PGRES_TUPLES_OK &&
+                status != PGRES_SINGLE_TUPLE) {
+                return -1; /* error */
+            }
+            break;
+        }
+
+        default: {
+            if (status != PGRES_COMMAND_OK) {
+                return -1; /* error */
+            }
+            break;
+        }
+    }
+
+    qpgsql->qpgresult.pgresult = pgresult;
+    qpgsql->qpgresult.pgconn_ref = pgconn;
+
+    return 0; /* ok */
+}
+
+static inline qpgresult_t* pgsql_get_result(qpgsql_t* qpgsql)
+{
+    if (qpgsql == NULL || qpgsql->qpgresult.pgresult == NULL) {
+        return NULL;
+    }
+
+    return &qpgsql->qpgresult;
+}
+
+static inline int pgsql_affected_rows(qpgsql_t* qpgsql)
+{
+    if (qpgsql && qpgsql->qpgresult.pgresult) {
+        return atoi(PQcmdTuples(qpgsql->qpgresult.pgresult));
+    }
+
+    /* error */
+    return -1;
+}
+
+static inline int pgsql_num_rows(qpgresult_t *qpgresult)
+{
+    if (qpgresult && qpgresult->pgresult) {
+        return PQntuples(qpgresult->pgresult);
+    }
+
+    /* error */
+    return -1;
+}
+
+static inline int pgsql_num_fields(qpgresult_t *qpgresult)
+{
+    if (qpgresult && qpgresult->pgresult) {
+        return PQnfields(qpgresult->pgresult);
+    }
+
+    /* error */
+    return -1;
+}
+
+static inline qpgrow_t* pgsql_fetch_row(qpgresult_t *qpgresult)
+{
+    if (qpgresult == NULL || qpgresult->pgresult == NULL) {
+        return NULL;
+    }
+
+    PGresult *pgresult = qpgresult->pgresult;
+    qpgrow_t *qpgrow = &qpgresult->qpgrow;
+
+    int cursor = qpgresult->cursor;
+    int rows = PQntuples(pgresult);
+    if (rows > cursor) {
+        qpgrow->idx = cursor;
+        qpgrow->pgresult_ref = pgresult;
+        qpgresult->cursor++;
+        return qpgrow;
+    } else {
+        PGconn *pgconn = qpgresult->pgconn_ref;
+        PGresult *pgresult = PQgetResult(pgconn);
+        if (pgresult) {
+            pgsql_free_result(qpgresult);
+            qpgresult->pgresult = pgresult;
+            qpgresult->pgconn_ref = pgconn;
+            return pgsql_fetch_row(qpgresult);
+        } else {
+            return NULL;
+        }
+    }
+}
+
+#endif /* ENABLE_PGSQL */
+
 #include "qinternal.h"
 #include "extensions/qdatabase.h"
 
@@ -120,11 +362,11 @@ static const char *get_error(qdb_t *db, unsigned int *errorno);
 static void free_(qdb_t *db);
 
 // qdbresult_t object
-static const char *_resultGetStr(qdbresult_t *result, const char *field);
-static const char *_resultGetStrAt(qdbresult_t *result, int idx);
-static int _resultGetInt(qdbresult_t *result, const char *field);
-static int _resultGetIntAt(qdbresult_t *result, int idx);
-static bool _resultGetNext(qdbresult_t *result);
+static const char *result_get_str(qdbresult_t *result, const char *field);
+static const char *result_get_str_at(qdbresult_t *result, int idx);
+static int result_get_int(qdbresult_t *result, const char *field);
+static int result_get_int_at(qdbresult_t *result, int idx);
+static bool result_get_next(qdbresult_t *result);
 
 static int result_get_cols(qdbresult_t *result);
 static int result_get_rows(qdbresult_t *result);
@@ -132,39 +374,67 @@ static int result_get_row(qdbresult_t *result);
 
 static void result_free(qdbresult_t *result);
 
-#endif
+#endif /* _DOXYGEN_SKIP */
 
 /**
  * Initialize internal connector structure
  *
- * @param dbtype    database server type. currently "MYSQL" is only supported
+ * @param dbtype    database server type. currently "MYSQL" and "PGSQL" are supported
  * @param addr      ip or fqdn address.
  * @param port      port number
+ * @param database  database name.
  * @param username  database username
  * @param password  database password
- * @param database  database server type. currently "MYSQL" is only supported
  * @param autocommit sets autocommit mode on if autocommit is true, off if
  *                   autocommit is false
+ *                   (can only be set to true, when dbtype is "PGSQL")
  *
  * @return a pointer of qdb_t object in case of successful,
  *         otherwise returns NULL.
  *
  * @code
- *   qdb_t *db = qdb("MYSQL",
- *                   "dbhost.qdecoder.org", 3306, "test", "secret",
- *                   "sampledb", true);
+ *   qdb_t *db = qdb("MYSQL", "dbhost.qdecoder.org", 3306,
+ *                   "sampledb", "test", "secret", true);
  *   if (db == NULL) {
  *     printf("ERROR: Not supported database type.\n");
  *     return -1;
  *   }
  * @endcode
+ *
+ * @code
+ *   qdb_t *db = qdb("PGSQL", "127.0.0.1", 5432,
+ *                   "sampledb", "test", "secret", true);
+ *   if (db == NULL) {
+ *     printf("ERROR: Not supported database type.\n");
+ *     return -1;
+ *   }
+ * @endcode
+ *
+ * @note
+ *  The pgsql server and libpq library does not provide a setting for autocommit.<br>
+ *  The following instructions are from the official manual(https://www.postgresql.org/docs/15/sql-begin.html):<br>
+ *  BEGIN initiates a transaction block, that is, all statements after a BEGIN command
+ *  will be executed in a single transaction until an explicit COMMIT or ROLLBACK is given.
+ *  By default (without BEGIN), PostgreSQL executes transactions in “autocommit” mode,
+ *  that is, each statement is executed in its own transaction
+ *  and a commit is implicitly performed at the end of the statement
+ *  (if execution was successful, otherwise a rollback is done).
  */
-qdb_t *qdb(const char *dbtype, const char *addr, int port, const char *username,
-        const char *password, const char *database, bool autocommit)
+qdb_t *qdb(const char *dbtype,
+           const char *addr, int port, const char *database,
+           const char *username, const char *password, bool autocommit)
 {
     // check db type
 #ifdef Q_ENABLE_MYSQL
-    if (strcmp(dbtype, "MYSQL")) return NULL;
+    if (strcmp(dbtype, "MYSQL")) {
+        errno = ENOTSUP;
+        return NULL;
+    }
+#elif defined(Q_ENABLE_PGSQL)
+    if (strcmp(dbtype, "PGSQL")) {
+        errno = ENOTSUP;
+        return NULL;
+    }
 #else
     return NULL;
 #endif
@@ -175,6 +445,13 @@ qdb_t *qdb(const char *dbtype, const char *addr, int port, const char *username,
             || database == NULL) {
         return NULL;
     }
+
+#ifdef Q_ENABLE_PGSQL
+    if (autocommit == false) {
+        errno = EINVAL;
+        return NULL;
+    }
+#endif
 
     // initialize
     qdb_t *db;
@@ -195,6 +472,8 @@ qdb_t *qdb(const char *dbtype, const char *addr, int port, const char *username,
     // set db handler
 #ifdef Q_ENABLE_MYSQL
     db->mysql = NULL;
+#elif defined(Q_ENABLE_PGSQL)
+    db->pgsql = NULL;
 #endif
 
     // assign methods
@@ -304,6 +583,58 @@ static bool open_(qdb_t *db)
     db->connected = true;
     Q_MUTEX_LEAVE(db->qmutex);
     return true;
+#elif defined(Q_ENABLE_PGSQL)
+    Q_MUTEX_ENTER(db->qmutex);
+
+    bool ret = true;
+    PGconn* pgconn = NULL;
+
+    // initialize handler
+    if (db->pgsql != NULL) close_(db);
+
+    if ((db->pgsql = pgsql_init()) == NULL) {
+        ret = false;
+        goto lable_quit;
+    }
+
+    // set options
+    /* do nothing */
+
+    /* int to char* */
+    char pgport[10];
+    snprintf(pgport, sizeof(pgport), "%d", db->info.port);
+
+    // try to connect
+    pgconn = PQsetdbLogin(db->info.addr, pgport,
+                    NULL, NULL,
+                    db->info.database, db->info.username, db->info.password);
+    if (pgconn == NULL) {
+        close_(db);  // free pgsql handler
+        ret = false;
+        goto lable_quit;
+    }
+
+    if (PQstatus(pgconn) != CONNECTION_OK) {
+        // const char* emsg = PQerrorMessage(pgconn);
+        // fprintf(stderr, "%s", emsg);
+        errno = ECONNREFUSED;
+        ret = false;
+        goto lable_quit;
+    }
+
+    qtype_cast(qpgsql_t*, db->pgsql)->pgconn = pgconn;
+
+    // set flag
+    db->connected = true;
+
+lable_quit:
+
+    if (ret == false) {
+        PQfinish(pgconn);
+    }
+
+    Q_MUTEX_LEAVE(db->qmutex);
+    return ret;
 #else
     return false;
 #endif
@@ -324,19 +655,28 @@ static bool close_(qdb_t *db)
 {
     if (db == NULL) return false;
 
-#ifdef Q_ENABLE_MYSQL
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
     Q_MUTEX_ENTER(db->qmutex);
 
+#if defined(Q_ENABLE_MYSQL)
     if (db->mysql != NULL) {
         mysql_close(db->mysql);
         db->mysql = NULL;
         mysql_library_end();
     }
-    db->connected = false;
+#endif /* Q_ENABLE_MYSQL */
 
+#if defined(Q_ENABLE_PGSQL)
+    if (db->pgsql != NULL) {
+        pgsql_close(db->pgsql);
+        db->pgsql = NULL;
+    }
+#endif /* Q_ENABLE_PGSQL */
+
+    db->connected = false;
     Q_MUTEX_LEAVE(db->qmutex);
     return true;
-#else
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return false;
 #endif
 }
@@ -353,21 +693,30 @@ static int execute_update(qdb_t *db, const char *query)
 {
     if (db == NULL || db->connected == false) return -1;
 
-#ifdef Q_ENABLE_MYSQL
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
     Q_MUTEX_ENTER(db->qmutex);
 
     int affected = -1;
 
     // query
     DEBUG("%s", query);
+#if defined(Q_ENABLE_MYSQL)
     if (mysql_query(db->mysql, query) == 0) {
         /* get affected rows */
         if ((affected = mysql_affected_rows(db->mysql)) < 0) affected = -1;
     }
+#endif /* Q_ENABLE_MYSQL */
+
+#if defined(Q_ENABLE_PGSQL)
+    if (pgsql_query(db->pgsql, query, PQ_UPDATE) == 0) {
+        /* get affected rows */
+        if ((affected = pgsql_affected_rows(db->pgsql)) < 0) affected = -1;
+    }
+#endif /* Q_ENABLE_PGSQL */
 
     Q_MUTEX_LEAVE(db->qmutex);
     return affected;
-#else
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return -1;
 #endif
 }
@@ -404,16 +753,26 @@ static qdbresult_t *execute_query(qdb_t *db, const char *query)
 {
     if (db == NULL || db->connected == false) return NULL;
 
-#ifdef Q_ENABLE_MYSQL
-    // query
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
+
     DEBUG("%s", query);
-    if (mysql_query(db->mysql, query)) return NULL;
 
     // store
     qdbresult_t *result = (qdbresult_t *)malloc(sizeof(qdbresult_t));
     if (result == NULL) return NULL;
 
+    // init
     result->fetchtype = db->info.fetchtype;
+    result->cursor = 0;
+    result->row = NULL;
+
+#if defined(Q_ENABLE_MYSQL)
+    // query
+    if (mysql_query(db->mysql, query)) {
+        free(result);
+        return NULL;
+    }
+
     if (result->fetchtype == false) {
         result->rs = mysql_store_result(db->mysql);
     } else {
@@ -426,16 +785,31 @@ static qdbresult_t *execute_query(qdb_t *db, const char *query)
 
     /* get meta data */
     result->fields = NULL;
-    result->row = NULL;
     result->cols = mysql_num_fields(result->rs);
-    result->cursor = 0;
+#endif /* Q_ENABLE_MYSQL */
+
+#if defined(Q_ENABLE_PGSQL)
+    qtype_cast(qpgsql_t*, db->pgsql)->fetchtype = result->fetchtype;
+
+    // query
+    if (pgsql_query(db->pgsql, query, PQ_QUERY)) return NULL;
+
+    result->rs = pgsql_get_result(db->pgsql);
+    if (result->rs == NULL) {
+        free(result);
+        return NULL;
+    }
+
+    /* get meta data */
+    result->cols = pgsql_num_fields(result->rs);
+#endif /* Q_ENABLE_PGSQL */
 
     /* assign methods */
-    result->get_str = _resultGetStr;
-    result->get_str_at = _resultGetStrAt;
-    result->get_int = _resultGetInt;
-    result->get_int_at = _resultGetIntAt;
-    result->get_next = _resultGetNext;
+    result->get_str = result_get_str;
+    result->get_str_at = result_get_str_at;
+    result->get_int = result_get_int;
+    result->get_int_at = result_get_int_at;
+    result->get_next = result_get_next;
 
     result->get_cols = result_get_cols;
     result->get_rows = result_get_rows;
@@ -444,7 +818,7 @@ static qdbresult_t *execute_query(qdb_t *db, const char *query)
     result->free = result_free;
 
     return result;
-#else
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return NULL;
 #endif
 }
@@ -485,13 +859,14 @@ static bool begin_tran(qdb_t *db)
 {
     if (db == NULL) return false;
 
-#ifdef Q_ENABLE_MYSQL
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
     Q_MUTEX_ENTER(db->qmutex);
-    if (db->qmutex.count != 1) {
+    if (qtype_cast(qmutex_t*, db->qmutex)->count != 1) {
         Q_MUTEX_LEAVE(db->qmutex);
         return false;
     }
 
+#if defined(Q_ENABLE_MYSQL)
     qdbresult_t *result;
     result = db->execute_query(db, "START TRANSACTION");
     if (result == NULL) {
@@ -500,7 +875,17 @@ static bool begin_tran(qdb_t *db)
     }
     result->free(result);
     return true;
-#else
+#endif /* Q_ENABLE_MYSQL */
+
+#if defined(Q_ENABLE_PGSQL)
+    if (pgsql_query(db->pgsql, "START TRANSACTION", PQ_TRANSACTION) < 0) {
+        Q_MUTEX_LEAVE(db->qmutex);
+        return false;
+    }
+    return true;
+#endif /* Q_ENABLE_PGSQL */
+
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return false;
 #endif
 }
@@ -516,17 +901,26 @@ static bool commit(qdb_t *db)
 {
     if (db == NULL) return false;
 
-#ifdef Q_ENABLE_MYSQL
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
     bool ret = false;
+
+#if defined(Q_ENABLE_MYSQL)
     if (mysql_commit(db->mysql) == 0) {
         ret = true;
     }
+#endif /* Q_ENABLE_MYSQL */
 
-    if (db->qmutex.count > 0) {
+#if defined(Q_ENABLE_PGSQL)
+    if (pgsql_query(db->pgsql, "COMMIT", PQ_TRANSACTION) == 0) {
+        ret = true;
+    }
+#endif /* Q_ENABLE_PGSQL */
+
+    if (qtype_cast(qmutex_t*, db->qmutex)->count > 0) {
         Q_MUTEX_LEAVE(db->qmutex);
     }
     return ret;
-#else
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return false;
 #endif
 }
@@ -542,17 +936,26 @@ static bool rollback(qdb_t *db)
 {
     if (db == NULL) return false;
 
-#ifdef Q_ENABLE_MYSQL
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
     bool ret = false;
+
+#if defined(Q_ENABLE_MYSQL)
     if (mysql_rollback(db->mysql) == 0) {
         ret = true;
     }
+#endif /* Q_ENABLE_MYSQL */
 
-    if (db->qmutex.count > 0) {
+#if defined(Q_ENABLE_PGSQL)
+    if (pgsql_query(db->pgsql, "ROLLBACK", PQ_TRANSACTION) == 0) {
+        ret = true;
+    }
+#endif /* Q_ENABLE_PGSQL */
+
+    if (qtype_cast(qmutex_t*, db->qmutex)->count > 0) {
         Q_MUTEX_LEAVE(db->qmutex);
     }
     return ret;
-#else
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return 0;
 #endif
 }
@@ -577,8 +980,22 @@ static bool rollback(qdb_t *db)
 static bool set_fetchtype(qdb_t *db, bool fromdb)
 {
     if (db == NULL) return false;
+
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
+
+#if defined(Q_ENABLE_MYSQL)
     db->info.fetchtype = fromdb;
     return true;
+#endif /* Q_ENABLE_MYSQL */
+
+#if defined(Q_ENABLE_PGSQL)
+    db->info.fetchtype = fromdb;
+    return true;
+#endif /* Q_ENABLE_PGSQL */
+
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
+    return false;
+#endif
 }
 
 /**
@@ -613,10 +1030,24 @@ static bool ping(qdb_t *db)
 {
     if (db == NULL) return false;
 
-#ifdef Q_ENABLE_MYSQL
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
+    bool ping_failed = false;
+
+#if defined(Q_ENABLE_MYSQL)
     if (db->connected == true && mysql_ping(db->mysql) == 0) {
         return true;
-    } else {  // ping test failed
+    }
+    ping_failed = true;
+#endif /* Q_ENABLE_MYSQL */
+
+#if defined(Q_ENABLE_PGSQL)
+    if (db->connected == true && pgsql_query(db->pgsql, NULL, PQ_PING) == 0) {
+        return true;
+    }
+    ping_failed = true;
+#endif /* Q_ENABLE_PGSQL */
+
+    if (ping_failed) { // ping test failed
         if (open_(db) == true) {  // try re-connect
             DEBUG("Connection recovered.");
             return true;
@@ -624,7 +1055,7 @@ static bool ping(qdb_t *db)
     }
 
     return false;
-#else
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return false;
 #endif
 }
@@ -646,11 +1077,20 @@ static const char *get_error(qdb_t *db, unsigned int *errorno)
 
     unsigned int eno = 0;
     const char *emsg;
-#ifdef Q_ENABLE_MYSQL
+
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
+#if defined(Q_ENABLE_MYSQL)
     eno = mysql_errno(db->mysql);
     if (eno == 0) emsg = "(no error)";
     else emsg = mysql_error(db->mysql);
-#else
+#endif /* Q_ENABLE_MYSQL */
+
+#if defined(Q_ENABLE_PGSQL)
+    eno = pgsql_errno(db->pgsql);
+    if (eno == 0) emsg = "(no error)";
+    else emsg = pgsql_error(db->pgsql);
+#endif /* Q_ENABLE_PGSQL */
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     emsg = "(not implemented)";
 #endif
 
@@ -695,11 +1135,13 @@ static void free_(qdb_t *db)
  * @note
  * Do not free returned string.
  */
-static const char *_resultGetStr(qdbresult_t *result, const char *field)
+static const char *result_get_str(qdbresult_t *result, const char *field)
 {
-#ifdef Q_ENABLE_MYSQL
-    if (result == NULL || result->rs == NULL || result->cols <= 0) return NULL;
+    if (result == NULL) return NULL;
 
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
+    if (result->rs == NULL || result->cols <= 0) return NULL;
+#if defined(Q_ENABLE_MYSQL)
     if (result->fields == NULL) result->fields = mysql_fetch_fields(result->rs);
 
     int i;
@@ -710,7 +1152,19 @@ static const char *_resultGetStr(qdbresult_t *result, const char *field)
     }
 
     return NULL;
-#else
+#endif /* Q_ENABLE_MYSQL */
+
+#if defined(Q_ENABLE_PGSQL)
+    /* get field num  */
+    qpgresult_t *qpgresult = result->rs;
+    int field_num = PQfnumber(qpgresult->pgresult, field);
+    if (field_num == -1) {
+        return NULL;
+    }
+
+    return result->get_str_at(result, field_num + 1);
+#endif /* Q_ENABLE_PGSQL */
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return NULL;
 #endif
 }
@@ -723,18 +1177,27 @@ static const char *_resultGetStr(qdbresult_t *result, const char *field)
  *
  * @return a string pointer if successful, otherwise returns NULL.
  */
-static const char *_resultGetStrAt(qdbresult_t *result, int idx)
+static const char *result_get_str_at(qdbresult_t *result, int idx)
 {
-#ifdef Q_ENABLE_MYSQL
-    if (result == NULL
-            || result->rs == NULL
-            || result->cursor == 0
-            || idx <= 0
-            || idx > result->cols ) {
+    if (result == NULL) return NULL;
+
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
+    if (result->rs == NULL
+        || result->cursor == 0
+        || idx <= 0
+        || idx > result->cols) {
         return NULL;
     }
+
+#if defined(Q_ENABLE_MYSQL)
     return result->row[idx-1];
-#else
+#endif /* Q_ENABLE_MYSQL */
+
+#if defined(Q_ENABLE_PGSQL)
+    return pgsql_row_get_str_at(result->row, idx - 1);
+#endif /* Q_ENABLE_PGSQL */
+
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return NULL;
 #endif
 }
@@ -747,7 +1210,7 @@ static const char *_resultGetStrAt(qdbresult_t *result, int idx)
  *
  * @return a integer converted value
  */
-static int _resultGetInt(qdbresult_t *result, const char *field)
+static int result_get_int(qdbresult_t *result, const char *field)
 {
     const char *val = result->get_str(result, field);
     if (val == NULL) return 0;
@@ -762,7 +1225,7 @@ static int _resultGetInt(qdbresult_t *result, const char *field)
  *
  * @return a integer converted value
  */
-static int _resultGetIntAt(qdbresult_t *result, int idx)
+static int result_get_int_at(qdbresult_t *result, int idx)
 {
     const char *val = result->get_str_at(result, idx);
     if (val == NULL) return 0;
@@ -776,16 +1239,27 @@ static int _resultGetIntAt(qdbresult_t *result, int idx)
  *
  * @return true if successful, false if no more rows are left
  */
-static bool _resultGetNext(qdbresult_t *result)
+static bool result_get_next(qdbresult_t *result)
 {
-#ifdef Q_ENABLE_MYSQL
-    if (result == NULL || result->rs == NULL) return false;
+    if (result == NULL) return false;
 
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
+    if (result->rs == NULL) return false;
+
+#if defined(Q_ENABLE_MYSQL)
     if ((result->row = mysql_fetch_row(result->rs)) == NULL) return false;
     result->cursor++;
 
     return true;
-#else
+#endif /* Q_ENABLE_MYSQL */
+
+#if defined(Q_ENABLE_PGSQL)
+    if ((result->row = pgsql_fetch_row(result->rs)) == NULL) return false;
+    result->cursor++;
+
+    return true;
+#endif /* Q_ENABLE_PGSQL */
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return false;
 #endif
 }
@@ -799,10 +1273,12 @@ static bool _resultGetNext(qdbresult_t *result)
  */
 static int result_get_cols(qdbresult_t *result)
 {
-#ifdef Q_ENABLE_MYSQL
-    if (result == NULL || result->rs == NULL) return 0;
+    if (result == NULL) return 0;
+
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
+    if (result->rs == NULL) return 0;
     return result->cols;
-#else
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return 0;
 #endif
 }
@@ -816,10 +1292,20 @@ static int result_get_cols(qdbresult_t *result)
  */
 static int result_get_rows(qdbresult_t *result)
 {
-#ifdef Q_ENABLE_MYSQL
-    if (result == NULL || result->rs == NULL) return 0;
+    if (result == NULL) return 0;
+
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
+    if (result->rs == NULL) return 0;
+
+#if defined(Q_ENABLE_MYSQL)
     return mysql_num_rows(result->rs);
-#else
+#endif /* Q_ENABLE_MYSQL */
+
+#if defined(Q_ENABLE_PGSQL)
+    return pgsql_num_rows(result->rs);
+#endif /* Q_ENABLE_PGSQL */
+
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return 0;
 #endif
 }
@@ -836,10 +1322,12 @@ static int result_get_rows(qdbresult_t *result)
  */
 static int result_get_row(qdbresult_t *result)
 {
-#ifdef Q_ENABLE_MYSQL
-    if (result == NULL || result->rs == NULL) return 0;
+    if (result == NULL) return 0;
+
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
+    if (result->rs == NULL) return 0;
     return result->cursor;
-#else
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return 0;
 #endif
 }
@@ -851,8 +1339,10 @@ static int result_get_row(qdbresult_t *result)
  */
 static void result_free(qdbresult_t *result)
 {
-#ifdef Q_ENABLE_MYSQL
     if (result == NULL) return;
+
+#if defined(Q_ENABLE_MYSQL) || defined(Q_ENABLE_PGSQL)
+#if defined(Q_ENABLE_MYSQL)
     if (result->rs != NULL) {
         if (result->fetchtype == true) {
             while (mysql_fetch_row(result->rs) != NULL);
@@ -862,7 +1352,17 @@ static void result_free(qdbresult_t *result)
     }
     free(result);
     return;
-#else
+#endif /* Q_ENABLE_MYSQL */
+
+#if defined(Q_ENABLE_PGSQL)
+    if (result->rs != NULL) {
+        pgsql_free_result(result->rs);
+        result->rs = NULL;
+    }
+    free(result);
+    return;
+#endif /* Q_ENABLE_PGSQL */
+#else /* Q_ENABLE_MYSQL || Q_ENABLE_PGSQL */
     return;
 #endif
 }

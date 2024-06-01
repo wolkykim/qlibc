@@ -38,6 +38,25 @@ IF (NOT CMAKE_USE_PTHREADS_INIT)
 	MESSAGE(FATAL_ERROR "Couldn't find pthreads.")
 ENDIF()
 
+IF(NOT "${WITH_PGSQL}" STREQUAL "")
+	message(STATUS "with_pgsql: ${WITH_PGSQL}")
+	# check "libpq-fe.h"
+	if(EXISTS "${WITH_PGSQL_INCLUDE_DIR}/libpq-fe.h")
+		message(STATUS "found 'libpq-fe.h' header.")
+		SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DENABLE_PGSQL")
+	else()
+		message(FATAL_ERROR "Cannot find 'libpq-fe.h' header. Use '-DWITH_PGSQL_INCLUDE_DIR=DIR' to specify the directory where 'libpq-fe.h' is located.")
+	endif()
+
+	# check "libpq.so"
+	if(EXISTS "${WITH_PGSQL_LIBRARY_DIR}/libpq.so")
+		message(STATUS "found 'libpq.so' library.")
+		SET(QLIBC_LINK_LIBS "pq")
+	else()
+		message(FATAL_ERROR "Cannot find 'libpq.so' library. Use '-DWITH_PGSQL_LIBRARY_DIR=DIR' to specify the directory where 'libpq.so' is located.")
+	endif()
+ENDIF()
+
 SET(SRC_SUBPATHS
 		containers/*.c
 		utilities/*.c
@@ -80,20 +99,26 @@ FILE(GLOB_RECURSE SRC_LIB_EXT
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${qlibc_SOURCE_DIR}/lib)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${qlibc_SOURCE_DIR}/lib)
 
+LIST(APPEND QLIBC_INCLUDE_DIRECTORIES ${qlibc_SOURCE_DIR}/src/internal)
+LIST(APPEND QLIBC_INCLUDE_DIRECTORIES ${WITH_PGSQL_INCLUDE_DIR})
+LIST(APPEND QLIBC_LINK_DIRECTORIES    ${WITH_PGSQL_LIBRARY_DIR})
+
+INCLUDE_DIRECTORIES(${QLIBC_INCLUDE_DIRECTORIES})
+LINK_DIRECTORIES(${QLIBC_LINK_DIRECTORIES})
+
 ADD_LIBRARY(qlibc-static STATIC ${SRC_LIB})
 ADD_LIBRARY(qlibc SHARED ${SRC_LIB})
 ADD_LIBRARY(qlibcext-static STATIC ${SRC_LIB_EXT})
 ADD_LIBRARY(qlibcext SHARED ${SRC_LIB_EXT})
 
-INCLUDE_DIRECTORIES(${qlibc_SOURCE_DIR}/src/internal)
 TARGET_INCLUDE_DIRECTORIES(qlibc-static PUBLIC ${qlibc_SOURCE_DIR}/include/qlibc)
 TARGET_INCLUDE_DIRECTORIES(qlibc PUBLIC ${qlibc_SOURCE_DIR}/include/qlibc)
 TARGET_INCLUDE_DIRECTORIES(qlibcext-static PUBLIC ${qlibc_SOURCE_DIR}/include/qlibc)
 
 TARGET_LINK_LIBRARIES(qlibc-static PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 TARGET_LINK_LIBRARIES(qlibc PRIVATE ${CMAKE_THREAD_LIBS_INIT})
-TARGET_LINK_LIBRARIES(qlibcext-static PRIVATE ${CMAKE_THREAD_LIBS_INIT})
-TARGET_LINK_LIBRARIES(qlibcext PUBLIC qlibc)
+TARGET_LINK_LIBRARIES(qlibcext-static PRIVATE ${CMAKE_THREAD_LIBS_INIT} ${QLIBC_LINK_LIBS})
+TARGET_LINK_LIBRARIES(qlibcext PUBLIC qlibc ${QLIBC_LINK_LIBS})
 
 SET(QLIBC_HEADER "${qlibc_SOURCE_DIR}/include/qlibc")
 INSTALL(DIRECTORY ${QLIBC_HEADER}         DESTINATION include)
