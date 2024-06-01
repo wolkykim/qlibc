@@ -199,16 +199,33 @@ TEST("Test3: execute_queryf()") {
     qdbresult_t *qrst = test_db->execute_queryf(test_db, "SELECT * FROM %s;", "animals");
     ASSERT_EQUAL_INT(qrst->get_rows(qrst), 5);
     ASSERT_EQUAL_INT(qrst->get_cols(qrst), 7);
-    ASSERT_EQUAL_INT(qrst->get_row(qrst),  0);
-    ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Dog");
-    ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Canis lupus familiaris");
-    ASSERT_TRUE(qrst->get_next(qrst));
-    ASSERT_EQUAL_INT(qrst->get_row(qrst),  1);
-    ASSERT_TRUE(qrst->get_next(qrst));
-    ASSERT_EQUAL_INT(qrst->get_row(qrst),  2);
 
-    ASSERT_EQUAL_INT(qrst->get_int(qrst, "animal_id"), 3);
-    ASSERT_EQUAL_INT(qrst->get_int_at(qrst, 5), 1);
+    ASSERT_EQUAL_INT(qrst->get_row(qrst),  0);
+    ASSERT_NULL(qrst->get_str(qrst, "animal_name"));
+    ASSERT_NULL(qrst->get_str_at(qrst, 3));
+
+    int i = 1;
+    while (qrst->get_next(qrst)) {
+        ASSERT_EQUAL_INT(qrst->get_row(qrst), i);
+        if (i == 1) {
+            ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Dog");
+            ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Canis lupus familiaris");
+        } else if (i == 2) {
+            ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Cat");
+            ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Felis catus");
+        } else if (i == 3) {
+            ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Rabbit");
+            ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Oryctolagus cuniculus");
+        } else if (i == 4) {
+            ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Hamster");
+            ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Mesocricetus auratus");
+        } else if (i == 5) {
+            ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Fish");
+            ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Poecilia reticulata");
+        }
+        i++;
+    }
+    ASSERT_EQUAL_INT(i,  6);
     qrst->free(qrst);
 
     /* disconnect */
@@ -286,16 +303,33 @@ TEST("Test6: fetchtype") {
     qdbresult_t *qrst = test_db->execute_queryf(test_db, "SELECT * FROM %s;", "animals");
     ASSERT_EQUAL_INT(qrst->get_rows(qrst), 1);
     ASSERT_EQUAL_INT(qrst->get_cols(qrst), 7);
-    ASSERT_EQUAL_INT(qrst->get_row(qrst),  0);
-    ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Dog");
-    ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Canis lupus familiaris");
-    ASSERT_TRUE(qrst->get_next(qrst));
-    ASSERT_EQUAL_INT(qrst->get_row(qrst),  1);
-    ASSERT_TRUE(qrst->get_next(qrst));
-    ASSERT_EQUAL_INT(qrst->get_row(qrst),  2);
 
-    ASSERT_EQUAL_INT(qrst->get_int(qrst, "animal_id"), 3);
-    ASSERT_EQUAL_INT(qrst->get_int_at(qrst, 5), 1);
+    ASSERT_EQUAL_INT(qrst->get_row(qrst),  0);
+    ASSERT_NULL(qrst->get_str(qrst, "animal_name"));
+    ASSERT_NULL(qrst->get_str_at(qrst, 3));
+
+    int i = 1;
+    while (qrst->get_next(qrst)) {
+        ASSERT_EQUAL_INT(qrst->get_row(qrst), i);
+        if (i == 1) {
+            ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Dog");
+            ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Canis lupus familiaris");
+        } else if (i == 2) {
+            ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Cat");
+            ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Felis catus");
+        } else if (i == 3) {
+            ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Rabbit");
+            ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Oryctolagus cuniculus");
+        } else if (i == 4) {
+            ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Hamster");
+            ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Mesocricetus auratus");
+        } else if (i == 5) {
+            ASSERT_EQUAL_STR(qrst->get_str(qrst, "animal_name"), "Fish");
+            ASSERT_EQUAL_STR(qrst->get_str_at(qrst, 3), "Poecilia reticulata");
+        }
+        i++;
+    }
+    ASSERT_EQUAL_INT(i,  6);
     qrst->free(qrst);
 
     /* test: set_fetchtype false */

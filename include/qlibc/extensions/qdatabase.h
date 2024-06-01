@@ -85,19 +85,21 @@ struct qdbresult_s {
 
     void (*free) (qdbresult_t *result);
 
+    bool fetchtype;
+    int cursor;
+    int cols;
+
 #ifdef Q_ENABLE_MYSQL
     /* private variables for mysql database - do not access directly */
-    bool fetchtype;
     MYSQL_RES  *rs;
     MYSQL_FIELD  *fields;
     MYSQL_ROW  row;
-    int cols;
-    int cursor;
 #endif
 
 #ifdef Q_ENABLE_PGSQL
     /* private variables for pgsql database - do not access directly */
-    void *pgsql;
+    void *rs;
+    const void *row;
 #endif
 };
 
