@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,9 +63,9 @@ int main(void) {
     free(str);
 
     // example: object queue
-    queue->push(queue, "A object", sizeof("A object"));
-    queue->push(queue, "B object", sizeof("B object"));
-    queue->push(queue, "C object", sizeof("C object"));
+    queue->push(queue, "Object A", sizeof("Object A"));
+    queue->push(queue, "Object B", sizeof("Object B"));
+    queue->push(queue, "Object C", sizeof("Object C"));
 
     void *obj = queue->pop(queue, NULL);
     printf("pop(): %s\n", (char *) obj);

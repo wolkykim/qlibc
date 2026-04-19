@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,9 +66,9 @@ enum {
 };
 
 /**
- * Argument type check
+ * Argument type check.
  *
- * uint32_t type 32bit variable is used for passing argument types.
+ * A 32-bit `uint32_t` value is used to describe argument types.
  *  notused  bool   float   int     #arg
  *  ---- ---====== ---- --== ==== ---- ----
  *  rrrr rrBb bbbb Ffff ffIi iiii aaaa aaaa  (32bit mask)
@@ -76,11 +76,11 @@ enum {
  *
  *  r : Not Used
  *  B : Consider all arguments as BOOL type unless individually specified.
- *  b : Flaged argument(1~5) must be bool type.
+ *  b : Flagged argument(1~5) must be bool type.
  *  F : Consider all arguments as FLOAT type unless individually specified.
- *  f : Flaged argument(1~5) must be float type.
+ *  f : Flagged argument(1~5) must be float type.
  *  I : Consider all arguments as INTEGER type unless individually specified.
- *  i : Flaged argument(1~5) must be integer type.
+ *  i : Flagged argument(1~5) must be integer type.
  *  a : Number of arguments (0~254).
  *      Value 255 means take any number of arguments.
  *
@@ -99,12 +99,12 @@ enum {
  *  An option takes any number of arguments in any type.
  *    QAC_TAKEALL
  *
- *  An option takes any number of arguments but 1st one must be bool and
- *  2nd one must be integer and rest of them must be float.
+ *  An option takes any number of arguments, but the 1st must be bool,
+ *  the 2nd must be integer, and the rest must be float.
  *    QAC_TAKEALL | QAC_A1_BOOL | QAC_A2_INT | QAC_AA_FLOAT
  */
 enum qaconf_take {
-    // Define string(any) type argument.
+    // Define a string (any) type argument.
     QAC_A1_STR          = 0,
     QAC_A2_STR          = 0,
     QAC_A3_STR          = 0,
@@ -112,7 +112,7 @@ enum qaconf_take {
     QAC_A5_STR          = 0,
     QAC_AA_STR          = 0, // All string unless individually specified.
 
-    // Define integer type argument.
+    // Define an integer type argument.
     QAC_A1_INT          = (1 << 8),
     QAC_A2_INT          = (QAC_A1_INT << 1),
     QAC_A3_INT          = (QAC_A1_INT << 2),
@@ -120,7 +120,7 @@ enum qaconf_take {
     QAC_A5_INT          = (QAC_A1_INT << 4),
     QAC_AA_INT          = (QAC_A1_INT << 5), // All integer unless specified.
 
-    // Define floating point type argument.
+    // Define a floating-point type argument.
     QAC_A1_FLOAT        = (1 << 16),
     QAC_A2_FLOAT        = (QAC_A1_FLOAT << 1),
     QAC_A3_FLOAT        = (QAC_A1_FLOAT << 2),
@@ -128,7 +128,7 @@ enum qaconf_take {
     QAC_A5_FLOAT        = (QAC_A1_FLOAT << 4),
     QAC_AA_FLOAT        = (QAC_A1_FLOAT << 5), // All float unless specified.
 
-    // Define bool(true/false, yes/no, on/off, 1/0)  type argument.
+    // Define a bool (true/false, yes/no, on/off, 1/0) type argument.
     QAC_A1_BOOL         = (1 << 24),
     QAC_A2_BOOL         = (QAC_A1_BOOL << 1),
     QAC_A3_BOOL         = (QAC_A1_BOOL << 2),
@@ -136,7 +136,7 @@ enum qaconf_take {
     QAC_A5_BOOL         = (QAC_A1_BOOL << 4),
     QAC_AA_BOOL         = (QAC_A1_BOOL << 5), // All bool unless specified.
 
-    // Number of arguments to take
+    // Number of arguments to take.
     QAC_TAKENONE        = QAC_TAKEn(0),
     QAC_TAKE0           = QAC_TAKENONE,
     QAC_TAKE1           = QAC_TAKEn(1),
@@ -147,7 +147,7 @@ enum qaconf_take {
     // use QAC_TAKEn(N) macro for 6~254 arguments.
     QAC_TAKEALL         = 0xFF, // Take any number of elements. (0 ~ INT_MAX)
 
-    // Convenient synonyms
+    // Convenient synonyms.
     QAC_TAKE_STR        = (QAC_TAKE1 | QAC_A1_STR),
     QAC_TAKE_INT        = (QAC_TAKE1 | QAC_A1_INT),
     QAC_TAKE_FLOAT      = (QAC_TAKE1 | QAC_A1_FLOAT),

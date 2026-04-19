@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -167,10 +167,10 @@ qgrow_t *qgrow(int options) {
  * qgrow->add(): Stack object
  *
  * @param grow    qgrow_t container pointer.
- * @param object    a pointer of object data
+ * @param object    pointer to object data
  * @param size        size of object
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  * @retval errno will be set in error condition.
  *  - EINVAL    : Invalid argument.
  *  - ENOMEM    : Memory allocation failure.
@@ -183,9 +183,9 @@ bool qgrow_add(qgrow_t *grow, const void *data, size_t size) {
  * qgrow->addstr(): Stack string
  *
  * @param grow    qgrow_t container pointer.
- * @param str        a pointer of string
+ * @param str        pointer to string
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  * @retval errno will be set in error condition.
  *  - EINVAL    : Invalid argument.
  *  - ENOMEM    : Memory allocation failure.
@@ -200,7 +200,7 @@ bool qgrow_addstr(qgrow_t *grow, const char *str) {
  * @param grow    qgrow_t container pointer.
  * @param format    string format
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  * @retval errno will be set in error condition.
  *  - EINVAL    : Invalid argument.
  *  - ENOMEM    : Memory allocation failure.
@@ -249,7 +249,7 @@ size_t qgrow_datasize(qgrow_t *grow) {
  * @param grow    qgrow_t container pointer.
  * @param size        if size is not NULL, merged object size will be stored.
  *
- * @return a pointer of finally merged elements(malloced), otherwise returns
+ * @return pointer to finally merged elements(allocated), otherwise returns
  *  NULL
  * @retval errno will be set in error condition.
  *  - ENOENT    : empty.
@@ -265,7 +265,7 @@ void *qgrow_toarray(qgrow_t *grow, size_t *size) {
  *
  * @param grow    qgrow_t container pointer.
  *
- * @return a pointer of finally merged strings(malloced), otherwise returns NULL
+ * @return pointer to finally merged strings(allocated), or NULL on failure
  * @retval errno will be set in error condition.
  *  - ENOENT    : empty.
  *  - ENOMEM    : Memory allocation failure.
@@ -287,12 +287,12 @@ void qgrow_clear(qgrow_t *grow) {
 }
 
 /**
- * qgrow->debug(): Print out stored elements for debugging purpose.
+ * qgrow->debug(): Prints stored elements for debugging purposes.
  *
  * @param grow    qgrow_t container pointer.
- * @param out       output stream FILE descriptor such like stdout, stderr.
+ * @param out       output stream such as stdout or stderr.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EIO   : Invalid output stream.
  */
@@ -301,7 +301,7 @@ bool qgrow_debug(qgrow_t *grow, FILE *out) {
 }
 
 /**
- * qgrow->free(): De-allocate grow
+ * qgrow->free(): Free grow
  *
  * @param grow    qgrow_t container pointer.
  */

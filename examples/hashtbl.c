@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,15 +61,15 @@ int main(void) {
     printf("getstr('e2') : %s\n", tbl->getstr(tbl, "e2", false));
 
     char *e2 = tbl->getstr(tbl, "e2", true);
-    printf("getstr('e2') with newmem parameter: %s\n", e2);
+    printf("getstr('e2') with the newmem parameter: %s\n", e2);
     free(e2);
 
     //
-    // TEST 3 : travesal a table.
+    // TEST 3 : traversal of a table.
     //
 
-    printf("\n--[Test 3 : travesal a table]--\n");
-    printf("list size : %zu elements\n", tbl->size(tbl));
+    printf("\n--[Test 3 : traversal of a table]--\n");
+    printf("table size : %zu elements\n", tbl->size(tbl));
     qhashtbl_obj_t obj;
     memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     tbl->lock(tbl);

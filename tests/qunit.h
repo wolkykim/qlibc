@@ -61,7 +61,7 @@ int _q_tot_tests = 0;                                                       \
 int _q_tot_failed = 0;                                                      \
 int _q_this_failed = 0;                                                     \
 int _q_errcnt = 0;                                                          \
-int _q_assert_cnt = 0; /* number of assert test in a test */                \
+int _q_assert_cnt = 0; /* number of assertions in a test */                 \
 int _q_assert_dot_cnt = 0; /* number of dots printed out in a test */       \
 bool _q_disable_progress_dot = false; /* disable printing dots */           \
 long _q_timer;                                                              \

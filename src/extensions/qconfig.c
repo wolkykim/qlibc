@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,38 +58,37 @@ static char *_parsestr(qlisttbl_t *tbl, const char *str);
 #endif
 
 /**
- * Load & parse configuration file
+ * Load and parse a configuration file.
  *
- * @param tbl       a pointer of qlisttbl_t. NULL will generate a new table.
- * @param filepath  configuration file path
- * @param sepchar   separater used in configuration file to divice key and value
+ * @param tbl       qlisttbl_t pointer. If NULL, a new table is created.
+ * @param filepath  path to the configuration file.
+ * @param sepchar   separator used to split keys and values.
  *
- * @return a pointer of qlisttbl_t in case of successful,
- *  otherwise(file not found) returns NULL
+ * @return qlisttbl_t pointer on success, or NULL if the file cannot be loaded.
  *
  * @code
- *   # This is "config.conf" file.
- *   # A line which starts with # character is comment
+ *   # This is the "config.conf" file.
+ *   # A line that starts with # is a comment.
  *
- *   @INCLUDE config.def  => include 'config.def' file.
+ *   @INCLUDE config.def      => include the "config.def" file.
  *
- *   prefix=/tmp        => set static value. 'prefix' is the key for this entry.
- *   log=${prefix}/log  => get the value from previously defined key 'prefix'.
- *   user=${%USER}      => get environment variable.
- *   host=${!/bin/hostname -s}  => run external command and put it's output.
+ *   prefix=/tmp              => set a fixed value. "prefix" is the key.
+ *   log=${prefix}/log        => use the value of the previously defined key "prefix".
+ *   user=${%USER}            => use an environment variable.
+ *   host=${!/bin/hostname -s} => run an external command and use its output.
  *   id=${user}@${host}
  *
- *   # now entering into 'system' section.
- *   [system]           => a key 'system.' with value 'system' will be inserted.
- *   ostype=${%OSTYPE}  => 'system.ostype' is the key for this entry.
- *   machtype=${%MACHTYPE}  => 'system.machtype' is the key for this entry.
+ *   # Enter the "system" section.
+ *   [system]                 => the key "system." with value "system" is inserted.
+ *   ostype=${%OSTYPE}        => "system.ostype" is the key for this entry.
+ *   machtype=${%MACHTYPE}    => "system.machtype" is the key for this entry.
  *
- *   # entering into 'daemon' section.
+ *   # Enter the "daemon" section.
  *   [daemon]
  *   port=1234
  *   name=${user}_${host}_${system.ostype}_${system.machtype}
  *
- *   # escape section. (go back to root)
+ *   # Leave the section and go back to the root.
  *   []
  *   rev=822
  * @endcode
@@ -129,14 +128,14 @@ qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
     if (str == NULL)
         return NULL;
 
-    // process include directive
+    // Process @INCLUDE directives.
     char *strp = str;
 
     while ((strp = strstr(strp, _INCLUDE_DIRECTIVE)) != NULL) {
         if (strp == str || strp[-1] == '\n') {
             char buf[PATH_MAX];
 
-            // parse filename
+            // Parse the file name.
             char *tmpp;
             for (tmpp = strp + CONST_STRLEN(_INCLUDE_DIRECTIVE);
                     *tmpp != '\n' && *tmpp != '\0'; tmpp++)
@@ -152,7 +151,7 @@ qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
             buf[len] = '\0';
             qstrtrim(buf);
 
-            // get full file path
+            // Build the full file path.
             if (!(buf[0] == '/' || buf[0] == '\\')) {
                 char tmp[PATH_MAX];
                 char *dir = qfile_get_dir(filepath);
@@ -168,7 +167,7 @@ qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
                 strcpy(buf, tmp);
             }
 
-            // read file
+            // Read the included file.
             char *incdata;
             if (strlen(buf) == 0 || (incdata = qfile_load(buf, NULL)) == NULL) {
                 DEBUG("Can't process '%s%s' directive.", _INCLUDE_DIRECTIVE,
@@ -177,7 +176,7 @@ qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
                 return NULL;
             }
 
-            // replace
+            // Replace the directive with the file contents.
             strncpy(buf, strp, CONST_STRLEN(_INCLUDE_DIRECTIVE) + len);
             buf[CONST_STRLEN(_INCLUDE_DIRECTIVE) + len] = '\0';
             strp = qstrreplace("sn", str, buf, incdata);
@@ -189,7 +188,7 @@ qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
         }
     }
 
-    // parse
+    // Parse the final string.
     tbl = qconfig_parse_str(tbl, str, sepchar);
     free(str);
 
@@ -197,20 +196,19 @@ qlisttbl_t *qconfig_parse_file(qlisttbl_t *tbl, const char *filepath,
 }
 
 /**
- * Parse string
+ * Parse a configuration string.
  *
- * @param tbl       a pointer of qlisttbl_t. NULL will generate a new table.
- * @param str       key, value pair strings
- * @param sepchar   separater used in configuration file to divice key and value
+ * @param tbl       qlisttbl_t pointer. If NULL, a new table is created.
+ * @param str       string that contains key/value pairs.
+ * @param sepchar   separator used to split keys and values.
  *
- * @return a pointer of qlisttbl_t in case of successful,
- *         otherwise(file not found) returns NULL
+ * @return qlisttbl_t pointer on success, or NULL on failure.
  *
  * @see qconfig_parse_file
  *
  * @code
- *  qlisttbl_t *tbl;
- *  tbl = qconfig_parse_str(NULL, "key = value\nhello = world", '=');
+ *   qlisttbl_t *tbl;
+ *   tbl = qconfig_parse_str(NULL, "key = value\nhello = world", '=');
  * @endcode
  */
 qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar) {
@@ -226,7 +224,7 @@ qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar) {
     char *section = NULL;
     char *org, *buf, *offset;
     for (org = buf = offset = strdup(str); *offset != '\0';) {
-        // get one line into buf
+        // Read one line into buf.
         for (buf = offset; *offset != '\n' && *offset != '\0'; offset++)
             ;
         if (*offset != '\0') {
@@ -235,44 +233,44 @@ qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar) {
         }
         qstrtrim(buf);
 
-        // skip blank or comment line
+        // Skip blank lines and comments.
         if ((buf[0] == '#') || (buf[0] == '\0'))
             continue;
 
-        // section header
+        // Parse a section header.
         if ((buf[0] == '[') && (buf[strlen(buf) - 1] == ']')) {
-            // extract section name
+            // Extract the section name.
             if (section != NULL)
                 free(section);
             section = strdup(buf + 1);
             section[strlen(section) - 1] = '\0';
             qstrtrim(section);
 
-            // remove section if section name is empty. ex) []
+            // Clear the section if the name is empty, such as [].
             if (section[0] == '\0') {
                 free(section);
                 section = NULL;
                 continue;
             }
 
-            // in order to put 'section.=section'
+            // Store the section name as "section.=section".
             sprintf(buf, "%c%s", sepchar, section);
         }
 
-        // parse & store
+        // Parse and store the entry.
         char *value = strdup(buf);
         char *name = _q_makeword(value, sepchar);
         qstrtrim(value);
         qstrtrim(name);
 
-        // put section name as a prefix
+        // Add the section name as a prefix.
         if (section != NULL) {
             char *newname = qstrdupf("%s.%s", section, name);
             free(name);
             name = newname;
         }
 
-        // get parsed string
+        // Resolve variables in the value.
         char *newvalue = _parsestr(tbl, value);
         if (newvalue != NULL) {
             tbl->putstr(tbl, name, newvalue);
@@ -292,35 +290,35 @@ qlisttbl_t *qconfig_parse_str(qlisttbl_t *tbl, const char *str, char sepchar) {
 #ifndef _DOXYGEN_SKIP
 
 /**
- * (qlisttbl_t*)->parsestr(): Parse a string and replace variables in the
- * string to the data in this list.
+ * (qlisttbl_t*)->parsestr(): Parse a string and replace variables with
+ * values from this table.
  *
  * @param tbl   qlisttbl container pointer.
- * @param str   string value which may contain variables like ${...}
+ * @param str   string value that may contain variables like ${...}
  *
- * @return malloced string if successful, otherwise returns NULL.
- * @retval errno will be set in error condition.
+ * @return allocated string on success, otherwise NULL.
+ * @retval errno will be set on error.
  *  - EINVAL : Invalid argument.
  *
  * @code
- *  ${key_name}          - replace this with a matched value data in this list.
- *  ${!system_command}   - run external command and put it's output here.
- *  ${%PATH}             - get environment variable.
+ *   ${key_name}        - replace with the matching value from this table.
+ *   ${!system_command} - run an external command and use its output.
+ *   ${%PATH}           - get an environment variable.
  * @endcode
  *
  * @code
- *  --[tbl Table]------------------------
- *  NAME = qLibc
- *  -------------------------------------
+ *   --[tbl Table]------------------------
+ *   NAME = qLibc
+ *   -------------------------------------
  *
- *  char *str = _parsestr(tbl, "${NAME}, ${%HOME}, ${!date -u}");
- *  if(str != NULL) {
- *    printf("%s\n", str);
- *    free(str);
- *  }
+ *   char *str = _parsestr(tbl, "${NAME}, ${%HOME}, ${!date -u}");
+ *   if (str != NULL) {
+ *     printf("%s\n", str);
+ *     free(str);
+ *   }
  *
- *  [Output]
- *  qLibc, /home/qlibc, Wed Nov 24 00:30:58 UTC 2010
+ *   [Output]
+ *   qLibc, /home/qlibc, Wed Nov 24 00:30:58 UTC 2010
  * @endcode
  */
 static char *_parsestr(qlisttbl_t *tbl, const char *str) {
@@ -334,18 +332,18 @@ static char *_parsestr(qlisttbl_t *tbl, const char *str) {
     do {
         loop = false;
 
-        // find ${
+        // Find the next ${ token.
         char *s, *e;
         int openedbrakets;
         for (s = value; *s != '\0'; s++) {
             if (!(*s == _VAR && *(s + 1) == _VAR_OPEN))
                 continue;
 
-            // found ${, try to find }. s points $
-            openedbrakets = 1;  // braket open counter
+            // Found ${. Now look for the matching }.
+            openedbrakets = 1;  // Number of open brackets.
             for (e = s + 2; *e != '\0'; e++) {
-                if (*e == _VAR && *(e + 1) == _VAR_OPEN) {  // found internal ${
-                    // e is always bigger than s, negative overflow never occure
+                if (*e == _VAR && *(e + 1) == _VAR_OPEN) {  // Found a nested ${
+                    // e is always greater than s, so this cannot underflow.
                     s = e - 1;
                     break;
                 } else if (*e == _VAR_OPEN)
@@ -359,19 +357,19 @@ static char *_parsestr(qlisttbl_t *tbl, const char *str) {
                     break;
             }
             if (*e == '\0')
-                break;  // braket mismatch
+                break;  // Brackets do not match.
             if (openedbrakets > 0)
-                continue;  // found internal ${
+                continue;  // A nested ${ was found.
 
-            // pick string between ${, }
-            int varlen = e - s - 2;  // length between ${ , }
+            // Copy the text between ${ and }.
+            int varlen = e - s - 2;  // Length between ${ and }.
             char *varstr = (char *) malloc(varlen + 3 + 1);
             if (varstr == NULL)
                 continue;
             strncpy(varstr, s + 2, varlen);
             varstr[varlen] = '\0';
 
-            // get the new string to replace
+            // Resolve the replacement string.
             char *newstr = NULL;
             switch (varstr[0]) {
                 case _VAR_CMD: {
@@ -398,15 +396,15 @@ static char *_parsestr(qlisttbl_t *tbl, const char *str) {
                         break;
                     }
                     if ((newstr = tbl->getstr(tbl, varstr, true)) == NULL) {
-                        s = e;  // not found
+                        s = e;  // No matching value was found.
                         continue;
                     }
                     break;
                 }
             }
 
-            // replace
-            strncpy(varstr, s, varlen + 3);  // ${str}
+            // Replace the original token.
+            strncpy(varstr, s, varlen + 3);  // Copy ${str}.
             varstr[varlen + 3] = '\0';
 
             s = qstrreplace("sn", value, varstr, newstr);

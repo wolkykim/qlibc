@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,10 +25,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
-/* This code is written and updated by following people and released under
- * the same license as above qLibc license.
- * Copyright (c) 2015 Zhenjiang Xie - https://github.com/Charles0429
- *****************************************************************************/
 
 #include "qunit.h"
 #include "qlibc.h"
@@ -45,12 +41,12 @@ TEST("Test basic features") {
 
     qstack_t *stack = qstack(0);
     ASSERT_EQUAL_INT(stack->size(stack), 0);
-    
+
     bool result;
     result = stack->push(stack, (void *)data, sizeof(data));
     ASSERT_EQUAL_BOOL(true, result);
     ASSERT_EQUAL_INT(1, stack->size(stack));
-    result = stack->pushstr(stack, string);   
+    result = stack->pushstr(stack, string);
     ASSERT_EQUAL_BOOL(true, result);
     ASSERT_EQUAL_INT(2, stack->size(stack));
     result = stack->pushint(stack, num);
@@ -66,11 +62,11 @@ TEST("Test basic features") {
     ASSERT_EQUAL_MEM(pop_data, data, sizeof(data));
 
     stack->clear(stack);
-    stack->free(stack); 
+    stack->free(stack);
 }
 
 TEST("Test boundary conditions") {
-    
+
     const int array[] = {1, 2, 3, 4, 5, 6};
     const char *string = "ewqljljoaq;vsl23053054302ds;flajewjpeo2353rekffkl;sdk;f";
 
@@ -206,8 +202,7 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
     int array[8];
     for(i = 0; i < num_values; i++) {
         int j;
-        for(j = 0; j < 8; j++)
-        {
+        for(j = 0; j < 8; j++) {
             array[j] = 8 * i + 1;
         }
 
@@ -229,14 +224,12 @@ void test_thousands_of_values(int num_values, char *prefix, char *postfix) {
     /*test ints*/
     int64_t k;
     int64_t size;
-    for(k = LONG_MIN, size = 0; size < num_values; k++, size++)
-    {
+    for(k = LONG_MIN, size = 0; size < num_values; k++, size++) {
         stack->pushint(stack, k);
         ASSERT_EQUAL_INT(size + 1, stack->size(stack));
     }
 
-    for(k = LONG_MIN, size = 0; size < num_values; k++, size++)
-    {
+    for(k = LONG_MIN, size = 0; size < num_values; k++, size++) {
         int64_t value = LONG_MIN + num_values - size - 1;
         int64_t num = stack->popint(stack);
         ASSERT_EQUAL_INT(value, num);

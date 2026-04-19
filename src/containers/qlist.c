@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,13 +61,13 @@
  *  list->addlast(list, "e3", sizeof("e3"));
  *
  *  // get
- *  char *e1 = (char*)list->getfirst(list, NULL, true));    // malloced
+ *  char *e1 = (char*)list->getfirst(list, NULL, true));    // allocated
  *  char *e3  = (char*)list->getat(list, -1, NULL, false)); // no malloc
  *  (...omit...)
  *  free(e1);
  *
  *  // pop (get and remove)
- *  char *e2 = (char*)list->popat(list, 1, NULL)); // get malloced copy
+ *  char *e2 = (char*)list->popat(list, 1, NULL)); // get allocated copy
  *  (...omit...)
  *  free(e2);
  *
@@ -109,7 +109,7 @@ static bool remove_obj(qlist_t *list, qlist_obj_t *obj);
  *
  * @param options   combination of initialization options.
  *
- * @return a pointer of malloced qlist_t container, otherwise returns NULL.
+ * @return pointer to allocated qlist_t container on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  -ENOMEM : Memory allocation failure.
  *
@@ -196,13 +196,13 @@ size_t qlist_setsize(qlist_t *list, size_t max) {
 }
 
 /**
- * qlist->addfirst(): Inserts a element at the beginning of this list.
+ * qlist->addfirst(): Inserts an element at the beginning of this list.
  *
  * @param list  qlist_t container pointer.
  * @param data  a pointer which points data memory.
  * @param size  size of the data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOBUFS : List full. Only happens when this list has set to have limited
  *              number of elements.
@@ -223,13 +223,13 @@ bool qlist_addfirst(qlist_t *list, const void *data, size_t size) {
 }
 
 /**
- * qlist->addlast(): Appends a element to the end of this list.
+ * qlist->addlast(): Appends an element to the end of this list.
  *
  * @param list  qlist_t container pointer.
  * @param data  a pointer which points data memory.
  * @param size  size of the data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOBUFS : List full. Only happens when this list has set to have limited
  *              number of elements.
@@ -241,7 +241,7 @@ bool qlist_addlast(qlist_t *list, const void *data, size_t size) {
 }
 
 /**
- * qlist->addat(): Inserts a element at the specified position in this
+ * qlist->addat(): Inserts an element at the specified position in this
  * list.
  *
  * @param list   qlist_t container pointer.
@@ -249,7 +249,7 @@ bool qlist_addlast(qlist_t *list, const void *data, size_t size) {
  * @param data   a pointer which points data memory.
  * @param size   size of the data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOBUFS : List full. Only happens when this list has set to have limited
  *              number of elements.
@@ -372,7 +372,7 @@ bool qlist_addat(qlist_t *list, int index, const void *data, size_t size) {
  * @param size    if size is not NULL, element size will be stored.
  * @param newmem  whether or not to allocate memory for the element.
  *
- * @return a pointer of element, otherwise returns NULL.
+ * @return pointer to element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : List is empty.
  *  - ENOMEM : Memory allocation failure.
@@ -397,7 +397,7 @@ void *qlist_getfirst(qlist_t *list, size_t *size, bool newmem) {
  * @param size    if size is not NULL, element size will be stored.
  * @param newmem  whether or not to allocate memory for the element.
  *
- * @return a pointer of element, otherwise returns NULL.
+ * @return pointer to element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *        ENOENT : List is empty.
  *        ENOMEM : Memory allocation failure.
@@ -415,7 +415,7 @@ void *qlist_getlast(qlist_t *list, size_t *size, bool newmem) {
  * @param size    if size is not NULL, element size will be stored.
  * @param newmem  whether or not to allocate memory for the element.
  *
- * @return a pointer of element, otherwise returns NULL.
+ * @return pointer to element on success, or NULL on failure.
  * @retval errno
  * @retval errno will be set in error condition.
  *  -ERANGE : Index out of range.
@@ -429,7 +429,7 @@ void *qlist_getlast(qlist_t *list, size_t *size, bool newmem) {
  * @endcode
  *
  * @note
- *  Negative index can be used for addressing a element from the end in this
+ *  Negative index can be used for addressing an element from the end in this
  *  stack. For example, index -1 is same as getlast() and index 0 is same as
  *  getfirst();
  */
@@ -438,12 +438,12 @@ void *qlist_getat(qlist_t *list, int index, size_t *size, bool newmem) {
 }
 
 /**
- * qlist->popfirst(): Returns and remove the first element in this list.
+ * qlist->popfirst(): Returns and removes the first element in this list.
  *
  * @param list  qlist_t container pointer.
  * @param size  if size is not NULL, element size will be stored.
  *
- * @return a pointer of malloced element, otherwise returns NULL.
+ * @return pointer to allocated element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  -ENOENT : List is empty.
  *  -ENOMEM : Memory allocation failure.
@@ -453,12 +453,12 @@ void *qlist_popfirst(qlist_t *list, size_t *size) {
 }
 
 /**
- * qlist->getlast(): Returns and remove the last element in this list.
+ * qlist->poplast(): Returns and removes the last element in this list.
  *
  * @param list  qlist_t container pointer.
  * @param size  if size is not NULL, element size will be stored.
  *
- * @return a pointer of malloced element, otherwise returns NULL.
+ * @return pointer to allocated element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  -ENOENT : List is empty.
  *  -ENOMEM : Memory allocation failure.
@@ -468,14 +468,14 @@ void *qlist_poplast(qlist_t *list, size_t *size) {
 }
 
 /**
- * qlist->popat(): Returns and remove the element at the specified
+ * qlist->popat(): Returns and removes the element at the specified
  * position in this list.
  *
  * @param list   qlist_t container pointer.
- * @param index  index at which the specified element is to be inserted
+ * @param index  index of the element to pop
  * @param size   if size is not NULL, element size will be stored.
  *
- * @return a pointer of malloced element, otherwise returns NULL.
+ * @return pointer to allocated element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  -ERANGE : Index out of range.
  *  -ENOMEM : Memory allocation failure.
@@ -488,7 +488,7 @@ void *qlist_poplast(qlist_t *list, size_t *size) {
  * @endcode
  *
  * @note
- *  Negative index can be used for addressing a element from the end in this
+ *  Negative index can be used for addressing an element from the end in this
  *  stack. For example, index -1 is same as poplast() and index 0 is same as
  *  popfirst();
  */
@@ -557,14 +557,14 @@ bool qlist_removeat(qlist_t *list, int index) {
  * @param obj     found data will be stored in this structure
  * @param newmem  whether or not to allocate memory for the element.
  *
- * @return true if found otherwise returns false
+ * @return true if found otherwise false
  * @retval errno will be set in error condition.
  *  -ENOENT : No next element.
  *  -ENOMEM : Memory allocation failure.
  *
  * @note
  *  obj should be initialized with 0 by using memset() before first call.
- *  If newmem flag is true, user should de-allocate obj.name and obj.data
+ *  If newmem flag is true, user should free obj.name and obj.data
  *  resources.
  *
  * @code
@@ -694,8 +694,7 @@ void qlist_clear(qlist_t *list) {
  * @param list  qlist_t container pointer.
  * @param size  if size is not NULL, chunk size will be stored.
  *
- * @return a malloced pointer,
- *  otherwise(if there is no data to merge) returns NULL.
+ * @return an allocated pointer, or NULL if the list is empty.
  * @retval errno will be set in error condition.
  *  -ENOENT : List is empty.
  *  -ENOMEM : Memory allocation failure.
@@ -736,8 +735,7 @@ void *qlist_toarray(qlist_t *list, size_t *size) {
  *
  * @param list  qlist_t container pointer.
  *
- * @return a malloced pointer,
- *  otherwise(if there is no data to merge) returns NULL.
+ * @return an allocated string, or NULL if the list is empty.
  * @retval errno will be set in error condition.
  *  -ENOENT : List is empty.
  *  -ENOMEM : Memory allocation failure.
@@ -764,7 +762,7 @@ char *qlist_tostring(qlist_t *list) {
     qlist_obj_t *obj;
     for (obj = list->first; obj; obj = obj->next) {
         size_t size = obj->size;
-        // do not copy tailing '\0'
+        // do not copy trailing '\0'
         if (*(char *) (obj->data + (size - 1)) == '\0')
             size -= 1;
         memcpy(dp, obj->data, size);
@@ -777,12 +775,12 @@ char *qlist_tostring(qlist_t *list) {
 }
 
 /**
- * qlist->debug(): Prints out stored elements for debugging purpose.
+ * qlist->debug(): Prints stored elements for debugging purposes.
  *
  * @param list  qlist_t container pointer.
- * @param out   output stream FILE descriptor such like stdout, stderr.
+ * @param out   output stream such as stdout or stderr.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  -EIO  : Invalid output stream.
  */
@@ -849,7 +847,7 @@ bool remove) {
     qlist_obj_t *obj = get_obj(list, index);
     if (obj == NULL) {
         qlist_unlock(list);
-        return false;
+        return NULL;
     }
 
     // copy data
@@ -859,7 +857,7 @@ bool remove) {
         if (data == NULL) {
             qlist_unlock(list);
             errno = ENOMEM;
-            return false;
+            return NULL;
         }
         memcpy(data, obj->data, obj->size);
     } else {

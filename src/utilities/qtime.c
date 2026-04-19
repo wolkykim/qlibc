@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,14 +54,14 @@ long qtime_current_milli(void) {
 }
 
 /**
- * Get custom formmatted local time string.
+ * Format a local time string with a custom format.
  *
- * @param buf       save buffer
+ * @param buf       output buffer
  * @param size      buffer size
- * @param utctime   0 for current time, universal time for specific time
- * @param format    format for strftime()
+ * @param utctime   0 for the current time, or a specific UTC time
+ * @param format    format string for `strftime()`
  *
- * @return string pointer of buf
+ * @return pointer to `buf`
  *
  * @code
  *   char *timestr = qtime_localtime_strf(0, "%H:%M:%S"); // HH:MM:SS
@@ -86,9 +86,9 @@ char *qtime_localtime_strf(char *buf, int size, time_t utctime,
 /**
  * Get local time string formatted like '02-Nov-2007 16:37:39 +0900'.
  *
- * @param utctime   0 for current time, universal time for specific time
+ * @param utctime   0 for the current time, or a specific UTC time
  *
- * @return mallocked string pointer of time string
+ * @return allocated time string.
  *
  * @code
  *   char *timestr;
@@ -113,9 +113,9 @@ char *qtime_localtime_str(time_t utctime) {
 /**
  * Get local time string formatted like '02-Nov-2007 16:37:39 +0900'.
  *
- * @param utctime   0 for current time, universal time for specific time
+ * @param utctime   0 for the current time, or a specific UTC time
  *
- * @return internal static string pointer of time string
+ * @return internal static time string.
  *
  * @code
  *   printf("%s", qtime_localtime_staticstr(0));  // now
@@ -131,14 +131,14 @@ const char *qtime_localtime_staticstr(time_t utctime) {
 }
 
 /**
- * Get custom formmatted GMT time string.
+ * Format a GMT time string with a custom format.
  *
- * @param buf       save buffer
+ * @param buf       output buffer
  * @param size      buffer size
- * @param utctime   0 for current time, universal time for specific time
- * @param format    format for strftime()
+ * @param utctime   0 for the current time, or a specific UTC time
+ * @param format    format string for `strftime()`
  *
- * @return string pointer of buf
+ * @return pointer to `buf`
  *
  * @code
  *   char timestr[8+1];
@@ -157,9 +157,9 @@ char *qtime_gmt_strf(char *buf, int size, time_t utctime, const char *format) {
 /**
  * Get GMT time string formatted like 'Wed, 11-Nov-2007 23:19:25 GMT'.
  *
- * @param utctime   0 for current time, universal time for specific time
+ * @param utctime   0 for the current time, or a specific UTC time
  *
- * @return malloced string pointer which points GMT time string.
+ * @return allocated GMT time string.
  *
  * @code
  *   char *timestr;
@@ -185,9 +185,9 @@ char *qtime_gmt_str(time_t utctime) {
 /**
  * Get GMT time string formatted like 'Wed, 11-Nov-2007 23:19:25 GMT'.
  *
- * @param utctime   0 for current time, universal time for specific time
+ * @param utctime   0 for the current time, or a specific UTC time
  *
- * @return internal static string pointer which points GMT time string.
+ * @return internal static GMT time string.
  *
  * @code
  *   printf("%s", qtime_gmt_staticstr(0));         // now
@@ -203,13 +203,15 @@ const char *qtime_gmt_staticstr(time_t utctime) {
 }
 
 /**
- * This parses GMT/Timezone(+/-) formatted time sting like
- * 'Sun, 04 May 2008 18:50:39 GMT', 'Mon, 05 May 2008 03:50:39 +0900'
- * and returns as universal time.
+ * Parse a GMT or timezone-formatted time string and return UTC time.
  *
- * @param gmtstr    GMT/Timezone(+/-) formatted time string
+ * Examples:
+ * 'Sun, 04 May 2008 18:50:39 GMT'
+ * 'Mon, 05 May 2008 03:50:39 +0900'
  *
- * @return universal time(UTC). in case of conversion error, returns -1.
+ * @param gmtstr    GMT/timezone-formatted time string
+ *
+ * @return UTC time. Returns -1 on conversion error.
  *
  * @code
  *   time_t t = time(NULL);
@@ -228,7 +230,7 @@ time_t qtime_parse_gmtstr(const char *gmtstr) {
     if (utc < 0)
         return -1;
 
-// parse timezone
+// Parse timezone.
     char *p;
     if ((p = strstr(gmtstr, "+")) != NULL) {
         utc -= ((atoi(p + 1) / 100) * 60 * 60);

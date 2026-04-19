@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,9 +71,9 @@
  *  free(str);
  *
  *  // example: object queue
- *  queue->push(queue, "A object", sizeof("A object"));
- *  queue->push(queue, "B object", sizeof("B object"));
- *  queue->push(queue, "C object", sizeof("C object"));
+ *  queue->push(queue, "Object A", sizeof("Object A"));
+ *  queue->push(queue, "Object B", sizeof("Object B"));
+ *  queue->push(queue, "Object C", sizeof("Object C"));
  *
  *  void *obj = queue->pop(queue, NULL);
  *  printf("pop(): %s\n", (char*)obj);
@@ -95,9 +95,9 @@
  *  popstr(): C string
  *  popstr(): B string
  *  popstr(): A string
- *  pop(): C object
- *  pop(): B object
- *  pop(): A object
+ *  pop(): Object C
+ *  pop(): Object B
+ *  pop(): Object A
  * @endcode
  */
 
@@ -114,7 +114,7 @@
  *
  * @param options   combination of initialization options.
  *
- * @return a pointer of malloced qqueue container, otherwise returns NULL.
+ * @return pointer to allocated qqueue container on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOMEM    : Memory allocation failure.
  *
@@ -185,7 +185,7 @@ size_t qqueue_setsize(qqueue_t *queue, size_t max) {
  * @param data  a pointer which points data memory.
  * @param size  size of the data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EINVAL    : Invalid argument.
  *  - ENOBUFS   : Queue full. Only happens when this queue has set to have
@@ -203,7 +203,7 @@ bool qqueue_push(qqueue_t *queue, const void *data, size_t size) {
  * @param data  a pointer which points data memory.
  * @param size  size of the data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EINVAL    : Invalid argument.
  *  - ENOBUFS   : Queue full. Only happens when this queue has set to have
@@ -219,12 +219,12 @@ bool qqueue_pushstr(qqueue_t *queue, const char *str) {
 }
 
 /**
- * qqueue->pushint(): Pushes a integer onto the top of this queue.
+ * qqueue->pushint(): Pushes an integer onto the top of this queue.
  *
  * @param queue qqueue container pointer.
  * @param num   integer data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOBUFS   : Queue full. Only happens when this queue has set to have
  *                limited number of elements.
@@ -235,13 +235,13 @@ bool qqueue_pushint(qqueue_t *queue, int64_t num) {
 }
 
 /**
- * qqueue->pop(): Removes a element at the top of this queue and returns
+ * qqueue->pop(): Removes an element at the top of this queue and returns
  * that element.
  *
  * @param queue qqueue container pointer.
  * @param size  if size is not NULL, element size will be stored.
  *
- * @return a pointer of malloced element, otherwise returns NULL.
+ * @return pointer to allocated element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT    : Queue is empty.
  *  - ENOMEM    : Memory allocation failure.
@@ -251,12 +251,12 @@ void *qqueue_pop(qqueue_t *queue, size_t *size) {
 }
 
 /**
- * qqueue->popstr(): Removes a element at the top of this queue and
+ * qqueue->popstr(): Removes an element at the top of this queue and
  * returns that element.
  *
  * @param queue qqueue container pointer.
  *
- * @return a pointer of malloced string element, otherwise returns NULL.
+ * @return pointer to allocated string element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT    : Queue is empty.
  *  - ENOMEM    : Memory allocation failure.
@@ -275,7 +275,7 @@ char *qqueue_popstr(qqueue_t *queue) {
 }
 
 /**
- * qqueue->popint(): Removes a integer at the top of this queue and
+ * qqueue->popint(): Removes an integer at the top of this queue and
  * returns that element.
  *
  * @param queue qqueue container pointer.
@@ -300,21 +300,21 @@ int64_t qqueue_popint(qqueue_t *queue) {
 }
 
 /**
- * qqueue->popat(): Returns and remove the element at the specified
+ * qqueue->popat(): Returns and removes the element at the specified
  * position in this queue.
  *
  * @param queue qqueue container pointer.
- * @param index index at which the specified element is to be inserted
+ * @param index index of the element to pop
  * @param size  if size is not NULL, element size will be stored.
  *
- * @return a pointer of malloced element, otherwise returns NULL.
+ * @return pointer to allocated element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ERANGE    : Index out of range.
  *  - ENOMEM    : Memory allocation failure.
  *
  * @note
- *  Negative index can be used for addressing a element from the bottom in this
- *  queue. For example, index -1 will always pop a element which is pushed at
+ *  Negative index can be used for addressing an element from the bottom in this
+ *  queue. For example, index -1 will always pop an element which is pushed at
  *  very last time.
  */
 void *qqueue_popat(qqueue_t *queue, int index, size_t *size) {
@@ -329,7 +329,7 @@ void *qqueue_popat(qqueue_t *queue, int index, size_t *size) {
  * @param size      if size is not NULL, element size will be stored.
  * @param newmem    whether or not to allocate memory for the element.
  *
- * @return a pointer of malloced element, otherwise returns NULL.
+ * @return pointer to allocated element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT    : Queue is empty.
  *  - ENOMEM    : Memory allocation failure.
@@ -339,12 +339,12 @@ void *qqueue_get(qqueue_t *queue, size_t *size, bool newmem) {
 }
 
 /**
- * qqueue->getstr(): Returns an string at the top of this queue without
+ * qqueue->getstr(): Returns a string at the top of this queue without
  * removing it.
  *
  * @param queue qqueue container pointer.
  *
- * @return a pointer of malloced string element, otherwise returns NULL.
+ * @return pointer to allocated string element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT    : Queue is empty.
  *  - ENOMEM    : Memory allocation failure.
@@ -396,14 +396,14 @@ int64_t qqueue_getint(qqueue_t *queue) {
  * @param size      if size is not NULL, element size will be stored.
  * @param newmem    whether or not to allocate memory for the element.
  *
- * @return a pointer of element, otherwise returns NULL.
+ * @return pointer to element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ERANGE    : Index out of range.
  *  - ENOMEM    : Memory allocation failure.
  *
  * @note
- *  Negative index can be used for addressing a element from the bottom in this
- *  queue. For example, index -1 will always get a element which is pushed at
+ *  Negative index can be used for addressing an element from the bottom in this
+ *  queue. For example, index -1 will always get an element which is pushed at
  *  very last time.
  */
 void *qqueue_getat(qqueue_t *queue, int index, size_t *size, bool newmem) {
@@ -431,12 +431,12 @@ void qqueue_clear(qqueue_t *queue) {
 }
 
 /**
- * qqueue->debug(): Print out stored elements for debugging purpose.
+ * qqueue->debug(): Prints stored elements for debugging purposes.
  *
  * @param queue     qqueue container pointer.
- * @param out       output stream FILE descriptor such like stdout, stderr.
+ * @param out       output stream such as stdout or stderr.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  */
 bool qqueue_debug(qqueue_t *queue, FILE *out) {
     return queue->list->debug(queue->list, out);

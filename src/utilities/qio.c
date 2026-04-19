@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,7 @@
 #define MAX_IOSEND_SIZE     (32 * 1024)
 
 /**
- * Test & wait until the file descriptor has readable data.
+ * Wait until a file descriptor becomes readable.
  *
  * @param fd        file descriptor
  * @param timeoutms wait timeout milliseconds. 0 for no wait,
@@ -53,7 +53,7 @@
  * @return 1 if readable, 0 on timeout, -1 if an error occurred.
  *
  * @note
- *  The argument timeoutms can be used to set maximum wait time for a socket
+ *  `timeoutms` can be used to set the maximum wait time for a socket
  *  descriptor.
  */
 int qio_wait_readable(int fd, int timeoutms) {
@@ -76,7 +76,7 @@ int qio_wait_readable(int fd, int timeoutms) {
 }
 
 /**
- * Test & wait until the file descriptor is ready for writing.
+ * Wait until a file descriptor is ready for writing.
  *
  * @param fd        file descriptor
  * @param timeoutms wait timeout milliseconds. 0 for no wait,
@@ -107,9 +107,9 @@ int qio_wait_writable(int fd, int timeoutms) {
  * Read from a file descriptor.
  *
  * @param fd        file descriptor
- * @param buf       data buffer pointer to write to
- * @param nbytes    the number of bytes to read from file descriptor & write
- *                  into buffer
+ * @param buf       data buffer to write into
+ * @param nbytes    number of bytes to read from the file descriptor and write
+ *                  into `buf`
  * @param timeoutms wait timeout milliseconds. 0 for no wait, -1 for infinite
  *                  wait
  *
@@ -147,9 +147,8 @@ ssize_t qio_read(int fd, void *buf, size_t nbytes, int timeoutms) {
  * Write to a file descriptor.
  *
  * @param fd        file descriptor
- * @param buf       data buffer pointer to read from
- * @param nbytes    the number of bytes to write to file descriptor & read
- *                  from buffer
+ * @param buf       data buffer to read from
+ * @param nbytes    number of bytes to write to the file descriptor from `buf`
  * @param timeoutms wait timeout milliseconds. 0 for no wait, -1 for infinite
  *                  wait
  *
@@ -184,7 +183,7 @@ ssize_t qio_write(int fd, const void *buf, size_t nbytes, int timeoutms) {
 }
 
 /**
- * Transfer data between file descriptors
+ * Transfer data between file descriptors.
  *
  * @param outfd       output file descriptor
  * @param infd        input file descriptor
@@ -237,12 +236,11 @@ off_t qio_send(int outfd, int infd, off_t nbytes, int timeoutms) {
 }
 
 /**
- * Read a line from a file descriptor into the buffer pointed to until either a
- * terminating newline or EOF. New-line characters(CR, LF ) will not be stored
- * into buffer.
+ * Read a line from a file descriptor into the buffer until a terminating
+ * newline or EOF. Newline characters (CR, LF) are not stored in the buffer.
  *
- * @param fd      file descriptor
- * @param buf     data buffer pointer
+ * @param fd          file descriptor
+ * @param buf         data buffer pointer
  * @param bufsize     buffer size
  * @param timeoutms   wait timeout milliseconds. 0 for no wait, -1 for infinite
  *                    wait
@@ -250,9 +248,9 @@ off_t qio_send(int outfd, int infd, off_t nbytes, int timeoutms) {
  * @return the number of bytes read if successful, 0 on timeout, -1 for error.
  *
  * @note
- *  Be sure the return value does not mean the length of actual stored data.
- *  It means how many bytes are readed from the file descriptor,
- *  so the new-line characters will be counted, but not be stored.
+ *  The return value is not the length of the stored string.
+ *  It is the number of bytes read from the file descriptor, so newline
+ *  characters are counted even though they are not stored.
  */
 ssize_t qio_gets(int fd, char *buf, size_t bufsize, int timeoutms) {
     if (bufsize <= 1)
@@ -288,7 +286,7 @@ ssize_t qio_gets(int fd, char *buf, size_t bufsize, int timeoutms) {
 }
 
 /**
- * Writes the string and a trailing newline to file descriptor.
+ * Write a string and a trailing newline to a file descriptor.
  *
  * @param fd        file descriptor
  * @param str       string pointer
@@ -312,7 +310,7 @@ ssize_t qio_puts(int fd, const char *str, int timeoutms) {
 }
 
 /**
- * Formatted output to a file descriptor
+ * Write formatted output to a file descriptor.
  *
  * @param fd        file descriptor
  * @param timeoutms wait timeout milliseconds. 0 for no wait, -1 for infinite

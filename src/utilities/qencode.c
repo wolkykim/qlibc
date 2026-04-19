@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,16 +39,15 @@
 #include "utilities/qencode.h"
 
 /**
- * Parse URL encoded query string
+ * Parse a URL-encoded query string.
  *
- * @param tbl       a pointer of qlisttbl_t container. NULL can be used to
- *                  create new table.
- * @param query     URL encoded string.
- * @param equalchar separater of key, value pair.
- * @param sepchar   separater of line.
- * @param count     if count is not NULL, a number of parsed entries are stored.
+ * @param tbl       qlisttbl_t pointer. If NULL, a new table is created.
+ * @param query     URL-encoded string
+ * @param equalchar separator between key and value
+ * @param sepchar   separator between entries
+ * @param count     number of parsed entries is stored here if not NULL
  *
- * @return qlisttbl container pointer, otherwise returns NULL.
+ * @return qlisttbl_t pointer on success, or NULL on failure.
  *
  * @code
  *  cont char query = "category=love&str=%C5%A5%B5%F0%C4%DA%B4%F5&sort=asc";
@@ -94,13 +93,12 @@ qlisttbl_t *qparse_queries(qlisttbl_t *tbl, const char *query, char equalchar,
 }
 
 /**
- * Encode data using URL encoding(Percent encoding) algorithm.
+ * Encode data using URL encoding (percent encoding).
  *
- * @param bin   a pointer of input data.
- * @param size  the length of input data.
+ * @param bin   input data
+ * @param size  length of the input data
  *
- * @return a malloced string pointer of URL encoded string in case of
- *         successful, otherwise returns NULL
+ * @return allocated URL-encoded string on success, or NULL on failure.
  *
  * @code
  *   const char *text = "hello 'qLibc' world";
@@ -178,16 +176,14 @@ char *qurl_encode(const void *bin, size_t size) {
 }
 
 /**
- * Decode URL encoded string.
+ * Decode a URL-encoded string.
  *
- * @param str   a pointer of URL encoded string.
+ * @param str   URL-encoded string
  *
- * @return the length of bytes stored in the str memory in case of successful,
- *         otherwise returns NULL
+ * @return number of bytes stored in `str`.
  *
  * @note
- *  This modify str directly. And the 'str' is always terminated by NULL
- *  character.
+ *  This function modifies `str` in place. The result is always null-terminated.
  */
 size_t qurl_decode(char *str) {
     if (str == NULL) {
@@ -218,13 +214,12 @@ size_t qurl_decode(char *str) {
 }
 
 /**
- * Encode data using BASE64 algorithm.
+ * Encode data using BASE64.
  *
- * @param bin   a pointer of input data.
- * @param size  the length of input data.
+ * @param bin   input data
+ * @param size  length of the input data
  *
- * @return a malloced string pointer of BASE64 encoded string in case of
- *         successful, otherwise returns NULL
+ * @return allocated BASE64 string on success, or NULL on failure.
  *
  * @code
  *   const char *text = "hello world";
@@ -294,16 +289,14 @@ char *qbase64_encode(const void *bin, size_t size) {
 }
 
 /**
- * Decode BASE64 encoded string.
+ * Decode a BASE64 string.
  *
- * @param str   a pointer of Base64 encoded string.
+ * @param str   BASE64-encoded string
  *
- * @return the length of bytes stored in the str memory in case of successful,
- *         otherwise returns NULL
+ * @return number of bytes stored in `str`.
  *
  * @note
- *  This modify str directly. And the 'str' is always terminated by NULL
- *  character.
+ *  This function modifies `str` in place. The result is always null-terminated.
  */
 size_t qbase64_decode(char *str) {
     const char B64MAPTBL[16 * 16] = {
@@ -360,13 +353,12 @@ size_t qbase64_decode(char *str) {
 }
 
 /**
- * Encode data to Hexadecimal digit format.
+ * Encode data as hexadecimal digits.
  *
- * @param bin   a pointer of input data.
- * @param size  the length of input data.
+ * @param bin   input data
+ * @param size  length of the input data
  *
- * @return a malloced string pointer of Hexadecimal encoded string in case of
- *         successful, otherwise returns NULL
+ * @return allocated hexadecimal string on success, or NULL on failure.
  *
  * @code
  *   const char *text = "hello world";
@@ -412,16 +404,14 @@ char *qhex_encode(const void *bin, size_t size) {
 }
 
 /**
- * Decode Hexadecimal encoded data.
+ * Decode hexadecimal data.
  *
- * @param str   a pointer of Hexadecimal encoded string.
+ * @param str   hexadecimal-encoded string
  *
- * @return the length of bytes stored in the str memory in case of successful,
- *         otherwise returns NULL
+ * @return number of bytes stored in `str`.
  *
  * @note
- *  This modify str directly. And the 'str' is always terminated by NULL
- *  character.
+ *  This function modifies `str` in place. The result is always null-terminated.
  */
 size_t qhex_decode(char *str) {
     const char HEXMAPTBL[16*16] = {

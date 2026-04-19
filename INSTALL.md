@@ -1,21 +1,21 @@
 Installing qLibc
 ================
 
-qLibc supports POSIX-compliant operating systems, including Linux, MacOS X
-and most of Unix systems. Windows OS is supported with most of features.
+qLibc supports POSIX-compliant operating systems, including Linux, macOS,
+and most Unix systems. Windows is supported for most features.
 
 ## Configure
 
-### Linux and most of Unix systems.
+### Linux and most Unix systems.
 
-Run "configure" command.
+Run the `configure` command.
 
 ```
 $ ./configure
 ```
 
-By default qLibc will be installed in `/usr/local/{include,lib}`, so use
-`--prefix` option if you want to change the installation path:
+By default, qLibc will be installed in `/usr/local/{include,lib}`, so use
+the `--prefix` option if you want to change the installation path:
 
 ```
 $ ./configure --prefix=/usr/local/qlibc
@@ -27,31 +27,31 @@ For those who don't want to build the extension library `libqlibcext`:
 $ ./configure --disable-ext
 ```
 
-For those who want HTTPS support in `qhttpclient` extension:
+If you want HTTPS support in the `qhttpclient` extension:
 
 ```
 $ ./configure --with-openssl
 ```
 
-To see detailed configure options, use `--help` option:
+To see detailed configure options, use the `--help` option:
 
 ```
 $ ./configure --help
 ```
 
-### MacOS X and Windows systems (includes most of Unix systems)
+### macOS and Windows systems (and most Unix systems)
 
-Run "cmake" command.
+Run the `cmake` command.
 
 ```
 $ cmake .
 ```
 
-In many systems, CMake needs to be installed separately. qlibc requires CMake
-version 2.8 or above. Currently, we're focusing on getting the library compiled
-on those machines using cmake thus it doesn't provide the full configure
-options that are provided in the configure command as well as build makefiles
-for examples and unit tests.
+On many systems, CMake must be installed separately. qLibc requires CMake
+version 2.8 or later. Currently, we're focusing on getting the library to
+compile on those systems using CMake, so it does not provide all of the
+configure options available in the `configure` command, nor does it generate
+Makefiles for examples and unit tests.
 
 ## Compile
 
@@ -64,40 +64,42 @@ $ make
 ## Install
 
 This command will install `qLibc` on your system. By default, the directory
-prefix is "/usr/local" so header files will be installed into `/usr/local/include`
-and library files will be installed into `/usr/local/lib`:
+prefix is `/usr/local`, so header files will be installed into
+`/usr/local/include` and library files will be installed into
+`/usr/local/lib`:
 
 ```
 $ make install
 ```
 
-This will only install header files and library(archive; static and dynamic)
-files. The document files in the "doc" directory will not be installed,
-so please make a copy of it by yourself if you want to keep it in the system.
+This installs only header files and library files (archive, static, and
+dynamic). The documentation files in the `doc` directory are not installed,
+so copy them separately if you want to keep them on the system.
 
 ## Uninstall
 
-`qLibc` can be completely removed from the system.
+`qLibc` can be removed completely from the system.
 
 ```
 $ make uninstall
 ```
 
-## Examples and Unit Tests.
+## Examples and Unit Tests
 
-Analyzing the example code is probably a best starting point to being familiar
-with qlibc, but please note that the examples were written as simply
-as possible just to show the sample usages.
+Reviewing the example code is probably the best way to get familiar with
+qLibc, but please note that the examples were written as simply as possible
+to demonstrate typical usage.
 
-As a reminder, example codes and API documents are provided with the package
-in the "examples" and "doc" directories.
+The example code and API documents are provided with the package in the
+`examples` and `doc` directories.
 
-Please note that the build Makefile is only provided when the package is
-configured usinig "configure" script. CMake doesn't build the makefiles.
+Please note that the build Makefile is provided only when the package is
+configured using the `configure` script. CMake does not generate those
+Makefiles.
 
 ### Run Examples
 
-The examples also can be compiled by running "make" command in the "examples"
+The examples can also be compiled by running `make` in the `examples`
 directory.
 
 ```
@@ -105,14 +107,14 @@ $ cd examples
 $ make
 ```
 
-If you're using cmake to configure the qlibc package, it will not generate
-Makefile for codes in examples.
+If you are using CMake to configure the qLibc package, it will not generate
+Makefiles for the example code.
 
 ### Run Unit Tests
 
-Unit tests can be compiled and run as following.
+Unit tests can be compiled and run as follows:
 
 ```
-$ cd tests (or in src directory)
+$ cd tests
 $ make test
 ```

@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,13 +44,13 @@
 #include "utilities/qstring.h"
 
 /**
- * Remove white spaces(including CR, LF) from head and tail of the string.
+ * Remove whitespace, including CR and LF, from both ends of a string.
  *
  * @param str       source string
  *
- * @return a pointer of source string if successful, otherwise returns NULL
+ * @return pointer to `str` on success, or NULL on failure.
  *
- * @note This modify source string directly.
+ * @note This function modifies the source string in place.
  */
 char *qstrtrim(char *str) {
     if (str == NULL)
@@ -79,13 +79,13 @@ char *qstrtrim(char *str) {
 }
 
 /**
- * Remove heading white spaces of the string.
+ * Remove leading whitespace from a string.
  *
  * @param str       source string
  *
- * @return a pointer of source string if successful, otherwise returns NULL
+ * @return pointer to `str` on success, or NULL on failure.
  *
- * @note This modify source string directly.
+ * @note This function modifies the source string in place.
  */
 char *qstrtrim_head(char *str) {
     if (str == NULL)
@@ -105,13 +105,13 @@ char *qstrtrim_head(char *str) {
 }
 
 /**
- * Remove tailing white spaces(including CR, LF) of the string.
+ * Remove trailing whitespace, including CR and LF, from a string.
  *
  * @param str       source string
  *
- * @return a pointer of source string if successful, otherwise returns NULL
+ * @return pointer to `str` on success, or NULL on failure.
  *
- * @note This modify source string directly.
+ * @note This function modifies the source string in place.
  */
 char *qstrtrim_tail(char *str) {
     if (str == NULL)
@@ -130,20 +130,20 @@ char *qstrtrim_tail(char *str) {
 }
 
 /**
- * Remove character from head and tail of the string.
+ * Remove matching characters from the start and end of a string.
  *
  * @param str       source string
- * @param head      heading character
- * @param tail      tailing character
+ * @param head      leading character
+ * @param tail      trailing character
  *
- * @return a pointer of source string if successful, otherwise returns NULL
+ * @return pointer to `str` on success, or NULL on failure.
  *
- * @note This modify source string directly.
+ * @note This function modifies the source string in place.
  *
  * @code
  *   char *str = strdup("   \"hello world\"   ");
- *   qstrtrim(str); // to remove white spaces
- *   qstrunchar(str, '"', '"'); // to unquote
+ *   qstrtrim(str);    // remove whitespace
+ *   qstrunchar(str, '"', '"');  // remove quotes
  * @endcode
  */
 char *qstrunchar(char *str, char head, char tail) {
@@ -162,75 +162,48 @@ char *qstrunchar(char *str, char head, char tail) {
 }
 
 /**
- * Replace string or tokens as word from source string with given mode.
+ * Replace tokens or strings in a source string using the given mode.
  *
- * @param mode      replacing mode
+ * @param mode      replace mode
  * @param srcstr    source string
- * @param tokstr    token or string
- * @param word      target word to be replaced
+ * @param tokstr    token or string to match
+ * @param word      replacement string
  *
- * @return a pointer of malloced or source string depending on the mode if
- *         successful, otherwise returns NULL
+ * @return pointer to the result string on success, or NULL on failure.
  *
  * @note
- * The mode argument has two separated characters. First character
- * is used to decide replacing method and can be 't' or 's'.
- * The character 't' and 's' stand on [t]oken and [s]tring.
+ * The mode has two characters.
  *
- * When 't' is given each character of the token string(third argument)
- * will be compared with source string individually. If matched one
- * is found. the character will be replaced with given work.
+ * The first character selects how matching works:
+ * - `t` matches each character in `tokstr` as a token.
+ * - `s` matches `tokstr` as a full string.
  *
- * If 's' is given instead of 't'. Token string will be analyzed
- * only one chunk word. So the replacement will be occured when
- * the case of whole word matched.
+ * The second character selects where the result is stored:
+ * - `n` returns a newly allocated string.
+ * - `r` writes the result back into `srcstr`.
  *
- * Second character is used to decide returning memory type and
- * can be 'n' or 'r' which are stand on [n]ew and [r]eplace.
+ * When `r` is used, `srcstr` must have enough space for the result, and it
+ * must point to writable memory.
  *
- * When 'n' is given the result will be placed into new array so
- * you should free the return string after using. Instead of this,
- * you can also use 'r' character to modify source string directly.
- * In this case, given source string should have enough space. Be
- * sure that untouchable value can not be used for source string.
- *
- * So there are four associatable modes such like below.
- *
- * Mode "tn" : [t]oken replacing & putting the result into [n]ew array.
- * Mode "tr" : [t]oken replacing & [r]eplace source string directly.
- * Mode "sn" : [s]tring replacing & putting the result into [n]ew array.
- * Mode "sr" : [s]tring replacing & [r]eplace source string directly.
+ * Supported modes:
+ * - `tn` : token replace, return a new string
+ * - `tr` : token replace, update `srcstr`
+ * - `sn` : string replace, return a new string
+ * - `sr` : string replace, update `srcstr`
  *
  * @code
  *   char srcstr[256], *retstr;
  *   char mode[4][2+1] = {"tn", "tr", "sn", "sr"};
  *
- *   for(i = 0; i < 4; i++) {
+ *   for (i = 0; i < 4; i++) {
  *     strcpy(srcstr, "Welcome to The qDecoder Project.");
  *
  *     printf("before %s : srcstr = %s\n", mode[i], srcstr);
  *     retstr = qstrreplace(mode[i], srcstr, "The", "_");
  *     printf("after  %s : srcstr = %s\n", mode[i], srcstr);
  *     printf("            retstr = %s\n\n", retstr);
- *     if(mode[i][1] == 'n') free(retstr);
+ *     if (mode[i][1] == 'n') free(retstr);
  *   }
- *
- *   --[Result]--
- *   before tn : srcstr = Welcome to The qDecoder Project.
- *   after  tn : srcstr = Welcome to The qDecoder Project.
- *               retstr = W_lcom_ _o ___ qD_cod_r Proj_c_.
- *
- *   before tr : srcstr = Welcome to The qDecoder Project.
- *   after  tr : srcstr = W_lcom_ _o ___ qD_cod_r Proj_c_.
- *               retstr = W_lcom_ _o ___ qD_cod_r Proj_c_.
- *
- *   before sn : srcstr = Welcome to The qDecoder Project.
- *   after  sn : srcstr = Welcome to The qDecoder Project.
- *               retstr = Welcome to _ qDecoder Project.
- *
- *   before sr : srcstr = Welcome to The qDecoder Project.
- *   after  sr : srcstr = Welcome to _ qDecoder Project.
- *               retstr = Welcome to _ qDecoder Project.
  * @endcode
  */
 char *qstrreplace(const char *mode, char *srcstr, const char *tokstr,
@@ -247,7 +220,7 @@ char *qstrreplace(const char *mode, char *srcstr, const char *tokstr,
     char method = mode[0], memuse = mode[1];
     int maxstrlen, tokstrlen;
 
-    /* Put replaced string into malloced 'newstr' */
+    /* Put replaced string into allocated 'newstr' */
     if (method == 't') { /* Token replace */
         maxstrlen = strlen(srcstr) * ((strlen(word) > 0) ? strlen(word) : 1);
         newstr = (char *) malloc(maxstrlen + 1);
@@ -316,11 +289,11 @@ char *qstrreplace(const char *mode, char *srcstr, const char *tokstr,
  * Copy src string to dst. The dst string array will be always terminated by
  * NULL character. Also allows overlap between src and dst.
  *
- * @param dst       a pointer of the string to be copied
+ * @param dst       pointer to the string to be copied
  * @param size      the size of dst character arrary
- * @param src       a pointer of source string
+ * @param src       pointer to source string
  *
- * @return always returns a pointer of dst
+ * @return always returns pointer to dst
  */
 char *qstrcpy(char *dst, size_t size, const char *src) {
     if (dst == NULL || size == 0 || src == NULL)
@@ -334,12 +307,12 @@ char *qstrcpy(char *dst, size_t size, const char *src) {
  * Copy src string to dst no more than n bytes. The dst string array will be
  * always terminated by NULL character. Also allows overlap between src and dst.
  *
- * @param dst       a pointer of the string to be copied
+ * @param dst       pointer to the string to be copied
  * @param size      the size of dst character arrary
- * @param src       a pointer of source string
+ * @param src       pointer to source string
  * @param nbytes    number of bytes to copy
  *
- * @return always returns a pointer of dst
+ * @return always returns pointer to dst
  */
 char *qstrncpy(char *dst, size_t size, const char *src, size_t nbytes) {
     if (dst == NULL || size == 0 || src == NULL)
@@ -358,7 +331,7 @@ char *qstrncpy(char *dst, size_t size, const char *src, size_t nbytes) {
  *
  * @param format    string format
  *
- * @return a pointer of malloced string if successful, otherwise returns NULL
+ * @return newly allocated string on success, or NULL on failure.
  */
 char *qstrdupf(const char *format, ...) {
     char *str;
@@ -373,13 +346,13 @@ char *qstrdupf(const char *format, ...) {
 }
 
 /**
- * Duplicate a substing set
+ * Duplicate a substring between two markers.
  *
- * @param str       a pointer of original string
- * @param start     substring which is started with this
- * @param end       substring which is ended with this
+ * @param str       source string
+ * @param start     start marker
+ * @param end       end marker
  *
- * @return a pointer of malloced string if successful, otherwise returns NULL
+ * @return newly allocated string on success, or NULL on failure.
  */
 char *qstrdup_between(const char *str, const char *start, const char *end) {
     char *s;
@@ -403,12 +376,12 @@ char *qstrdup_between(const char *str, const char *start, const char *end) {
 }
 
 /**
- * Duplicate a copy of memory data.
+ * Duplicate a block of memory.
  *
  * @param data    source data
  * @param size    data size
  *
- * @return a pointer of malloced data which's content is identical to source data.
+ * @return pointer to newly allocated data on success, or NULL on failure.
  */
 void *qmemdup(const void *data, size_t size) {
     if (data == NULL || size == 0) {
@@ -425,12 +398,12 @@ void *qmemdup(const void *data, size_t size) {
 }
 
 /**
- * Append formatted string to the end of the source str
+ * Append formatted text to the end of a string.
  *
- * @param str       a pointer of original string
+ * @param str       destination string
  * @param format    string format to append
  *
- * @return a pointer of str if successful, otherwise returns NULL
+ * @return pointer to `str` on success, or NULL on failure.
  */
 char *qstrcatf(char *str, const char *format, ...) {
     char *buf;
@@ -444,13 +417,13 @@ char *qstrcatf(char *str, const char *format, ...) {
 }
 
 /**
- * Get one line from the string offset.
+ * Read one line from a string.
  *
  * @param buf       buffer pointer
  * @param size      buffer size
- * @param offset    a offset pointer which point source string
+ * @param offset    pointer to the current position in the source string
  *
- * @return a pointer of buffer if successful, otherwise(EOF) returns NULL
+ * @return pointer to `buf` on success, or NULL on EOF.
  *
  * @note
  *   CR and LF will not be stored.
@@ -491,11 +464,11 @@ char *qstrgets(char *buf, size_t size, char **offset) {
 /**
  * Reverse the order of characters in the string
  *
- * @param str       a pointer of source string
+ * @param str       pointer to source string
  *
- * @return always returns a pointer of str
+ * @return always returns pointer to str
  *
- * @note This modify str directly.
+ * @note This function modifies str directly.
  */
 char *qstrrev(char *str) {
     if (str == NULL)
@@ -514,11 +487,11 @@ char *qstrrev(char *str) {
 /**
  * Convert character to bigger character.
  *
- * @param str       a pointer of source string
+ * @param str       pointer to source string
  *
- * @return always returns a pointer of str
+ * @return always returns pointer to str
  *
- * @note This modify str directly.
+ * @note This function modifies str directly.
  */
 char *qstrupper(char *str) {
     char *cp;
@@ -534,11 +507,11 @@ char *qstrupper(char *str) {
 /**
  * Convert character to lower character.
  *
- * @param str       a pointer of source string
+ * @param str       pointer to source string
  *
- * @return always returns a pointer of str
+ * @return always returns pointer to str
  *
- * @note This modify str directly.
+ * @note This function modifies str directly.
  */
 char *qstrlower(char *str) {
     char *cp;
@@ -552,18 +525,16 @@ char *qstrlower(char *str) {
 }
 
 /**
- * Split string into tokens
+ * Split a string into tokens.
  *
  * @param str           source string
- * @param delimiters    string that specifies a set of delimiters that may
- *                      surround the token being extracted
- * @param retstop       stop delimiter character will be stored. it can be NULL
- *                      if you don't want to know.
- * @param offset        integer pointer used for store last position.
- *                      (must be reset to 0)
+ * @param delimiters    string that specifies the delimiter characters
+ * @param retstop       stop delimiter character is stored here. This can be
+ *                      NULL if you do not need it.
+ * @param offset        integer pointer used to store the last position.
+ *                      It must be reset to 0 before the first call.
  *
- * @return a pointer to the first byte of a token if successful, otherwise
- *         returns NULL.
+ * @return pointer to the first byte of a token on success, or NULL on failure.
  *
  * @code
  *   char *str = strdup("Hello,world|Thank,you");
@@ -609,13 +580,13 @@ char *qstrtok(char *str, const char *delimiters, char *retstop, int *offset) {
 }
 
 /**
- * String Tokenizer
+ * Tokenize a string.
  *
  * @param str           source string
  * @param delimiters    string that specifies a set of delimiters that may
  *                      surround the token being extracted
  *
- * @return qlist container pointer otherwise returns NULL.
+ * @return qlist_t pointer on success, or NULL on failure.
  *
  * @code
  *   qlist_t *tokens = qstr_tokenizer("a:b:c", ":");
@@ -646,11 +617,11 @@ qlist_t *qstrtokenizer(const char *str, const char *delimiters) {
 }
 
 /**
- * Generate unique id
+ * Generate a unique ID.
  *
- * @param seed      additional seed string. this can be NULL
+ * @param seed      additional seed string. This can be NULL.
  *
- * @return a pointer of malloced string
+ * @return newly allocated string.
  *
  * @note
  *  The length of returned string is 32+1 bytes long including terminating NULL
@@ -681,12 +652,11 @@ char *qstrunique(const char *seed) {
 }
 
 /**
- * Convert integer to comma string.
+ * Convert an integer to a comma-separated string.
  *
  * @param number    integer
  *
- * @return a pointer of malloced string which contains comma separated number
- *         if successful, otherwise returns NULL
+ * @return newly allocated string on success, or NULL on failure.
  */
 char *qstr_comma_number(int number) {
     char *str, *strp;
@@ -711,12 +681,12 @@ char *qstr_comma_number(int number) {
 }
 
 /**
- * Test for an alpha-numeric string
+ * Test whether a string matches a character rule.
  *
- * @param testfunc  test function for individual character
- * @param str       a pointer of string
+ * @param testfunc  test function for each character
+ * @param str       string to test
  *
- * @return true for ok, otherwise returns false
+ * @return true if all characters match, otherwise false.
  *
  * @code
  *   if(qstrtest(isalnum, "hello1234") == true) {
@@ -729,7 +699,7 @@ char *qstr_comma_number(int number) {
  * @endcode
  *
  * @note
- *  Basically you can use below test functios without creating your own version.
+ *  You can use the standard functions below without writing your own version.
  *  Make sure <ctype.h> header should be included before using any of these
  *  functions.
  *    isalnum - checks for an alphanumeric character.
@@ -747,7 +717,7 @@ char *qstr_comma_number(int number) {
  *    isspace - checks  for  white-space  characters.
  *    isupper - checks for an uppercase letter.
  *    isxdigit -  checks for a hexadecimal digits.
- *  Please refer "man isalnum" for more details about these functions.
+ *  See `man isalnum` for more details about these functions.
  */
 bool qstrtest(int (*testfunc)(int), const char *str) {
     for (; *str; str++) {
@@ -762,7 +732,7 @@ bool qstrtest(int (*testfunc)(int), const char *str) {
  *
  * @param email     email-address formatted string
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  */
 bool qstr_is_email(const char *email) {
     int i, alpa, dot, gol;
@@ -814,7 +784,7 @@ bool qstr_is_email(const char *email) {
  *
  * @param url       IPv4 address string
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  *
  * @code
  *   if(qstr_is_ip4addr("1.2.3.4") == true) {
@@ -849,15 +819,14 @@ bool qstr_is_ip4addr(const char *str) {
 #endif
 
 /**
- * Convert character encoding
+ * Convert character encoding.
  *
- * @param str       additional seed string. this can be NULL
- * @param fromcode  encoding type of str
- * @param tocode    encoding to convert
- * @param mag       magnification between fromcode and tocode
+ * @param str       source string. This can be NULL.
+ * @param fromcode  source encoding
+ * @param tocode    target encoding
+ * @param mag       size multiplier between `fromcode` and `tocode`
  *
- * @return a pointer of malloced converted string if successful,
- *         otherwise returns NULL
+ * @return newly allocated converted string on success, or NULL on failure.
  *
  * @code
  *   qCharEncode("KOREAN_EUCKR_STRING", "EUC-KR", "UTF-8", 1.5);

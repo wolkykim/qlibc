@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,7 @@
  *     return -1;
  *   }
  *
- *   // fork childs
+ *   // fork children
  *   (... child forking codes ...)
  *
  *   // at the end of daemon, free semaphores
@@ -86,14 +86,14 @@
 #include "ipc/qsem.h"
 
 /**
- * Initialize semaphore
+ * Initialize semaphores.
  *
- * @param keyfile   seed for generating unique IPC key
- * @param keyid     seed for generating unique IPC key
+ * @param keyfile   seed used to generate a unique IPC key
+ * @param keyid     seed used to generate a unique IPC key
  * @param nsems     number of semaphores to initialize
- * @param recreate set to true to re-create semaphore if exists
+ * @param recreate  set to true to recreate the semaphore set if it already exists
  *
- * @return non-negative shared memory identifier if successful, otherwise returns -1
+ * @return non-negative semaphore identifier on success, or -1 on failure.
  *
  * @code
  *   int semid = qsem_init("/tmp/mydaemon.pid", 'q', 10, true);
@@ -145,12 +145,12 @@ int qsem_init(const char *keyfile, int keyid, int nsems, bool recreate) {
 }
 
 /**
- * Get semaphore identifier by keyfile and keyid for the existing semaphore
+ * Get the identifier of an existing semaphore set.
  *
- * @param keyfile   seed for generating unique IPC key
- * @param keyid     seed for generating unique IPC key
+ * @param keyfile   seed used to generate a unique IPC key
+ * @param keyid     seed used to generate a unique IPC key
  *
- * @return non-negative shared memory identifier if successful, otherwise returns -1
+ * @return non-negative semaphore identifier on success, or -1 on failure.
  */
 int qsem_getid(const char *keyfile, int keyid) {
     int semid;
@@ -168,14 +168,14 @@ int qsem_getid(const char *keyfile, int keyid) {
 }
 
 /**
- * Turn on the flag of semaphore then entering critical section
+ * Lock a semaphore and enter a critical section.
  *
  * @param semid     semaphore identifier
  * @param semno     semaphore number
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false.
  *
- * @note If the semaphore is already turned on, this will wait until released
+ * @note If the semaphore is already locked, this function waits until it is released.
  */
 bool qsem_enter(int semid, int semno) {
     struct sembuf sbuf;
@@ -192,12 +192,12 @@ bool qsem_enter(int semid, int semno) {
 }
 
 /**
- * Try to turn on the flag of semaphore. If it is already turned on, do not wait.
+ * Try to lock a semaphore without waiting.
  *
  * @param semid     semaphore identifier
  * @param semno     semaphore number
  *
- * @return true if successful, otherwise(already turned on by other) returns false
+ * @return true on success, or false if it is already locked or an error occurs.
  */
 bool qsem_enter_nowait(int semid, int semno) {
     struct sembuf sbuf;
@@ -214,20 +214,20 @@ bool qsem_enter_nowait(int semid, int semno) {
 }
 
 /**
- * Force to turn on the flag of semaphore.
+ * Wait for a semaphore, then force it open if needed.
  *
  * @param semid     semaphore identifier
  * @param semno     semaphore number
- * @param maxwaitms maximum waiting micro-seconds to release
- * @param forceflag status will be stored, it can be NULL if you don't need this information
+ * @param maxwaitms maximum time to wait, in milliseconds
+ * @param forceflag status output. This can be NULL if you do not need it.
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false.
  *
  * @note
- * This will wait the semaphore to be released with in maxwaitms.
- * If it it released by locker normally with in maxwaitms, forceflag will be set to false.
- * But if maximum maxwaitms is exceed and the semaphore is released forcely, forceflag will
- * be set to true.
+ * This function waits up to `maxwaitms` for the semaphore to be released.
+ * If it is released normally in time, `forceflag` is set to false.
+ * If the wait time is exceeded and the semaphore is forcibly released,
+ * `forceflag` is set to true.
  */
 bool qsem_enter_force(int semid, int semno, int maxwaitms, bool *forceflag) {
     int wait;
@@ -253,12 +253,12 @@ bool qsem_enter_force(int semid, int semno, int maxwaitms, bool *forceflag) {
 }
 
 /**
- * Turn off the flag of semaphore then leaving critical section
+ * Unlock a semaphore and leave the critical section.
  *
  * @param semid     semaphore identifier
  * @param semno     semaphore number
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false.
  */
 bool qsem_leave(int semid, int semno) {
     struct sembuf sbuf;
@@ -275,12 +275,12 @@ bool qsem_leave(int semid, int semno) {
 }
 
 /**
- * Get the status of semaphore
+ * Get the status of a semaphore.
  *
  * @param semid     semaphore identifier
  * @param semno     semaphore number
  *
- * @return true for the flag on, false for the flag off
+ * @return true if the semaphore is locked, or false if it is unlocked.
  */
 bool qsem_check(int semid, int semno) {
     if (semctl(semid, semno, GETVAL, 0) == 0)
@@ -289,11 +289,11 @@ bool qsem_check(int semid, int semno) {
 }
 
 /**
- * Release semaphore to system
+ * Release a semaphore set from the system.
  *
  * @param semid     semaphore identifier
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false.
  */
 bool qsem_free(int semid) {
     if (semid < 0)

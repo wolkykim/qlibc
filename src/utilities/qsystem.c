@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,12 +44,12 @@
 #include "utilities/qsystem.h"
 
 /**
- * Get system environment variable
+ * Get a system environment variable.
  *
- * @param envname   environment name
- * @param defstr    if not found, return this string
+ * @param envname   environment variable name.
+ * @param defstr    default string to return if the variable is not set.
  *
- * @return a pointer of environment variable
+ * @return pointer to the environment variable value, or `defstr` if not found.
  */
 const char *qgetenv(const char *envname, const char *defstr) {
     const char *envstr = getenv(envname);
@@ -57,16 +57,16 @@ const char *qgetenv(const char *envname, const char *defstr) {
 }
 
 /**
- * Get the result string of external command execution
+ * Run an external command and return its output.
  *
- * @param cmd       external command
+ * @param cmd       command string to run.
  *
- * @return malloced string pointer which contains result if successful,
- *         otherwise returns NULL
+ * @return allocated string that contains the command output on success,
+ *         or NULL on failure.
  *
  * @note
- *  If the command does not report result but it is executed successfully,
- *  this will returns empty string(not null)
+ *  If the command runs successfully but produces no output, this function
+ *  returns an empty string, not NULL.
  */
 char *qsyscmd(const char *cmd) {
     FILE *fp = popen(cmd, "r");

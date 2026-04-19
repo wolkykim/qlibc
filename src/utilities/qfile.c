@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,7 +52,7 @@
  *
  * @param fd        file descriptor
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  *
  * @code
  *   // for file descriptor
@@ -93,7 +93,7 @@ bool qfile_lock(int fd) {
  *
  * @param fd        file descriptor
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  */
 bool qfile_unlock(int fd) {
 #ifdef _WIN32
@@ -117,7 +117,7 @@ bool qfile_unlock(int fd) {
  *
  * @param filepath  file or directory path
  *
- * @return true if exists, otherwise returns false.
+ * @return true if exists, otherwise false.
  */
 bool qfile_exist(const char *filepath) {
     if (access(filepath, F_OK) == 0)
@@ -126,14 +126,15 @@ bool qfile_exist(const char *filepath) {
 }
 
 /**
- * Load file into memory.
+ * Load a file into memory.
  *
  * @param filepath  file path
- * @param nbytes    has two purpost, one is to set how many bytes are readed.
- *                  the other is actual the number loaded bytes will be stored.
- *                  nbytes must be point 0 or NULL to read entire file.
+ * @param nbytes    has two purposes. You can set it to limit how many bytes
+ *                  are read, and the actual number of loaded bytes is stored
+ *                  back through the same pointer. Set it to 0 or NULL to read
+ *                  the entire file.
  *
- * @return allocated memory pointer if successful, otherwise returns NULL.
+ * @return allocated memory on success, or NULL on failure.
  *
  * @code
  *   // loading text file
@@ -149,12 +150,11 @@ bool qfile_exist(const char *filepath) {
  * @endcode
  *
  * @note
- *  This method actually allocates memory more than 1 bytes than filesize then
- *  append NULL character at the end. For example, when the file size is 10
- *  bytes long, 10+1 bytes will allocated and the last byte is always NULL
- *  character. So you can load text file and use without appending NULL
- *  character. By the way, the actual file size 10 will be returned at nbytes
- *  variable.
+ *  This function allocates one extra byte after the file size and appends a
+ *  NULL character at the end. For example, if the file size is 10 bytes,
+ *  11 bytes are allocated and the last byte is always NULL. This makes it
+ *  safe to use the loaded data as a text string. The actual file size is
+ *  returned through `nbytes`.
  */
 void *qfile_load(const char *filepath, size_t *nbytes) {
     int fd;
@@ -196,11 +196,12 @@ void *qfile_load(const char *filepath, size_t *nbytes) {
  * Read data from a file stream.
  *
  * @param fp        FILE pointer
- * @param nbytes    has two purpose, one is to set bytes to read.
- *                  the other is to return actual number of bytes loaded.
- *                  0 or NULL can be set to read file until the end.
+ * @param nbytes    has two purposes. You can set it to limit how many bytes
+ *                  are read, and the actual number of loaded bytes is stored
+ *                  back through the same pointer. Set it to 0 or NULL to read
+ *                  until the end of the stream.
  *
- * @return allocated memory pointer if successful, otherwise returns NULL.
+ * @return allocated memory on success, or NULL on failure.
  *
  * @code
  *   int binlen = 0;
@@ -208,8 +209,8 @@ void *qfile_load(const char *filepath, size_t *nbytes) {
  * @endcode
  *
  * @note
- *  This method append NULL character at the end of stream. but nbytes only
- *  counts actual readed bytes.
+ *  This function appends a NULL character at the end of the stream, but
+ *  `nbytes` only counts the actual number of bytes read.
  */
 void *qfile_read(FILE *fp, size_t *nbytes) {
     size_t memsize = 1024;
@@ -277,7 +278,7 @@ void *qfile_read(FILE *fp, size_t *nbytes) {
  *
  *   // save binary
  *   int integer1 = 75;
- *   qfile_save("/tmp/integer.bin, (void*)&integer, sizeof(int));
+ *   qfile_save("/tmp/integer.bin", (void*)&integer1, sizeof(int), false);
  * @endcode
  */
 ssize_t qfile_save(const char *filepath, const void *buf, size_t size,
@@ -307,7 +308,7 @@ ssize_t qfile_save(const char *filepath, const void *buf, size_t size,
  * @param mode      permissions to use
  * @param recursive whether or not to create parent directories automatically
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  */
 bool qfile_mkdir(const char *dirpath, mode_t mode, bool recursive) {
     DEBUG("try to create directory %s", dirpath);
@@ -332,7 +333,7 @@ bool qfile_mkdir(const char *dirpath, mode_t mode, bool recursive) {
  *
  * @param path      path string
  *
- * @return true if ok, otherwise returns false.
+ * @return true if ok, otherwise false.
  */
 bool qfile_check_path(const char *path) {
     if (path == NULL)
@@ -347,11 +348,11 @@ bool qfile_check_path(const char *path) {
 }
 
 /**
- * Get filename from filepath
+ * Get the file name from a path.
  *
  * @param filepath  file or directory path
  *
- * @return malloced filename string
+ * @return allocated file name string.
  */
 char *qfile_get_name(const char *filepath) {
     char *path = strdup(filepath);
@@ -362,11 +363,11 @@ char *qfile_get_name(const char *filepath) {
 }
 
 /**
- * Get directory suffix from filepath
+ * Get the directory part of a path.
  *
  * @param filepath  file or directory path
  *
- * @return malloced filepath string
+ * @return allocated directory string.
  */
 char *qfile_get_dir(const char *filepath) {
     char *path = strdup(filepath);
@@ -377,11 +378,11 @@ char *qfile_get_dir(const char *filepath) {
 }
 
 /**
- * Get extension from filepath.
+ * Get the file extension from a path.
  *
  * @param filepath  file or directory path
  *
- * @return malloced extension string which is converted to lower case.
+ * @return allocated extension string in lower case.
  */
 char *qfile_get_ext(const char *filepath) {
 #define MAX_EXTENSION_LENGTH        (8)
@@ -422,7 +423,7 @@ off_t qfile_get_size(const char *filepath) {
  * @return path string pointer
  *
  * @note
- * This modify path argument itself.
+ * This function modifies path argument itself.
  *
  * @code
  *   "/hello//my/../world" => "/hello/world"
@@ -435,7 +436,7 @@ char *qfile_correct_path(char *path) {
     if (path == NULL)
         return NULL;
 
-    // take off heading & tailing white spaces
+    // take off leading & trailing white spaces
     qstrtrim(path);
 
     while (true) {
@@ -466,7 +467,7 @@ char *qfile_correct_path(char *path) {
             continue;
         }
 
-        // take off tailing slash
+        // take off trailing slash
         size_t nLen = strlen(path);
         if (nLen > 1) {
             if (path[nLen - 1] == '/') {
@@ -475,7 +476,7 @@ char *qfile_correct_path(char *path) {
             }
         }
 
-        // take off tailing /.
+        // take off trailing /.
         if (nLen > 2) {
             if (!strcmp(path + (nLen - 2), "/.")) {
                 path[nLen - 2] = '\0';
@@ -483,7 +484,7 @@ char *qfile_correct_path(char *path) {
             }
         }
 
-        // take off tailing /.
+        // take off trailing /.
         if (nLen > 2) {
             if (!strcmp(path + (nLen - 2), "/.")) {
                 path[nLen - 2] = '\0';
@@ -491,7 +492,7 @@ char *qfile_correct_path(char *path) {
             }
         }
 
-        // take off tailing /.
+        // take off trailing /.
         if (nLen > 3) {
             if (!strcmp(path + (nLen - 3), "/..")) {
                 path[nLen - 3] = '\0';
@@ -515,7 +516,7 @@ char *qfile_correct_path(char *path) {
  * @param bufsize   buffer size
  * @param path      path string
  *
- * @return buffer pointer if successful, otherwise returns NULL.
+ * @return buffer pointer on success, or NULL on failure.
  *
  * @code
  *   char buf[PATH_MAX];

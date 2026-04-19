@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 /**
  * @file qlog.c Rotating file logger object.
  *
- * qlog implements a auto-rotating file logger.
+ * qlog implements an auto-rotating file logger.
  *
  * @code
  *   // create a daily-rotating log file.
@@ -75,27 +75,27 @@ static bool _real_open(qlog_t *log);
 #endif
 
 /**
- * Open ratating-log file
+ * Open a rotating log file.
  *
- * @param filepathfmt     filename format. formatting argument is same as
- *                        strftime()
- * @param mode            new file mode. 0 for system default
- * @param rotateinterval  rotating interval seconds, set 0 to disable rotation
- * @param options         combination of options.
+ * @param filepathfmt     filename format. The format string follows
+ *                        `strftime()`
+ * @param mode            new file mode. Use 0 for the system default
+ * @param rotateinterval  rotation interval in seconds. Use 0 to disable rotation
+ * @param options         combination of options
  *
- * @return a pointer of qlog_t structure
+ * @return qlog_t pointer.
  *
  * @note
- *  rotateinterval is not relative time. If you set it to 3600, log file will be
- *  rotated at every hour. And filenameformat is same as strftime(). So If you
- *  want to log with hourly rotating, filenameformat must be defined including
- *  hour format like "/somepath/xxx-%Y%m%d%H.log". You can set it to
- *  "/somepath/xxx-%H.log" for daily overrided log file.
+ *  `rotateinterval` is not relative time. If you set it to 3600, the log file
+ *  rotates every hour. `filepathfmt` uses the same format as `strftime()`, so
+ *  if you want hourly rotation, the format must include the hour, such as
+ *  "/somepath/xxx-%Y%m%d%H.log". You can use "/somepath/xxx-%H.log" for a
+ *  daily overwritten log file.
  *
  * @note
  *   Available options:
  *   - QLOG_OPT_THREADSAFE - make it thread-safe.
- *   - QLOG_OPT_FLUSH -  flush out buffer everytime.
+ *   - QLOG_OPT_FLUSH -  flush out buffer every time.
  *
  * @code
  *   qlog_t *log = qlog("/tmp/qdecoder-%Y%m%d.err", 0644, 86400, QLOG_OPT_THREADSAFE);
@@ -152,10 +152,10 @@ qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval,
 /**
  * qlog->write(): Log messages
  *
- * @param log       a pointer of qlog_t
+ * @param log       pointer to qlog_t
  * @param str       message string
  *
- * @return true if successful, otherewise returns false
+ * @return true on success, otherwise false
  */
 static bool write_(qlog_t *log, const char *str) {
     if (log == NULL || log->fp == NULL)
@@ -191,10 +191,10 @@ static bool write_(qlog_t *log, const char *str) {
 /**
  * qlog->writef(): Log messages
  *
- * @param log       a pointer of qlog_t
- * @param format    messages format
+ * @param log       pointer to qlog_t
+ * @param format    message format string
  *
- * @return true if successful, otherewise returns false
+ * @return true on success, otherwise false
  */
 static bool writef(qlog_t *log, const char *format, ...) {
     if (log == NULL || log->fp == NULL)
@@ -212,14 +212,14 @@ static bool writef(qlog_t *log, const char *format, ...) {
 }
 
 /**
- * qlog->duplicate(): Duplicate log string into other stream
+ * qlog->duplicate(): Duplicate log output to another stream.
  *
- * @param log       a pointer of qlog_t
- * @param fp        logging messages will be printed out into this stream.
- *                  set NULL to disable.
- * @param flush     set to true if you want to flush everytime duplicating.
+ * @param log       pointer to qlog_t
+ * @param fp        stream to write duplicated log messages to.
+ *                  Set NULL to disable duplication.
+ * @param flush     set to true to flush every time data is duplicated.
  *
- * @return true if successful, otherewise returns false
+ * @return true on success, otherwise false
  *
  * @code
  *   log->duplicate(log, stdout, true); // enable console out with flushing
@@ -240,17 +240,17 @@ static bool duplicate(qlog_t *log, FILE *outfp, bool flush) {
 }
 
 /**
- * qlog->flush(): Flush buffered log
+ * qlog->flush(): Flush buffered log data.
  *
- * @param log       a pointer of qlog_t
+ * @param log       pointer to qlog_t
  *
- * @return true if successful, otherewise returns false
+ * @return true on success, otherwise false
  */
 static bool flush_(qlog_t *log) {
     if (log == NULL)
         return false;
 
-    // only flush if flush flag is disabled
+    // Only flush here when automatic flushing is disabled.
     Q_MUTEX_ENTER(log->qmutex);
     if (log->fp != NULL && log->logflush == false)
         fflush(log->fp);
@@ -262,9 +262,9 @@ static bool flush_(qlog_t *log) {
 }
 
 /**
- * qlog->free(): Close ratating-log file & de-allocate resources
+ * qlog->free(): Close rotating-log file & free resources
  *
- * @param log       a pointer of qlog_t
+ * @param log       pointer to qlog_t
  */
 static void free_(qlog_t *log) {
     if (log == NULL)

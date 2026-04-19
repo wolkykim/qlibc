@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,10 +60,10 @@ int main(void) {
     tbl->debug(tbl, stdout);
 
     //
-    // TEST 2 : many ways to find key.
+    // TEST 2 : many ways to find a key.
     //
 
-    printf("\n--[Test 2 : many ways to find key]--\n");
+    printf("\n--[Test 2 : many ways to find a key]--\n");
     char *e2 = tbl->getstr(tbl, "e2");
     if (e2 != NULL) {
         printf("getstr('e2') : %s\n", e2);
@@ -71,10 +71,10 @@ int main(void) {
     }
 
     //
-    // TEST 3 : travesal table.
+    // TEST 3 : traversal table.
     //
 
-    printf("\n--[Test 3 : travesal table]--\n");
+    printf("\n--[Test 3 : traversal table]--\n");
     printf("table size : %d elements\n", tbl->size(tbl, NULL, NULL));
     int idx = 0;
     qhasharr_obj_t obj;

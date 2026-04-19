@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,10 +78,10 @@ int main(void) {
     list->debug(list, stdout);
 
     //
-    // TEST 4 : travesal list.
+    // TEST 4 : traversal list.
     //
 
-    printf("\n--[Test 4 : travesal list]--\n");
+    printf("\n--[Test 4 : traversal list]--\n");
     printf("list size : %zu elements\n", list->size(list));
     qlist_obj_t obj;
     memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
