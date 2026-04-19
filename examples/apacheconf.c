@@ -178,27 +178,26 @@ static QAC_CB(confcb_userdata_example) {
 
 static QAC_CB(confcb_section_example) {
     /*
-     * If option is found in brackets like <Option>, that is called section.
-     * It has opening section <Option> and closing section </Option>
+     * If an option is found in brackets like <Option>, it is called a section.
+     * It has an opening section <Option> and a closing section </Option>.
      *
-     * Sometimes, it's easier you handle sections when it's closing.
-     * So, for sections, it will be called twice one time at openning and
-     * one time at closing because sometimes it's easier you handle sections
-     * when it's closing.
+     * Sometimes it is easier to handle sections when they are closing.
+     * For sections, the callback will be called twice: once when opening and
+     * once when closing.
      *
-     * Section can also take arguments like <Option Arg1 Arg2...>, but only
-     * for opening section, because these arguments will be provided at closing
-     * callback for you convenient.
+     * Sections can also take arguments like <Option Arg1 Arg2...>, but only
+     * for the opening section. For convenience, these arguments will also be
+     * provided to the closing callback.
      *
-     * For example.
+     * For example:
      *   <Option Arg1, Arg2> <= Opening section. It can take arguments.
-     *                          A callback will be make.
+     *                          A callback will be made.
      *
-     *   </Option2>          <= Closing section.
-     *                          Another callback will be make with arguments
+     *   </Option>           <= Closing section.
+     *                          Another callback will be made with arguments
      *                          Arg1 and Arg2.
      *
-     * data->otype can be used to determine if it's opening or closing.
+     * data->otype can be used to determine whether it is opening or closing.
      */
 
     // Just to print out option information for display purpose.

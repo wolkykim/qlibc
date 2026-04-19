@@ -94,7 +94,7 @@ static bool remove_at(qvector_t *vector, int index);
  * @param objsize   size of each element
  * @param options   combination of initialization options
  *
- * @return allocated qvector_t pointer on success on success, or NULL on failure.
+ * @return allocated qvector_t pointer on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *  - EINVAL  : Invalid argument.
@@ -265,7 +265,7 @@ bool qvector_addlast(qvector_t *vector, const void *data) {
  * @param data      pointer to the source data
  *
  * @return true on success, otherwise false.
- * @retval errno will be set in errno condition.
+ * @retval errno will be set in error condition.
  *
  * - ERANGE  : Index out of range.
  * - EINVAL  : Invalid argument.
@@ -349,7 +349,7 @@ bool qvector_addat(qvector_t *vector, int index, const void *data) {
  * @param vector    qvector_t container pointer.
  * @param newmem    whether or not to allocate memory for the element.
  *
- * @return pointer to the element on success on success, or NULL on failure.
+ * @return pointer to the element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : Vector is empty.
  *  - ENOMEM : Memory allocation failure.
@@ -374,7 +374,7 @@ void *qvector_getfirst(qvector_t *vector, bool newmem) {
  * @param vector    qvector_t container pointer.
  * @param newmem    whether or not to allocate memory for the element.
  *
- * @return pointer to the element on success on success, or NULL on failure.
+ * @return pointer to the element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : Vector is empty.
  *  - ENOMEM : Memory alocation failure.
@@ -400,7 +400,7 @@ void *qvector_getlast(qvector_t *vector, bool newmem) {
  * @param index     index at which the specified element is to access.
  * @param newmem    whether or not to allocate memory for the element.
  *
- * @return pointer to the element on success on success, or NULL on failure.
+ * @return pointer to the element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ERANGE : Index out of range.
  *  - ENOMEM : Memory allocation failure.
@@ -509,11 +509,11 @@ bool qvector_setat(qvector_t *vector, int index, const void *data) {
 }
 
 /**
- * qvector->popfirst(): Returns and remove the first element in this vector.
+ * qvector->popfirst(): Returns and removes the first element in this vector.
  *
  * @param vector    qvector_t container pointer.
  *
- * @return allocated element on success on success, or NULL on failure.
+ * @return allocated element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : Vector is empty.
  *  - ENOMEM : Memory allocation failure.
@@ -527,7 +527,7 @@ void *qvector_popfirst(qvector_t *vector) {
  *
  * @param vector    qvector_t container pointer.
  *
- * @return allocated element on success on success, or NULL on failure.
+ * @return allocated element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : Vector is empty.
  *  - ENOMEM : Memory allocation failure.
@@ -537,13 +537,13 @@ void *qvector_poplast(qvector_t *vector) {
 }
 
 /**
- * qvector->popat(): Returns and remove the element at specified
+ * qvector->popat(): Returns and removes the element at the specified
  * position in this vector.
  *
  * @param vector    qvector_t container pointer.
  * @param index     index of the element to pop
  *
- * @return allocated element on success on success, or NULL on failure.
+ * @return allocated element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : Vector is empty.
  *  - ERANGE : Index out of range.
@@ -691,10 +691,10 @@ void qvector_free(qvector_t *vector) {
 }
 
 /**
- * qvector->debug(): Prints out stored elements for debugging purpose.
+ * qvector->debug(): Prints stored elements for debugging purposes.
  *
  * @param vector    qvector_t container pointer.
- * @param out       output stream FILE descriptor such like stdout, stderr.
+ * @param out       output stream such as stdout or stderr.
  *
  * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
@@ -771,12 +771,12 @@ bool qvector_resize(qvector_t *vector, size_t newmax) {
 }
 
 /**
- * qvector->toarray(): Returns an array contains all the elements in this vector.
+ * qvector->toarray(): Returns an array containing all the elements in this vector.
  * @param vector    qvector_t container pointer.
  * @param size      if size is not NULL, the number of elements will be stored.
  *
- * @return allocated pointer on success on success, or NULL on failure.
- * @retval errno wil be set in error condition.
+ * @return allocated pointer on success, or NULL on failure.
+ * @retval errno will be set in error condition.
  *  - ENOENT : Vector is empty.
  *  - ENOMEM : Memory allocation failure.
  */

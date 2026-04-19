@@ -205,7 +205,7 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="comment"> *                  back through the same pointer. Set it to 0 or NULL to read</span></div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="comment"> *                  the entire file.</span></div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="comment"> * @return allocated memory on success on success, or NULL on failure.</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="comment"> * @return allocated memory on success, or NULL on failure.</span></div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="comment"> * @code</span></div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="comment"> *   // loading text file</span></div>
@@ -274,7 +274,7 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="comment"> *                  back through the same pointer. Set it to 0 or NULL to read</span></div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span><span class="comment"> *                  until the end of the stream.</span></div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="comment"> * @return allocated memory on success on success, or NULL on failure.</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="comment"> * @return allocated memory on success, or NULL on failure.</span></div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span><span class="comment"> * @code</span></div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="comment"> *   int binlen = 0;</span></div>
@@ -353,11 +353,11 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="comment"> *   // save binary</span></div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="comment"> *   int integer1 = 75;</span></div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><span class="comment"> *   qfile_save(&quot;/tmp/integer.bin, (void*)&amp;integer, sizeof(int));</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><span class="comment"> *   qfile_save(&quot;/tmp/integer.bin&quot;, (void*)&amp;integer1, sizeof(int), false);</span></div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span><span class="comment"> * @endcode</span></div>
-<div class="foldopen" id="foldopen00283" data-start="{" data-end="}">
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno"><a class="line" href="qfile_8c.html#aaef22ff4a8a80e6356583335cc34db64">  283</a></span><span class="comment"> */</span></div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>ssize_t <a class="code hl_function" href="qfile_8c.html#aaef22ff4a8a80e6356583335cc34db64">qfile_save</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *filepath, <span class="keyword">const</span> <span class="keywordtype">void</span> *buf, <span class="keywordtype">size_t</span> size,</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00284" data-start="{" data-end="}">
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="qfile_8c.html#aaef22ff4a8a80e6356583335cc34db64">  284</a></span>ssize_t <a class="code hl_function" href="qfile_8c.html#aaef22ff4a8a80e6356583335cc34db64">qfile_save</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *filepath, <span class="keyword">const</span> <span class="keywordtype">void</span> *buf, <span class="keywordtype">size_t</span> size,</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                   <span class="keywordtype">bool</span> append) {</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    <span class="keywordtype">int</span> fd;</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
@@ -375,8 +375,8 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    close(fd);</div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    <span class="keywordflow">return</span> count;</div>
-</div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>}</div>
+</div>
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span><span class="comment"></span> </div>
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span><span class="comment">/**</span></div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span><span class="comment"> * Attempts to create a directory recursively.</span></div>
@@ -386,9 +386,9 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="comment"> * @param recursive whether or not to create parent directories automatically</span></div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span><span class="comment"> * @return true on success, otherwise false.</span></div>
-<div class="foldopen" id="foldopen00312" data-start="{" data-end="}">
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno"><a class="line" href="qfile_8c.html#ae623f84683c9aa6f58ead2f16a8f63db">  312</a></span><span class="comment"> */</span></div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span><span class="keywordtype">bool</span> <a class="code hl_function" href="qfile_8c.html#ae623f84683c9aa6f58ead2f16a8f63db">qfile_mkdir</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *dirpath, mode_t mode, <span class="keywordtype">bool</span> recursive) {</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00313" data-start="{" data-end="}">
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno"><a class="line" href="qfile_8c.html#ae623f84683c9aa6f58ead2f16a8f63db">  313</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="qfile_8c.html#ae623f84683c9aa6f58ead2f16a8f63db">qfile_mkdir</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *dirpath, mode_t mode, <span class="keywordtype">bool</span> recursive) {</div>
 <div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    DEBUG(<span class="stringliteral">&quot;try to create directory %s&quot;</span>, dirpath);</div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    <span class="keywordflow">if</span> (mkdir(dirpath, mode) == 0)</div>
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
@@ -404,8 +404,8 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    }</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    <span class="keywordflow">return</span> ret;</div>
-</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>}</div>
+</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span><span class="comment"></span> </div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span><span class="comment">/**</span></div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span><span class="comment"> * Check path string contains invalid characters.</span></div>
@@ -413,9 +413,9 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span><span class="comment"> * @param path      path string</span></div>
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span><span class="comment"> * @return true if ok, otherwise false.</span></div>
-<div class="foldopen" id="foldopen00337" data-start="{" data-end="}">
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno"><a class="line" href="qfile_8c.html#af382e5541d166ecb6229dcac10a029ff">  337</a></span><span class="comment"> */</span></div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span><span class="keywordtype">bool</span> <a class="code hl_function" href="qfile_8c.html#af382e5541d166ecb6229dcac10a029ff">qfile_check_path</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *path) {</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00338" data-start="{" data-end="}">
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno"><a class="line" href="qfile_8c.html#af382e5541d166ecb6229dcac10a029ff">  338</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="qfile_8c.html#af382e5541d166ecb6229dcac10a029ff">qfile_check_path</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *path) {</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    <span class="keywordflow">if</span> (path == NULL)</div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span> </div>
@@ -425,8 +425,8 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strpbrk(path, <span class="stringliteral">&quot;\\:*?\&quot;&lt;&gt;|&quot;</span>) != NULL)</div>
 <div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-</div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>}</div>
+</div>
 <div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span><span class="comment"></span> </div>
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span><span class="comment">/**</span></div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span><span class="comment"> * Get the file name from a path.</span></div>
@@ -434,16 +434,16 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span><span class="comment"> * @param filepath  file or directory path</span></div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span><span class="comment"> * @return allocated file name string.</span></div>
-<div class="foldopen" id="foldopen00356" data-start="{" data-end="}">
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno"><a class="line" href="qfile_8c.html#a5386ae607fac65eb68fac034a8d4e612">  356</a></span><span class="comment"> */</span></div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span><span class="keywordtype">char</span> *<a class="code hl_function" href="qfile_8c.html#a5386ae607fac65eb68fac034a8d4e612">qfile_get_name</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *filepath) {</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00357" data-start="{" data-end="}">
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno"><a class="line" href="qfile_8c.html#a5386ae607fac65eb68fac034a8d4e612">  357</a></span><span class="keywordtype">char</span> *<a class="code hl_function" href="qfile_8c.html#a5386ae607fac65eb68fac034a8d4e612">qfile_get_name</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *filepath) {</div>
 <div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    <span class="keywordtype">char</span> *path = strdup(filepath);</div>
 <div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    <span class="keywordtype">char</span> *bname = basename(path);</div>
 <div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    <span class="keywordtype">char</span> *filename = strdup(bname);</div>
 <div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    free(path);</div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="keywordflow">return</span> filename;</div>
-</div>
 <div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>}</div>
+</div>
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span><span class="comment"></span> </div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span><span class="comment">/**</span></div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span><span class="comment"> * Get the directory part of a path.</span></div>
@@ -451,16 +451,16 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span><span class="comment"> * @param filepath  file or directory path</span></div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span><span class="comment"> * @return allocated directory string.</span></div>
-<div class="foldopen" id="foldopen00371" data-start="{" data-end="}">
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno"><a class="line" href="qfile_8c.html#aeb6452731c1582ac80bf26f91ce494c4">  371</a></span><span class="comment"> */</span></div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span><span class="keywordtype">char</span> *<a class="code hl_function" href="qfile_8c.html#aeb6452731c1582ac80bf26f91ce494c4">qfile_get_dir</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *filepath) {</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00372" data-start="{" data-end="}">
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno"><a class="line" href="qfile_8c.html#aeb6452731c1582ac80bf26f91ce494c4">  372</a></span><span class="keywordtype">char</span> *<a class="code hl_function" href="qfile_8c.html#aeb6452731c1582ac80bf26f91ce494c4">qfile_get_dir</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *filepath) {</div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="keywordtype">char</span> *path = strdup(filepath);</div>
 <div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <span class="keywordtype">char</span> *dname = dirname(path);</div>
 <div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    <span class="keywordtype">char</span> *dir = strdup(dname);</div>
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    free(path);</div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    <span class="keywordflow">return</span> dir;</div>
-</div>
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>}</div>
+</div>
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="comment"></span> </div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span><span class="comment">/**</span></div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span><span class="comment"> * Get the file extension from a path.</span></div>
@@ -468,9 +468,9 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span><span class="comment"> * @param filepath  file or directory path</span></div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span><span class="comment"> * @return allocated extension string in lower case.</span></div>
-<div class="foldopen" id="foldopen00386" data-start="{" data-end="}">
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno"><a class="line" href="qfile_8c.html#ac4728af539fcbdc7cd00e88834cfce74">  386</a></span><span class="comment"> */</span></div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span><span class="keywordtype">char</span> *<a class="code hl_function" href="qfile_8c.html#ac4728af539fcbdc7cd00e88834cfce74">qfile_get_ext</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *filepath) {</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00387" data-start="{" data-end="}">
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno"><a class="line" href="qfile_8c.html#ac4728af539fcbdc7cd00e88834cfce74">  387</a></span><span class="keywordtype">char</span> *<a class="code hl_function" href="qfile_8c.html#ac4728af539fcbdc7cd00e88834cfce74">qfile_get_ext</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *filepath) {</div>
 <div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span><span class="preprocessor">#define MAX_EXTENSION_LENGTH        (8)</span></div>
 <div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    <span class="keywordtype">char</span> *filename = <a class="code hl_function" href="qfile_8c.html#a5386ae607fac65eb68fac034a8d4e612">qfile_get_name</a>(filepath);</div>
 <div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    <span class="keywordtype">char</span> *p = strrchr(filename, <span class="charliteral">&#39;.&#39;</span>);</div>
@@ -485,8 +485,8 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span> </div>
 <div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    free(filename);</div>
 <div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    <span class="keywordflow">return</span> ext;</div>
-</div>
 <div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>}</div>
+</div>
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span><span class="comment"></span> </div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span><span class="comment">/**</span></div>
 <div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span><span class="comment"> * Get file size.</span></div>
@@ -494,15 +494,15 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span><span class="comment"> * @param filepath  file or directory path</span></div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span><span class="comment"> * @return the file size if exists, otherwise returns -1.</span></div>
-<div class="foldopen" id="foldopen00410" data-start="{" data-end="}">
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno"><a class="line" href="qfile_8c.html#af4b95ff503ddf957bc1d0d1a139a4be2">  410</a></span><span class="comment"> */</span></div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>off_t <a class="code hl_function" href="qfile_8c.html#af4b95ff503ddf957bc1d0d1a139a4be2">qfile_get_size</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *filepath) {</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00411" data-start="{" data-end="}">
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno"><a class="line" href="qfile_8c.html#af4b95ff503ddf957bc1d0d1a139a4be2">  411</a></span>off_t <a class="code hl_function" href="qfile_8c.html#af4b95ff503ddf957bc1d0d1a139a4be2">qfile_get_size</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *filepath) {</div>
 <div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    <span class="keyword">struct </span>stat finfo;</div>
 <div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    <span class="keywordflow">if</span> (stat(filepath, &amp;finfo) &lt; 0)</div>
 <div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    <span class="keywordflow">return</span> finfo.st_size;</div>
-</div>
 <div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>}</div>
+</div>
 <div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span><span class="comment"></span> </div>
 <div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span><span class="comment">/**</span></div>
 <div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span><span class="comment"> * Correct path string.</span></div>
@@ -520,9 +520,9 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span><span class="comment"> *   &quot;/../hello//world&quot; =&gt; &quot;/hello/world&quot;</span></div>
 <div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span><span class="comment"> *   &quot;/../hello//world/&quot; =&gt; &quot;/hello/world&quot;</span></div>
 <div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span><span class="comment"> * @endcode</span></div>
-<div class="foldopen" id="foldopen00434" data-start="{" data-end="}">
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno"><a class="line" href="qfile_8c.html#a3adcdafab36f7466a54538a3ae30a728">  434</a></span><span class="comment"> */</span></div>
-<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span><span class="keywordtype">char</span> *<a class="code hl_function" href="qfile_8c.html#a3adcdafab36f7466a54538a3ae30a728">qfile_correct_path</a>(<span class="keywordtype">char</span> *path) {</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00435" data-start="{" data-end="}">
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno"><a class="line" href="qfile_8c.html#a3adcdafab36f7466a54538a3ae30a728">  435</a></span><span class="keywordtype">char</span> *<a class="code hl_function" href="qfile_8c.html#a3adcdafab36f7466a54538a3ae30a728">qfile_correct_path</a>(<span class="keywordtype">char</span> *path) {</div>
 <div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>    <span class="keywordflow">if</span> (path == NULL)</div>
 <div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>        <span class="keywordflow">return</span> NULL;</div>
 <div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span> </div>
@@ -597,8 +597,8 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>    }</div>
 <div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span> </div>
 <div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>    <span class="keywordflow">return</span> path;</div>
-</div>
 <div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>}</div>
+</div>
 <div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span><span class="comment"></span> </div>
 <div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span><span class="comment">/**</span></div>
 <div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span><span class="comment"> * Make full absolute system path string.</span></div>
@@ -618,9 +618,9 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span><span class="comment"> *   qfile_abspath(buf, sizeof(buf), &quot;/etc&quot;); // returns &quot;/etc&quot;</span></div>
 <div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span><span class="comment"> *   qfile_abspath(buf, sizeof(buf), &quot;/etc/&quot;); // returns &quot;/etc/&quot;</span></div>
 <div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span><span class="comment"> * @endcode</span></div>
-<div class="foldopen" id="foldopen00530" data-start="{" data-end="}">
-<div class="line"><a id="l00530" name="l00530"></a><span class="lineno"><a class="line" href="qfile_8c.html#a9b19d1e8419deecd9519759a5e37805a">  530</a></span><span class="comment"> */</span></div>
-<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span><span class="keywordtype">char</span> *<a class="code hl_function" href="qfile_8c.html#a9b19d1e8419deecd9519759a5e37805a">qfile_abspath</a>(<span class="keywordtype">char</span> *buf, <span class="keywordtype">size_t</span> bufsize, <span class="keyword">const</span> <span class="keywordtype">char</span> *path) {</div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00531" data-start="{" data-end="}">
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno"><a class="line" href="qfile_8c.html#a9b19d1e8419deecd9519759a5e37805a">  531</a></span><span class="keywordtype">char</span> *<a class="code hl_function" href="qfile_8c.html#a9b19d1e8419deecd9519759a5e37805a">qfile_abspath</a>(<span class="keywordtype">char</span> *buf, <span class="keywordtype">size_t</span> bufsize, <span class="keyword">const</span> <span class="keywordtype">char</span> *path) {</div>
 <div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>    <span class="keywordflow">if</span> (bufsize == 0)</div>
 <div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>        <span class="keywordflow">return</span> NULL;</div>
 <div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span> </div>
@@ -635,22 +635,22 @@ $(function(){initNavTree('qfile_8c_source.html','',''); });
 <div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>    <a class="code hl_function" href="qfile_8c.html#a3adcdafab36f7466a54538a3ae30a728">qfile_correct_path</a>(buf);</div>
 <div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span> </div>
 <div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>    <span class="keywordflow">return</span> buf;</div>
-</div>
 <div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>}</div>
+</div>
 <div class="ttc" id="aqfile_8c_html_a2e381f2cbdcbeeaee40dc754414cbe01"><div class="ttname"><a href="qfile_8c.html#a2e381f2cbdcbeeaee40dc754414cbe01">qfile_load</a></div><div class="ttdeci">void * qfile_load(const char *filepath, size_t *nbytes)</div><div class="ttdoc">Load a file into memory.</div><div class="ttdef"><b>Definition</b> <a href="#l00159">qfile.c:159</a></div></div>
-<div class="ttc" id="aqfile_8c_html_a3adcdafab36f7466a54538a3ae30a728"><div class="ttname"><a href="qfile_8c.html#a3adcdafab36f7466a54538a3ae30a728">qfile_correct_path</a></div><div class="ttdeci">char * qfile_correct_path(char *path)</div><div class="ttdoc">Correct path string.</div><div class="ttdef"><b>Definition</b> <a href="#l00434">qfile.c:434</a></div></div>
-<div class="ttc" id="aqfile_8c_html_a5386ae607fac65eb68fac034a8d4e612"><div class="ttname"><a href="qfile_8c.html#a5386ae607fac65eb68fac034a8d4e612">qfile_get_name</a></div><div class="ttdeci">char * qfile_get_name(const char *filepath)</div><div class="ttdoc">Get the file name from a path.</div><div class="ttdef"><b>Definition</b> <a href="#l00356">qfile.c:356</a></div></div>
+<div class="ttc" id="aqfile_8c_html_a3adcdafab36f7466a54538a3ae30a728"><div class="ttname"><a href="qfile_8c.html#a3adcdafab36f7466a54538a3ae30a728">qfile_correct_path</a></div><div class="ttdeci">char * qfile_correct_path(char *path)</div><div class="ttdoc">Correct path string.</div><div class="ttdef"><b>Definition</b> <a href="#l00435">qfile.c:435</a></div></div>
+<div class="ttc" id="aqfile_8c_html_a5386ae607fac65eb68fac034a8d4e612"><div class="ttname"><a href="qfile_8c.html#a5386ae607fac65eb68fac034a8d4e612">qfile_get_name</a></div><div class="ttdeci">char * qfile_get_name(const char *filepath)</div><div class="ttdoc">Get the file name from a path.</div><div class="ttdef"><b>Definition</b> <a href="#l00357">qfile.c:357</a></div></div>
 <div class="ttc" id="aqfile_8c_html_a9133efad385ea27ea68c6df8fb94f1c4"><div class="ttname"><a href="qfile_8c.html#a9133efad385ea27ea68c6df8fb94f1c4">qfile_read</a></div><div class="ttdeci">void * qfile_read(FILE *fp, size_t *nbytes)</div><div class="ttdoc">Read data from a file stream.</div><div class="ttdef"><b>Definition</b> <a href="#l00215">qfile.c:215</a></div></div>
 <div class="ttc" id="aqfile_8c_html_a964a6571f9178ce478d61fe7c4f1021e"><div class="ttname"><a href="qfile_8c.html#a964a6571f9178ce478d61fe7c4f1021e">qfile_unlock</a></div><div class="ttdeci">bool qfile_unlock(int fd)</div><div class="ttdoc">Unlock file which is locked by qfile_lock().</div><div class="ttdef"><b>Definition</b> <a href="#l00098">qfile.c:98</a></div></div>
-<div class="ttc" id="aqfile_8c_html_a9b19d1e8419deecd9519759a5e37805a"><div class="ttname"><a href="qfile_8c.html#a9b19d1e8419deecd9519759a5e37805a">qfile_abspath</a></div><div class="ttdeci">char * qfile_abspath(char *buf, size_t bufsize, const char *path)</div><div class="ttdoc">Make full absolute system path string.</div><div class="ttdef"><b>Definition</b> <a href="#l00530">qfile.c:530</a></div></div>
-<div class="ttc" id="aqfile_8c_html_aaef22ff4a8a80e6356583335cc34db64"><div class="ttname"><a href="qfile_8c.html#aaef22ff4a8a80e6356583335cc34db64">qfile_save</a></div><div class="ttdeci">ssize_t qfile_save(const char *filepath, const void *buf, size_t size, bool append)</div><div class="ttdoc">Save data into file.</div><div class="ttdef"><b>Definition</b> <a href="#l00283">qfile.c:283</a></div></div>
-<div class="ttc" id="aqfile_8c_html_ac4728af539fcbdc7cd00e88834cfce74"><div class="ttname"><a href="qfile_8c.html#ac4728af539fcbdc7cd00e88834cfce74">qfile_get_ext</a></div><div class="ttdeci">char * qfile_get_ext(const char *filepath)</div><div class="ttdoc">Get the file extension from a path.</div><div class="ttdef"><b>Definition</b> <a href="#l00386">qfile.c:386</a></div></div>
-<div class="ttc" id="aqfile_8c_html_ae623f84683c9aa6f58ead2f16a8f63db"><div class="ttname"><a href="qfile_8c.html#ae623f84683c9aa6f58ead2f16a8f63db">qfile_mkdir</a></div><div class="ttdeci">bool qfile_mkdir(const char *dirpath, mode_t mode, bool recursive)</div><div class="ttdoc">Attempts to create a directory recursively.</div><div class="ttdef"><b>Definition</b> <a href="#l00312">qfile.c:312</a></div></div>
-<div class="ttc" id="aqfile_8c_html_aeb6452731c1582ac80bf26f91ce494c4"><div class="ttname"><a href="qfile_8c.html#aeb6452731c1582ac80bf26f91ce494c4">qfile_get_dir</a></div><div class="ttdeci">char * qfile_get_dir(const char *filepath)</div><div class="ttdoc">Get the directory part of a path.</div><div class="ttdef"><b>Definition</b> <a href="#l00371">qfile.c:371</a></div></div>
+<div class="ttc" id="aqfile_8c_html_a9b19d1e8419deecd9519759a5e37805a"><div class="ttname"><a href="qfile_8c.html#a9b19d1e8419deecd9519759a5e37805a">qfile_abspath</a></div><div class="ttdeci">char * qfile_abspath(char *buf, size_t bufsize, const char *path)</div><div class="ttdoc">Make full absolute system path string.</div><div class="ttdef"><b>Definition</b> <a href="#l00531">qfile.c:531</a></div></div>
+<div class="ttc" id="aqfile_8c_html_aaef22ff4a8a80e6356583335cc34db64"><div class="ttname"><a href="qfile_8c.html#aaef22ff4a8a80e6356583335cc34db64">qfile_save</a></div><div class="ttdeci">ssize_t qfile_save(const char *filepath, const void *buf, size_t size, bool append)</div><div class="ttdoc">Save data into file.</div><div class="ttdef"><b>Definition</b> <a href="#l00284">qfile.c:284</a></div></div>
+<div class="ttc" id="aqfile_8c_html_ac4728af539fcbdc7cd00e88834cfce74"><div class="ttname"><a href="qfile_8c.html#ac4728af539fcbdc7cd00e88834cfce74">qfile_get_ext</a></div><div class="ttdeci">char * qfile_get_ext(const char *filepath)</div><div class="ttdoc">Get the file extension from a path.</div><div class="ttdef"><b>Definition</b> <a href="#l00387">qfile.c:387</a></div></div>
+<div class="ttc" id="aqfile_8c_html_ae623f84683c9aa6f58ead2f16a8f63db"><div class="ttname"><a href="qfile_8c.html#ae623f84683c9aa6f58ead2f16a8f63db">qfile_mkdir</a></div><div class="ttdeci">bool qfile_mkdir(const char *dirpath, mode_t mode, bool recursive)</div><div class="ttdoc">Attempts to create a directory recursively.</div><div class="ttdef"><b>Definition</b> <a href="#l00313">qfile.c:313</a></div></div>
+<div class="ttc" id="aqfile_8c_html_aeb6452731c1582ac80bf26f91ce494c4"><div class="ttname"><a href="qfile_8c.html#aeb6452731c1582ac80bf26f91ce494c4">qfile_get_dir</a></div><div class="ttdeci">char * qfile_get_dir(const char *filepath)</div><div class="ttdoc">Get the directory part of a path.</div><div class="ttdef"><b>Definition</b> <a href="#l00372">qfile.c:372</a></div></div>
 <div class="ttc" id="aqfile_8c_html_aee13ab9a468771f9b4e60ae117d1f613"><div class="ttname"><a href="qfile_8c.html#aee13ab9a468771f9b4e60ae117d1f613">qfile_lock</a></div><div class="ttdeci">bool qfile_lock(int fd)</div><div class="ttdoc">Lock file.</div><div class="ttdef"><b>Definition</b> <a href="#l00074">qfile.c:74</a></div></div>
 <div class="ttc" id="aqfile_8c_html_af22eeea721ad66346d7e19f82b28fdb0"><div class="ttname"><a href="qfile_8c.html#af22eeea721ad66346d7e19f82b28fdb0">qfile_exist</a></div><div class="ttdeci">bool qfile_exist(const char *filepath)</div><div class="ttdoc">Check file existence.</div><div class="ttdef"><b>Definition</b> <a href="#l00122">qfile.c:122</a></div></div>
-<div class="ttc" id="aqfile_8c_html_af382e5541d166ecb6229dcac10a029ff"><div class="ttname"><a href="qfile_8c.html#af382e5541d166ecb6229dcac10a029ff">qfile_check_path</a></div><div class="ttdeci">bool qfile_check_path(const char *path)</div><div class="ttdoc">Check path string contains invalid characters.</div><div class="ttdef"><b>Definition</b> <a href="#l00337">qfile.c:337</a></div></div>
-<div class="ttc" id="aqfile_8c_html_af4b95ff503ddf957bc1d0d1a139a4be2"><div class="ttname"><a href="qfile_8c.html#af4b95ff503ddf957bc1d0d1a139a4be2">qfile_get_size</a></div><div class="ttdeci">off_t qfile_get_size(const char *filepath)</div><div class="ttdoc">Get file size.</div><div class="ttdef"><b>Definition</b> <a href="#l00410">qfile.c:410</a></div></div>
+<div class="ttc" id="aqfile_8c_html_af382e5541d166ecb6229dcac10a029ff"><div class="ttname"><a href="qfile_8c.html#af382e5541d166ecb6229dcac10a029ff">qfile_check_path</a></div><div class="ttdeci">bool qfile_check_path(const char *path)</div><div class="ttdoc">Check path string contains invalid characters.</div><div class="ttdef"><b>Definition</b> <a href="#l00338">qfile.c:338</a></div></div>
+<div class="ttc" id="aqfile_8c_html_af4b95ff503ddf957bc1d0d1a139a4be2"><div class="ttname"><a href="qfile_8c.html#af4b95ff503ddf957bc1d0d1a139a4be2">qfile_get_size</a></div><div class="ttdeci">off_t qfile_get_size(const char *filepath)</div><div class="ttdoc">Get file size.</div><div class="ttdef"><b>Definition</b> <a href="#l00411">qfile.c:411</a></div></div>
 <div class="ttc" id="aqstring_8c_html_a24dcde4b707ed664b3962e1bf400de0f"><div class="ttname"><a href="qstring_8c.html#a24dcde4b707ed664b3962e1bf400de0f">qstrcpy</a></div><div class="ttdeci">char * qstrcpy(char *dst, size_t size, const char *src)</div><div class="ttdoc">Copy src string to dst.</div><div class="ttdef"><b>Definition</b> <a href="qstring_8c_source.html#l00298">qstring.c:298</a></div></div>
 <div class="ttc" id="aqstring_8c_html_a673d4ee449a08223e9f26508fa7d81a3"><div class="ttname"><a href="qstring_8c.html#a673d4ee449a08223e9f26508fa7d81a3">qstrtrim</a></div><div class="ttdeci">char * qstrtrim(char *str)</div><div class="ttdoc">Remove whitespace, including CR and LF, from both ends of a string.</div><div class="ttdef"><b>Definition</b> <a href="qstring_8c_source.html#l00055">qstring.c:55</a></div></div>
 <div class="ttc" id="aqstring_8c_html_a6ddf2449ee1edb1139005fa88213567c"><div class="ttname"><a href="qstring_8c.html#a6ddf2449ee1edb1139005fa88213567c">qstrtest</a></div><div class="ttdeci">bool qstrtest(int(*testfunc)(int), const char *str)</div><div class="ttdoc">Test whether a string matches a character rule.</div><div class="ttdef"><b>Definition</b> <a href="qstring_8c_source.html#l00722">qstring.c:722</a></div></div>

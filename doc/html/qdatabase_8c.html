@@ -102,13 +102,13 @@ Functions</h2></td></tr>
 <tr class="memitem:afe5578f18ea12e68e96a80b91bd9be9d" id="r_afe5578f18ea12e68e96a80b91bd9be9d"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#afe5578f18ea12e68e96a80b91bd9be9d">free_</a> (qdb_t *db)</td></tr>
 <tr class="memdesc:afe5578f18ea12e68e96a80b91bd9be9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">qdb-&gt;free(): Free qdb_t structure  <br /></td></tr>
 <tr class="memitem:a4b0bd360d7253d390c5775dd2608caa1" id="r_a4b0bd360d7253d390c5775dd2608caa1"><td class="memItemLeft">static const char *&#160;</td><td class="memItemRight"><a class="el" href="#a4b0bd360d7253d390c5775dd2608caa1">_resultGetStr</a> (qdbresult_t *result, const char *field)</td></tr>
-<tr class="memdesc:a4b0bd360d7253d390c5775dd2608caa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">qdbresult-&gt;get_str(): Get the result as string by field name  <br /></td></tr>
+<tr class="memdesc:a4b0bd360d7253d390c5775dd2608caa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">qdbresult-&gt;get_str(): Get the result as a string by field name.  <br /></td></tr>
 <tr class="memitem:a59dbd0f78d2490fd50b2254451103368" id="r_a59dbd0f78d2490fd50b2254451103368"><td class="memItemLeft">static const char *&#160;</td><td class="memItemRight"><a class="el" href="#a59dbd0f78d2490fd50b2254451103368">_resultGetStrAt</a> (qdbresult_t *result, int idx)</td></tr>
-<tr class="memdesc:a59dbd0f78d2490fd50b2254451103368"><td class="mdescLeft">&#160;</td><td class="mdescRight">qdbresult-&gt;get_str_at(): Get the result as string by column number  <br /></td></tr>
+<tr class="memdesc:a59dbd0f78d2490fd50b2254451103368"><td class="mdescLeft">&#160;</td><td class="mdescRight">qdbresult-&gt;get_str_at(): Get the result as a string by column number.  <br /></td></tr>
 <tr class="memitem:aa7608c9e6913b4d3c71d62cd43073fd1" id="r_aa7608c9e6913b4d3c71d62cd43073fd1"><td class="memItemLeft">static int&#160;</td><td class="memItemRight"><a class="el" href="#aa7608c9e6913b4d3c71d62cd43073fd1">_resultGetInt</a> (qdbresult_t *result, const char *field)</td></tr>
-<tr class="memdesc:aa7608c9e6913b4d3c71d62cd43073fd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">qdbresult-&gt;get_int(): Get the result as integer by field name  <br /></td></tr>
+<tr class="memdesc:aa7608c9e6913b4d3c71d62cd43073fd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">qdbresult-&gt;get_int(): Get the result as an integer by field name.  <br /></td></tr>
 <tr class="memitem:a6b5beda54ba78647276bc180f65138ca" id="r_a6b5beda54ba78647276bc180f65138ca"><td class="memItemLeft">static int&#160;</td><td class="memItemRight"><a class="el" href="#a6b5beda54ba78647276bc180f65138ca">_resultGetIntAt</a> (qdbresult_t *result, int idx)</td></tr>
-<tr class="memdesc:a6b5beda54ba78647276bc180f65138ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">qdbresult-&gt;get_int_at(): Get the result as integer by column number  <br /></td></tr>
+<tr class="memdesc:a6b5beda54ba78647276bc180f65138ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">qdbresult-&gt;get_int_at(): Get the result as an integer by column number.  <br /></td></tr>
 <tr class="memitem:aeb86d8858bb8ea5dd06e052f8f3e9a09" id="r_aeb86d8858bb8ea5dd06e052f8f3e9a09"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#aeb86d8858bb8ea5dd06e052f8f3e9a09">_resultGetNext</a> (qdbresult_t *result)</td></tr>
 <tr class="memdesc:aeb86d8858bb8ea5dd06e052f8f3e9a09"><td class="mdescLeft">&#160;</td><td class="mdescRight">qdbresult-&gt;get_next(): Retrieves the next row of a result set  <br /></td></tr>
 <tr class="memitem:a95d88451db51492ae6122701ce56b94d" id="r_a95d88451db51492ae6122701ce56b94d"><td class="memItemLeft">static int&#160;</td><td class="memItemRight"><a class="el" href="#a95d88451db51492ae6122701ce56b94d">result_get_cols</a> (qdbresult_t *result)</td></tr>
@@ -812,7 +812,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>qdbresult-&gt;get_str(): Get the result as string by field name </p>
+<p>qdbresult-&gt;get_str(): Get the result as a string by field name. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">result</td><td>pointer to qdbresult_t </td></tr>
@@ -854,7 +854,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>qdbresult-&gt;get_str_at(): Get the result as string by column number </p>
+<p>qdbresult-&gt;get_str_at(): Get the result as a string by column number. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">result</td><td>pointer to qdbresult_t </td></tr>
@@ -895,7 +895,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>qdbresult-&gt;get_int(): Get the result as integer by field name </p>
+<p>qdbresult-&gt;get_int(): Get the result as an integer by field name. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">result</td><td>pointer to qdbresult_t </td></tr>
@@ -903,7 +903,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a integer converted value </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>an integer converted value. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="qdatabase_8c_source.html#l00731">731</a> of file <a class="el" href="qdatabase_8c_source.html">qdatabase.c</a>.</p>
 
@@ -936,7 +936,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>qdbresult-&gt;get_int_at(): Get the result as integer by column number </p>
+<p>qdbresult-&gt;get_int_at(): Get the result as an integer by column number. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">result</td><td>pointer to qdbresult_t </td></tr>
@@ -944,7 +944,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a integer converted value </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>an integer converted value. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="qdatabase_8c_source.html#l00745">745</a> of file <a class="el" href="qdatabase_8c_source.html">qdatabase.c</a>.</p>
 

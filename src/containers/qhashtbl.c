@@ -29,11 +29,11 @@
 /**
  * @file qhashtbl.c Hash-table container implementation.
  *
- * qhashtbl implements a hash table, which maps keys to values. Key is a unique
- * string and value is any non-null object. The creator qhashtbl() has a
- * parameter that affect its performance: initial hash range. The hash range
- * is the number of slots(pointers) in the hash table. in the case of a hash
- * collision, a single slots stores multiple elements using linked-list
+ * qhashtbl implements a hash table, which maps keys to values. Keys are unique
+ * strings and values are any non-null objects. The creator qhashtbl() has a
+ * parameter that affects its performance: the initial hash range. The hash
+ * range is the number of slots (pointers) in the hash table. In the case of a
+ * hash collision, a single slot stores multiple elements using a linked-list
  * structure, which must be searched sequentially. So lower range than the
  * number of elements decreases the space overhead but increases the number of
  * hash collisions and consequently it increases the time cost to look up an
@@ -306,7 +306,7 @@ bool qhashtbl_putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...
 }
 
 /**
- * qhashtbl->putint(): Put a integer into this table as string type.
+ * qhashtbl->putint(): Put an integer into this table as a string.
  *
  * @param tbl       qhashtbl_t container pointer.
  * @param name      key name.
@@ -331,7 +331,7 @@ bool qhashtbl_putint(qhashtbl_t *tbl, const char *name, const int64_t num) {
  *
  * @param tbl       qhashtbl_t container pointer.
  * @param name      key name.
- * @param size      if not NULL, oject size will be stored.
+ * @param size      if not NULL, object size will be stored.
  * @param newmem    whether or not to allocate memory for the data.
  *
  * @return pointer to data if the key is found on success, or NULL on failure.
@@ -403,7 +403,7 @@ void *qhashtbl_get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem)
 }
 
 /**
- * qhashtbl->getstr(): Finds an object and returns as string type.
+ * qhashtbl->getstr(): Finds an object and returns it as a string.
  *
  * @param tbl       qhashtbl_t container pointer.
  * @param name      key name
@@ -430,7 +430,7 @@ char *qhashtbl_getstr(qhashtbl_t *tbl, const char *name, const bool newmem) {
  * @param tbl       qhashtbl_t container pointer.
  * @param name      key name
  *
- * @return value integer if successful, otherwise(not found) returns 0
+ * @return the integer value on success; otherwise (if not found), returns 0.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -453,7 +453,7 @@ int64_t qhashtbl_getint(qhashtbl_t *tbl, const char *name) {
  * @param tbl   qhashtbl_t container pointer.
  * @param name  key name
  *
- * @return true if successful, otherwise(not found) returns false
+ * @return true on success; otherwise (if not found), returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -531,13 +531,13 @@ bool qhashtbl_remove(qhashtbl_t *tbl, const char *name) {
  * @endcode
  *
  * @note
- *  locking must be provided on user code when all element scan must be
- *  guaranteed where multiple threads concurrently update the table.
- *  It's ok not to lock the table on the user code even in thread condition,
- *  when concurreny is importand and all element scan in a path doesn't need
- *  to be guaranteed. In this case, new data inserted during the traversal
- *  will be show up in this scan or next scan. Make sure newmem flag is set
- *  if deletion is expected during the scan.
+ *  locking must be provided in user code when a full element scan must be
+ *  guaranteed while multiple threads concurrently update the table.
+ *  It's OK not to lock the table in user code even in multi-threaded
+ *  conditions when concurrency is important and a full element scan in a pass
+ *  does not need to be guaranteed. In this case, new data inserted during the
+ *  traversal will show up in this scan or the next scan. Make sure the newmem
+ *  flag is set if deletion is expected during the scan.
  *  Object obj should be initialized with 0 by using memset() before first call.
  */
 bool qhashtbl_getnext(qhashtbl_t *tbl, qhashtbl_obj_t *obj, const bool newmem) {
@@ -642,10 +642,10 @@ void qhashtbl_clear(qhashtbl_t *tbl) {
 }
 
 /**
- * qhashtbl->debug(): Print hash table for debugging purpose
+ * qhashtbl->debug(): Print the hash table for debugging purposes.
  *
  * @param tbl   qhashtbl_t container pointer.
- * @param out   output stream
+ * @param out   output stream such as stdout or stderr.
  *
  * @return true on success, otherwise false.
  * @retval errno will be set in error condition.

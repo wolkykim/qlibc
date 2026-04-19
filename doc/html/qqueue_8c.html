@@ -80,19 +80,19 @@ Functions</h2></td></tr>
 <tr class="memitem:a382fb2a1977afc2b129bded75a41ed8b" id="r_a382fb2a1977afc2b129bded75a41ed8b"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a382fb2a1977afc2b129bded75a41ed8b">qqueue_pushstr</a> (qqueue_t *queue, const char *str)</td></tr>
 <tr class="memdesc:a382fb2a1977afc2b129bded75a41ed8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;pushstr(): Pushes a string onto the top of this queue.  <br /></td></tr>
 <tr class="memitem:abe2952d24a9a9f6cc8121f491faec4c4" id="r_abe2952d24a9a9f6cc8121f491faec4c4"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#abe2952d24a9a9f6cc8121f491faec4c4">qqueue_pushint</a> (qqueue_t *queue, int64_t num)</td></tr>
-<tr class="memdesc:abe2952d24a9a9f6cc8121f491faec4c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;pushint(): Pushes a integer onto the top of this queue.  <br /></td></tr>
+<tr class="memdesc:abe2952d24a9a9f6cc8121f491faec4c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;pushint(): Pushes an integer onto the top of this queue.  <br /></td></tr>
 <tr class="memitem:a6859700f743f55461f8ca56beba6437f" id="r_a6859700f743f55461f8ca56beba6437f"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#a6859700f743f55461f8ca56beba6437f">qqueue_pop</a> (qqueue_t *queue, size_t *size)</td></tr>
 <tr class="memdesc:a6859700f743f55461f8ca56beba6437f"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;pop(): Removes an element at the top of this queue and returns that element.  <br /></td></tr>
 <tr class="memitem:a7250d2c5928e63093344e559f629fbbc" id="r_a7250d2c5928e63093344e559f629fbbc"><td class="memItemLeft">char *&#160;</td><td class="memItemRight"><a class="el" href="#a7250d2c5928e63093344e559f629fbbc">qqueue_popstr</a> (qqueue_t *queue)</td></tr>
 <tr class="memdesc:a7250d2c5928e63093344e559f629fbbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;popstr(): Removes an element at the top of this queue and returns that element.  <br /></td></tr>
 <tr class="memitem:ade3de0f1655569417856bb9758f1017c" id="r_ade3de0f1655569417856bb9758f1017c"><td class="memItemLeft">int64_t&#160;</td><td class="memItemRight"><a class="el" href="#ade3de0f1655569417856bb9758f1017c">qqueue_popint</a> (qqueue_t *queue)</td></tr>
-<tr class="memdesc:ade3de0f1655569417856bb9758f1017c"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;popint(): Removes a integer at the top of this queue and returns that element.  <br /></td></tr>
+<tr class="memdesc:ade3de0f1655569417856bb9758f1017c"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;popint(): Removes an integer at the top of this queue and returns that element.  <br /></td></tr>
 <tr class="memitem:aa72722b6d5a7ecc5ec01f71c0d7aa951" id="r_aa72722b6d5a7ecc5ec01f71c0d7aa951"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#aa72722b6d5a7ecc5ec01f71c0d7aa951">qqueue_popat</a> (qqueue_t *queue, int index, size_t *size)</td></tr>
-<tr class="memdesc:aa72722b6d5a7ecc5ec01f71c0d7aa951"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;popat(): Returns and remove the element at the specified position in this queue.  <br /></td></tr>
+<tr class="memdesc:aa72722b6d5a7ecc5ec01f71c0d7aa951"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;popat(): Returns and removes the element at the specified position in this queue.  <br /></td></tr>
 <tr class="memitem:a0a561f175ff24b26dea93b3540363e4d" id="r_a0a561f175ff24b26dea93b3540363e4d"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#a0a561f175ff24b26dea93b3540363e4d">qqueue_get</a> (qqueue_t *queue, size_t *size, bool newmem)</td></tr>
 <tr class="memdesc:a0a561f175ff24b26dea93b3540363e4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;<a class="el" href="qhttpclient_8c.html#af16a3eb0912e8b5d4896466632d9c843" title="qhttpclient-&gt;get(): Downloads a file from the remote host using GET method.">get()</a>: Returns an element at the top of this queue without removing it.  <br /></td></tr>
 <tr class="memitem:a984579020101ea2eec6f6e074148923b" id="r_a984579020101ea2eec6f6e074148923b"><td class="memItemLeft">char *&#160;</td><td class="memItemRight"><a class="el" href="#a984579020101ea2eec6f6e074148923b">qqueue_getstr</a> (qqueue_t *queue)</td></tr>
-<tr class="memdesc:a984579020101ea2eec6f6e074148923b"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;getstr(): Returns an string at the top of this queue without removing it.  <br /></td></tr>
+<tr class="memdesc:a984579020101ea2eec6f6e074148923b"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;getstr(): Returns a string at the top of this queue without removing it.  <br /></td></tr>
 <tr class="memitem:a00afe6738073f11568f5b75c11bd11a2" id="r_a00afe6738073f11568f5b75c11bd11a2"><td class="memItemLeft">int64_t&#160;</td><td class="memItemRight"><a class="el" href="#a00afe6738073f11568f5b75c11bd11a2">qqueue_getint</a> (qqueue_t *queue)</td></tr>
 <tr class="memdesc:a00afe6738073f11568f5b75c11bd11a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;getint(): Returns an integer at the top of this queue without removing it.  <br /></td></tr>
 <tr class="memitem:ae22aa53bd411431a0809888655797848" id="r_ae22aa53bd411431a0809888655797848"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#ae22aa53bd411431a0809888655797848">qqueue_getat</a> (qqueue_t *queue, int index, size_t *size, bool newmem)</td></tr>
@@ -102,7 +102,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a407c506258030896676079f9125132b9" id="r_a407c506258030896676079f9125132b9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a407c506258030896676079f9125132b9">qqueue_clear</a> (qqueue_t *queue)</td></tr>
 <tr class="memdesc:a407c506258030896676079f9125132b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;clear(): Removes all of the elements from this queue.  <br /></td></tr>
 <tr class="memitem:a39066762f093f61a310dc3b3550c8780" id="r_a39066762f093f61a310dc3b3550c8780"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a39066762f093f61a310dc3b3550c8780">qqueue_debug</a> (qqueue_t *queue, FILE *out)</td></tr>
-<tr class="memdesc:a39066762f093f61a310dc3b3550c8780"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;debug(): Print out stored elements for debugging purpose.  <br /></td></tr>
+<tr class="memdesc:a39066762f093f61a310dc3b3550c8780"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;debug(): Prints stored elements for debugging purposes.  <br /></td></tr>
 <tr class="memitem:a748db13e1474f59abbc49f922cb90b76" id="r_a748db13e1474f59abbc49f922cb90b76"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a748db13e1474f59abbc49f922cb90b76">qqueue_free</a> (qqueue_t *queue)</td></tr>
 <tr class="memdesc:a748db13e1474f59abbc49f922cb90b76"><td class="mdescLeft">&#160;</td><td class="mdescRight">qqueue-&gt;free(): Free qqueue_t  <br /></td></tr>
 </table>
@@ -143,9 +143,9 @@ Functions</h2></td></tr>
 <div class="line">free(str);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// example: object queue</span></div>
-<div class="line">queue-&gt;push(queue, <span class="stringliteral">&quot;A object&quot;</span>, <span class="keyword">sizeof</span>(<span class="stringliteral">&quot;A object&quot;</span>));</div>
-<div class="line">queue-&gt;push(queue, <span class="stringliteral">&quot;B object&quot;</span>, <span class="keyword">sizeof</span>(<span class="stringliteral">&quot;B object&quot;</span>));</div>
-<div class="line">queue-&gt;push(queue, <span class="stringliteral">&quot;C object&quot;</span>, <span class="keyword">sizeof</span>(<span class="stringliteral">&quot;C object&quot;</span>));</div>
+<div class="line">queue-&gt;push(queue, <span class="stringliteral">&quot;Object A&quot;</span>, <span class="keyword">sizeof</span>(<span class="stringliteral">&quot;Object A&quot;</span>));</div>
+<div class="line">queue-&gt;push(queue, <span class="stringliteral">&quot;Object B&quot;</span>, <span class="keyword">sizeof</span>(<span class="stringliteral">&quot;Object B&quot;</span>));</div>
+<div class="line">queue-&gt;push(queue, <span class="stringliteral">&quot;Object C&quot;</span>, <span class="keyword">sizeof</span>(<span class="stringliteral">&quot;Object C&quot;</span>));</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> *obj = queue-&gt;pop(queue, NULL);</div>
 <div class="line">printf(<span class="stringliteral">&quot;pop(): %s\n&quot;</span>, (<span class="keywordtype">char</span>*)obj);</div>
@@ -167,9 +167,9 @@ Functions</h2></td></tr>
 <div class="line">popstr(): C string</div>
 <div class="line">popstr(): B string</div>
 <div class="line">popstr(): A string</div>
-<div class="line">pop(): C object</div>
-<div class="line">pop(): B object</div>
-<div class="line">pop(): A object</div>
+<div class="line">pop(): Object C</div>
+<div class="line">pop(): Object B</div>
+<div class="line">pop(): Object A</div>
 </div><!-- fragment --> 
 <p class="definition">Definition in file <a class="el" href="qqueue_8c_source.html">qqueue.c</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
@@ -362,7 +362,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qqueue-&gt;pushint(): Pushes a integer onto the top of this queue. </p>
+<p>qqueue-&gt;pushint(): Pushes an integer onto the top of this queue. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">queue</td><td>qqueue container pointer. </td></tr>
@@ -483,7 +483,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qqueue-&gt;popint(): Removes a integer at the top of this queue and returns that element. </p>
+<p>qqueue-&gt;popint(): Removes an integer at the top of this queue and returns that element. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">queue</td><td>qqueue container pointer.</td></tr>
@@ -531,11 +531,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qqueue-&gt;popat(): Returns and remove the element at the specified position in this queue. </p>
+<p>qqueue-&gt;popat(): Returns and removes the element at the specified position in this queue. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">queue</td><td>qqueue container pointer. </td></tr>
-    <tr><td class="paramname">index</td><td>index at which the specified element is to be inserted </td></tr>
+    <tr><td class="paramname">index</td><td>index of the element to pop </td></tr>
     <tr><td class="paramname">size</td><td>if size is not NULL, element size will be stored.</td></tr>
   </table>
   </dd>
@@ -621,7 +621,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qqueue-&gt;getstr(): Returns an string at the top of this queue without removing it. </p>
+<p>qqueue-&gt;getstr(): Returns a string at the top of this queue without removing it. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">queue</td><td>qqueue container pointer.</td></tr>
@@ -814,11 +814,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qqueue-&gt;debug(): Print out stored elements for debugging purpose. </p>
+<p>qqueue-&gt;debug(): Prints stored elements for debugging purposes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">queue</td><td>qqueue container pointer. </td></tr>
-    <tr><td class="paramname">out</td><td>output stream FILE descriptor such like stdout, stderr.</td></tr>
+    <tr><td class="paramname">out</td><td>output stream such as stdout or stderr.</td></tr>
   </table>
   </dd>
 </dl>

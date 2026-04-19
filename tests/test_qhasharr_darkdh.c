@@ -80,7 +80,7 @@ TEST("put() to full") {
     ASSERT_EQUAL_INT(tbl->size(tbl, NULL, NULL), TARGET_NUM);
 }
 
-TEST("get() non-exist key") {
+TEST("get() non-existent key") {
     size_t size;
     char *target_got = (char*) tbl->get(tbl, extra_key[0], &size);
     ASSERT_NULL(target_got);

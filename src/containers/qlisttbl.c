@@ -29,9 +29,9 @@
 /**
  * @file qlisttbl.c Linked-list-table implementation.
  *
- * qlisttbl container is a Linked-List-Table implementation.
- * Which maps keys to values. Key is a string and value is any non-null object.
- * These elements are stored sequentially in Doubly-Linked-List data structure.
+ * qlisttbl container is a Linked-List-Table implementation that maps keys to
+ * values. Keys are strings, and values are any non-null objects. These
+ * elements are stored sequentially in a Doubly-Linked-List data structure.
  *
  * Compared to Hash-Table, List-Table is efficient when you need to keep
  * duplicated keys since Hash-Table only keep unique keys. Of course, qlisttbl
@@ -129,7 +129,7 @@ static bool namecasematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash);
  *
  * @param options   combination of initialization options
  *
- * @return allocated qlisttbl_t pointer on success on success, or NULL on failure.
+ * @return allocated qlisttbl_t pointer on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *
@@ -322,7 +322,7 @@ bool qlisttbl_putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...
 }
 
 /**
- * qlisttbl->putInt(): Put an integer into this table as string type.
+ * qlisttbl->putint(): Put an integer into this table as a string.
  *
  * @param tbl       qlisttbl container pointer.
  * @param name      element name.
@@ -459,19 +459,20 @@ int64_t qlisttbl_getint(qlisttbl_t *tbl, const char *name) {
 }
 
 /**
- * qlisttbl->getmulti(): Finds all objects with given name and return a array
- * of objects.
+ * qlisttbl->getmulti(): Finds all objects with the given name and returns an
+ * array of objects.
  *
- * If there are duplicate keys in the table, this will return all
- * the matched ones. The order of objects in return depends on setnextdir()
- * setting. By default, the order is same(forward) as listed in the table.
+ * If there are duplicate keys in the table, this returns all matching ones.
+ * The order of returned objects depends on the setnextdir() setting. By
+ * default, the order is the same (forward) as listed in the table.
  *
  * @param tbl       qlisttbl container pointer.
  * @param name      element name.
  * @param newmem    whether or not to allocate memory for the data.
- * @param numobjs   the nuber of objects returned will be stored. (can be NULL)
+ * @param numobjs   the number of returned objects will be stored here.
+ *                  (can be NULL)
  *
- * @return pointer to the data if the key is found on success, or NULL on failure.
+ * @return pointer to the data array if the key is found, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -600,14 +601,14 @@ size_t qlisttbl_remove(qlisttbl_t *tbl, const char *name) {
  * qlisttbl->removeobj(): Remove objects with given object pointer.
  *
  * This call is useful when you want to remove an element while traversing a
- * table using getnext(). So the address pointed by obj maybe different than
- * the actual object in a table, but it's ok because we'll recalculate the
- * actual object address by referring it's links.
+ * table using getnext(). The address pointed to by obj may be different from
+ * the actual object in the table, but that is OK because we will recalculate
+ * the actual object address by following its links.
  *
  * @param tbl   qlisttbl container pointer.
- * @param name  element name.
+ * @param obj   object to remove.
  *
- * @return true if succeed on deletion, false if failed.
+ * @return true if deletion succeeds, otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *
@@ -639,7 +640,7 @@ bool qlisttbl_removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj) {
     // double check
     if (this == NULL) {
         qlisttbl_unlock(tbl);
-        DEBUG("qlisttbl->removeobj(): Can't veryfy object.");
+        DEBUG("qlisttbl->removeobj(): Can't verify object.");
         errno = ENOENT;
         return false;
     }
@@ -672,8 +673,8 @@ bool qlisttbl_removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj) {
  *
  * @param tbl       qlisttbl container pointer.
  * @param obj       found data will be stored in this object
- * @param name      element name., if key name is NULL search every objects in
- *                  the table.
+ * @param name      element name. If the key name is NULL, search all objects
+ *                  in the table.
  * @param newmem    whether or not to allocate memory for the data.
  *
  * @return true if found otherwise false
@@ -690,7 +691,7 @@ bool qlisttbl_removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj) {
  *  qlisttbl_t *tbl = qlisttbl();
  *  (...add data into table...)
  *
- *  // non-thread usages
+ *  // single-threaded usage
  *  qlisttbl_obj_t obj;
  *  memset((void*)&obj, 0, sizeof(obj)); // must be cleared before call
  *  while(tbl->getnext(tbl, &obj, NULL, false) == true) {
@@ -962,10 +963,10 @@ ssize_t qlisttbl_load(qlisttbl_t *tbl, const char *filepath, char sepchar,
 }
 
 /**
- * qlisttbl->debug(): Print out stored elements for debugging purpose.
+ * qlisttbl->debug(): Prints stored elements for debugging purposes.
  *
  * @param tbl qlisttbl container pointer.
- * @param out output stream FILE descriptor such like stdout, stderr.
+ * @param out output stream such as stdout or stderr.
  *
  * @return true on success, otherwise false.
  * @retval errno will be set in error condition.

@@ -192,7 +192,7 @@ static bool write_(qlog_t *log, const char *str) {
  * qlog->writef(): Log messages
  *
  * @param log       pointer to qlog_t
- * @param format    messages format
+ * @param format    message format string
  *
  * @return true on success, otherwise false
  */

@@ -338,17 +338,17 @@ Functions</h2></td></tr>
 <div class="line">  4th) This is a regular option and does not have section <span class="keywordtype">id</span>.</div>
 <div class="line">  5th) This option can be specified in OPT_SECTION_DOMAIN and OPT_SECTION_HOST.</div>
 </div><!-- fragment --><p>OPTION NAME field:</p>
-<p>Option name is a unique string. Even an option is section type like &lt;option&gt; only name part without bracket needs to be specified.</p>
+<p>Option name is a unique string. Even when an option is a section type like &lt;option&gt;, only the name part without brackets needs to be specified.</p>
 <p>ARGUMENT field:</p>
-<p>This field is for providing argument checking in parser level. So in user's callback routine can go simple. This provides checking of number of arguments this option can take and those argument type.</p>
-<p>In terms of argument types. There are 4 argument types as below. And first 5 arguments can be checked individually with different types.</p>
+<p>This field provides argument checking at the parser level, so the user's callback routine can stay simple. It checks the number of arguments this option can take and their argument types.</p>
+<p>There are 4 argument types, as shown below. And first 5 arguments can be checked individually with different types.</p>
 <div class="fragment"><div class="line">STR type   : any type</div>
 <div class="line">INT type   : integer type. ex) 23, -12, 0</div>
 <div class="line">FLOAT type : integer + floating point type. ex) 1.32, -32.5, 23, -12, 0</div>
 <div class="line">BOOL type  : bool type ex) 1/0, true/false, on/off, yes/no</div>
-</div><!-- fragment --><p>When a BOOL type is specified, the argument passed to callback will be replaced to "1" or "0" for convenience use. For example, if "On" is specified as a argument and if BOOL type checking is specified, then actual argument which will be passed to callback will have "1". So we can simply determine it like "bool enabled = atoi(data-&gt;argv[1])".</p>
-<p>If original input argument needs to be passed to callback, specify STR type.</p>
-<p>Here is some examples of how to specify "Arguments" field.</p>
+</div><!-- fragment --><p>When a BOOL type is specified, the argument passed to the callback will be replaced with "1" or "0" for convenience. For example, if "On" is specified as an argument and BOOL type checking is enabled, the actual argument passed to the callback will be "1". So we can simply determine it like "bool enabled = atoi(data-&gt;argv[1])".</p>
+<p>If the original input argument needs to be passed to the callback, specify STR type.</p>
+<p>Here are some examples of how to specify the "Arguments" field.</p>
 <div class="fragment"><div class="line">An option takes 1 argument.</div>
 <div class="line">  QAC_TAKE_STR    &lt;= String(any) type</div>
 <div class="line">  QAC_TAKE_INT    &lt;= Integer type</div>
@@ -391,7 +391,7 @@ Functions</h2></td></tr>
 <div class="line">  <span class="keywordtype">char</span> **argv;    <span class="comment">// argument pointers. argv[0] is option name.</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><p>SECTION ID field:</p>
-<p>If an option is an section like &lt;Option&gt;, section id can be assigned. This section id can be used to limit some other option directives to be located only inside of that section. So this is your choice. If it doesn't require to check directory scope, we can just specify 0 here.</p>
+<p>If an option is a section like &lt;Option&gt;, a section ID can be assigned. This section ID can be used to limit some other option directives so they are located only inside that section. This is optional. If you do not need to check directory scope, you can simply specify 0 here.</p>
 <p>There are 2 predefined section IDs: QAC_SECTION_ALL and QAC_SECTION_ROOT. User-defined section IDs should start from <span class="tt">1 &lt;&lt; 1</span>, as shown below.</p>
 <div class="fragment"><div class="line"><span class="keyword">enum</span> {</div>
 <div class="line">  OPT_SECTION_ALL        = QAC_SECTION_ALL,   <span class="comment">// pre-defined</span></div>
@@ -405,7 +405,7 @@ Functions</h2></td></tr>
 <p>QAC_SECTION_ALL means an option can appear anywhere.</p>
 <p>QAC_SECTION_ROOT means an option can appear only at the top level, not inside any section. </p>
 
-<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00438">438</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00439">439</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
 
 </div>
 </div>
@@ -446,7 +446,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00470">470</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00471">471</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
 
 </div>
 </div>
@@ -508,9 +508,9 @@ Functions</h2></td></tr>
 <div class="line">  (...codes...)</div>
 <div class="line">  <span class="keywordflow">return</span> NULL;</div>
 <div class="line">}</div>
-<div class="ttc" id="aqaconf_8c_html_ab68c8ab80781fbca3aeaf7e3d16a9cc2"><div class="ttname"><a href="#ab68c8ab80781fbca3aeaf7e3d16a9cc2">setuserdata</a></div><div class="ttdeci">static void setuserdata(qaconf_t *qaconf, const void *userdata)</div><div class="ttdoc">qaconf_t-&gt;setuserdata(): Set userdata which will be provided on callback.</div><div class="ttdef"><b>Definition</b> <a href="qaconf_8c_source.html#l00506">qaconf.c:506</a></div></div>
+<div class="ttc" id="aqaconf_8c_html_ab68c8ab80781fbca3aeaf7e3d16a9cc2"><div class="ttname"><a href="#ab68c8ab80781fbca3aeaf7e3d16a9cc2">setuserdata</a></div><div class="ttdeci">static void setuserdata(qaconf_t *qaconf, const void *userdata)</div><div class="ttdoc">qaconf_t-&gt;setuserdata(): Set userdata which will be provided on callback.</div><div class="ttdef"><b>Definition</b> <a href="qaconf_8c_source.html#l00507">qaconf.c:507</a></div></div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00506">506</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00507">507</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
 
 </div>
 </div>
@@ -564,7 +564,7 @@ Functions</h2></td></tr>
 <div class="line">c = conf-&gt;parse(conf, <span class="stringliteral">&quot;sm2.conf&quot;</span>, QAC_CASEINSENSITIVE);</div>
 <div class="line">c = conf-&gt;parse(conf, <span class="stringliteral">&quot;sm3.conf&quot;</span>, QAC_CASEINSENSITIVE | QAC_IGNOREUNKNOWN);</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00534">534</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00535">535</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
 
 </div>
 </div>
@@ -605,7 +605,7 @@ Functions</h2></td></tr>
 <div class="line">  printf(<span class="stringliteral">&quot;%s\n&quot;</span>, conf-&gt;errmsg(conf));</div>
 <div class="line">}</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00572">572</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00573">573</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
 
 </div>
 </div>
@@ -645,7 +645,7 @@ Functions</h2></td></tr>
 <div class="line">  <span class="comment">// ERROR</span></div>
 <div class="line">}</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00589">589</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00590">590</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
 
 </div>
 </div>
@@ -681,7 +681,7 @@ Functions</h2></td></tr>
 </dl>
 <div class="fragment"><div class="line">conf-&gt;free(conf);</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00605">605</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qaconf_8c_source.html#l00606">606</a> of file <a class="el" href="qaconf_8c_source.html">qaconf.c</a>.</p>
 
 </div>
 </div>

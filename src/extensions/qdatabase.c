@@ -668,7 +668,7 @@ static void free_(qdb_t *db) {
 }
 
 /**
- * qdbresult->get_str(): Get the result as string by field name
+ * qdbresult->get_str(): Get the result as a string by field name.
  *
  * @param result    pointer to qdbresult_t
  * @param field     column name
@@ -698,7 +698,7 @@ static const char *_resultGetStr(qdbresult_t *result, const char *field) {
 }
 
 /**
- * qdbresult->get_str_at(): Get the result as string by column number
+ * qdbresult->get_str_at(): Get the result as a string by column number.
  *
  * @param result    pointer to qdbresult_t
  * @param idx       column number (first column is 1)
@@ -721,12 +721,12 @@ static const char *_resultGetStrAt(qdbresult_t *result, int idx) {
 }
 
 /**
- * qdbresult->get_int(): Get the result as integer by field name
+ * qdbresult->get_int(): Get the result as an integer by field name.
  *
  * @param result    pointer to qdbresult_t
  * @param field     column name
  *
- * @return a integer converted value
+ * @return an integer converted value.
  */
 static int _resultGetInt(qdbresult_t *result, const char *field) {
     const char *val = result->get_str(result, field);
@@ -735,12 +735,12 @@ static int _resultGetInt(qdbresult_t *result, const char *field) {
 }
 
 /**
- * qdbresult->get_int_at(): Get the result as integer by column number
+ * qdbresult->get_int_at(): Get the result as an integer by column number.
  *
  * @param result    pointer to qdbresult_t
  * @param idx       column number (first column is 1)
  *
- * @return a integer converted value
+ * @return an integer converted value.
  */
 static int _resultGetIntAt(qdbresult_t *result, int idx) {
     const char *val = result->get_str_at(result, idx);

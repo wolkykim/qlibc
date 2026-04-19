@@ -1,7 +1,7 @@
 qLibc Unit Tests
 ================
 
-# How to run unit tests.
+# How to run unit tests
 
 ```
 $ make test
@@ -23,7 +23,8 @@ PASS - 2/2 tests passed.
 
 # How to write unit tests
 
-We need your help to write unit tests. Please refer to test_qstring.c and qunit.h for inspiration.
+We need your help writing unit tests. Please refer to `test_qstring.c` and
+`qunit.h` for inspiration.
 
 ```C
 #include "qunit.h"
@@ -37,7 +38,7 @@ TEST("Test name1") {
 }
 
 TEST("Test name2") {
-    ASSERT_EQUAL_PT(NULL == NULL);
+    ASSERT_EQUAL_PT(NULL, NULL);
 }
 
 QUNIT_END();

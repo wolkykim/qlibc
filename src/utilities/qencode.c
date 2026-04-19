@@ -98,7 +98,7 @@ qlisttbl_t *qparse_queries(qlisttbl_t *tbl, const char *query, char equalchar,
  * @param bin   input data
  * @param size  length of the input data
  *
- * @return allocated URL-encoded string on success on success, or NULL on failure.
+ * @return allocated URL-encoded string on success, or NULL on failure.
  *
  * @code
  *   const char *text = "hello 'qLibc' world";
@@ -219,7 +219,7 @@ size_t qurl_decode(char *str) {
  * @param bin   input data
  * @param size  length of the input data
  *
- * @return allocated BASE64 string on success on success, or NULL on failure.
+ * @return allocated BASE64 string on success, or NULL on failure.
  *
  * @code
  *   const char *text = "hello world";
@@ -358,7 +358,7 @@ size_t qbase64_decode(char *str) {
  * @param bin   input data
  * @param size  length of the input data
  *
- * @return allocated hexadecimal string on success on success, or NULL on failure.
+ * @return allocated hexadecimal string on success, or NULL on failure.
  *
  * @code
  *   const char *text = "hello world";

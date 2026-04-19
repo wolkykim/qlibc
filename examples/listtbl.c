@@ -55,10 +55,10 @@ int main(void) {
     tbl->debug(tbl, stdout);
 
     //
-    // TEST 2 : many ways to find key.
+    // TEST 2 : many ways to find a key.
     //
 
-    printf("\n--[Test 2 : many ways to find key]--\n");
+    printf("\n--[Test 2 : many ways to find a key]--\n");
     printf("get('e2') : %s\n", (char *) tbl->get(tbl, "e2", NULL, false));
     printf("getstr('e2') : %s\n", tbl->getstr(tbl, "e2", false));
 
@@ -67,10 +67,10 @@ int main(void) {
     free(e2);
 
     //
-    // TEST 3 : getmulti() - fetch all duplicated 'e2' keys.
+    // TEST 3 : getmulti() - fetch all duplicate 'e2' keys.
     //
 
-    printf("\n--[Test 3 : getmulti() - fetch all duplicated 'e2' keys]--\n");
+    printf("\n--[Test 3 : getmulti() - fetch all duplicate 'e2' keys]--\n");
     size_t numobjs = 0;
     qlisttbl_data_t *objs = tbl->getmulti(tbl, "e2", true, &numobjs);
     printf("getmulti('e2') : %d objects found.\n", (int) numobjs);
@@ -84,7 +84,7 @@ int main(void) {
     // TEST 4 : traversal duplicated keys 'e2'.
     //
 
-    printf("\n--[Test 4 : travesal a particular key 'e2']--\n");
+    printf("\n--[Test 4 : traversal of the key 'e2']--\n");
     memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     tbl->lock(tbl);
     while (tbl->getnext(tbl, &obj, "e2", false) == true) {
@@ -94,11 +94,11 @@ int main(void) {
     tbl->unlock(tbl);
 
     //
-    // TEST 5 : traversal a list.
+    // TEST 5 : traversal of a list.
     //
 
-    printf("\n--[Test 5 : travesal a list]--\n");
-    printf("list size : %zu elements\n", tbl->size(tbl));
+    printf("\n--[Test 5 : traversal of a list]--\n");
+    printf("table size : %zu elements\n", tbl->size(tbl));
     memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call
     tbl->lock(tbl);
     while (tbl->getnext(tbl, &obj, NULL, true) == true) {
@@ -137,7 +137,7 @@ int main(void) {
     tbl->debug(tbl, stdout);
 
     //
-    //  TEST 8 : Sorting test.
+    // TEST 8 : sorting test.
     //
     tbl->free(tbl);
     tbl = qlisttbl(0);
@@ -151,7 +151,7 @@ int main(void) {
     tbl->sort(tbl);
 
     // print out
-    printf("\n--[Test 8 : Sorting test.\n");
+    printf("\n--[Test 8 : sorting test]--\n");
     tbl->debug(tbl, stdout);
 
     // free object

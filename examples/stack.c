@@ -63,9 +63,9 @@ int main(void) {
     free(str);
 
     // example: object stack
-    stack->push(stack, "A object", sizeof("A object"));
-    stack->push(stack, "B object", sizeof("B object"));
-    stack->push(stack, "C object", sizeof("C object"));
+    stack->push(stack, "Object A", sizeof("Object A"));
+    stack->push(stack, "Object B", sizeof("Object B"));
+    stack->push(stack, "Object C", sizeof("Object C"));
 
     void *obj = stack->pop(stack, NULL);
     printf("pop(): %s\n", (char *) obj);

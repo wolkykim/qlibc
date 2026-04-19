@@ -71,9 +71,9 @@
  *  free(str);
  *
  *  // example: object queue
- *  queue->push(queue, "A object", sizeof("A object"));
- *  queue->push(queue, "B object", sizeof("B object"));
- *  queue->push(queue, "C object", sizeof("C object"));
+ *  queue->push(queue, "Object A", sizeof("Object A"));
+ *  queue->push(queue, "Object B", sizeof("Object B"));
+ *  queue->push(queue, "Object C", sizeof("Object C"));
  *
  *  void *obj = queue->pop(queue, NULL);
  *  printf("pop(): %s\n", (char*)obj);
@@ -95,9 +95,9 @@
  *  popstr(): C string
  *  popstr(): B string
  *  popstr(): A string
- *  pop(): C object
- *  pop(): B object
- *  pop(): A object
+ *  pop(): Object C
+ *  pop(): Object B
+ *  pop(): Object A
  * @endcode
  */
 
@@ -219,7 +219,7 @@ bool qqueue_pushstr(qqueue_t *queue, const char *str) {
 }
 
 /**
- * qqueue->pushint(): Pushes a integer onto the top of this queue.
+ * qqueue->pushint(): Pushes an integer onto the top of this queue.
  *
  * @param queue qqueue container pointer.
  * @param num   integer data.
@@ -275,7 +275,7 @@ char *qqueue_popstr(qqueue_t *queue) {
 }
 
 /**
- * qqueue->popint(): Removes a integer at the top of this queue and
+ * qqueue->popint(): Removes an integer at the top of this queue and
  * returns that element.
  *
  * @param queue qqueue container pointer.
@@ -300,11 +300,11 @@ int64_t qqueue_popint(qqueue_t *queue) {
 }
 
 /**
- * qqueue->popat(): Returns and remove the element at the specified
+ * qqueue->popat(): Returns and removes the element at the specified
  * position in this queue.
  *
  * @param queue qqueue container pointer.
- * @param index index at which the specified element is to be inserted
+ * @param index index of the element to pop
  * @param size  if size is not NULL, element size will be stored.
  *
  * @return pointer to allocated element on success, or NULL on failure.
@@ -339,7 +339,7 @@ void *qqueue_get(qqueue_t *queue, size_t *size, bool newmem) {
 }
 
 /**
- * qqueue->getstr(): Returns an string at the top of this queue without
+ * qqueue->getstr(): Returns a string at the top of this queue without
  * removing it.
  *
  * @param queue qqueue container pointer.
@@ -431,10 +431,10 @@ void qqueue_clear(qqueue_t *queue) {
 }
 
 /**
- * qqueue->debug(): Print out stored elements for debugging purpose.
+ * qqueue->debug(): Prints stored elements for debugging purposes.
  *
  * @param queue     qqueue container pointer.
- * @param out       output stream FILE descriptor such like stdout, stderr.
+ * @param out       output stream such as stdout or stderr.
  *
  * @return true on success, otherwise false.
  */

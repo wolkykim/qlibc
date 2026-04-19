@@ -41,7 +41,7 @@
  *     return -1;
  *   }
  *
- *   // fork childs
+ *   // fork children
  *   (... child forking codes ...)
  *
  *   // at the end of daemon, free semaphores

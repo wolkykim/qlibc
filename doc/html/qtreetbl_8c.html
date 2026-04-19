@@ -86,13 +86,13 @@ Functions</h2></td></tr>
 <tr class="memitem:a106198f0800d8892e404e0020da0d685" id="r_a106198f0800d8892e404e0020da0d685"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#a106198f0800d8892e404e0020da0d685">qtreetbl_get</a> (qtreetbl_t *tbl, const char *name, size_t *datasize, bool newmem)</td></tr>
 <tr class="memdesc:a106198f0800d8892e404e0020da0d685"><td class="mdescLeft">&#160;</td><td class="mdescRight">qtreetbl-&gt;<a class="el" href="qhttpclient_8c.html#af16a3eb0912e8b5d4896466632d9c843" title="qhttpclient-&gt;get(): Downloads a file from the remote host using GET method.">get()</a>: Get an object from this table.  <br /></td></tr>
 <tr class="memitem:a80185e2ca955ce2ccbdb43065110df4c" id="r_a80185e2ca955ce2ccbdb43065110df4c"><td class="memItemLeft">char *&#160;</td><td class="memItemRight"><a class="el" href="#a80185e2ca955ce2ccbdb43065110df4c">qtreetbl_getstr</a> (qtreetbl_t *tbl, const char *name, const bool newmem)</td></tr>
-<tr class="memdesc:a80185e2ca955ce2ccbdb43065110df4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">qtreetbl-&gt;getstr(): Finds an object and returns it as string type.  <br /></td></tr>
+<tr class="memdesc:a80185e2ca955ce2ccbdb43065110df4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">qtreetbl-&gt;getstr(): Finds an object and returns it as a string.  <br /></td></tr>
 <tr class="memitem:a756340d5313f0ecf604c35326b3b6a5f" id="r_a756340d5313f0ecf604c35326b3b6a5f"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#a756340d5313f0ecf604c35326b3b6a5f">qtreetbl_getobj</a> (qtreetbl_t *tbl, const void *name, size_t namesize, size_t *datasize, bool newmem)</td></tr>
 <tr class="memdesc:a756340d5313f0ecf604c35326b3b6a5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">qtreetbl-&gt;getobj(): Get an object from this table with an object name.  <br /></td></tr>
 <tr class="memitem:a3354408a36cb5d6fd724727dda04d1f3" id="r_a3354408a36cb5d6fd724727dda04d1f3"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a3354408a36cb5d6fd724727dda04d1f3">qtreetbl_remove</a> (qtreetbl_t *tbl, const char *name)</td></tr>
 <tr class="memdesc:a3354408a36cb5d6fd724727dda04d1f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">qtreetbl-&gt;remove(): Remove an object from this table.  <br /></td></tr>
 <tr class="memitem:ad3284afb03b64b8242687e33b87aaf0e" id="r_ad3284afb03b64b8242687e33b87aaf0e"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ad3284afb03b64b8242687e33b87aaf0e">qtreetbl_removeobj</a> (qtreetbl_t *tbl, const void *name, size_t namesize)</td></tr>
-<tr class="memdesc:ad3284afb03b64b8242687e33b87aaf0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qtreetbl-&gt;remove(): Remove an object from this table with an object name.  <br /></td></tr>
+<tr class="memdesc:ad3284afb03b64b8242687e33b87aaf0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qtreetbl-&gt;removeobj(): Remove an object from this table using an object name.  <br /></td></tr>
 <tr class="memitem:aeb32bf5a193a0b7276cff302d3fcd090" id="r_aeb32bf5a193a0b7276cff302d3fcd090"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aeb32bf5a193a0b7276cff302d3fcd090">qtreetbl_getnext</a> (qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem)</td></tr>
 <tr class="memdesc:aeb32bf5a193a0b7276cff302d3fcd090"><td class="mdescLeft">&#160;</td><td class="mdescRight">qtreetbl-&gt;getnext(): Get next element.  <br /></td></tr>
 <tr class="memitem:ac12b7b164b262053427eac34a2d1cbbc" id="r_ac12b7b164b262053427eac34a2d1cbbc"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#ac12b7b164b262053427eac34a2d1cbbc">qtreetbl_find_min</a> (qtreetbl_t *tbl, size_t *namesize)</td></tr>
@@ -151,7 +151,7 @@ Functions</h2></td></tr>
 </pre> Nodes A, I and S are nodes with RED upper link. Others are BLACK</li>
 </ul>
 <p>The Red-Black BST algorithm has been one of the popular BST algorithms especially for in-memory operation. The Left-Leaning version of Red-Black especially improves performance and reduces overall complexity.</p>
-<p>Since it's relatively new algorithm, there's not many practically functional working codes yet other than proof of concept kinds. Here's one of fully functional codes and I, Seungyoung Kim, would like to dedicate this code to the genius inventor Robert Sedgewick and to all the great qLibc users.</p>
+<p>Since it is a relatively new algorithm, there are not many practical, fully functional implementations yet beyond proof-of-concept code. This is one such implementation, and I, Seungyoung Kim, would like to dedicate this code to the genius inventor Robert Sedgewick and to all the great qLibc users.</p>
 <p>Additional features:</p><ul>
 <li>iterator.</li>
 <li>find nearest key.</li>
@@ -190,7 +190,7 @@ Functions</h2></td></tr>
 <div class="line"><span class="keywordtype">size_t</span> num = tbl-&gt;size(tbl);</div>
 <div class="line"> </div>
 <div class="line">tbl-&gt;free(tbl);</div>
-<div class="ttc" id="aqtreetbl_8c_html_a0a5c039995463a94bb7066190a6653e1"><div class="ttname"><a href="#a0a5c039995463a94bb7066190a6653e1">qtreetbl</a></div><div class="ttdeci">qtreetbl_t * qtreetbl(int options)</div><div class="ttdoc">Initialize a tree table.</div><div class="ttdef"><b>Definition</b> <a href="qtreetbl_8c_source.html#l00182">qtreetbl.c:182</a></div></div>
+<div class="ttc" id="aqtreetbl_8c_html_a0a5c039995463a94bb7066190a6653e1"><div class="ttname"><a href="#a0a5c039995463a94bb7066190a6653e1">qtreetbl</a></div><div class="ttdeci">qtreetbl_t * qtreetbl(int options)</div><div class="ttdoc">Initialize a tree table.</div><div class="ttdef"><b>Definition</b> <a href="qtreetbl_8c_source.html#l00183">qtreetbl.c:183</a></div></div>
 </div><!-- fragment --> 
 <p class="definition">Definition in file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
@@ -232,7 +232,7 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00182">182</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00183">183</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -265,7 +265,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>By default, qtreetbl uses byte comparator that works for both binary type key and string type key. Please refer qtreetbl_byte_cmp() for your idea to make your own comparator. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00250">250</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00251">251</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -320,7 +320,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00269">269</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00270">270</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -369,7 +369,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00287">287</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00288">288</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -423,7 +423,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00305">305</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00306">306</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -485,7 +485,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>This is the underlying put function which all other put methods use. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00336">336</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00337">337</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -553,7 +553,7 @@ Functions</h2></td></tr>
 <div class="line">free(data);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be allocated and should be deallocated by user. Otherwise returned pointer will point internal buffer directly and should not be freed by user. In thread-safe mode, newmem flag must be set to true always. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00392">392</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00393">393</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -581,7 +581,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qtreetbl-&gt;getstr(): Finds an object and returns it as string type. </p>
+<p>qtreetbl-&gt;getstr(): Finds an object and returns it as a string. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qtreetbl_t container pointer. </td></tr>
@@ -604,7 +604,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be allocated and should be deallocated by user. Otherwise returned pointer will point internal buffer directly and should not be freed by user. In thread-safe mode, newmem flag must be set to true always. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00417">417</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00418">418</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -648,7 +648,7 @@ Functions</h2></td></tr>
     <tr><td class="paramname">tbl</td><td>qtreetbl_t container pointer. </td></tr>
     <tr><td class="paramname">name</td><td>key name. </td></tr>
     <tr><td class="paramname">namesize</td><td>key size. </td></tr>
-    <tr><td class="paramname">datasize</td><td>if not NULL, oject size will be stored. </td></tr>
+    <tr><td class="paramname">datasize</td><td>if not NULL, object size will be stored. </td></tr>
     <tr><td class="paramname">newmem</td><td>whether or not to allocate memory for the data.</td></tr>
   </table>
   </dd>
@@ -667,7 +667,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>If newmem flag is set, returned data will be allocated and should be deallocated by user. Otherwise returned pointer will point internal buffer directly and should not be freed by user. In thread-safe mode, newmem flag must be set to true always. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00443">443</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00444">444</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -698,7 +698,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise(not found) returns false. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true on success; otherwise (if not found), returns false. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
@@ -710,7 +710,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00474">474</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00475">475</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -738,16 +738,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qtreetbl-&gt;remove(): Remove an object from this table with an object name. </p>
+<p>qtreetbl-&gt;removeobj(): Remove an object from this table using an object name. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qtreetbl_t container pointer. </td></tr>
     <tr><td class="paramname">name</td><td>key name. </td></tr>
-    <tr><td class="paramname">name</td><td>key size.</td></tr>
+    <tr><td class="paramname">namesize</td><td>key size.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if successful, otherwise(not found) returns false. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true on success; otherwise (if not found), returns false. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
@@ -759,7 +759,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00491">491</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00492">492</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -855,7 +855,7 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00580">580</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00581">581</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -889,7 +889,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>allocated memory copying the key name.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>It's user's responsibility to free the return. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00634">634</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00635">635</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -923,7 +923,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>allocated memory copying the key name.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>It's user's responsibility to free the return. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00662">662</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00663">663</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 
 </div>
 </div>
@@ -983,7 +983,7 @@ Functions</h2></td></tr>
 <div class="line">find_nearest(<span class="stringliteral">&quot;0&quot;</span>) =&gt; <span class="stringliteral">&quot;A&quot;</span> <span class="comment">// no smaller key available, so &quot;A&quot;</span></div>
 <div class="line">find_nearest(<span class="stringliteral">&quot;C&quot;</span>) =&gt; <span class="stringliteral">&quot;C&quot;</span> <span class="comment">// matching key found</span></div>
 <div class="line">find_nearest(<span class="stringliteral">&quot;F&quot;</span>) =&gt; <span class="stringliteral">&quot;E&quot;</span> <span class="comment">// &quot;E&quot; is nearest smaller key from &quot;F&quot;</span></div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>When there's no matching key it look for closest smaller key in the neighbors. The only exception when it returns bigger key than given search key is that when there's no smaller keys available in the table. In such case, it'll return the nearest bigger key. </dd></dl>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>When there is no matching key, it looks for the closest smaller key among the neighbors. The only exception is when there are no smaller keys available in the table. In that case, it returns the nearest larger key. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="qtreetbl_8c_source.html#l00711">711</a> of file <a class="el" href="qtreetbl_8c_source.html">qtreetbl.c</a>.</p>
 

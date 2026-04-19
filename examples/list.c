@@ -78,10 +78,10 @@ int main(void) {
     list->debug(list, stdout);
 
     //
-    // TEST 4 : travesal list.
+    // TEST 4 : traversal list.
     //
 
-    printf("\n--[Test 4 : travesal list]--\n");
+    printf("\n--[Test 4 : traversal list]--\n");
     printf("list size : %zu elements\n", list->size(list));
     qlist_obj_t obj;
     memset((void *) &obj, 0, sizeof(obj));  // must be cleared before call

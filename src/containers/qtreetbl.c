@@ -69,10 +69,11 @@
  * especially for in-memory operation. The Left-Leaning version of Red-Black
  * especially improves performance and reduces overall complexity.
  *
- * Since it's relatively new algorithm, there's not many practically functional
- * working codes yet other than proof of concept kinds. Here's one of fully
- * functional codes and I, Seungyoung Kim, would like to dedicate this code to
- * the genius inventor Robert Sedgewick and to all the great qLibc users.
+ * Since it is a relatively new algorithm, there are not many practical,
+ * fully functional implementations yet beyond proof-of-concept code. This is
+ * one such implementation, and I, Seungyoung Kim, would like to dedicate this
+ * code to the genius inventor Robert Sedgewick and to all the great qLibc
+ * users.
  *
  * Additional features:
  *   - iterator.
@@ -396,7 +397,7 @@ void *qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize,
 }
 
 /**
- * qtreetbl->getstr(): Finds an object and returns it as string type.
+ * qtreetbl->getstr(): Finds an object and returns it as a string.
  *
  * @param tbl       qtreetbl_t container pointer.
  * @param name      key name.
@@ -425,7 +426,7 @@ char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem) {
  * @param tbl         qtreetbl_t container pointer.
  * @param name        key name.
  * @param namesize    key size.
- * @param datasize    if not NULL, oject size will be stored.
+ * @param datasize    if not NULL, object size will be stored.
  * @param newmem      whether or not to allocate memory for the data.
  *
  * @return pointer to data if the key is found on success, or NULL on failure.
@@ -466,7 +467,7 @@ void *qtreetbl_getobj(qtreetbl_t *tbl, const void *name, size_t namesize,
  * @param tbl     qtreetbl_t container pointer.
  * @param name    key name.
  *
- * @return true if successful, otherwise(not found) returns false.
+ * @return true on success; otherwise (if not found), returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -477,13 +478,13 @@ bool qtreetbl_remove(qtreetbl_t *tbl, const char *name) {
 }
 
 /**
- * qtreetbl->remove(): Remove an object from this table with an object name.
+ * qtreetbl->removeobj(): Remove an object from this table using an object name.
  *
  * @param tbl     qtreetbl_t container pointer.
  * @param name    key name.
- * @param name    key size.
+ * @param namesize key size.
  *
- * @return true if successful, otherwise(not found) returns false.
+ * @return true on success; otherwise (if not found), returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -703,10 +704,9 @@ void *qtreetbl_find_max(qtreetbl_t *tbl, size_t *namesize) {
  * @endcode
  *
  * @note
- *  When there's no matching key it look for closest smaller key
- *  in the neighbors. The only exception when it returns bigger key
- *  than given search key is that when there's no smaller keys available
- *  in the table. In such case, it'll return the nearest bigger key.
+ *  When there is no matching key, it looks for the closest smaller key among
+ *  the neighbors. The only exception is when there are no smaller keys
+ *  available in the table. In that case, it returns the nearest larger key.
  */
 qtreetbl_obj_t qtreetbl_find_nearest(qtreetbl_t *tbl, const void *name,
                                      size_t namesize, bool newmem) {
@@ -1250,7 +1250,7 @@ static qtreetbl_obj_t *remove_obj(qtreetbl_t *tbl, qtreetbl_obj_t *obj,
         // keep going down to the left
         obj->left = remove_obj(tbl, obj->left, name, namesize);
     } else {  // right or equal
-        bool recmp = false;  // optimization to reduce duplicated comparisions
+        bool recmp = false;  // optimization to reduce duplicated comparisons
         if (is_red(obj->left)) {
             obj = rotate_right(obj);
             recmp = true;

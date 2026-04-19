@@ -438,7 +438,7 @@ void *qlist_getat(qlist_t *list, int index, size_t *size, bool newmem) {
 }
 
 /**
- * qlist->popfirst(): Returns and remove the first element in this list.
+ * qlist->popfirst(): Returns and removes the first element in this list.
  *
  * @param list  qlist_t container pointer.
  * @param size  if size is not NULL, element size will be stored.
@@ -453,7 +453,7 @@ void *qlist_popfirst(qlist_t *list, size_t *size) {
 }
 
 /**
- * qlist->getlast(): Returns and remove the last element in this list.
+ * qlist->poplast(): Returns and removes the last element in this list.
  *
  * @param list  qlist_t container pointer.
  * @param size  if size is not NULL, element size will be stored.
@@ -468,11 +468,11 @@ void *qlist_poplast(qlist_t *list, size_t *size) {
 }
 
 /**
- * qlist->popat(): Returns and remove the element at the specified
+ * qlist->popat(): Returns and removes the element at the specified
  * position in this list.
  *
  * @param list   qlist_t container pointer.
- * @param index  index at which the specified element is to be inserted
+ * @param index  index of the element to pop
  * @param size   if size is not NULL, element size will be stored.
  *
  * @return pointer to allocated element on success, or NULL on failure.
@@ -694,8 +694,7 @@ void qlist_clear(qlist_t *list) {
  * @param list  qlist_t container pointer.
  * @param size  if size is not NULL, chunk size will be stored.
  *
- * @return an allocated pointer,
- *  otherwise(if there is no data to merge) returns NULL.
+ * @return an allocated pointer, or NULL if the list is empty.
  * @retval errno will be set in error condition.
  *  -ENOENT : List is empty.
  *  -ENOMEM : Memory allocation failure.
@@ -736,8 +735,7 @@ void *qlist_toarray(qlist_t *list, size_t *size) {
  *
  * @param list  qlist_t container pointer.
  *
- * @return an allocated pointer,
- *  otherwise(if there is no data to merge) returns NULL.
+ * @return an allocated string, or NULL if the list is empty.
  * @retval errno will be set in error condition.
  *  -ENOENT : List is empty.
  *  -ENOMEM : Memory allocation failure.
@@ -777,10 +775,10 @@ char *qlist_tostring(qlist_t *list) {
 }
 
 /**
- * qlist->debug(): Prints out stored elements for debugging purpose.
+ * qlist->debug(): Prints stored elements for debugging purposes.
  *
  * @param list  qlist_t container pointer.
- * @param out   output stream FILE descriptor such like stdout, stderr.
+ * @param out   output stream such as stdout or stderr.
  *
  * @return true on success, otherwise false.
  * @retval errno will be set in error condition.

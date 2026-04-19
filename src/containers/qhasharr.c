@@ -29,28 +29,28 @@
 /**
  * @file qhasharr.c Static(array) hash-table implementation.
  *
- * qhasharr implements a hash-table which maps keys to values and stores into
- * fixed size static memory like shared-memory and memory-mapped file.
- * The creator qhasharr() initializes static memory to makes small slots in it.
- * The default slot size factors are defined in Q_HASHARR_NAMESIZE and
- * Q_HASHARR_DATASIZE. And they are applied at compile time.
+ * qhasharr implements a hash table that maps keys to values and stores them in
+ * fixed-size static memory such as shared memory and memory-mapped files.
+ * The creator qhasharr() initializes static memory and divides it into small
+ * slots. The default slot size factors are defined in Q_HASHARR_NAMESIZE and
+ * Q_HASHARR_DATASIZE, and they are applied at compile time.
  *
- * The value part of an element will be stored across several slots if it's size
- * exceeds the slot size. But the key part of an element will be truncated if
- * the size exceeds and it's length and more complex MD5 hash value will be
- * stored with the key. So to look up a particular key, first we find an element
- * which has same hash value. If the key was not truncated, we just do key
- * comparison. But if the key was truncated because it's length exceeds, we do
- * both md5 and key comparison(only stored size) to verify that the key is same.
- * So please be aware of that, theoretically there is a possibility we pick
- * wrong element in case a key exceeds the limit, has same length and MD5 hash
- * with lookup key. But this possibility is very low and almost zero in practice.
+ * The value part of an element will be stored across several slots if its size
+ * exceeds the slot size. The key part of an element will be truncated if its
+ * length exceeds the limit, and an MD5 hash value will also be stored with the
+ * key. To look up a particular key, we first find an element that has the same
+ * hash value. If the key was not truncated, we simply compare the key values.
+ * If the key was truncated because its length exceeded the limit, we compare
+ * both the MD5 hash and the stored portion of the key to verify that the key
+ * is the same. Please be aware that, in theory, it is possible to pick the
+ * wrong element if a key exceeds the limit and has the same length and MD5 hash
+ * as the lookup key. In practice, however, this possibility is extremely low.
  *
- * qhasharr hash-table does not provide thread-safe handling intentionally and
- * let users determine whether to provide locking mechanism or not, depending on
- * the use cases. When there's race conditions expected, you should provide a
- * shared resource control using mutex or semaphore to make sure data gets
- * updated by one instance at a time.
+ * qhasharr intentionally does not provide thread-safe handling and lets users
+ * determine whether to provide a locking mechanism, depending on the use case.
+ * When race conditions are expected, you should provide shared-resource
+ * control using a mutex or semaphore to make sure data is updated by one
+ * instance at a time.
  *
  * @code
  *  [Data Structure Diagram]
@@ -61,7 +61,7 @@
  *  | +------------------+ +------------+ +------------+        +------------+ |
  *  +--------------------------------------------------------------------------+
  *
- *  Below diagram shows how a big value is stored.
+ *  The diagram below shows how a large value is stored.
  *  +--[Static Flat Memory Area------------------------------------------------+
  *  | +--------+ +-[Slot 0]---+ +-[Slot 1]---+ +-[Slot 2]---+ +-[Slot 3]-----+ |
  *  | |TBL INFO| |KEY A|DATA A| |DATA A cont.| |KEY B|DATA B| |DATA A cont.  | |
@@ -76,7 +76,7 @@
  *  qhasharr_t *tbl = qhasharr(memory, sizeof(memory));
  *  if(tbl == NULL) return;
  *
- *  // insert elements (key duplication does not allowed)
+ *  // insert elements (key duplication is not allowed)
  *  tbl->putstr(tbl, "e1", "a");
  *  tbl->putstr(tbl, "e2", "b");
  *  tbl->putstr(tbl, "e3", "c");
@@ -273,7 +273,7 @@ qhasharr_t *qhasharr(void *memory, size_t memsize) {
  * @retval errno will be set in error condition.
  *  - ENOBUFS   : Table doesn't have enough space to store the object.
  *  - EINVAL    : Invalid argument.
- *  - EFAULT    : Unexpected error. Data structure is not constant.
+ *  - EFAULT    : Unexpected error. Data structure is inconsistent.
  */
 bool qhasharr_put(qhasharr_t *tbl, const char *name, const void *data,
                   size_t datasize) {
@@ -292,7 +292,7 @@ bool qhasharr_put(qhasharr_t *tbl, const char *name, const void *data,
  * @retval errno will be set in error condition.
  *  - ENOBUFS   : Table doesn't have enough space to store the object.
  *  - EINVAL    : Invalid argument.
- *  - EFAULT    : Unexpected error. Data structure is not constant.
+ *  - EFAULT    : Unexpected error. Data structure is inconsistent.
  */
 bool qhasharr_putstr(qhasharr_t *tbl, const char *name, const char *data) {
     return qhasharr_put_by_obj(tbl, name, (name) ? strlen(name) + 1 : 0,
@@ -311,7 +311,7 @@ bool qhasharr_putstr(qhasharr_t *tbl, const char *name, const char *data) {
  *  - ENOBUFS   : Table doesn't have enough space to store the object.
  *  - ENOMEM    : System memory allocation failure.
  *  - EINVAL    : Invalid argument.
- *  - EFAULT    : Unexpected error. Data structure is not constant.
+ *  - EFAULT    : Unexpected error. Data structure is inconsistent.
  */
 bool qhasharr_putstrf(qhasharr_t *tbl, const char *name, const char *format, ...) {
     char *str;
@@ -327,7 +327,7 @@ bool qhasharr_putstrf(qhasharr_t *tbl, const char *name, const char *format, ...
 }
 
 /**
- * qhasharr->put_by_obj(): ut an object into this table by key object.
+ * qhasharr->put_by_obj(): Put an object into this table by key object.
  *
  * @param tbl       qhasharr_t container pointer.
  * @param name      key data
@@ -339,7 +339,7 @@ bool qhasharr_putstrf(qhasharr_t *tbl, const char *name, const char *format, ...
  * @retval errno will be set in error condition.
  *  - ENOBUFS   : Table doesn't have enough space to store the object.
  *  - EINVAL    : Invalid argument.
- *  - EFAULT    : Unexpected error. Data structure is not constant.
+ *  - EFAULT    : Unexpected error. Data structure is inconsistent.
  */
 bool qhasharr_put_by_obj(qhasharr_t *tbl, const void *name, size_t namesize,
                          const void *data, size_t datasize) {
@@ -445,8 +445,8 @@ void *qhasharr_get(qhasharr_t *tbl, const char *name, size_t *datasize) {
 }
 
 /**
- * qhasharr->getstr(): Finds an object with given name and returns as
- * string type.
+ * qhasharr->getstr(): Finds an object with the given name and returns it as a
+ * string.
  *
  * @param tbl       qhasharr_t container pointer.
  * @param name      key string
@@ -465,7 +465,7 @@ char *qhasharr_getstr(qhasharr_t *tbl, const char *name) {
 }
 
 /**
- * qhasharr->get_by_object(): Get an object from this table by key object
+ * qhasharr->get_by_obj(): Get an object from this table by key object.
  *
  * @param tbl       qhasharr_t container pointer.
  * @param name      key data
@@ -507,11 +507,11 @@ void *qhasharr_get_by_obj(qhasharr_t *tbl, const void *name, size_t namesize,
  * @param tbl       qhasharr_t container pointer.
  * @param name      key string
  *
- * @return true if successful, otherwise(not found) returns false
+ * @return true on success; otherwise (if not found), returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT    : No such key found.
  *  - EINVAL    : Invalid argument.
- *  - EFAULT    : Unexpected error. Data structure is not constant.
+ *  - EFAULT    : Unexpected error. Data structure is inconsistent.
  */
 bool qhasharr_remove(qhasharr_t *tbl, const char *name) {
     return qhasharr_remove_by_obj(tbl, name, (name) ? strlen(name) + 1 : 0);
@@ -524,11 +524,11 @@ bool qhasharr_remove(qhasharr_t *tbl, const char *name) {
  * @param name      key data
  * @param namesize  size of key
  *
- * @return true if successful, otherwise(not found) returns false
+ * @return true on success; otherwise (if not found), returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT    : No such key found.
  *  - EINVAL    : Invalid argument.
- *  - EFAULT    : Unexpected error. Data structure is not constant.
+ *  - EFAULT    : Unexpected error. Data structure is inconsistent.
  */
 bool qhasharr_remove_by_obj(qhasharr_t *tbl, const char *name, size_t namesize) {
     if (tbl == NULL || name == NULL || namesize == 0) {
@@ -555,11 +555,11 @@ bool qhasharr_remove_by_obj(qhasharr_t *tbl, const char *name, size_t namesize) 
  * @param tbl       qhasharr_t container pointer.
  * @param idx       slot index number
  *
- * @return true if successful, otherwise(not found) returns false
+ * @return true on success; otherwise (if not found), returns false.
  * @retval errno will be set in error condition.
  *  - ENOENT    : Index is not pointing a valid object.
  *  - EINVAL    : Invalid argument.
- *  - EFAULT    : Unexpected error. Data structure is not constant.
+ *  - EFAULT    : Unexpected error. Data structure is inconsistent.
  *
  * @code
  *  int idx = 0;
@@ -766,10 +766,10 @@ void qhasharr_clear(qhasharr_t *tbl) {
 }
 
 /**
- * qhasharr->debug(): Print hash table for debugging purpose
+ * qhasharr->debug(): Print the hash table for debugging purposes.
  *
  * @param tbl       qhasharr_t container pointer.
- * @param out       output stream
+ * @param out       output stream such as stdout or stderr.
  *
  * @return true on success, otherwise false
  * @retval errno will be set in error condition.

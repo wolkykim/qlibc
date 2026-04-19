@@ -317,16 +317,16 @@ qaconf_t *qaconf(void) {
  *
  * OPTION NAME field:
  *
- * Option name is a unique string. Even an option is section type like <option>
- * only name part without bracket needs to be specified.
+ * Option name is a unique string. Even when an option is a section type like
+ * <option>, only the name part without brackets needs to be specified.
  *
  * ARGUMENT field:
  *
- * This field is for providing argument checking in parser level. So in user's
- * callback routine can go simple. This provides checking of number of arguments
- * this option can take and those argument type.
+ * This field provides argument checking at the parser level, so the user's
+ * callback routine can stay simple. It checks the number of arguments this
+ * option can take and their argument types.
  *
- * In terms of argument types. There are 4 argument types as below.
+ * There are 4 argument types, as shown below.
  * And first 5 arguments can be checked individually with different types.
  *
  * @code
@@ -336,15 +336,16 @@ qaconf_t *qaconf(void) {
  *   BOOL type  : bool type ex) 1/0, true/false, on/off, yes/no
  * @endcode
  *
- * When a BOOL type is specified, the argument passed to callback will be
- * replaced to "1" or "0" for convenience use. For example, if "On" is specified
- * as a argument and if BOOL type checking is specified, then actual argument
- * which will be passed to callback will have "1". So we can simply determine it
- * like "bool enabled = atoi(data->argv[1])".
+ * When a BOOL type is specified, the argument passed to the callback will be
+ * replaced with "1" or "0" for convenience. For example, if "On" is specified
+ * as an argument and BOOL type checking is enabled, the actual argument passed
+ * to the callback will be "1". So we can simply determine it like
+ * "bool enabled = atoi(data->argv[1])".
  *
- * If original input argument needs to be passed to callback, specify STR type.
+ * If the original input argument needs to be passed to the callback, specify
+ * STR type.
  *
- * Here is some examples of how to specify "Arguments" field.
+ * Here are some examples of how to specify the "Arguments" field.
  *
  * @code
  *  An option takes 1 argument.
@@ -405,10 +406,10 @@ qaconf_t *qaconf(void) {
  *
  * SECTION ID field:
  *
- * If an option is an section like <Option>, section id can be assigned.
- * This section id can be used to limit some other option directives to be
- * located only inside of that section. So this is your choice. If it doesn't
- * require to check directory scope, we can just specify 0 here.
+ * If an option is a section like <Option>, a section ID can be assigned.
+ * This section ID can be used to limit some other option directives so they
+ * are located only inside that section. This is optional. If you do not need
+ * to check directory scope, you can simply specify 0 here.
  *
  * There are 2 predefined section IDs: QAC_SECTION_ALL and QAC_SECTION_ROOT.
  * User-defined section IDs should start from `1 << 1`, as shown below.
@@ -628,7 +629,7 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
     char buf[MAX_LINESIZE];
     bool doneloop = false;
     bool exception = false;
-    int optcount = 0;  // number of option entry processed.
+    int optcount = 0;  // number of option entries processed.
     int newsectionid = 0;  // temporary store
     void *freethis = NULL;  // userdata to free
     while (doneloop == false && exception == false) {
@@ -654,7 +655,7 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
         // Trim white spaces
         qstrtrim(buf);
 
-        // Skip blank like and comments.
+        // Skip blank lines and comments.
         if (IS_EMPTY_STR(buf) || *buf == '#') {
             continue;
         }
@@ -699,7 +700,7 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
             cbdata->otype = QAC_OTYPE_OPTION;
         }
 
-        // Brackets has removed at this point
+        // Brackets have been removed at this point
         // Copy data into cbdata buffer.
         cbdata->data = strdup(sp);
         ASSERT(cbdata->data != NULL);
@@ -762,17 +763,17 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
             *wp2 = '\0';
             wp2++;
 
-            // Check quotations has paired.
+            // Check that quotations are paired.
             if (qtmark > 0) {
-                EXITLOOP("Quotation hasn't properly closed.");
+                EXITLOOP("Quotation marks were not closed properly.");
             }
 
-            // Store a argument
+            // Store an argument
             cbdata->argv[cbdata->argc] = wp1;
             cbdata->argc++;
             DEBUG("  argv[%d]=%s", cbdata->argc - 1, wp1);
 
-            // For quoted string, this case can be happened.
+            // For quoted strings, this can happen.
             if (*wp2 == '\0') {
                 doneparsing = true;
             }
@@ -845,7 +846,7 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
                             // floating point type
                             if (_is_str_number(cbdata->argv[j]) == 0) {
                                 EXITLOOP(
-                                        "%dth argument of '%s' must be floating point. type",
+                                        "%dth argument of '%s' must be floating-point type.",
                                         j, option->name);
                             }
                         } else if (argtype == 3) {

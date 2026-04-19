@@ -136,17 +136,17 @@ $(function(){initNavTree('qstack_8c_source.html','',''); });
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment"> *  free(str);</span></div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment"> *  // example: object stack</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment"> *  stack-&gt;push(stack, &quot;A object&quot;, sizeof(&quot;A object&quot;));</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment"> *  stack-&gt;push(stack, &quot;B object&quot;, sizeof(&quot;B object&quot;));</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment"> *  stack-&gt;push(stack, &quot;C object&quot;, sizeof(&quot;C object&quot;));</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment"> *  stack-&gt;push(stack, &quot;Object A&quot;, sizeof(&quot;Object A&quot;));</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment"> *  stack-&gt;push(stack, &quot;Object B&quot;, sizeof(&quot;Object B&quot;));</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment"> *  stack-&gt;push(stack, &quot;Object C&quot;, sizeof(&quot;Object C&quot;));</span></div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment"> *  void *obj = stack-&gt;pop(stack, NULL);</span></div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="comment"> *  printf(&quot;pop(): %s\n&quot;, (char*)obj);</span></div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="comment"> *  free(obj);</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment"> *  str = stack-&gt;pop(stack, NULL);</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment"> *  obj = stack-&gt;pop(stack, NULL);</span></div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment"> *  printf(&quot;pop(): %s\n&quot;, (char*)obj);</span></div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="comment"> *  free(obj);</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment"> *  str = stack-&gt;pop(stack, NULL);</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment"> *  obj = stack-&gt;pop(stack, NULL);</span></div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment"> *  printf(&quot;pop(): %s\n&quot;, (char*)obj);</span></div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="comment"> *  free(obj);</span></div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment"> *</span></div>
@@ -160,9 +160,9 @@ $(function(){initNavTree('qstack_8c_source.html','',''); });
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment"> *  popstr(): C string</span></div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment"> *  popstr(): B string</span></div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment"> *  popstr(): A string</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment"> *  pop(): C object</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment"> *  pop(): B object</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment"> *  pop(): A object</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment"> *  pop(): Object C</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment"> *  pop(): Object B</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment"> *  pop(): Object A</span></div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment"> * @endcode</span></div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
@@ -292,7 +292,7 @@ $(function(){initNavTree('qstack_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="comment"></span> </div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="comment"> * qstack-&gt;pushint(): Pushes a integer onto the top of this stack.</span></div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="comment"> * qstack-&gt;pushint(): Pushes an integer onto the top of this stack.</span></div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="comment"> * @param stack qstack container pointer.</span></div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="comment"> * @param num   integer data.</span></div>
@@ -354,7 +354,7 @@ $(function(){initNavTree('qstack_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="comment"></span> </div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="comment"> * qstack-&gt;popint(): Removes a integer at the top of this stack and</span></div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="comment"> * qstack-&gt;popint(): Removes an integer at the top of this stack and</span></div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="comment"> * returns that element.</span></div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><span class="comment"> * @param stack qstack container pointer.</span></div>
@@ -381,11 +381,11 @@ $(function(){initNavTree('qstack_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span><span class="comment"></span> </div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span><span class="comment"> * qstack-&gt;popat(): Returns and remove the element at the specified</span></div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span><span class="comment"> * qstack-&gt;popat(): Returns and removes the element at the specified</span></div>
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span><span class="comment"> * position in this stack.</span></div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span><span class="comment"> * @param stack qstack container pointer.</span></div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span><span class="comment"> * @param index index at which the specified element is to be inserted</span></div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span><span class="comment"> * @param index index of the element to pop</span></div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span><span class="comment"> * @param size  if size is not NULL, element size will be stored.</span></div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span><span class="comment"> * @return pointer to allocated element on success, or NULL on failure.</span></div>
@@ -424,7 +424,7 @@ $(function(){initNavTree('qstack_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span><span class="comment"></span> </div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="comment"> * qstack-&gt;getstr(): Returns an string at the top of this stack without</span></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="comment"> * qstack-&gt;getstr(): Returns a string at the top of this stack without</span></div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span><span class="comment"> * removing it.</span></div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span><span class="comment"> * @param stack qstack container pointer.</span></div>
@@ -526,10 +526,10 @@ $(function(){initNavTree('qstack_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span><span class="comment"></span> </div>
 <div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span><span class="comment"> * qstack-&gt;debug(): Print out stored elements for debugging purpose.</span></div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span><span class="comment"> * qstack-&gt;debug(): Prints stored elements for debugging purposes.</span></div>
 <div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span><span class="comment"> * @param stack     qstack container pointer.</span></div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span><span class="comment"> * @param out       output stream FILE descriptor such like stdout, stderr.</span></div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span><span class="comment"> * @param out       output stream such as stdout or stderr.</span></div>
 <div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span><span class="comment"> * @return true on success, otherwise false.</span></div>
 <div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span><span class="comment"> */</span></div>
@@ -553,22 +553,22 @@ $(function(){initNavTree('qstack_8c_source.html','',''); });
 <div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>}</div>
 </div>
 <div class="ttc" id="aqlist_8c_html_ad9937048b43bf3ced8a61ee16c6e5702"><div class="ttname"><a href="qlist_8c.html#ad9937048b43bf3ced8a61ee16c6e5702">qlist</a></div><div class="ttdeci">qlist_t * qlist(int options)</div><div class="ttdoc">Create new qlist_t linked-list container.</div><div class="ttdef"><b>Definition</b> <a href="qlist_8c_source.html#l00124">qlist.c:124</a></div></div>
-<div class="ttc" id="aqstack_8c_html_a1a467bd3711514b767b8093aa768ab1b"><div class="ttname"><a href="qstack_8c.html#a1a467bd3711514b767b8093aa768ab1b">qstack_popat</a></div><div class="ttdeci">void * qstack_popat(qstack_t *stack, int index, size_t *size)</div><div class="ttdoc">qstack-&gt;popat(): Returns and remove the element at the specified position in this stack.</div><div class="ttdef"><b>Definition</b> <a href="#l00320">qstack.c:320</a></div></div>
+<div class="ttc" id="aqstack_8c_html_a1a467bd3711514b767b8093aa768ab1b"><div class="ttname"><a href="qstack_8c.html#a1a467bd3711514b767b8093aa768ab1b">qstack_popat</a></div><div class="ttdeci">void * qstack_popat(qstack_t *stack, int index, size_t *size)</div><div class="ttdoc">qstack-&gt;popat(): Returns and removes the element at the specified position in this stack.</div><div class="ttdef"><b>Definition</b> <a href="#l00320">qstack.c:320</a></div></div>
 <div class="ttc" id="aqstack_8c_html_a1ca1db3402919fe147e32a16ee56a051"><div class="ttname"><a href="qstack_8c.html#a1ca1db3402919fe147e32a16ee56a051">qstack_clear</a></div><div class="ttdeci">void qstack_clear(qstack_t *stack)</div><div class="ttdoc">qstack-&gt;clear(): Removes all of the elements from this stack.</div><div class="ttdef"><b>Definition</b> <a href="#l00429">qstack.c:429</a></div></div>
-<div class="ttc" id="aqstack_8c_html_a227a2c394e088afee835b79aa1e81a90"><div class="ttname"><a href="qstack_8c.html#a227a2c394e088afee835b79aa1e81a90">qstack_pushint</a></div><div class="ttdeci">bool qstack_pushint(qstack_t *stack, int64_t num)</div><div class="ttdoc">qstack-&gt;pushint(): Pushes a integer onto the top of this stack.</div><div class="ttdef"><b>Definition</b> <a href="#l00233">qstack.c:233</a></div></div>
+<div class="ttc" id="aqstack_8c_html_a227a2c394e088afee835b79aa1e81a90"><div class="ttname"><a href="qstack_8c.html#a227a2c394e088afee835b79aa1e81a90">qstack_pushint</a></div><div class="ttdeci">bool qstack_pushint(qstack_t *stack, int64_t num)</div><div class="ttdoc">qstack-&gt;pushint(): Pushes an integer onto the top of this stack.</div><div class="ttdef"><b>Definition</b> <a href="#l00233">qstack.c:233</a></div></div>
 <div class="ttc" id="aqstack_8c_html_a243157bbd832b1a29da906cdf1e067d1"><div class="ttname"><a href="qstack_8c.html#a243157bbd832b1a29da906cdf1e067d1">qstack_setsize</a></div><div class="ttdeci">size_t qstack_setsize(qstack_t *stack, size_t max)</div><div class="ttdoc">qstack-&gt;setsize(): Sets maximum number of elements allowed in this stack.</div><div class="ttdef"><b>Definition</b> <a href="#l00177">qstack.c:177</a></div></div>
 <div class="ttc" id="aqstack_8c_html_a2a091ec90ef14302cb29ea07c1ce84b2"><div class="ttname"><a href="qstack_8c.html#a2a091ec90ef14302cb29ea07c1ce84b2">qstack_free</a></div><div class="ttdeci">void qstack_free(qstack_t *stack)</div><div class="ttdoc">qstack-&gt;free(): Free qstack_t</div><div class="ttdef"><b>Definition</b> <a href="#l00452">qstack.c:452</a></div></div>
-<div class="ttc" id="aqstack_8c_html_a355b4b772da518e3e63702e61df44886"><div class="ttname"><a href="qstack_8c.html#a355b4b772da518e3e63702e61df44886">qstack_popint</a></div><div class="ttdeci">int64_t qstack_popint(qstack_t *stack)</div><div class="ttdoc">qstack-&gt;popint(): Removes a integer at the top of this stack and returns that element.</div><div class="ttdef"><b>Definition</b> <a href="#l00291">qstack.c:291</a></div></div>
+<div class="ttc" id="aqstack_8c_html_a355b4b772da518e3e63702e61df44886"><div class="ttname"><a href="qstack_8c.html#a355b4b772da518e3e63702e61df44886">qstack_popint</a></div><div class="ttdeci">int64_t qstack_popint(qstack_t *stack)</div><div class="ttdoc">qstack-&gt;popint(): Removes an integer at the top of this stack and returns that element.</div><div class="ttdef"><b>Definition</b> <a href="#l00291">qstack.c:291</a></div></div>
 <div class="ttc" id="aqstack_8c_html_a3c626c12f0f8ad9b1899c4d6e9fa78a6"><div class="ttname"><a href="qstack_8c.html#a3c626c12f0f8ad9b1899c4d6e9fa78a6">qstack_pushstr</a></div><div class="ttdeci">bool qstack_pushstr(qstack_t *stack, const char *str)</div><div class="ttdoc">qstack-&gt;pushstr(): Pushes a string onto the top of this stack.</div><div class="ttdef"><b>Definition</b> <a href="#l00213">qstack.c:213</a></div></div>
 <div class="ttc" id="aqstack_8c_html_a3eac4be39a2ae68c7290735b034fc66c"><div class="ttname"><a href="qstack_8c.html#a3eac4be39a2ae68c7290735b034fc66c">qstack_size</a></div><div class="ttdeci">size_t qstack_size(qstack_t *stack)</div><div class="ttdoc">qstack-&gt;size(): Returns the number of elements in this stack.</div><div class="ttdef"><b>Definition</b> <a href="#l00420">qstack.c:420</a></div></div>
 <div class="ttc" id="aqstack_8c_html_a3ed81d0e8555fb6167d4be53c3ddb9ae"><div class="ttname"><a href="qstack_8c.html#a3ed81d0e8555fb6167d4be53c3ddb9ae">qstack</a></div><div class="ttdeci">qstack_t * qstack(int options)</div><div class="ttdoc">Create a new stack container.</div><div class="ttdef"><b>Definition</b> <a href="#l00129">qstack.c:129</a></div></div>
 <div class="ttc" id="aqstack_8c_html_a5f57044ab0d93ba510ad9ec44491d969"><div class="ttname"><a href="qstack_8c.html#a5f57044ab0d93ba510ad9ec44491d969">qstack_pop</a></div><div class="ttdeci">void * qstack_pop(qstack_t *stack, size_t *size)</div><div class="ttdoc">qstack-&gt;pop(): Removes an element at the top of this stack and returns that element.</div><div class="ttdef"><b>Definition</b> <a href="#l00249">qstack.c:249</a></div></div>
 <div class="ttc" id="aqstack_8c_html_a66b564e1ea27a75ec3fa4e13b9b34eb4"><div class="ttname"><a href="qstack_8c.html#a66b564e1ea27a75ec3fa4e13b9b34eb4">qstack_get</a></div><div class="ttdeci">void * qstack_get(qstack_t *stack, size_t *size, bool newmem)</div><div class="ttdoc">qstack-&gt;get(): Returns an element at the top of this stack without removing it.</div><div class="ttdef"><b>Definition</b> <a href="#l00337">qstack.c:337</a></div></div>
-<div class="ttc" id="aqstack_8c_html_a80484101311b715fbb867da8c3616c11"><div class="ttname"><a href="qstack_8c.html#a80484101311b715fbb867da8c3616c11">qstack_getstr</a></div><div class="ttdeci">char * qstack_getstr(qstack_t *stack)</div><div class="ttdoc">qstack-&gt;getstr(): Returns an string at the top of this stack without removing it.</div><div class="ttdef"><b>Definition</b> <a href="#l00355">qstack.c:355</a></div></div>
+<div class="ttc" id="aqstack_8c_html_a80484101311b715fbb867da8c3616c11"><div class="ttname"><a href="qstack_8c.html#a80484101311b715fbb867da8c3616c11">qstack_getstr</a></div><div class="ttdeci">char * qstack_getstr(qstack_t *stack)</div><div class="ttdoc">qstack-&gt;getstr(): Returns a string at the top of this stack without removing it.</div><div class="ttdef"><b>Definition</b> <a href="#l00355">qstack.c:355</a></div></div>
 <div class="ttc" id="aqstack_8c_html_a9b0e45524a375b63cd1d07ee8b99665a"><div class="ttname"><a href="qstack_8c.html#a9b0e45524a375b63cd1d07ee8b99665a">qstack_getat</a></div><div class="ttdeci">void * qstack_getat(qstack_t *stack, int index, size_t *size, bool newmem)</div><div class="ttdoc">qstack-&gt;getat(): Returns an element at the specified position in this stack without removing it.</div><div class="ttdef"><b>Definition</b> <a href="#l00409">qstack.c:409</a></div></div>
 <div class="ttc" id="aqstack_8c_html_ace3dc06378d4cde45bede6c4032a7151"><div class="ttname"><a href="qstack_8c.html#ace3dc06378d4cde45bede6c4032a7151">qstack_popstr</a></div><div class="ttdeci">char * qstack_popstr(qstack_t *stack)</div><div class="ttdoc">qstack-&gt;popstr(): Removes an element at the top of this stack and returns that element.</div><div class="ttdef"><b>Definition</b> <a href="#l00267">qstack.c:267</a></div></div>
 <div class="ttc" id="aqstack_8c_html_af37f84c47e9cd48b3f070fa96777029e"><div class="ttname"><a href="qstack_8c.html#af37f84c47e9cd48b3f070fa96777029e">qstack_getint</a></div><div class="ttdeci">int64_t qstack_getint(qstack_t *stack)</div><div class="ttdoc">qstack-&gt;getint(): Returns an integer at the top of this stack without removing it.</div><div class="ttdef"><b>Definition</b> <a href="#l00379">qstack.c:379</a></div></div>
-<div class="ttc" id="aqstack_8c_html_af40fcb35c362981495c37aa7963ff50d"><div class="ttname"><a href="qstack_8c.html#af40fcb35c362981495c37aa7963ff50d">qstack_debug</a></div><div class="ttdeci">bool qstack_debug(qstack_t *stack, FILE *out)</div><div class="ttdoc">qstack-&gt;debug(): Print out stored elements for debugging purpose.</div><div class="ttdef"><b>Definition</b> <a href="#l00441">qstack.c:441</a></div></div>
+<div class="ttc" id="aqstack_8c_html_af40fcb35c362981495c37aa7963ff50d"><div class="ttname"><a href="qstack_8c.html#af40fcb35c362981495c37aa7963ff50d">qstack_debug</a></div><div class="ttdeci">bool qstack_debug(qstack_t *stack, FILE *out)</div><div class="ttdoc">qstack-&gt;debug(): Prints stored elements for debugging purposes.</div><div class="ttdef"><b>Definition</b> <a href="#l00441">qstack.c:441</a></div></div>
 <div class="ttc" id="aqstack_8c_html_af6bd78d22c5ac2a5dbcc4102416a1682"><div class="ttname"><a href="qstack_8c.html#af6bd78d22c5ac2a5dbcc4102416a1682">qstack_push</a></div><div class="ttdeci">bool qstack_push(qstack_t *stack, const void *data, size_t size)</div><div class="ttdoc">qstack-&gt;push(): Pushes an element onto the top of this stack.</div><div class="ttdef"><b>Definition</b> <a href="#l00195">qstack.c:195</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

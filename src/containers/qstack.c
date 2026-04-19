@@ -71,17 +71,17 @@
  *  free(str);
  *
  *  // example: object stack
- *  stack->push(stack, "A object", sizeof("A object"));
- *  stack->push(stack, "B object", sizeof("B object"));
- *  stack->push(stack, "C object", sizeof("C object"));
+ *  stack->push(stack, "Object A", sizeof("Object A"));
+ *  stack->push(stack, "Object B", sizeof("Object B"));
+ *  stack->push(stack, "Object C", sizeof("Object C"));
  *
  *  void *obj = stack->pop(stack, NULL);
  *  printf("pop(): %s\n", (char*)obj);
  *  free(obj);
- *  str = stack->pop(stack, NULL);
+ *  obj = stack->pop(stack, NULL);
  *  printf("pop(): %s\n", (char*)obj);
  *  free(obj);
- *  str = stack->pop(stack, NULL);
+ *  obj = stack->pop(stack, NULL);
  *  printf("pop(): %s\n", (char*)obj);
  *  free(obj);
  *
@@ -95,9 +95,9 @@
  *  popstr(): C string
  *  popstr(): B string
  *  popstr(): A string
- *  pop(): C object
- *  pop(): B object
- *  pop(): A object
+ *  pop(): Object C
+ *  pop(): Object B
+ *  pop(): Object A
  * @endcode
  */
 
@@ -219,7 +219,7 @@ bool qstack_pushstr(qstack_t *stack, const char *str) {
 }
 
 /**
- * qstack->pushint(): Pushes a integer onto the top of this stack.
+ * qstack->pushint(): Pushes an integer onto the top of this stack.
  *
  * @param stack qstack container pointer.
  * @param num   integer data.
@@ -275,7 +275,7 @@ char *qstack_popstr(qstack_t *stack) {
 }
 
 /**
- * qstack->popint(): Removes a integer at the top of this stack and
+ * qstack->popint(): Removes an integer at the top of this stack and
  * returns that element.
  *
  * @param stack qstack container pointer.
@@ -300,11 +300,11 @@ int64_t qstack_popint(qstack_t *stack) {
 }
 
 /**
- * qstack->popat(): Returns and remove the element at the specified
+ * qstack->popat(): Returns and removes the element at the specified
  * position in this stack.
  *
  * @param stack qstack container pointer.
- * @param index index at which the specified element is to be inserted
+ * @param index index of the element to pop
  * @param size  if size is not NULL, element size will be stored.
  *
  * @return pointer to allocated element on success, or NULL on failure.
@@ -339,7 +339,7 @@ void *qstack_get(qstack_t *stack, size_t *size, bool newmem) {
 }
 
 /**
- * qstack->getstr(): Returns an string at the top of this stack without
+ * qstack->getstr(): Returns a string at the top of this stack without
  * removing it.
  *
  * @param stack qstack container pointer.
@@ -431,10 +431,10 @@ void qstack_clear(qstack_t *stack) {
 }
 
 /**
- * qstack->debug(): Print out stored elements for debugging purpose.
+ * qstack->debug(): Prints stored elements for debugging purposes.
  *
  * @param stack     qstack container pointer.
- * @param out       output stream FILE descriptor such like stdout, stderr.
+ * @param out       output stream such as stdout or stderr.
  *
  * @return true on success, otherwise false.
  */

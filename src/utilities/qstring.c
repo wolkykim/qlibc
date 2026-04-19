@@ -48,7 +48,7 @@
  *
  * @param str       source string
  *
- * @return pointer to `str` on success on success, or NULL on failure.
+ * @return pointer to `str` on success, or NULL on failure.
  *
  * @note This function modifies the source string in place.
  */
@@ -83,7 +83,7 @@ char *qstrtrim(char *str) {
  *
  * @param str       source string
  *
- * @return pointer to `str` on success on success, or NULL on failure.
+ * @return pointer to `str` on success, or NULL on failure.
  *
  * @note This function modifies the source string in place.
  */
@@ -109,7 +109,7 @@ char *qstrtrim_head(char *str) {
  *
  * @param str       source string
  *
- * @return pointer to `str` on success on success, or NULL on failure.
+ * @return pointer to `str` on success, or NULL on failure.
  *
  * @note This function modifies the source string in place.
  */
@@ -136,7 +136,7 @@ char *qstrtrim_tail(char *str) {
  * @param head      leading character
  * @param tail      trailing character
  *
- * @return pointer to `str` on success on success, or NULL on failure.
+ * @return pointer to `str` on success, or NULL on failure.
  *
  * @note This function modifies the source string in place.
  *
@@ -169,7 +169,7 @@ char *qstrunchar(char *str, char head, char tail) {
  * @param tokstr    token or string to match
  * @param word      replacement string
  *
- * @return pointer to the result string on success on success, or NULL on failure.
+ * @return pointer to the result string on success, or NULL on failure.
  *
  * @note
  * The mode has two characters.
@@ -381,7 +381,7 @@ char *qstrdup_between(const char *str, const char *start, const char *end) {
  * @param data    source data
  * @param size    data size
  *
- * @return pointer to newly allocated data on success on success, or NULL on failure.
+ * @return pointer to newly allocated data on success, or NULL on failure.
  */
 void *qmemdup(const void *data, size_t size) {
     if (data == NULL || size == 0) {
@@ -403,7 +403,7 @@ void *qmemdup(const void *data, size_t size) {
  * @param str       destination string
  * @param format    string format to append
  *
- * @return pointer to `str` on success on success, or NULL on failure.
+ * @return pointer to `str` on success, or NULL on failure.
  */
 char *qstrcatf(char *str, const char *format, ...) {
     char *buf;

@@ -134,7 +134,7 @@ bool qfile_exist(const char *filepath) {
  *                  back through the same pointer. Set it to 0 or NULL to read
  *                  the entire file.
  *
- * @return allocated memory on success on success, or NULL on failure.
+ * @return allocated memory on success, or NULL on failure.
  *
  * @code
  *   // loading text file
@@ -201,7 +201,7 @@ void *qfile_load(const char *filepath, size_t *nbytes) {
  *                  back through the same pointer. Set it to 0 or NULL to read
  *                  until the end of the stream.
  *
- * @return allocated memory on success on success, or NULL on failure.
+ * @return allocated memory on success, or NULL on failure.
  *
  * @code
  *   int binlen = 0;
@@ -278,7 +278,7 @@ void *qfile_read(FILE *fp, size_t *nbytes) {
  *
  *   // save binary
  *   int integer1 = 75;
- *   qfile_save("/tmp/integer.bin, (void*)&integer, sizeof(int));
+ *   qfile_save("/tmp/integer.bin", (void*)&integer1, sizeof(int), false);
  * @endcode
  */
 ssize_t qfile_save(const char *filepath, const void *buf, size_t size,

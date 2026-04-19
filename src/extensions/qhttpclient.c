@@ -49,7 +49,7 @@
  *      return -1;
  *    }
  *
- *    // container for storing response headers for debugging purpose
+ *    // container for storing response headers for debugging purposes
  *    qlisttbl_t *resheaders = qlisttbl(QLISTTBL_UNIQUE | QLISTTBL_CASEINSENSITIVE);
  *
  *    // download
@@ -405,10 +405,10 @@ static void setuseragent(qhttpclient_t *client, const char *useragent) {
  * @return true on success, otherwise false
  *
  * @note
- *  Don't need to open a connection unless you definitely need to do this,
- *  because qhttpclient open a connection automatically when it's needed.
- *  This function also can be used to veryfy a connection failure with remote
- *  host.
+ *  You do not need to open a connection unless you definitely need to,
+ *  because qhttpclient opens a connection automatically when needed.
+ *  This function can also be used to verify a connection failure with the
+ *  remote host.
  *
  * @code
  *   if(httpclient->open(httpclient) == false) return;
@@ -1070,7 +1070,7 @@ static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
  * @param resheaders    qlisttbl_t pointer for storing response headers.
  *                      (can be NULL)
  *
- * @return allocated response content on success on success, or NULL on failure.
+ * @return allocated response content on success, or NULL on failure.
  *
  * @code
  *   int nResCode;
@@ -1168,7 +1168,7 @@ static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
 }
 
 /**
- * qhttpclient->sendrequest(): Sends a HTTP request to the remote host.
+ * qhttpclient->sendrequest(): Sends an HTTP request to the remote host.
  *
  * @param client    qhttpclient object pointer
  * @param method    HTTP method name
@@ -1354,7 +1354,7 @@ static int readresponse(qhttpclient_t *client, qlisttbl_t *resheaders,
 }
 
 /**
- * qhttpclient->gets(): Reads a text line from a HTTP/HTTPS stream.
+ * qhttpclient->gets(): Reads a text line from an HTTP/HTTPS stream.
  *
  * @param   client      qhttpclient object pointer
  * @param   buf         data buffer pointer
@@ -1414,7 +1414,7 @@ static ssize_t gets_(qhttpclient_t *client, char *buf, size_t bufsize) {
 }
 
 /**
- * qhttpclient->read(): Reads data from a HTTP/HTTPS stream.
+ * qhttpclient->read(): Reads data from an HTTP/HTTPS stream.
  *
  * @param client    qhttpclient object pointer.
  * @param buf       a buffer pointer for storing content. (can be NULL, then
@@ -1478,7 +1478,7 @@ static ssize_t read_(qhttpclient_t *client, void *buf, size_t nbytes) {
 }
 
 /**
- * qhttpclient->write(): Writes data to a HTTP/HTTPS stream.
+ * qhttpclient->write(): Writes data to an HTTP/HTTPS stream.
  *
  * @param client    qhttpclient object pointer.
  * @param buf       a data pointer.
@@ -1521,8 +1521,8 @@ static ssize_t write_(qhttpclient_t *client, const void *buf, size_t nbytes) {
 }
 
 /**
- * qhttpclient->recvfile(): Reads data from a HTTP/HTTPS stream and save
- * into a file descriptor.
+ * qhttpclient->recvfile(): Reads data from an HTTP/HTTPS stream and saves
+ * it to a file descriptor.
  *
  * @param   client      qhttpclient object pointer.
  * @param   fd          output file descriptor
@@ -1568,7 +1568,7 @@ static off_t recvfile(qhttpclient_t *client, int fd, off_t nbytes) {
 }
 
 /**
- * qhttpclient->sendfile(): Send file data to a HTTP/HTTPS stream.
+ * qhttpclient->sendfile(): Sends file data to an HTTP/HTTPS stream.
  *
  * @param   client      qhttpclient object pointer.
  * @param   fd          input file descriptor

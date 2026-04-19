@@ -287,10 +287,10 @@ void qgrow_clear(qgrow_t *grow) {
 }
 
 /**
- * qgrow->debug(): Print out stored elements for debugging purpose.
+ * qgrow->debug(): Prints stored elements for debugging purposes.
  *
  * @param grow    qgrow_t container pointer.
- * @param out       output stream FILE descriptor such like stdout, stderr.
+ * @param out       output stream such as stdout or stderr.
  *
  * @return true on success, otherwise false.
  * @retval errno will be set in error condition.

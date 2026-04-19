@@ -136,9 +136,9 @@ $(function(){initNavTree('qqueue_8c_source.html','',''); });
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment"> *  free(str);</span></div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment"> *  // example: object queue</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment"> *  queue-&gt;push(queue, &quot;A object&quot;, sizeof(&quot;A object&quot;));</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment"> *  queue-&gt;push(queue, &quot;B object&quot;, sizeof(&quot;B object&quot;));</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment"> *  queue-&gt;push(queue, &quot;C object&quot;, sizeof(&quot;C object&quot;));</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment"> *  queue-&gt;push(queue, &quot;Object A&quot;, sizeof(&quot;Object A&quot;));</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment"> *  queue-&gt;push(queue, &quot;Object B&quot;, sizeof(&quot;Object B&quot;));</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment"> *  queue-&gt;push(queue, &quot;Object C&quot;, sizeof(&quot;Object C&quot;));</span></div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment"> *  void *obj = queue-&gt;pop(queue, NULL);</span></div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="comment"> *  printf(&quot;pop(): %s\n&quot;, (char*)obj);</span></div>
@@ -160,9 +160,9 @@ $(function(){initNavTree('qqueue_8c_source.html','',''); });
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment"> *  popstr(): C string</span></div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment"> *  popstr(): B string</span></div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment"> *  popstr(): A string</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment"> *  pop(): C object</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment"> *  pop(): B object</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment"> *  pop(): A object</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment"> *  pop(): Object C</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment"> *  pop(): Object B</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment"> *  pop(): Object A</span></div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment"> * @endcode</span></div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
@@ -292,7 +292,7 @@ $(function(){initNavTree('qqueue_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="comment"></span> </div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="comment"> * qqueue-&gt;pushint(): Pushes a integer onto the top of this queue.</span></div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="comment"> * qqueue-&gt;pushint(): Pushes an integer onto the top of this queue.</span></div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="comment"> * @param queue qqueue container pointer.</span></div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="comment"> * @param num   integer data.</span></div>
@@ -354,7 +354,7 @@ $(function(){initNavTree('qqueue_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="comment"></span> </div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="comment"> * qqueue-&gt;popint(): Removes a integer at the top of this queue and</span></div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="comment"> * qqueue-&gt;popint(): Removes an integer at the top of this queue and</span></div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="comment"> * returns that element.</span></div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><span class="comment"> * @param queue qqueue container pointer.</span></div>
@@ -381,11 +381,11 @@ $(function(){initNavTree('qqueue_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span><span class="comment"></span> </div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span><span class="comment"> * qqueue-&gt;popat(): Returns and remove the element at the specified</span></div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span><span class="comment"> * qqueue-&gt;popat(): Returns and removes the element at the specified</span></div>
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span><span class="comment"> * position in this queue.</span></div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span><span class="comment"> * @param queue qqueue container pointer.</span></div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span><span class="comment"> * @param index index at which the specified element is to be inserted</span></div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span><span class="comment"> * @param index index of the element to pop</span></div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span><span class="comment"> * @param size  if size is not NULL, element size will be stored.</span></div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span><span class="comment"> * @return pointer to allocated element on success, or NULL on failure.</span></div>
@@ -424,7 +424,7 @@ $(function(){initNavTree('qqueue_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span><span class="comment"></span> </div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="comment"> * qqueue-&gt;getstr(): Returns an string at the top of this queue without</span></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="comment"> * qqueue-&gt;getstr(): Returns a string at the top of this queue without</span></div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span><span class="comment"> * removing it.</span></div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span><span class="comment"> * @param queue qqueue container pointer.</span></div>
@@ -526,10 +526,10 @@ $(function(){initNavTree('qqueue_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span><span class="comment"></span> </div>
 <div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span><span class="comment"> * qqueue-&gt;debug(): Print out stored elements for debugging purpose.</span></div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span><span class="comment"> * qqueue-&gt;debug(): Prints stored elements for debugging purposes.</span></div>
 <div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span><span class="comment"> * @param queue     qqueue container pointer.</span></div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span><span class="comment"> * @param out       output stream FILE descriptor such like stdout, stderr.</span></div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span><span class="comment"> * @param out       output stream such as stdout or stderr.</span></div>
 <div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span><span class="comment"> * @return true on success, otherwise false.</span></div>
 <div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span><span class="comment"> */</span></div>
@@ -557,18 +557,18 @@ $(function(){initNavTree('qqueue_8c_source.html','',''); });
 <div class="ttc" id="aqqueue_8c_html_a0a561f175ff24b26dea93b3540363e4d"><div class="ttname"><a href="qqueue_8c.html#a0a561f175ff24b26dea93b3540363e4d">qqueue_get</a></div><div class="ttdeci">void * qqueue_get(qqueue_t *queue, size_t *size, bool newmem)</div><div class="ttdoc">qqueue-&gt;get(): Returns an element at the top of this queue without removing it.</div><div class="ttdef"><b>Definition</b> <a href="#l00337">qqueue.c:337</a></div></div>
 <div class="ttc" id="aqqueue_8c_html_a3111eeb954b1af9c0c8a67f96968b988"><div class="ttname"><a href="qqueue_8c.html#a3111eeb954b1af9c0c8a67f96968b988">qqueue_push</a></div><div class="ttdeci">bool qqueue_push(qqueue_t *queue, const void *data, size_t size)</div><div class="ttdoc">qqueue-&gt;push(): Pushes an element onto the top of this queue.</div><div class="ttdef"><b>Definition</b> <a href="#l00195">qqueue.c:195</a></div></div>
 <div class="ttc" id="aqqueue_8c_html_a382fb2a1977afc2b129bded75a41ed8b"><div class="ttname"><a href="qqueue_8c.html#a382fb2a1977afc2b129bded75a41ed8b">qqueue_pushstr</a></div><div class="ttdeci">bool qqueue_pushstr(qqueue_t *queue, const char *str)</div><div class="ttdoc">qqueue-&gt;pushstr(): Pushes a string onto the top of this queue.</div><div class="ttdef"><b>Definition</b> <a href="#l00213">qqueue.c:213</a></div></div>
-<div class="ttc" id="aqqueue_8c_html_a39066762f093f61a310dc3b3550c8780"><div class="ttname"><a href="qqueue_8c.html#a39066762f093f61a310dc3b3550c8780">qqueue_debug</a></div><div class="ttdeci">bool qqueue_debug(qqueue_t *queue, FILE *out)</div><div class="ttdoc">qqueue-&gt;debug(): Print out stored elements for debugging purpose.</div><div class="ttdef"><b>Definition</b> <a href="#l00441">qqueue.c:441</a></div></div>
+<div class="ttc" id="aqqueue_8c_html_a39066762f093f61a310dc3b3550c8780"><div class="ttname"><a href="qqueue_8c.html#a39066762f093f61a310dc3b3550c8780">qqueue_debug</a></div><div class="ttdeci">bool qqueue_debug(qqueue_t *queue, FILE *out)</div><div class="ttdoc">qqueue-&gt;debug(): Prints stored elements for debugging purposes.</div><div class="ttdef"><b>Definition</b> <a href="#l00441">qqueue.c:441</a></div></div>
 <div class="ttc" id="aqqueue_8c_html_a407c506258030896676079f9125132b9"><div class="ttname"><a href="qqueue_8c.html#a407c506258030896676079f9125132b9">qqueue_clear</a></div><div class="ttdeci">void qqueue_clear(qqueue_t *queue)</div><div class="ttdoc">qqueue-&gt;clear(): Removes all of the elements from this queue.</div><div class="ttdef"><b>Definition</b> <a href="#l00429">qqueue.c:429</a></div></div>
 <div class="ttc" id="aqqueue_8c_html_a6859700f743f55461f8ca56beba6437f"><div class="ttname"><a href="qqueue_8c.html#a6859700f743f55461f8ca56beba6437f">qqueue_pop</a></div><div class="ttdeci">void * qqueue_pop(qqueue_t *queue, size_t *size)</div><div class="ttdoc">qqueue-&gt;pop(): Removes an element at the top of this queue and returns that element.</div><div class="ttdef"><b>Definition</b> <a href="#l00249">qqueue.c:249</a></div></div>
 <div class="ttc" id="aqqueue_8c_html_a7250d2c5928e63093344e559f629fbbc"><div class="ttname"><a href="qqueue_8c.html#a7250d2c5928e63093344e559f629fbbc">qqueue_popstr</a></div><div class="ttdeci">char * qqueue_popstr(qqueue_t *queue)</div><div class="ttdoc">qqueue-&gt;popstr(): Removes an element at the top of this queue and returns that element.</div><div class="ttdef"><b>Definition</b> <a href="#l00267">qqueue.c:267</a></div></div>
 <div class="ttc" id="aqqueue_8c_html_a732d5260a04c2f67fa28f690eb31566c"><div class="ttname"><a href="qqueue_8c.html#a732d5260a04c2f67fa28f690eb31566c">qqueue_size</a></div><div class="ttdeci">size_t qqueue_size(qqueue_t *queue)</div><div class="ttdoc">qqueue-&gt;size(): Returns the number of elements in this queue.</div><div class="ttdef"><b>Definition</b> <a href="#l00420">qqueue.c:420</a></div></div>
 <div class="ttc" id="aqqueue_8c_html_a748db13e1474f59abbc49f922cb90b76"><div class="ttname"><a href="qqueue_8c.html#a748db13e1474f59abbc49f922cb90b76">qqueue_free</a></div><div class="ttdeci">void qqueue_free(qqueue_t *queue)</div><div class="ttdoc">qqueue-&gt;free(): Free qqueue_t</div><div class="ttdef"><b>Definition</b> <a href="#l00452">qqueue.c:452</a></div></div>
-<div class="ttc" id="aqqueue_8c_html_a984579020101ea2eec6f6e074148923b"><div class="ttname"><a href="qqueue_8c.html#a984579020101ea2eec6f6e074148923b">qqueue_getstr</a></div><div class="ttdeci">char * qqueue_getstr(qqueue_t *queue)</div><div class="ttdoc">qqueue-&gt;getstr(): Returns an string at the top of this queue without removing it.</div><div class="ttdef"><b>Definition</b> <a href="#l00355">qqueue.c:355</a></div></div>
-<div class="ttc" id="aqqueue_8c_html_aa72722b6d5a7ecc5ec01f71c0d7aa951"><div class="ttname"><a href="qqueue_8c.html#aa72722b6d5a7ecc5ec01f71c0d7aa951">qqueue_popat</a></div><div class="ttdeci">void * qqueue_popat(qqueue_t *queue, int index, size_t *size)</div><div class="ttdoc">qqueue-&gt;popat(): Returns and remove the element at the specified position in this queue.</div><div class="ttdef"><b>Definition</b> <a href="#l00320">qqueue.c:320</a></div></div>
+<div class="ttc" id="aqqueue_8c_html_a984579020101ea2eec6f6e074148923b"><div class="ttname"><a href="qqueue_8c.html#a984579020101ea2eec6f6e074148923b">qqueue_getstr</a></div><div class="ttdeci">char * qqueue_getstr(qqueue_t *queue)</div><div class="ttdoc">qqueue-&gt;getstr(): Returns a string at the top of this queue without removing it.</div><div class="ttdef"><b>Definition</b> <a href="#l00355">qqueue.c:355</a></div></div>
+<div class="ttc" id="aqqueue_8c_html_aa72722b6d5a7ecc5ec01f71c0d7aa951"><div class="ttname"><a href="qqueue_8c.html#aa72722b6d5a7ecc5ec01f71c0d7aa951">qqueue_popat</a></div><div class="ttdeci">void * qqueue_popat(qqueue_t *queue, int index, size_t *size)</div><div class="ttdoc">qqueue-&gt;popat(): Returns and removes the element at the specified position in this queue.</div><div class="ttdef"><b>Definition</b> <a href="#l00320">qqueue.c:320</a></div></div>
 <div class="ttc" id="aqqueue_8c_html_abd187f46c2a60edaa0b1bd82bb8a1426"><div class="ttname"><a href="qqueue_8c.html#abd187f46c2a60edaa0b1bd82bb8a1426">qqueue</a></div><div class="ttdeci">qqueue_t * qqueue(int options)</div><div class="ttdoc">Create new queue container.</div><div class="ttdef"><b>Definition</b> <a href="#l00129">qqueue.c:129</a></div></div>
-<div class="ttc" id="aqqueue_8c_html_abe2952d24a9a9f6cc8121f491faec4c4"><div class="ttname"><a href="qqueue_8c.html#abe2952d24a9a9f6cc8121f491faec4c4">qqueue_pushint</a></div><div class="ttdeci">bool qqueue_pushint(qqueue_t *queue, int64_t num)</div><div class="ttdoc">qqueue-&gt;pushint(): Pushes a integer onto the top of this queue.</div><div class="ttdef"><b>Definition</b> <a href="#l00233">qqueue.c:233</a></div></div>
+<div class="ttc" id="aqqueue_8c_html_abe2952d24a9a9f6cc8121f491faec4c4"><div class="ttname"><a href="qqueue_8c.html#abe2952d24a9a9f6cc8121f491faec4c4">qqueue_pushint</a></div><div class="ttdeci">bool qqueue_pushint(qqueue_t *queue, int64_t num)</div><div class="ttdoc">qqueue-&gt;pushint(): Pushes an integer onto the top of this queue.</div><div class="ttdef"><b>Definition</b> <a href="#l00233">qqueue.c:233</a></div></div>
 <div class="ttc" id="aqqueue_8c_html_ada41104b85c01a5773263c3ff84f9dc5"><div class="ttname"><a href="qqueue_8c.html#ada41104b85c01a5773263c3ff84f9dc5">qqueue_setsize</a></div><div class="ttdeci">size_t qqueue_setsize(qqueue_t *queue, size_t max)</div><div class="ttdoc">qqueue-&gt;setsize(): Sets maximum number of elements allowed in this queue.</div><div class="ttdef"><b>Definition</b> <a href="#l00177">qqueue.c:177</a></div></div>
-<div class="ttc" id="aqqueue_8c_html_ade3de0f1655569417856bb9758f1017c"><div class="ttname"><a href="qqueue_8c.html#ade3de0f1655569417856bb9758f1017c">qqueue_popint</a></div><div class="ttdeci">int64_t qqueue_popint(qqueue_t *queue)</div><div class="ttdoc">qqueue-&gt;popint(): Removes a integer at the top of this queue and returns that element.</div><div class="ttdef"><b>Definition</b> <a href="#l00291">qqueue.c:291</a></div></div>
+<div class="ttc" id="aqqueue_8c_html_ade3de0f1655569417856bb9758f1017c"><div class="ttname"><a href="qqueue_8c.html#ade3de0f1655569417856bb9758f1017c">qqueue_popint</a></div><div class="ttdeci">int64_t qqueue_popint(qqueue_t *queue)</div><div class="ttdoc">qqueue-&gt;popint(): Removes an integer at the top of this queue and returns that element.</div><div class="ttdef"><b>Definition</b> <a href="#l00291">qqueue.c:291</a></div></div>
 <div class="ttc" id="aqqueue_8c_html_ae22aa53bd411431a0809888655797848"><div class="ttname"><a href="qqueue_8c.html#ae22aa53bd411431a0809888655797848">qqueue_getat</a></div><div class="ttdeci">void * qqueue_getat(qqueue_t *queue, int index, size_t *size, bool newmem)</div><div class="ttdoc">qqueue-&gt;getat(): Returns an element at the specified position in this queue without removing it.</div><div class="ttdef"><b>Definition</b> <a href="#l00409">qqueue.c:409</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

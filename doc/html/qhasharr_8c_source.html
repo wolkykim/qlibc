@@ -94,28 +94,28 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">/**</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment"> * @file qhasharr.c Static(array) hash-table implementation.</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment"> * qhasharr implements a hash-table which maps keys to values and stores into</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment"> * fixed size static memory like shared-memory and memory-mapped file.</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment"> * The creator qhasharr() initializes static memory to makes small slots in it.</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment"> * The default slot size factors are defined in Q_HASHARR_NAMESIZE and</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment"> * Q_HASHARR_DATASIZE. And they are applied at compile time.</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment"> * qhasharr implements a hash table that maps keys to values and stores them in</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment"> * fixed-size static memory such as shared memory and memory-mapped files.</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment"> * The creator qhasharr() initializes static memory and divides it into small</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment"> * slots. The default slot size factors are defined in Q_HASHARR_NAMESIZE and</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment"> * Q_HASHARR_DATASIZE, and they are applied at compile time.</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment"> * The value part of an element will be stored across several slots if it&#39;s size</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"> * exceeds the slot size. But the key part of an element will be truncated if</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment"> * the size exceeds and it&#39;s length and more complex MD5 hash value will be</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment"> * stored with the key. So to look up a particular key, first we find an element</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment"> * which has same hash value. If the key was not truncated, we just do key</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment"> * comparison. But if the key was truncated because it&#39;s length exceeds, we do</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment"> * both md5 and key comparison(only stored size) to verify that the key is same.</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment"> * So please be aware of that, theoretically there is a possibility we pick</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment"> * wrong element in case a key exceeds the limit, has same length and MD5 hash</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment"> * with lookup key. But this possibility is very low and almost zero in practice.</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment"> * The value part of an element will be stored across several slots if its size</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"> * exceeds the slot size. The key part of an element will be truncated if its</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment"> * length exceeds the limit, and an MD5 hash value will also be stored with the</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment"> * key. To look up a particular key, we first find an element that has the same</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment"> * hash value. If the key was not truncated, we simply compare the key values.</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment"> * If the key was truncated because its length exceeded the limit, we compare</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment"> * both the MD5 hash and the stored portion of the key to verify that the key</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment"> * is the same. Please be aware that, in theory, it is possible to pick the</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment"> * wrong element if a key exceeds the limit and has the same length and MD5 hash</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment"> * as the lookup key. In practice, however, this possibility is extremely low.</span></div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment"> * qhasharr hash-table does not provide thread-safe handling intentionally and</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment"> * let users determine whether to provide locking mechanism or not, depending on</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment"> * the use cases. When there&#39;s race conditions expected, you should provide a</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment"> * shared resource control using mutex or semaphore to make sure data gets</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment"> * updated by one instance at a time.</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment"> * qhasharr intentionally does not provide thread-safe handling and lets users</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment"> * determine whether to provide a locking mechanism, depending on the use case.</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment"> * When race conditions are expected, you should provide shared-resource</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment"> * control using a mutex or semaphore to make sure data is updated by one</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment"> * instance at a time.</span></div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment"> * @code</span></div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment"> *  [Data Structure Diagram]</span></div>
@@ -126,7 +126,7 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment"> *  | +------------------+ +------------+ +------------+        +------------+ |</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment"> *  +--------------------------------------------------------------------------+</span></div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment"> *  Below diagram shows how a big value is stored.</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment"> *  The diagram below shows how a large value is stored.</span></div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment"> *  +--[Static Flat Memory Area------------------------------------------------+</span></div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment"> *  | +--------+ +-[Slot 0]---+ +-[Slot 1]---+ +-[Slot 2]---+ +-[Slot 3]-----+ |</span></div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment"> *  | |TBL INFO| |KEY A|DATA A| |DATA A cont.| |KEY B|DATA B| |DATA A cont.  | |</span></div>
@@ -141,7 +141,7 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment"> *  qhasharr_t *tbl = qhasharr(memory, sizeof(memory));</span></div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment"> *  if(tbl == NULL) return;</span></div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="comment"> *  // insert elements (key duplication does not allowed)</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="comment"> *  // insert elements (key duplication is not allowed)</span></div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="comment"> *  tbl-&gt;putstr(tbl, &quot;e1&quot;, &quot;a&quot;);</span></div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment"> *  tbl-&gt;putstr(tbl, &quot;e2&quot;, &quot;b&quot;);</span></div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment"> *  tbl-&gt;putstr(tbl, &quot;e3&quot;, &quot;c&quot;);</span></div>
@@ -342,7 +342,7 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><span class="comment"> * @retval errno will be set in error condition.</span></div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="comment"> *  - ENOBUFS   : Table doesn&#39;t have enough space to store the object.</span></div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span><span class="comment"> *  - EINVAL    : Invalid argument.</span></div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is not constant.</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is inconsistent.</span></div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span><span class="comment"> */</span></div>
 <div class="foldopen" id="foldopen00278" data-start="{" data-end="}">
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno"><a class="line" href="qhasharr_8c.html#a6e43029429b7aa43a66d2b55ce3bac81">  278</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="qhasharr_8c.html#a6e43029429b7aa43a66d2b55ce3bac81">qhasharr_put</a>(qhasharr_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keyword">const</span> <span class="keywordtype">void</span> *data,</div>
@@ -363,7 +363,7 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="comment"> * @retval errno will be set in error condition.</span></div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="comment"> *  - ENOBUFS   : Table doesn&#39;t have enough space to store the object.</span></div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="comment"> *  - EINVAL    : Invalid argument.</span></div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is not constant.</span></div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is inconsistent.</span></div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="comment"> */</span></div>
 <div class="foldopen" id="foldopen00297" data-start="{" data-end="}">
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno"><a class="line" href="qhasharr_8c.html#aeadc9cda7a3e29e81a1f11b914c34390">  297</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="qhasharr_8c.html#aeadc9cda7a3e29e81a1f11b914c34390">qhasharr_putstr</a>(qhasharr_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keyword">const</span> <span class="keywordtype">char</span> *data) {</div>
@@ -384,7 +384,7 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span><span class="comment"> *  - ENOBUFS   : Table doesn&#39;t have enough space to store the object.</span></div>
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span><span class="comment"> *  - ENOMEM    : System memory allocation failure.</span></div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span><span class="comment"> *  - EINVAL    : Invalid argument.</span></div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is not constant.</span></div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is inconsistent.</span></div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span><span class="comment"> */</span></div>
 <div class="foldopen" id="foldopen00316" data-start="{" data-end="}">
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno"><a class="line" href="qhasharr_8c.html#a9df103f6016cd3d3267cdf42893ba809">  316</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="qhasharr_8c.html#a9df103f6016cd3d3267cdf42893ba809">qhasharr_putstrf</a>(qhasharr_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keyword">const</span> <span class="keywordtype">char</span> *format, ...) {</div>
@@ -402,7 +402,7 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span><span class="comment"></span> </div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span><span class="comment"> * qhasharr-&gt;put_by_obj(): ut an object into this table by key object.</span></div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span><span class="comment"> * qhasharr-&gt;put_by_obj(): Put an object into this table by key object.</span></div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span><span class="comment"> * @param tbl       qhasharr_t container pointer.</span></div>
 <div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span><span class="comment"> * @param name      key data</span></div>
@@ -414,7 +414,7 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span><span class="comment"> * @retval errno will be set in error condition.</span></div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span><span class="comment"> *  - ENOBUFS   : Table doesn&#39;t have enough space to store the object.</span></div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span><span class="comment"> *  - EINVAL    : Invalid argument.</span></div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is not constant.</span></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is inconsistent.</span></div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span><span class="comment"> */</span></div>
 <div class="foldopen" id="foldopen00344" data-start="{" data-end="}">
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno"><a class="line" href="qhasharr_8c.html#a3bc56610cce2c4f7ee2373ae4a40143b">  344</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="qhasharr_8c.html#a3bc56610cce2c4f7ee2373ae4a40143b">qhasharr_put_by_obj</a>(qhasharr_t *tbl, <span class="keyword">const</span> <span class="keywordtype">void</span> *name, <span class="keywordtype">size_t</span> namesize,</div>
@@ -524,8 +524,8 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span><span class="comment"></span> </div>
 <div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span><span class="comment"> * qhasharr-&gt;getstr(): Finds an object with given name and returns as</span></div>
-<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span><span class="comment"> * string type.</span></div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span><span class="comment"> * qhasharr-&gt;getstr(): Finds an object with the given name and returns it as a</span></div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span><span class="comment"> * string.</span></div>
 <div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span><span class="comment"> * @param tbl       qhasharr_t container pointer.</span></div>
 <div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span><span class="comment"> * @param name      key string</span></div>
@@ -546,7 +546,7 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span><span class="comment"></span> </div>
 <div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span><span class="comment"> * qhasharr-&gt;get_by_object(): Get an object from this table by key object</span></div>
+<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span><span class="comment"> * qhasharr-&gt;get_by_obj(): Get an object from this table by key object.</span></div>
 <div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span><span class="comment"> * @param tbl       qhasharr_t container pointer.</span></div>
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span><span class="comment"> * @param name      key data</span></div>
@@ -590,11 +590,11 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 <div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span><span class="comment"> * @param tbl       qhasharr_t container pointer.</span></div>
 <div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span><span class="comment"> * @param name      key string</span></div>
 <div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span><span class="comment"> * @return true if successful, otherwise(not found) returns false</span></div>
+<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span><span class="comment"> * @return true on success; otherwise (if not found), returns false.</span></div>
 <div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span><span class="comment"> * @retval errno will be set in error condition.</span></div>
 <div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span><span class="comment"> *  - ENOENT    : No such key found.</span></div>
 <div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span><span class="comment"> *  - EINVAL    : Invalid argument.</span></div>
-<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is not constant.</span></div>
+<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is inconsistent.</span></div>
 <div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span><span class="comment"> */</span></div>
 <div class="foldopen" id="foldopen00516" data-start="{" data-end="}">
 <div class="line"><a id="l00516" name="l00516"></a><span class="lineno"><a class="line" href="qhasharr_8c.html#aac1f0f336ac79a12590a7f0993e09997">  516</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="qhasharr_8c.html#aac1f0f336ac79a12590a7f0993e09997">qhasharr_remove</a>(qhasharr_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *name) {</div>
@@ -609,11 +609,11 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 <div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span><span class="comment"> * @param name      key data</span></div>
 <div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span><span class="comment"> * @param namesize  size of key</span></div>
 <div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span><span class="comment"> * @return true if successful, otherwise(not found) returns false</span></div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span><span class="comment"> * @return true on success; otherwise (if not found), returns false.</span></div>
 <div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span><span class="comment"> * @retval errno will be set in error condition.</span></div>
 <div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span><span class="comment"> *  - ENOENT    : No such key found.</span></div>
 <div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span><span class="comment"> *  - EINVAL    : Invalid argument.</span></div>
-<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is not constant.</span></div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is inconsistent.</span></div>
 <div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span><span class="comment"> */</span></div>
 <div class="foldopen" id="foldopen00533" data-start="{" data-end="}">
 <div class="line"><a id="l00533" name="l00533"></a><span class="lineno"><a class="line" href="qhasharr_8c.html#af57be2bc8caf66f6bf94cd21370ef44f">  533</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="qhasharr_8c.html#af57be2bc8caf66f6bf94cd21370ef44f">qhasharr_remove_by_obj</a>(qhasharr_t *tbl, <span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keywordtype">size_t</span> namesize) {</div>
@@ -642,11 +642,11 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 <div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span><span class="comment"> * @param tbl       qhasharr_t container pointer.</span></div>
 <div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span><span class="comment"> * @param idx       slot index number</span></div>
 <div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span><span class="comment"> * @return true if successful, otherwise(not found) returns false</span></div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span><span class="comment"> * @return true on success; otherwise (if not found), returns false.</span></div>
 <div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span><span class="comment"> * @retval errno will be set in error condition.</span></div>
 <div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span><span class="comment"> *  - ENOENT    : Index is not pointing a valid object.</span></div>
 <div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span><span class="comment"> *  - EINVAL    : Invalid argument.</span></div>
-<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is not constant.</span></div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span><span class="comment"> *  - EFAULT    : Unexpected error. Data structure is inconsistent.</span></div>
 <div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span><span class="comment"> * @code</span></div>
 <div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span><span class="comment"> *  int idx = 0;</span></div>
@@ -861,10 +861,10 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span><span class="comment"></span> </div>
 <div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span><span class="comment"> * qhasharr-&gt;debug(): Print hash table for debugging purpose</span></div>
+<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span><span class="comment"> * qhasharr-&gt;debug(): Print the hash table for debugging purposes.</span></div>
 <div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span><span class="comment"> * @param tbl       qhasharr_t container pointer.</span></div>
-<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span><span class="comment"> * @param out       output stream</span></div>
+<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span><span class="comment"> * @param out       output stream such as stdout or stderr.</span></div>
 <div class="line"><a id="l00773" name="l00773"></a><span class="lineno">  773</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00774" name="l00774"></a><span class="lineno">  774</span><span class="comment"> * @return true on success, otherwise false</span></div>
 <div class="line"><a id="l00775" name="l00775"></a><span class="lineno">  775</span><span class="comment"> * @retval errno will be set in error condition.</span></div>
@@ -1206,16 +1206,16 @@ $(function(){initNavTree('qhasharr_8c_source.html','',''); });
 <div class="ttc" id="aqhash_8c_html_a433dc88e449b346a863f957421c4d2ba"><div class="ttname"><a href="qhash_8c.html#a433dc88e449b346a863f957421c4d2ba">qhashmurmur3_32</a></div><div class="ttdeci">uint32_t qhashmurmur3_32(const void *data, size_t nbytes)</div><div class="ttdoc">Get 32-bit Murmur3 hash.</div><div class="ttdef"><b>Definition</b> <a href="qhash_8c_source.html#l00265">qhash.c:265</a></div></div>
 <div class="ttc" id="aqhasharr_8c_html_a0c0674e4d7ce39cf336067732ba8cb7b"><div class="ttname"><a href="qhasharr_8c.html#a0c0674e4d7ce39cf336067732ba8cb7b">qhasharr_clear</a></div><div class="ttdeci">void qhasharr_clear(qhasharr_t *tbl)</div><div class="ttdoc">qhasharr-&gt;clear(): Clears this table so that it contains no keys.</div><div class="ttdef"><b>Definition</b> <a href="#l00748">qhasharr.c:748</a></div></div>
 <div class="ttc" id="aqhasharr_8c_html_a2a780affb950d666046cfb5e1f9c8153"><div class="ttname"><a href="qhasharr_8c.html#a2a780affb950d666046cfb5e1f9c8153">qhasharr_size</a></div><div class="ttdeci">int qhasharr_size(qhasharr_t *tbl, int *maxslots, int *usedslots)</div><div class="ttdoc">qhasharr-&gt;size(): Returns the number of objects in this table.</div><div class="ttdef"><b>Definition</b> <a href="#l00725">qhasharr.c:725</a></div></div>
-<div class="ttc" id="aqhasharr_8c_html_a3bc56610cce2c4f7ee2373ae4a40143b"><div class="ttname"><a href="qhasharr_8c.html#a3bc56610cce2c4f7ee2373ae4a40143b">qhasharr_put_by_obj</a></div><div class="ttdeci">bool qhasharr_put_by_obj(qhasharr_t *tbl, const void *name, size_t namesize, const void *data, size_t datasize)</div><div class="ttdoc">qhasharr-&gt;put_by_obj(): ut an object into this table by key object.</div><div class="ttdef"><b>Definition</b> <a href="#l00344">qhasharr.c:344</a></div></div>
+<div class="ttc" id="aqhasharr_8c_html_a3bc56610cce2c4f7ee2373ae4a40143b"><div class="ttname"><a href="qhasharr_8c.html#a3bc56610cce2c4f7ee2373ae4a40143b">qhasharr_put_by_obj</a></div><div class="ttdeci">bool qhasharr_put_by_obj(qhasharr_t *tbl, const void *name, size_t namesize, const void *data, size_t datasize)</div><div class="ttdoc">qhasharr-&gt;put_by_obj(): Put an object into this table by key object.</div><div class="ttdef"><b>Definition</b> <a href="#l00344">qhasharr.c:344</a></div></div>
 <div class="ttc" id="aqhasharr_8c_html_a54fa504cce007a18fa510be544307cab"><div class="ttname"><a href="qhasharr_8c.html#a54fa504cce007a18fa510be544307cab">qhasharr_remove_by_idx</a></div><div class="ttdeci">bool qhasharr_remove_by_idx(qhasharr_t *tbl, int idx)</div><div class="ttdoc">qhasharr-&gt;remove_by_idx(): Remove an object from this table by index number.</div><div class="ttdef"><b>Definition</b> <a href="#l00589">qhasharr.c:589</a></div></div>
 <div class="ttc" id="aqhasharr_8c_html_a63f33bbeb824803c310e672f2ceb8c70"><div class="ttname"><a href="qhasharr_8c.html#a63f33bbeb824803c310e672f2ceb8c70">qhasharr_get</a></div><div class="ttdeci">void * qhasharr_get(qhasharr_t *tbl, const char *name, size_t *datasize)</div><div class="ttdoc">qhasharr-&gt;get(): Get an object from this table</div><div class="ttdef"><b>Definition</b> <a href="#l00443">qhasharr.c:443</a></div></div>
-<div class="ttc" id="aqhasharr_8c_html_a6b95b3177af93236950694298df2b7e4"><div class="ttname"><a href="qhasharr_8c.html#a6b95b3177af93236950694298df2b7e4">qhasharr_debug</a></div><div class="ttdeci">bool qhasharr_debug(qhasharr_t *tbl, FILE *out)</div><div class="ttdoc">qhasharr-&gt;debug(): Print hash table for debugging purpose</div><div class="ttdef"><b>Definition</b> <a href="#l00778">qhasharr.c:778</a></div></div>
+<div class="ttc" id="aqhasharr_8c_html_a6b95b3177af93236950694298df2b7e4"><div class="ttname"><a href="qhasharr_8c.html#a6b95b3177af93236950694298df2b7e4">qhasharr_debug</a></div><div class="ttdeci">bool qhasharr_debug(qhasharr_t *tbl, FILE *out)</div><div class="ttdoc">qhasharr-&gt;debug(): Print the hash table for debugging purposes.</div><div class="ttdef"><b>Definition</b> <a href="#l00778">qhasharr.c:778</a></div></div>
 <div class="ttc" id="aqhasharr_8c_html_a6e43029429b7aa43a66d2b55ce3bac81"><div class="ttname"><a href="qhasharr_8c.html#a6e43029429b7aa43a66d2b55ce3bac81">qhasharr_put</a></div><div class="ttdeci">bool qhasharr_put(qhasharr_t *tbl, const char *name, const void *data, size_t datasize)</div><div class="ttdoc">qhasharr-&gt;put(): Put an object into this table.</div><div class="ttdef"><b>Definition</b> <a href="#l00278">qhasharr.c:278</a></div></div>
 <div class="ttc" id="aqhasharr_8c_html_a6f5f9ed05bab0600c251949db75f76f1"><div class="ttname"><a href="qhasharr_8c.html#a6f5f9ed05bab0600c251949db75f76f1">qhasharr</a></div><div class="ttdeci">qhasharr_t * qhasharr(void *memory, size_t memsize)</div><div class="ttdoc">Initialize a static hash table.</div><div class="ttdef"><b>Definition</b> <a href="#l00208">qhasharr.c:208</a></div></div>
 <div class="ttc" id="aqhasharr_8c_html_a83012ec9fea85ca5770529997306334d"><div class="ttname"><a href="qhasharr_8c.html#a83012ec9fea85ca5770529997306334d">qhasharr_calculate_memsize</a></div><div class="ttdeci">size_t qhasharr_calculate_memsize(int max)</div><div class="ttdoc">Get how much memory is needed for N slots.</div><div class="ttdef"><b>Definition</b> <a href="#l00179">qhasharr.c:179</a></div></div>
-<div class="ttc" id="aqhasharr_8c_html_a875e900cd73f72bcb613842ddf5b9c3a"><div class="ttname"><a href="qhasharr_8c.html#a875e900cd73f72bcb613842ddf5b9c3a">qhasharr_getstr</a></div><div class="ttdeci">char * qhasharr_getstr(qhasharr_t *tbl, const char *name)</div><div class="ttdoc">qhasharr-&gt;getstr(): Finds an object with given name and returns as string type.</div><div class="ttdef"><b>Definition</b> <a href="#l00463">qhasharr.c:463</a></div></div>
+<div class="ttc" id="aqhasharr_8c_html_a875e900cd73f72bcb613842ddf5b9c3a"><div class="ttname"><a href="qhasharr_8c.html#a875e900cd73f72bcb613842ddf5b9c3a">qhasharr_getstr</a></div><div class="ttdeci">char * qhasharr_getstr(qhasharr_t *tbl, const char *name)</div><div class="ttdoc">qhasharr-&gt;getstr(): Finds an object with the given name and returns it as a string.</div><div class="ttdef"><b>Definition</b> <a href="#l00463">qhasharr.c:463</a></div></div>
 <div class="ttc" id="aqhasharr_8c_html_a88e2f56b1a87c1f9485f5343ec7998be"><div class="ttname"><a href="qhasharr_8c.html#a88e2f56b1a87c1f9485f5343ec7998be">qhasharr_getnext</a></div><div class="ttdeci">bool qhasharr_getnext(qhasharr_t *tbl, qhasharr_obj_t *obj, int *idx)</div><div class="ttdoc">qhasharr-&gt;getnext(): Get next element.</div><div class="ttdef"><b>Definition</b> <a href="#l00674">qhasharr.c:674</a></div></div>
-<div class="ttc" id="aqhasharr_8c_html_a9334082a845acb3edc1f62d337266acd"><div class="ttname"><a href="qhasharr_8c.html#a9334082a845acb3edc1f62d337266acd">qhasharr_get_by_obj</a></div><div class="ttdeci">void * qhasharr_get_by_obj(qhasharr_t *tbl, const void *name, size_t namesize, size_t *datasize)</div><div class="ttdoc">qhasharr-&gt;get_by_object(): Get an object from this table by key object</div><div class="ttdef"><b>Definition</b> <a href="#l00484">qhasharr.c:484</a></div></div>
+<div class="ttc" id="aqhasharr_8c_html_a9334082a845acb3edc1f62d337266acd"><div class="ttname"><a href="qhasharr_8c.html#a9334082a845acb3edc1f62d337266acd">qhasharr_get_by_obj</a></div><div class="ttdeci">void * qhasharr_get_by_obj(qhasharr_t *tbl, const void *name, size_t namesize, size_t *datasize)</div><div class="ttdoc">qhasharr-&gt;get_by_obj(): Get an object from this table by key object.</div><div class="ttdef"><b>Definition</b> <a href="#l00484">qhasharr.c:484</a></div></div>
 <div class="ttc" id="aqhasharr_8c_html_a9df103f6016cd3d3267cdf42893ba809"><div class="ttname"><a href="qhasharr_8c.html#a9df103f6016cd3d3267cdf42893ba809">qhasharr_putstrf</a></div><div class="ttdeci">bool qhasharr_putstrf(qhasharr_t *tbl, const char *name, const char *format,...)</div><div class="ttdoc">qhasharr-&gt;putstrf(): Put a formatted string into this table.</div><div class="ttdef"><b>Definition</b> <a href="#l00316">qhasharr.c:316</a></div></div>
 <div class="ttc" id="aqhasharr_8c_html_aa5cd6756ea7192366386e811c9da8cee"><div class="ttname"><a href="qhasharr_8c.html#aa5cd6756ea7192366386e811c9da8cee">qhasharr_free</a></div><div class="ttdeci">void qhasharr_free(qhasharr_t *tbl)</div><div class="ttdoc">qhasharr-&gt;free(): Free table reference object.</div><div class="ttdef"><b>Definition</b> <a href="#l00860">qhasharr.c:860</a></div></div>
 <div class="ttc" id="aqhasharr_8c_html_aac1f0f336ac79a12590a7f0993e09997"><div class="ttname"><a href="qhasharr_8c.html#aac1f0f336ac79a12590a7f0993e09997">qhasharr_remove</a></div><div class="ttdeci">bool qhasharr_remove(qhasharr_t *tbl, const char *name)</div><div class="ttdoc">qhasharr-&gt;remove(): Remove an object from this table.</div><div class="ttdef"><b>Definition</b> <a href="#l00516">qhasharr.c:516</a></div></div>
