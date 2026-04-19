@@ -23,7 +23,7 @@ PASS - 2/2 tests passed.
 
 # How to write unit tests
 
-We need your help to write unit tests. Please refer test_qstring.c and qunit.h for your inspiration.
+We need your help to write unit tests. Please refer to test_qstring.c and qunit.h for inspiration.
 
 ```C
 #include "qunit.h"

@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,10 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-/* This code is written and updated by following people and released under
- * the same license as above qLibc license.
- * Copyright (c) 2015 Zhenjiang Xie - https://github.com/Charles0429
  *****************************************************************************/
 
 /**
@@ -147,7 +143,7 @@ struct qvector_s {
     size_t initnum;
 };
 
-struct qvector_obj_s { 
+struct qvector_obj_s {
     void *data;
     int index;
 };

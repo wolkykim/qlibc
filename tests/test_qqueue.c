@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,10 +25,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
-/* This code is written and updated by following people and released under
- * the same license as above qLibc license.
- * Copyright (c) 2015 Zhenjiang Xie - https://github.com/Charles0429
- *****************************************************************************/
 
 #include "qunit.h"
 #include "qlibc.h"
@@ -45,7 +41,7 @@ TEST("Test basic features") {
 
     qqueue_t *queue = qqueue(0);
     ASSERT_EQUAL_INT(queue->size(queue), 0);
-    
+
     bool result;
     result = queue->push(queue, (void*) data, sizeof(data));
     ASSERT_EQUAL_BOOL(true, result);
@@ -74,7 +70,7 @@ TEST("Test boundary conditions") {
     const int array[] = { 1, 2, 3, 4, 5, 6 };
     const char *string =
             "ewqljljoaq;vsl23053054302ds;flajewjpeo2353rekffkl;sdk;f";
-    
+
     /*test when queue is empty*/
     qqueue_t *queue = qqueue(0);
     ASSERT_EQUAL_INT(0, queue->size(queue));

@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -183,25 +183,25 @@ size_t qhasharr_calculate_memsize(int max) {
 }
 
 /**
- * Initialize static hash table
+ * Initialize a static hash table.
  *
- * @param memory    a pointer of data memory.
- * @param memsize   a size of data memory, 0 for using existing data.
+ * @param memory    pointer to the data buffer
+ * @param memsize   size of the data buffer, or 0 to use existing data
  *
- * @return qhasharr_t container pointer, otherwise returns NULL.
- * @retval errno  will be set in error condition.
- *  - EINVAL : Assigned memory is too small. It must bigger enough to allocate
- *  at least 1 slot.
+ * @return qhasharr_t pointer on success, or NULL on failure.
+ * @retval errno  will be set on error.
+ *  - EINVAL : Assigned memory is too small. It must be large enough to hold
+ *             at least one slot.
  *
  * @code
- *  // initialize hash-table with 100 slots.
- *  // A single element can take several slots.
+ *  // Initialize a hash table with 100 slots.
+ *  // One element can use several slots.
  *  char memory[112 * 100];
  *
- *  // Initialize new table.
+ *  // Initialize a new table.
  *  qhasharr_t *tbl = qhasharr(memory, sizeof(memory));
  *
- *  // Use existing table.
+ *  // Use an existing table.
  *  qhasharr_t *tbl2 = qhasharr(memory, 0);
  * @endcode
  */
@@ -269,7 +269,7 @@ qhasharr_t *qhasharr(void *memory, size_t memsize) {
  * @param value     value object data
  * @param size      size of value
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  * @retval errno will be set in error condition.
  *  - ENOBUFS   : Table doesn't have enough space to store the object.
  *  - EINVAL    : Invalid argument.
@@ -288,7 +288,7 @@ bool qhasharr_put(qhasharr_t *tbl, const char *name, const void *data,
  * @param name      key string.
  * @param data      value string.
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  * @retval errno will be set in error condition.
  *  - ENOBUFS   : Table doesn't have enough space to store the object.
  *  - EINVAL    : Invalid argument.
@@ -306,7 +306,7 @@ bool qhasharr_putstr(qhasharr_t *tbl, const char *name, const char *data) {
  * @param name      key string
  * @param format    formatted string data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOBUFS   : Table doesn't have enough space to store the object.
  *  - ENOMEM    : System memory allocation failure.
@@ -335,7 +335,7 @@ bool qhasharr_putstrf(qhasharr_t *tbl, const char *name, const char *format, ...
  * @param data      data
  * @param datasize  size of data
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  * @retval errno will be set in error condition.
  *  - ENOBUFS   : Table doesn't have enough space to store the object.
  *  - EINVAL    : Invalid argument.
@@ -431,15 +431,14 @@ bool qhasharr_put_by_obj(qhasharr_t *tbl, const void *name, size_t namesize,
  * @param name      key string
  * @param datasize  if not NULL, returned object size will be stored
  *
- * @return malloced object pointer if successful, otherwise(not found)
- *  returns NULL
+ * @return newly allocated object on success, or NULL if not found.
  * @retval errno will be set in error condition.
  *  - ENOENT    : No such key found.
  *  - EINVAL    : Invalid argument.
  *  - ENOMEM    : Memory allocation failed.
  *
  * @note
- * returned object must be freed after done using.
+ * The returned object must be freed after use.
  */
 void *qhasharr_get(qhasharr_t *tbl, const char *name, size_t *datasize) {
     return qhasharr_get_by_obj(tbl, name, (name) ? strlen(name) + 1 : 0, datasize);
@@ -452,14 +451,14 @@ void *qhasharr_get(qhasharr_t *tbl, const char *name, size_t *datasize) {
  * @param tbl       qhasharr_t container pointer.
  * @param name      key string
  *
- * @return string pointer if successful, otherwise(not found) returns NULL
+ * @return string pointer on success, or NULL if not found.
  * @retval errno will be set in error condition.
  *  - ENOENT    : No such key found.
  *  - EINVAL    : Invalid argument.
  *  - ENOMEM    : Memory allocation failed.
  *
  * @note
- * returned object must be freed after done using.
+ * The returned object must be freed after use.
  */
 char *qhasharr_getstr(qhasharr_t *tbl, const char *name) {
     return (char *) qhasharr_get(tbl, name, NULL);
@@ -473,15 +472,14 @@ char *qhasharr_getstr(qhasharr_t *tbl, const char *name) {
  * @param namesize  size of key
  * @param datasize  if not NULL, returned object size will be stored
  *
- * @return malloced object pointer if successful, otherwise(not found)
- *  returns NULL
+ * @return newly allocated object on success, or NULL if not found.
  * @retval errno will be set in error condition.
  *  - ENOENT    : No such key found.
  *  - EINVAL    : Invalid argument.
  *  - ENOMEM    : Memory allocation failed.
  *
  * @note
- * returned object must be freed after done using.
+ * The returned object must be freed after use.
  */
 void *qhasharr_get_by_obj(qhasharr_t *tbl, const void *name, size_t namesize,
                           size_t *datasize) {
@@ -512,7 +510,7 @@ void *qhasharr_get_by_obj(qhasharr_t *tbl, const void *name, size_t namesize,
  * @return true if successful, otherwise(not found) returns false
  * @retval errno will be set in error condition.
  *  - ENOENT    : No such key found.
- *  - EINVAL    : Invald argument.
+ *  - EINVAL    : Invalid argument.
  *  - EFAULT    : Unexpected error. Data structure is not constant.
  */
 bool qhasharr_remove(qhasharr_t *tbl, const char *name) {
@@ -529,7 +527,7 @@ bool qhasharr_remove(qhasharr_t *tbl, const char *name) {
  * @return true if successful, otherwise(not found) returns false
  * @retval errno will be set in error condition.
  *  - ENOENT    : No such key found.
- *  - EINVAL    : Invald argument.
+ *  - EINVAL    : Invalid argument.
  *  - EFAULT    : Unexpected error. Data structure is not constant.
  */
 bool qhasharr_remove_by_obj(qhasharr_t *tbl, const char *name, size_t namesize) {
@@ -560,7 +558,7 @@ bool qhasharr_remove_by_obj(qhasharr_t *tbl, const char *name, size_t namesize) 
  * @return true if successful, otherwise(not found) returns false
  * @retval errno will be set in error condition.
  *  - ENOENT    : Index is not pointing a valid object.
- *  - EINVAL    : Invald argument.
+ *  - EINVAL    : Invalid argument.
  *  - EFAULT    : Unexpected error. Data structure is not constant.
  *
  * @code
@@ -582,11 +580,11 @@ bool qhasharr_remove_by_obj(qhasharr_t *tbl, const char *name, size_t namesize) 
  * defined size, the keys are stored with truncation with their fingerprint,
  * so this method provides a way to remove those keys.
  * getnext() returns actual index + 1(pointing next slot of current finding),
- * so you need to adjust it by -1 for the valid index number. And once you
- * remove object by this method, rewind idx by -1 before calling getnext()
+ * so you need to adjust it by -1 for a valid index. After you remove an
+ * object with this method, rewind idx by -1 before calling getnext()
  * because collision objects can be moved back to removed index again, so
  * by adjusting index by -1, getnext() can continue search from the removed
- * slot index again. Please refer an example code.
+ * slot index again. Please see the example above.
  */
 bool qhasharr_remove_by_idx(qhasharr_t *tbl, int idx) {
     if (idx < 0) {
@@ -654,7 +652,7 @@ bool qhasharr_remove_by_idx(qhasharr_t *tbl, int idx) {
  * @return key name string if successful, otherwise(end of table) returns NULL
  * @retval errno will be set in error condition.
  *  - ENOENT    : No next element.
- *  - EINVAL    : Invald argument.
+ *  - EINVAL    : Invalid argument.
  *  - ENOMEM    : Memory allocation failed.
  *
  * @code
@@ -745,7 +743,7 @@ int qhasharr_size(qhasharr_t *tbl, int *maxslots, int *usedslots) {
  *
  * @param tbl       qhasharr_t container pointer.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  */
 void qhasharr_clear(qhasharr_t *tbl) {
     if (tbl == NULL) {
@@ -773,7 +771,7 @@ void qhasharr_clear(qhasharr_t *tbl) {
  * @param tbl       qhasharr_t container pointer.
  * @param out       output stream
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  * @retval errno will be set in error condition.
  *  - EIO       : Invalid output stream.
  */
@@ -850,13 +848,13 @@ bool qhasharr_debug(qhasharr_t *tbl, FILE *out) {
 }
 
 /**
- * qhasharr->free(): De-allocate table reference object.
+ * qhasharr->free(): Free table reference object.
  *
  * @param tbl   qhashtbl_t container pointer.
  *
  * @note
- *  This does not de-allocate the data memory but only the memory of
- *  qhasharr struct. User provided data memory must be de-allocated
+ *  This does not free the data memory but only the memory of
+ *  qhasharr struct. User provided data memory must be freed
  *  by user.
  */
 void qhasharr_free(qhasharr_t *tbl) {

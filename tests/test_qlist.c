@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,10 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-/* This code is written and updated by following people and released under
- * the same license as above qLibc license.
- * Copyright (c) 2015 Zhenjiang Xie - https://github.com/Charles0429
  *****************************************************************************/
 
 #include "qunit.h"
@@ -57,7 +53,7 @@ TEST("Test basic features") {
     ASSERT_EQUAL_STR(values[0], (char*)data);
     data = list->getlast(list, NULL, false);
     ASSERT_EQUAL_STR(values[2], (char*)data);
-    
+
     list->addat(list, 1, values[1], strlen(values[1]) + 1);
     ASSERT_EQUAL_INT(3, list->size(list));
     data = list->getfirst(list, NULL, false);
@@ -66,7 +62,7 @@ TEST("Test basic features") {
     ASSERT_EQUAL_STR(values[1], (char*)data);
     data = list->getlast(list, NULL, false);
     ASSERT_EQUAL_STR(values[2], (char*)data);
-    
+
     data = list->popat(list, 1, NULL);
     ASSERT_EQUAL_INT(2, list->size(list));
     ASSERT_EQUAL_STR(values[1], (char*)data);
@@ -83,7 +79,7 @@ TEST("Test basic features") {
 
 TEST("Test boundary conditions") {
     const char *values[] = { "value0" };
-    
+
     /*test when list is empty*/
     qlist_t *list = qlist(0);
     bool result;

@@ -10,7 +10,7 @@ APIs with a consistent API look.
 ## qLibc Copyright
 
 qLibc is published under 2-clause BSD license known as Simplified BSD License.
-Please refer the LICENSE document included in the package for more details.
+Please refer to the LICENSE document included in the package for more details.
 
 ## API Reference
 
@@ -28,11 +28,11 @@ Please refer the LICENSE document included in the package for more details.
   * General utilities.
     * String --- string trimmer, modifier, replacer, case converter, pattern detectors, ...
     * I/O --- non-blocking I/O, stream reader/writer, ...
-    * File --- file locking, file/directory hander, path correctors, ...
+    * File --- file locking, file/directory handler, path correctors, ...
     * IPC, Semaphore Shared-memory
     * En/decoders --- Url en/decoder, Base64 en/decoder, Hex en/decoder, ...
     * Hashes --- Murmur hashes, FNV hashes, MD5 hashes, ...
-    * Time --- time diff, time format converstion, ...
+    * Time --- time diff, time format conversion, ...
 
 * [qLibc Extension API Reference](https://wolkykim.github.io/qlibc/doc/html/files.html)
   * Apache-style Configuration File Parser.
@@ -59,7 +59,7 @@ Please refer the LICENSE document included in the package for more details.
 | Search Nearest Key  | Yes          | No           | No              | No           |
 | Iterator support    | Yes          | Yes          | Yes             | Yes          |
 | Iterator visit order| min -> max   | random       | random          | insert order |
-| Thread-safe option  | Supported    | Suported     | User            | Supported    |
+| Thread-safe option  | Supported    | Supported    | User            | Supported    |
 | Can use shared mem  | No           | No           | Yes             | No           |
 
 ## Consistent API Look
@@ -68,13 +68,12 @@ All container APIs have a consistent look and feel. It basically provides
 a creator function which usually returns a pointer to a container structure.
 Also, **all functions related to the container can be accessed through function
 pointers inside of the container** or traditional style direct access APIs.
-For an example, 
 
 So, regardless of which container you use, you can simply put elements into
 a list with `container->put(container, ...)` or you can call them using
-direct API like qtreetbl_pub(container, ...).
+direct API like qtreetbl_put(container, ...).
 
-An examples below illustrates how it looks like.
+The example below illustrates what it looks like.
 
 ~~~{.c}
   // create a hash-table.
@@ -122,7 +121,7 @@ pointers inside of the container object.
 ## Looking for people to work with.
 
 We're looking for people who want to work together to develop and improve qLibc.
-Currently, we have high demands on following areas.
+Currently, we have high demand in the following areas.
 
 * Automated testing
 * Documentation.

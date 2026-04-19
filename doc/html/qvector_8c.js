@@ -3,6 +3,7 @@ var qvector_8c =
     [ "qvector", "qvector_8c.html#a6ed9e631160fd8f497a384dcb82d5794", null ],
     [ "qvector_addfirst", "qvector_8c.html#a0bf76991577f397aafecb52599709103", null ],
     [ "qvector_addlast", "qvector_8c.html#af61312ebeacce01f8d2b1777802d3f98", null ],
+    [ "qvector_addat", "qvector_8c.html#a607e3dac35bf27af22de78875f2ee557", null ],
     [ "qvector_getfirst", "qvector_8c.html#a377aea2cd35c7d879a35fb3c9404e85c", null ],
     [ "qvector_getlast", "qvector_8c.html#a516f324b062fb12c15cc444b8f72798f", null ],
     [ "qvector_getat", "qvector_8c.html#a131073e557942bf36271cb01a3ccaf43", null ],

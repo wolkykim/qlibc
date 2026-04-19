@@ -1,7 +1,7 @@
 ################################################################################
 ## qLibc
 ##
-## Copyright (c) 2010-2015 Seungyoung Kim.
+## Copyright (c) 2010-2026 Seungyoung Kim.
 ## All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@ AC_COPYRIGHT([
 ==============================================================================
  qLibc
 
- Copyright (c) 2010-2015 Seungyoung Kim.
+ Copyright (c) 2010-2026 Seungyoung Kim.
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -76,7 +76,7 @@ AC_DEFUN([Q_ARG_DISABLE], [
 ## Initialize
 AC_INIT([qLibc], [2 RELEASE], [https://github.com/wolkykim/qlibc])
 AC_CONFIG_SRCDIR([config.h.in])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile examples/Makefile])
 AC_SUBST(BUILD_TARGETS, ["qlibc qlibcext"])
 AC_SUBST(INSTALL_TARGETS, ["install-qlibc install-qlibcext"])
@@ -104,8 +104,7 @@ if test $ac_compiler_gnu = yes; then
 	CFLAGS_LIB="$CFLAGS -fPIC"
 	AC_SUBST(CFLAGS_LIB)
 fi
-AC_PROG_CC_C99
-if test $ac_cv_prog_cc_c99 = no; then
+if test "x$ac_prog_cc_stdc" = "xno" || test "x$ac_prog_cc_stdc" = "xc89"; then
 	AC_MSG_FAILURE([Compiler does not support C99 mode.])
 fi
 
@@ -121,7 +120,8 @@ AC_PATH_PROG(LD, ld)
 AC_PATH_PROG(RM, rm)
 
 ## Checks for header files.
-AC_HEADER_STDC
+AC_CHECK_INCLUDES_DEFAULT
+AC_PROG_EGREP
 AC_HEADER_STDBOOL
 AC_HEADER_DIRENT
 AC_CHECK_HEADER([inttypes.h])

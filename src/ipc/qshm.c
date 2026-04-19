@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,14 +79,14 @@
 #include "ipc/qshm.h"
 
 /**
- * Initialize shared-memory
+ * Initialize shared memory.
  *
- * @param keyfile   seed for generating unique IPC key
- * @param keyid     seed for generating unique IPC key
- * @param size      size of shared memory
- * @param recreate  set to true to re-create shared-memory if already exists
+ * @param keyfile   seed used to generate a unique IPC key
+ * @param keyid     seed used to generate a unique IPC key
+ * @param size      size of the shared memory
+ * @param recreate  set to true to recreate the shared memory if it already exists
  *
- * @return non-negative shared memory identifier if successful, otherwise returns -1
+ * @return non-negative shared memory identifier on success, or -1 on failure.
  */
 int qshm_init(const char *keyfile, int keyid, size_t size, bool recreate) {
     key_t semkey;
@@ -117,12 +117,12 @@ int qshm_init(const char *keyfile, int keyid, size_t size, bool recreate) {
 }
 
 /**
- * Get shared memory identifier by keyfile and keyid for existing shared memory
+ * Get the identifier of existing shared memory.
  *
- * @param keyfile   seed for generating unique IPC key
- * @param keyid     seed for generating unique IPC key
+ * @param keyfile   seed used to generate a unique IPC key
+ * @param keyid     seed used to generate a unique IPC key
  *
- * @return non-negative shared memory identifier if successful, otherwise returns -1
+ * @return non-negative shared memory identifier on success, or -1 on failure.
  */
 int qshm_getid(const char *keyfile, int keyid) {
     int shmid;
@@ -140,11 +140,11 @@ int qshm_getid(const char *keyfile, int keyid) {
 }
 
 /**
- * Get a pointer of shared memory
+ * Get a pointer to shared memory.
  *
  * @param shmid     shared memory identifier
  *
- * @return a pointer of shared memory
+ * @return pointer to shared memory, or NULL on failure.
  */
 void *qshm_get(int shmid) {
     void *pShm;
@@ -158,11 +158,11 @@ void *qshm_get(int shmid) {
 }
 
 /**
- * De-allocate shared memory
+ * Free shared memory.
  *
  * @param shmid     shared memory identifier
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false.
  */
 bool qshm_free(int shmid) {
     if (shmid < 0)

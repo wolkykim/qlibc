@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -114,7 +114,7 @@
  *
  * @param options   combination of initialization options.
  *
- * @return a pointer of malloced qstack_t container, otherwise returns NULL.
+ * @return pointer to allocated qstack_t container on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOMEM    : Memory allocation failure.
  *
@@ -185,7 +185,7 @@ size_t qstack_setsize(qstack_t *stack, size_t max) {
  * @param data  a pointer which points data memory.
  * @param size  size of the data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EINVAL    : Invalid argument.
  *  - ENOBUFS   : Stack full. Only happens when this stack has set to have
@@ -203,7 +203,7 @@ bool qstack_push(qstack_t *stack, const void *data, size_t size) {
  * @param data  a pointer which points data memory.
  * @param size  size of the data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EINVAL    : Invalid argument.
  *  - ENOBUFS   : Stack full. Only happens when this stack has set to have
@@ -224,7 +224,7 @@ bool qstack_pushstr(qstack_t *stack, const char *str) {
  * @param stack qstack container pointer.
  * @param num   integer data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOBUFS   : Stack full. Only happens when this stack has set to have
  *                limited number of elements.
@@ -235,13 +235,13 @@ bool qstack_pushint(qstack_t *stack, int64_t num) {
 }
 
 /**
- * qstack->pop(): Removes a element at the top of this stack and returns
+ * qstack->pop(): Removes an element at the top of this stack and returns
  * that element.
  *
  * @param stack qstack container pointer.
  * @param size  if size is not NULL, element size will be stored.
  *
- * @return a pointer of malloced element, otherwise returns NULL.
+ * @return pointer to allocated element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT    : Stack is empty.
  *  - ENOMEM    : Memory allocation failure.
@@ -251,12 +251,12 @@ void *qstack_pop(qstack_t *stack, size_t *size) {
 }
 
 /**
- * qstack->popstr(): Removes a element at the top of this stack and
+ * qstack->popstr(): Removes an element at the top of this stack and
  * returns that element.
  *
  * @param stack qstack container pointer.
  *
- * @return a pointer of malloced string element, otherwise returns NULL.
+ * @return pointer to allocated string element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT    : Stack is empty.
  *  - ENOMEM    : Memory allocation failure.
@@ -307,14 +307,14 @@ int64_t qstack_popint(qstack_t *stack) {
  * @param index index at which the specified element is to be inserted
  * @param size  if size is not NULL, element size will be stored.
  *
- * @return a pointer of malloced element, otherwise returns NULL.
+ * @return pointer to allocated element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ERANGE    : Index out of range.
  *  - ENOMEM    : Memory allocation failure.
  *
  * @note
- *  Negative index can be used for addressing a element from the bottom in
- *  this stack. For example, index -1 will always pop a element which is pushed
+ *  Negative index can be used for addressing an element from the bottom in
+ *  this stack. For example, index -1 will always pop an element which is pushed
  *  at very first time.
  */
 void *qstack_popat(qstack_t *stack, int index, size_t *size) {
@@ -332,7 +332,7 @@ void *qstack_popat(qstack_t *stack, int index, size_t *size) {
  *  - ENOENT    : Stack is empty.
  *  - ENOMEM    : Memory allocation failure.
  *
- * @return a pointer of malloced element, otherwise returns NULL.
+ * @return pointer to allocated element on success, or NULL on failure.
  */
 void *qstack_get(qstack_t *stack, size_t *size, bool newmem) {
     return stack->list->getfirst(stack->list, size, newmem);
@@ -344,7 +344,7 @@ void *qstack_get(qstack_t *stack, size_t *size, bool newmem) {
  *
  * @param stack qstack container pointer.
  *
- * @return a pointer of malloced string element, otherwise returns NULL.
+ * @return pointer to allocated string element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT    : Stack is empty.
  *  - ENOMEM    : Memory allocation failure.
@@ -396,14 +396,14 @@ int64_t qstack_getint(qstack_t *stack) {
  * @param size      if size is not NULL, element size will be stored.
  * @param newmem    whether or not to allocate memory for the element.
  *
- * @return a pointer of element, otherwise returns NULL.
+ * @return pointer to element on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ERANGE    : Index out of range.
  *  - ENOMEM    : Memory allocation failure.
  *
  * @note
- * Negative index can be used for addressing a element from the bottom in this
- * stack. For example, index -1 will always get a element which is pushed at
+ * Negative index can be used for addressing an element from the bottom in this
+ * stack. For example, index -1 will always get an element which is pushed at
  * very first time.
  */
 void *qstack_getat(qstack_t *stack, int index, size_t *size, bool newmem) {
@@ -436,7 +436,7 @@ void qstack_clear(qstack_t *stack) {
  * @param stack     qstack container pointer.
  * @param out       output stream FILE descriptor such like stdout, stderr.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  */
 bool qstack_debug(qstack_t *stack, FILE *out) {
     return stack->list->debug(stack->list, out);

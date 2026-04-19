@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,7 +58,7 @@ typedef struct qlog_s qlog_t;
 extern qlog_t *qlog(const char *filepathfmt, mode_t mode, int rotateinterval, int options);
 
 /**
- * qlog structure object structure
+ * qlog object.
  */
 struct qlog_s {
     /* encapsulated member functions */
@@ -69,19 +69,19 @@ struct qlog_s {
     void (*free) (qlog_t *log);
 
     /* private variables - do not access directly */
-    void *qmutex;  /*!< activated if compiled with --enable-threadsafe */
+    void *qmutex;  /*!< used when compiled with --enable-threadsafe */
 
-    char filepathfmt[PATH_MAX]; /*!< file file naming format like
+    char filepathfmt[PATH_MAX]; /*!< log file naming format, such as
                                      /somepath/daily-%Y%m%d.log */
-    char filepath[PATH_MAX];    /*!< generated system path of log file */
-    FILE *fp;           /*!< file pointer of logpath */
+    char filepath[PATH_MAX];    /*!< generated path of the current log file */
+    FILE *fp;           /*!< file pointer for the log file */
     mode_t mode;        /*!< file mode */
-    int rotateinterval; /*!< log file will be rotate in this interval seconds */
-    int nextrotate;  /*!< next rotate universal time, seconds */
+    int rotateinterval; /*!< log rotation interval in seconds */
+    int nextrotate;  /*!< next rotation time in UTC seconds */
     bool logflush;   /*!< flag for immediate flushing */
 
-    FILE *outfp;    /*!< stream pointer for duplication */
-    bool outflush;  /*!< flag for immediate flushing for duplicated stream */
+    FILE *outfp;    /*!< output stream used for duplication */
+    bool outflush;  /*!< flush the duplicated stream immediately */
 };
 
 #ifdef __cplusplus

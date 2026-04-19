@@ -25,7 +25,7 @@
 var NAVTREE =
 [
   [ "qLibc", "index.html", [
-    [ "What's qLibc?  <a href=\"https://github.com/wolkykim/qlibc/actions\" ><img src=\"https://github.com/wolkykim/qlibc/workflows/CI/badge.svg\" alt=\"Actions Status\"/></a>", "index.html", "index" ],
+    [ "What's qLibc? <a href=\"https://github.com/wolkykim/qlibc/actions\"><img src=\"https://github.com/wolkykim/qlibc/workflows/CI/badge.svg\" alt=\"Actions Status\" style=\"pointer-events: none;\" class=\"inline\"/></a>", "index.html", "index" ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "Globals", "globals.html", [
@@ -43,5 +43,6 @@ var NAVTREEINDEX =
 "qlisttbl_8c.html#a41e4658b9680da54c0d7b97ae046999c"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';
+var LISTOFALLMEMBERS = 'List of all members';

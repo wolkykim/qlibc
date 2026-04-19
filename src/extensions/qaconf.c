@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,7 +72,7 @@
  *
  *   // Define scope.
  *   //   QAC_SCOPE_ALL and QAC_SCOPE_ROOT are predefined.
- *   //   Custum scope should be defined from 2(1 << 1).
+ *   //   Custom scope should be defined from 2(1 << 1).
  *   //   Note) These values are ORed(bit operation), so the number should be
  *   //         2(1<<1), 4(1<<2), 6(1<<3), 8(1<<4), ...
  *   enum {
@@ -233,7 +233,7 @@ static int _is_str_bool(const char *s);
 /**
  * Create a new configuration object.
  *
- * @return a pointer of new qaconf_t object.
+ * @return pointer to new qaconf_t object.
  *
  * @code
  *   qaconf_t *conf = qaconf();
@@ -318,7 +318,7 @@ qaconf_t *qaconf(void) {
  * OPTION NAME field:
  *
  * Option name is a unique string. Even an option is section type like <option>
- * only name part without bracket needs to be specifed.
+ * only name part without bracket needs to be specified.
  *
  * ARGUMENT field:
  *
@@ -353,8 +353,8 @@ qaconf_t *qaconf(void) {
  *    QAC_TAKE_FLOAT  <= Float type
  *    QAC_TAKE_BOOL   <= Bool type
  *
- *    QAC_TAKE1               <= Equavalent to QAC_TAKE_STR
- *    QAC_TAKE1 | QAC_A1_BOOL <= Equavalent to QAC_TAKE_BOOL
+ *    QAC_TAKE1               <= Equivalent to QAC_TAKE_STR
+ *    QAC_TAKE1 | QAC_A1_BOOL <= Equivalent to QAC_TAKE_BOOL
  *
  *  An option takes 2 arguments, bool and float.
  *    QAC_TAKE2 | QAC_A1_BOOL | QAC_A2_FLOAT
@@ -377,7 +377,7 @@ qaconf_t *qaconf(void) {
  *     (...codes...)
  *   }
  *
- *   is equavalent to
+ *   is equivalent to
  *
  *   char *sample_cb(qaconf_cbdata_t *data, void *userdata) {
  *     (...codes...)
@@ -410,8 +410,8 @@ qaconf_t *qaconf(void) {
  * located only inside of that section. So this is your choice. If it doesn't
  * require to check directory scope, we can just specify 0 here.
  *
- * There are 2 pre-defined section id, QAC_SECTION_ALL and QAC_SECTION_ROOT.
- * When we define user section, it has to be defined from 2(1 << 1)as below.
+ * There are 2 predefined section IDs: QAC_SECTION_ALL and QAC_SECTION_ROOT.
+ * User-defined section IDs should start from `1 << 1`, as shown below.
  *
  * @code
  *   enum {
@@ -422,18 +422,18 @@ qaconf_t *qaconf(void) {
  *   };
  * @endcode
  *
- * Please note that this section IDs are ORed. So the section id should be
- * assigned in bit operation manner as 2(1<<1), 4(1<<2), 6(1<<3), 8(1<<4), ...
+ * Please note that these section IDs are ORed together. The values should be
+ * assigned as bit flags, such as 2 (`1 << 1`), 4 (`1 << 2`), 8 (`1 << 3`), ...
  *
  * SECTION IDS field:
  *
  * This field is to limit the scope where an option is allowed to be specified.
  * Multiple section IDs can be ORed.
  *
- * QAC_SECTION_ALL means an option can be appeared in anywhere.
+ * QAC_SECTION_ALL means an option can appear anywhere.
  *
- * QAC_SECTION_ROOT means an option can be appeared only in top level and not
- * inside of any sections.
+ * QAC_SECTION_ROOT means an option can appear only at the top level, not
+ * inside any section.
  */
 static int addoptions(qaconf_t *qaconf, const qaconf_option_t *options) {
     if (qaconf == NULL || options == NULL) {
@@ -475,7 +475,7 @@ static void setdefhandler(qaconf_t *qaconf, qaconf_cb_t *callback) {
  * qaconf_t->setuserdata(): Set userdata which will be provided on callback.
  *
  * @param qaconf qaconf_t object.
- * @param userdata a pointer of userdata.
+ * @param userdata pointer to userdata.
  *
  * @code
  *   // Define an example userdata
@@ -693,7 +693,7 @@ static int _parse_inline(qaconf_t *qaconf, FILE *fp, uint8_t flags,
                 cbdata->otype = QAC_OTYPE_SECTIONOPEN;
             }
 
-            // Remove tailing bracket
+            // Remove trailing bracket
             ENDING_CHAR(sp) = '\0';
         } else {
             cbdata->otype = QAC_OTYPE_OPTION;

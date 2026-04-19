@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -135,19 +135,17 @@ static void result_free(qdbresult_t *result);
 #endif
 
 /**
- * Initialize internal connector structure
+ * Initialize the internal database connector structure.
  *
- * @param dbtype    database server type. currently "MYSQL" is only supported
- * @param addr      ip or fqdn address.
+ * @param dbtype    database server type. Currently only "MYSQL" is supported
+ * @param addr      IP address or FQDN
  * @param port      port number
  * @param username  database username
  * @param password  database password
- * @param database  database server type. currently "MYSQL" is only supported
- * @param autocommit sets autocommit mode on if autocommit is true, off if
- *                   autocommit is false
+ * @param database  database name
+ * @param autocommit set autocommit on when true, or off when false
  *
- * @return a pointer of qdb_t object in case of successful,
- *         otherwise returns NULL.
+ * @return qdb_t pointer on success, or NULL on failure.
  *
  * @code
  *   qdb_t *db = qdb("MYSQL",
@@ -160,8 +158,7 @@ static void result_free(qdbresult_t *result);
  * @endcode
  */
 qdb_t *qdb(const char *dbtype, const char *addr, int port, const char *username,
-        const char *password, const char *database, bool autocommit)
-{
+        const char *password, const char *database, bool autocommit) {
     // check db type
 #ifdef Q_ENABLE_MYSQL
     if (strcmp(dbtype, "MYSQL")) return NULL;
@@ -216,7 +213,7 @@ qdb_t *qdb(const char *dbtype, const char *addr, int port, const char *username,
     db->get_error = get_error;
     db->free = free_;
 
-    // initialize recrusive mutex
+    // initialize recursive mutex
     Q_MUTEX_NEW(db->qmutex, true);
 
     return db;
@@ -225,12 +222,11 @@ qdb_t *qdb(const char *dbtype, const char *addr, int port, const char *username,
 /**
  * qdb->open(): Connect to database server
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  */
-static bool open_(qdb_t *db)
-{
+static bool open_(qdb_t *db) {
     if (db == NULL) return false;
 
     // if connected, close first
@@ -312,16 +308,15 @@ static bool open_(qdb_t *db)
 /**
  * qdb->close(): Disconnect from database server
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  *
  * @note
  *  Unless you call qdb->free(), qdb_t object will keep the database
  *  information. So you can re-connect to database using qdb->open().
  */
-static bool close_(qdb_t *db)
-{
+static bool close_(qdb_t *db) {
     if (db == NULL) return false;
 
 #ifdef Q_ENABLE_MYSQL
@@ -344,13 +339,12 @@ static bool close_(qdb_t *db)
 /**
  * qdb->execute_update(): Executes the update DML
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  * @param query     query string
  *
  * @return a number of affected rows
  */
-static int execute_update(qdb_t *db, const char *query)
-{
+static int execute_update(qdb_t *db, const char *query) {
     if (db == NULL || db->connected == false) return -1;
 
 #ifdef Q_ENABLE_MYSQL
@@ -375,13 +369,12 @@ static int execute_update(qdb_t *db, const char *query)
 /**
  * qdb->execute_updatef(): Executes the formatted update DML
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  * @param format    query string format
  *
  * @return a number of affected rows, otherwise returns -1
  */
-static int execute_updatef(qdb_t *db, const char *format, ...)
-{
+static int execute_updatef(qdb_t *db, const char *format, ...) {
     char *query;
     DYNAMIC_VSPRINTF(query, format);
     if (query == NULL) return -1;
@@ -393,15 +386,14 @@ static int execute_updatef(qdb_t *db, const char *format, ...)
 }
 
 /**
- * qdb->execute_query(): Executes the query
+ * qdb->execute_query(): Execute a query.
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  * @param query     query string
  *
- * @return a pointer of qdbresult_t if successful, otherwise returns NULL
+ * @return qdbresult_t pointer on success, or NULL on failure.
  */
-static qdbresult_t *execute_query(qdb_t *db, const char *query)
-{
+static qdbresult_t *execute_query(qdb_t *db, const char *query) {
     if (db == NULL || db->connected == false) return NULL;
 
 #ifdef Q_ENABLE_MYSQL
@@ -450,15 +442,14 @@ static qdbresult_t *execute_query(qdb_t *db, const char *query)
 }
 
 /**
- * qdb->execute_queryf(): Executes the formatted query
+ * qdb->execute_queryf(): Execute a formatted query.
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  * @param format    query string format
  *
- * @return a pointer of qdbresult_t if successful, otherwise returns NULL
+ * @return qdbresult_t pointer on success, or NULL on failure.
  */
-static qdbresult_t *execute_queryf(qdb_t *db, const char *format, ...)
-{
+static qdbresult_t *execute_queryf(qdb_t *db, const char *format, ...) {
     char *query;
     DYNAMIC_VSPRINTF(query, format);
     if (query == NULL) return NULL;
@@ -471,9 +462,9 @@ static qdbresult_t *execute_queryf(qdb_t *db, const char *format, ...)
 /**
  * qdb->begin_tran(): Start transaction
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  *
  * @code
  *   db->begin_tran(db);
@@ -481,8 +472,7 @@ static qdbresult_t *execute_queryf(qdb_t *db, const char *format, ...)
  *   db->commit(db);
  * @endcode
  */
-static bool begin_tran(qdb_t *db)
-{
+static bool begin_tran(qdb_t *db) {
     if (db == NULL) return false;
 
 #ifdef Q_ENABLE_MYSQL
@@ -508,12 +498,11 @@ static bool begin_tran(qdb_t *db)
 /**
  * qdb->commit(): Commit transaction
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  */
-static bool commit(qdb_t *db)
-{
+static bool commit(qdb_t *db) {
     if (db == NULL) return false;
 
 #ifdef Q_ENABLE_MYSQL
@@ -534,12 +523,11 @@ static bool commit(qdb_t *db)
 /**
  * qdb->rellback(): Roll-back and abort transaction
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  */
-static bool rollback(qdb_t *db)
-{
+static bool rollback(qdb_t *db) {
     if (db == NULL) return false;
 
 #ifdef Q_ENABLE_MYSQL
@@ -560,11 +548,11 @@ static bool rollback(qdb_t *db)
 /**
  * qdb->set_fetchtype(): Set result fetching type
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  * @param fromdb    false for storing the results to client (default mode),
  *                  true for fetching directly from server,
  *
- * @return true if successful otherwise returns false
+ * @return true if successful otherwise false
  *
  * @note
  *  If qdb->set_fetchtype(db, true) is called, the results does not
@@ -574,8 +562,7 @@ static bool rollback(qdb_t *db)
  *  it in local buffer, which is somewhat faster and uses much less memory than
  *  default behavior qdb->set_fetchtype(db, false).
  */
-static bool set_fetchtype(qdb_t *db, bool fromdb)
-{
+static bool set_fetchtype(qdb_t *db, bool fromdb) {
     if (db == NULL) return false;
     db->info.fetchtype = fromdb;
     return true;
@@ -584,15 +571,14 @@ static bool set_fetchtype(qdb_t *db, bool fromdb)
 /**
  * qdb->get_conn_status(): Get last connection status
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  *
- * @return true if the connection flag is set to alive, otherwise returns false
+ * @return true if the connection flag is set to alive, otherwise false
  *
  * @note
- * This function just returns the the connection status flag.
+ * This function just returns the connection status flag.
  */
-static bool get_conn_status(qdb_t *db)
-{
+static bool get_conn_status(qdb_t *db) {
     if (db == NULL) return false;
 
     return db->connected;
@@ -601,7 +587,7 @@ static bool get_conn_status(qdb_t *db)
 /**
  * qdb->ping(): Checks whether the connection to the server is working.
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  *
  * @return true if connection is alive, false if connection is not available
  *         and failed to reconnect
@@ -609,8 +595,7 @@ static bool get_conn_status(qdb_t *db)
  * @note
  * If the connection has gone down, an attempt to reconnect.
  */
-static bool ping(qdb_t *db)
-{
+static bool ping(qdb_t *db) {
     if (db == NULL) return false;
 
 #ifdef Q_ENABLE_MYSQL
@@ -632,16 +617,15 @@ static bool ping(qdb_t *db)
 /**
  * qdb->get_error(): Get error number and message
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  * @param errorno   if not NULL, error number will be stored
  *
- * @return a pointer of error message string
+ * @return pointer to error message string
  *
  * @note
  * Do not free returned error message
  */
-static const char *get_error(qdb_t *db, unsigned int *errorno)
-{
+static const char *get_error(qdb_t *db, unsigned int *errorno) {
     if (db == NULL || db->connected == false) return "(no opened db)";
 
     unsigned int eno = 0;
@@ -659,12 +643,11 @@ static const char *get_error(qdb_t *db, unsigned int *errorno)
 }
 
 /**
- * qdb->free(): De-allocate qdb_t structure
+ * qdb->free(): Free qdb_t structure
  *
- * @param db        a pointer of qdb_t object
+ * @param db        pointer to qdb_t object
  */
-static void free_(qdb_t *db)
-{
+static void free_(qdb_t *db) {
     if (db == NULL) return;
 
     Q_MUTEX_ENTER(db->qmutex);
@@ -687,16 +670,15 @@ static void free_(qdb_t *db)
 /**
  * qdbresult->get_str(): Get the result as string by field name
  *
- * @param result    a pointer of qdbresult_t
+ * @param result    pointer to qdbresult_t
  * @param field     column name
  *
- * @return a string pointer if successful, otherwise returns NULL.
+ * @return string pointer on success, or NULL on failure.
  *
  * @note
  * Do not free returned string.
  */
-static const char *_resultGetStr(qdbresult_t *result, const char *field)
-{
+static const char *_resultGetStr(qdbresult_t *result, const char *field) {
 #ifdef Q_ENABLE_MYSQL
     if (result == NULL || result->rs == NULL || result->cols <= 0) return NULL;
 
@@ -718,13 +700,12 @@ static const char *_resultGetStr(qdbresult_t *result, const char *field)
 /**
  * qdbresult->get_str_at(): Get the result as string by column number
  *
- * @param result    a pointer of qdbresult_t
+ * @param result    pointer to qdbresult_t
  * @param idx       column number (first column is 1)
  *
- * @return a string pointer if successful, otherwise returns NULL.
+ * @return string pointer on success, or NULL on failure.
  */
-static const char *_resultGetStrAt(qdbresult_t *result, int idx)
-{
+static const char *_resultGetStrAt(qdbresult_t *result, int idx) {
 #ifdef Q_ENABLE_MYSQL
     if (result == NULL
             || result->rs == NULL
@@ -742,13 +723,12 @@ static const char *_resultGetStrAt(qdbresult_t *result, int idx)
 /**
  * qdbresult->get_int(): Get the result as integer by field name
  *
- * @param result    a pointer of qdbresult_t
+ * @param result    pointer to qdbresult_t
  * @param field     column name
  *
  * @return a integer converted value
  */
-static int _resultGetInt(qdbresult_t *result, const char *field)
-{
+static int _resultGetInt(qdbresult_t *result, const char *field) {
     const char *val = result->get_str(result, field);
     if (val == NULL) return 0;
     return atoi(val);
@@ -757,13 +737,12 @@ static int _resultGetInt(qdbresult_t *result, const char *field)
 /**
  * qdbresult->get_int_at(): Get the result as integer by column number
  *
- * @param result    a pointer of qdbresult_t
+ * @param result    pointer to qdbresult_t
  * @param idx       column number (first column is 1)
  *
  * @return a integer converted value
  */
-static int _resultGetIntAt(qdbresult_t *result, int idx)
-{
+static int _resultGetIntAt(qdbresult_t *result, int idx) {
     const char *val = result->get_str_at(result, idx);
     if (val == NULL) return 0;
     return atoi(val);
@@ -772,12 +751,11 @@ static int _resultGetIntAt(qdbresult_t *result, int idx)
 /**
  * qdbresult->get_next(): Retrieves the next row of a result set
  *
- * @param result    a pointer of qdbresult_t
+ * @param result    pointer to qdbresult_t
  *
  * @return true if successful, false if no more rows are left
  */
-static bool _resultGetNext(qdbresult_t *result)
-{
+static bool _resultGetNext(qdbresult_t *result) {
 #ifdef Q_ENABLE_MYSQL
     if (result == NULL || result->rs == NULL) return false;
 
@@ -793,12 +771,11 @@ static bool _resultGetNext(qdbresult_t *result)
 /**
  * qdbresult->get_cols(): Get the number of columns in the result set
  *
- * @param result    a pointer of qdbresult_t
+ * @param result    pointer to qdbresult_t
  *
  * @return the number of columns in the result set
  */
-static int result_get_cols(qdbresult_t *result)
-{
+static int result_get_cols(qdbresult_t *result) {
 #ifdef Q_ENABLE_MYSQL
     if (result == NULL || result->rs == NULL) return 0;
     return result->cols;
@@ -810,12 +787,11 @@ static int result_get_cols(qdbresult_t *result)
 /**
  * qdbresult->get_rows(): Get the number of rows in the result set
  *
- * @param result    a pointer of qdbresult_t
+ * @param result    pointer to qdbresult_t
  *
  * @return the number of rows in the result set
  */
-static int result_get_rows(qdbresult_t *result)
-{
+static int result_get_rows(qdbresult_t *result) {
 #ifdef Q_ENABLE_MYSQL
     if (result == NULL || result->rs == NULL) return 0;
     return mysql_num_rows(result->rs);
@@ -827,15 +803,14 @@ static int result_get_rows(qdbresult_t *result)
 /**
  * qdbresult->get_row(): Get the current row number
  *
- * @param result    a pointer of qdbresult_t
+ * @param result    pointer to qdbresult_t
  *
  * @return current fetching row number of the result set
  *
  * @note
- * This number is sequencial counter which is started from 1.
+ * This number is sequential counter which is started from 1.
  */
-static int result_get_row(qdbresult_t *result)
-{
+static int result_get_row(qdbresult_t *result) {
 #ifdef Q_ENABLE_MYSQL
     if (result == NULL || result->rs == NULL) return 0;
     return result->cursor;
@@ -845,12 +820,11 @@ static int result_get_row(qdbresult_t *result)
 }
 
 /**
- * qdbresult->free(): De-allocate the result
+ * qdbresult->free(): Free the result
  *
- * @param result    a pointer of qdbresult_t
+ * @param result    pointer to qdbresult_t
  */
-static void result_free(qdbresult_t *result)
-{
+static void result_free(qdbresult_t *result) {
 #ifdef Q_ENABLE_MYSQL
     if (result == NULL) return;
     if (result->rs != NULL) {

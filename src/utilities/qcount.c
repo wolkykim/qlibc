@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,11 +45,11 @@
 #include "utilities/qcount.h"
 
 /**
- * Read counter(integer) from file with advisory file locking.
+ * Read an integer counter from a file with advisory file locking.
  *
  * @param filepath  file path
  *
- * @return counter value readed from file. in case of failure, returns 0.
+ * @return counter value read from the file. On failure, returns 0.
  *
  * @code
  *   qcount_save("number.dat", 75);
@@ -81,12 +81,12 @@ int64_t qcount_read(const char *filepath) {
 }
 
 /**
- * Save counter(integer) to file with advisory file locking.
+ * Save an integer counter to a file with advisory file locking.
  *
  * @param filepath  file path
- * @param number    counter integer value
+ * @param number    counter value
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  *
  * @code
  *   qcount_save("number.dat", 75);
@@ -108,13 +108,13 @@ bool qcount_save(const char *filepath, int64_t number) {
 }
 
 /**
- * Increases(or decrease) the counter value as much as specified number
- * with advisory file locking.
+ * Increase or decrease the counter by the given value with advisory file
+ * locking.
  *
  * @param filepath  file path
- * @param number    how much increase or decrease
+ * @param number    amount to increase or decrease
  *
- * @return updated counter value. in case of failure, returns 0.
+ * @return updated counter value. On failure, returns 0.
  *
  * @code
  *   int count;

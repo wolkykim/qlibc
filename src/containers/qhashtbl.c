@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -77,7 +77,7 @@
  *  char *sample2 = tbl->getstr(tbl, "sample2", false);
  *  int  sample3  = tbl->getint(tbl, "sample3");
  *
- *  // sample1 is memalloced
+ *  // sample1 is meallocated
  *  free(sample1);
  *
  *  // release table
@@ -106,7 +106,7 @@
  * @param range     initial size of index range. Value of 0 will use default value, DEFAULT_INDEX_RANGE;
  * @param options   combination of initialization options.
  *
- * @return a pointer of malloced qhashtbl_t, otherwise returns NULL.
+ * @return pointer to allocated qhashtbl_t on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *
@@ -190,7 +190,7 @@ qhashtbl_t *qhashtbl(size_t range, int options) {
  * @param data      data object
  * @param size      size of data object
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
@@ -271,7 +271,7 @@ bool qhashtbl_put(qhashtbl_t *tbl, const char *name, const void *data,
  * @param name      key name.
  * @param str       string data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
@@ -287,7 +287,7 @@ bool qhashtbl_putstr(qhashtbl_t *tbl, const char *name, const char *str) {
  * @param name      key name.
  * @param format    formatted string data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
@@ -312,7 +312,7 @@ bool qhashtbl_putstrf(qhashtbl_t *tbl, const char *name, const char *format, ...
  * @param name      key name.
  * @param num       integer data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
@@ -334,7 +334,7 @@ bool qhashtbl_putint(qhashtbl_t *tbl, const char *name, const int64_t num) {
  * @param size      if not NULL, oject size will be stored.
  * @param newmem    whether or not to allocate memory for the data.
  *
- * @return a pointer of data if the key is found, otherwise returns NULL.
+ * @return pointer to data if the key is found on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -355,9 +355,9 @@ bool qhashtbl_putint(qhashtbl_t *tbl, const char *name, const int64_t num) {
  * @endcode
  *
  * @note
- *  If newmem flag is set, returned data will be malloced and should be
+ *  If newmem flag is set, returned data will be allocated and should be
  *  deallocated by user. Otherwise returned pointer will point internal buffer
- *  directly and should not be de-allocated by user. In thread-safe mode,
+ *  directly and should not be freed by user. In thread-safe mode,
  *  newmem flag must be set to true always.
  */
 void *qhashtbl_get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem) {
@@ -409,14 +409,14 @@ void *qhashtbl_get(qhashtbl_t *tbl, const char *name, size_t *size, bool newmem)
  * @param name      key name
  * @param newmem    whether or not to allocate memory for the data.
  *
- * @return a pointer of data if the key is found, otherwise returns NULL.
+ * @return pointer to data if the key is found on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  *
  * @note
- *  If newmem flag is set, returned data will be malloced and should be
+ *  If newmem flag is set, returned data will be allocated and should be
  *  deallocated by user.
  */
 char *qhashtbl_getstr(qhashtbl_t *tbl, const char *name, const bool newmem) {
@@ -509,7 +509,7 @@ bool qhashtbl_remove(qhashtbl_t *tbl, const char *name) {
  * @param obj       found data will be stored in this object
  * @param newmem    whether or not to allocate memory for the data.
  *
- * @return true if found otherwise returns false
+ * @return true if found otherwise false
  * @retval errno will be set in error condition.
  *  - ENOENT : No next element.
  *  - EINVAL : Invalid argument.
@@ -647,7 +647,7 @@ void qhashtbl_clear(qhashtbl_t *tbl) {
  * @param tbl   qhashtbl_t container pointer.
  * @param out   output stream
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EIO : Invalid output stream.
  */
@@ -701,7 +701,7 @@ void qhashtbl_unlock(qhashtbl_t *tbl) {
 }
 
 /**
- * qhashtbl->free(): De-allocate hash table
+ * qhashtbl->free(): Free hash table
  *
  * @param tbl   qhashtbl_t container pointer.
  */

@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -125,12 +125,11 @@ static bool namecasematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash);
 #endif
 
 /**
- * Create a new Q_LIST linked-list container
+ * Create a new Q_LIST linked-list container.
  *
- * @param options   combination of initialization options.
+ * @param options   combination of initialization options
  *
- * @return a pointer of malloced qlisttbl_t structure in case of successful,
- *  otherwise returns NULL.
+ * @return allocated qlisttbl_t pointer on success on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *
@@ -141,14 +140,13 @@ static bool namecasematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash);
  *
  * @note
  *   Available options:
- *   - QLISTTBL_THREADSAFE - make it thread-safe.
- *   - QLISTTBL_UNIQUE     - keys are all unique. replace same key
- *   - QLISTTBL_CASEINSENSITIVE  - key is case insensitive
- *   - QLISTTBL_INSERTTOP        - insert new key at the top
- *   - QLISTTBL_LOOKUPFORWARD    - find key from the top
+ *   - QLISTTBL_THREADSAFE       - make it thread-safe
+ *   - QLISTTBL_UNIQUE           - replace entries with the same key
+ *   - QLISTTBL_CASEINSENSITIVE  - treat keys as case-insensitive
+ *   - QLISTTBL_INSERTTOP        - insert a new key at the top
+ *   - QLISTTBL_LOOKUPFORWARD    - search from the top
  */
-qlisttbl_t *qlisttbl(int options)
-{
+qlisttbl_t *qlisttbl(int options) {
     qlisttbl_t *tbl = (qlisttbl_t *)calloc(1, sizeof(qlisttbl_t));
     if (tbl == NULL) {
         errno = ENOMEM;
@@ -224,7 +222,7 @@ qlisttbl_t *qlisttbl(int options)
  * @param data      a pointer which points data memory.
  * @param size      size of the data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *  - EINVAL : Invalid argument.
@@ -246,8 +244,7 @@ qlisttbl_t *qlisttbl(int options)
  *  The default behavior is adding an object at the end of this table
  *  unless QLISTTBL_INSERTTOP option was given.
  */
-bool qlisttbl_put(qlisttbl_t *tbl, const char *name, const void *data, size_t size)
-{
+bool qlisttbl_put(qlisttbl_t *tbl, const char *name, const void *data, size_t size) {
     // make new object table
     qlisttbl_obj_t *obj = newobj(name, data, size);
     if (obj == NULL) {
@@ -288,13 +285,12 @@ bool qlisttbl_put(qlisttbl_t *tbl, const char *name, const void *data, size_t si
  * @param name      element name.
  * @param str       string data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *  - EINVAL : Invalid argument.
  */
-bool qlisttbl_putstr(qlisttbl_t *tbl, const char *name, const char *str)
-{
+bool qlisttbl_putstr(qlisttbl_t *tbl, const char *name, const char *str) {
     size_t size = (str) ? (strlen(str) + 1) : 0;
     return qlisttbl_put(tbl, name, (const void *)str, size);
 }
@@ -306,13 +302,12 @@ bool qlisttbl_putstr(qlisttbl_t *tbl, const char *name, const char *str)
  * @param name      element name.
  * @param format    formatted value string.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *  - EINVAL : Invalid argument.
  */
-bool qlisttbl_putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...)
-{
+bool qlisttbl_putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...) {
     char *str;
     DYNAMIC_VSPRINTF(str, format);
     if (str == NULL) {
@@ -333,7 +328,7 @@ bool qlisttbl_putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...
  * @param name      element name.
  * @param num       number data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *  - EINVAL : Invalid argument.
@@ -342,8 +337,7 @@ bool qlisttbl_putstrf(qlisttbl_t *tbl, const char *name, const char *format, ...
  *  The integer will be converted to a string object and stored as a string
  *  object.
  */
-bool qlisttbl_putint(qlisttbl_t *tbl, const char *name, int64_t num)
-{
+bool qlisttbl_putint(qlisttbl_t *tbl, const char *name, int64_t num) {
     char str[20+1];
     snprintf(str, sizeof(str), "%"PRId64, num);
     return qlisttbl_putstr(tbl, name, str);
@@ -361,7 +355,7 @@ bool qlisttbl_putint(qlisttbl_t *tbl, const char *name, int64_t num)
  * @param size      if size is not NULL, data size will be stored.
  * @param newmem    whether or not to allocate memory for the data.
  *
- * @return a pointer of data if key is found, otherwise returns NULL.
+ * @return pointer to the data if the key is found on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -383,14 +377,12 @@ bool qlisttbl_putint(qlisttbl_t *tbl, const char *name, int64_t num)
  * @endcode
  *
  * @note
- *  If newmem flag is set, returned data will be malloced and should be
- *  deallocated by user. Otherwise returned pointer will point internal data
- *  buffer directly and should not be de-allocated by user. In thread-safe mode,
- *  always set newmem flag as true to make sure it works in race condition
- *  situation.
+ *  If `newmem` is set, the returned data is newly allocated and must be freed
+ *  by the caller. Otherwise, the returned pointer refers to the internal data
+ *  buffer and must not be freed. In thread-safe mode, always set `newmem` to
+ *  true to avoid race-condition issues.
  */
-void *qlisttbl_get(qlisttbl_t *tbl, const char *name, size_t *size, bool newmem)
-{
+void *qlisttbl_get(qlisttbl_t *tbl, const char *name, size_t *size, bool newmem) {
     if (name == NULL) {
         errno = EINVAL;
         return NULL;
@@ -433,14 +425,13 @@ void *qlisttbl_get(qlisttbl_t *tbl, const char *name, size_t *size, bool newmem)
  * @param name element name.
  * @param newmem whether or not to allocate memory for the data.
  *
- * @return a pointer of data if key is found, otherwise returns NULL.
-  * @retval errno will be set in error condition.
+ * @return pointer to the data if the key is found on success, or NULL on failure.
+ * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
-*/
-char *qlisttbl_getstr(qlisttbl_t *tbl, const char *name, bool newmem)
-{
+ */
+char *qlisttbl_getstr(qlisttbl_t *tbl, const char *name, bool newmem) {
     return (char *)qlisttbl_get(tbl, name, NULL, newmem);
 }
 
@@ -457,8 +448,7 @@ char *qlisttbl_getstr(qlisttbl_t *tbl, const char *name, bool newmem)
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  */
-int64_t qlisttbl_getint(qlisttbl_t *tbl, const char *name)
-{
+int64_t qlisttbl_getint(qlisttbl_t *tbl, const char *name) {
     int64_t num = 0;
     char *str = qlisttbl_getstr(tbl, name, true);
     if (str != NULL) {
@@ -481,16 +471,17 @@ int64_t qlisttbl_getint(qlisttbl_t *tbl, const char *name)
  * @param newmem    whether or not to allocate memory for the data.
  * @param numobjs   the nuber of objects returned will be stored. (can be NULL)
  *
- * @return a pointer of data if key is found, otherwise returns NULL.
+ * @return pointer to the data if the key is found on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  *
  * @note
- *  The returned array of qlisttbl_data_t should be released by freemulti() call
- *  after use. Even you call getmulti() with newmem set false, freemulti() should
- *  be called all the times, so the object array itself can be released.
+ *  The returned array of qlisttbl_data_t should be released by calling
+ *  `freemulti()` after use. Even if `getmulti()` is called with `newmem`
+ *  set to false, `freemulti()` should still be called so the object array
+ *  itself can be released.
  *
  * @code
  *  size_t numobjs = 0;
@@ -502,8 +493,7 @@ int64_t qlisttbl_getint(qlisttbl_t *tbl, const char *name)
  * @endcode
  */
 qlisttbl_data_t *qlisttbl_getmulti(qlisttbl_t *tbl, const char *name, bool newmem,
-                                   size_t *numobjs)
-{
+                                   size_t *numobjs) {
     qlisttbl_data_t *objs = NULL;  // objects container
     size_t allocobjs = 0;  // allocated number of objs
     size_t numfound = 0;  // number of keys found
@@ -570,8 +560,7 @@ qlisttbl_data_t *qlisttbl_getmulti(qlisttbl_t *tbl, const char *name, bool newme
  *
  * @endcode
  */
-void qlisttbl_freemulti(qlisttbl_data_t *objs)
-{
+void qlisttbl_freemulti(qlisttbl_data_t *objs) {
     if (objs == NULL) return;
 
     qlisttbl_data_t *obj;
@@ -590,8 +579,7 @@ void qlisttbl_freemulti(qlisttbl_data_t *objs)
  *
  * @return a number of removed objects.
  */
-size_t qlisttbl_remove(qlisttbl_t *tbl, const char *name)
-{
+size_t qlisttbl_remove(qlisttbl_t *tbl, const char *name) {
     if (name == NULL) return false;
 
     size_t numremoved = 0;
@@ -633,8 +621,7 @@ size_t qlisttbl_remove(qlisttbl_t *tbl, const char *name)
  *  tbl->unlock(tbl);
  * @endcode
  */
-bool qlisttbl_removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj)
-{
+bool qlisttbl_removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj) {
     if (obj == NULL) return false;
 
     qlisttbl_lock(tbl);
@@ -689,14 +676,14 @@ bool qlisttbl_removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj)
  *                  the table.
  * @param newmem    whether or not to allocate memory for the data.
  *
- * @return true if found otherwise returns false
+ * @return true if found otherwise false
  * @retval errno will be set in error condition.
  *  - ENOENT : No next element.
  *  - ENOMEM : Memory allocation failure.
  *
  * @note
  *  The obj should be initialized with 0 by using memset() before first call.
- *  If newmem flag is true, user should de-allocate obj.name and obj.data
+ *  If newmem flag is true, user should free obj.name and obj.data
  *  resources.
  *
  * @code
@@ -725,8 +712,7 @@ bool qlisttbl_removeobj(qlisttbl_t *tbl, const qlisttbl_obj_t *obj)
  * @endcode
  */
 bool qlisttbl_getnext(qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name,
-                             bool newmem)
-{
+                             bool newmem) {
     if (obj == NULL) return NULL;
 
     qlisttbl_lock(tbl);
@@ -796,8 +782,7 @@ bool qlisttbl_getnext(qlisttbl_t *tbl, qlisttbl_obj_t *obj, const char *name,
  *
  * @return the number of elements in this table.
  */
-size_t qlisttbl_size(qlisttbl_t *tbl)
-{
+size_t qlisttbl_size(qlisttbl_t *tbl) {
     return tbl->num;
 }
 
@@ -823,8 +808,7 @@ size_t qlisttbl_size(qlisttbl_t *tbl)
  *    b = 6          d = 1           a = 2
  * @endcode
  */
-void qlisttbl_sort(qlisttbl_t *tbl)
-{
+void qlisttbl_sort(qlisttbl_t *tbl) {
     // run bubble sort
     qlisttbl_lock(tbl);
     qlisttbl_obj_t *obj1, *obj2;
@@ -859,8 +843,7 @@ void qlisttbl_sort(qlisttbl_t *tbl)
  *
  * @param tbl qlisttbl container pointer.
  */
-void qlisttbl_clear(qlisttbl_t *tbl)
-{
+void qlisttbl_clear(qlisttbl_t *tbl) {
     qlisttbl_lock(tbl);
     qlisttbl_obj_t *obj;
     for (obj = tbl->first; obj != NULL;) {
@@ -890,11 +873,10 @@ void qlisttbl_clear(qlisttbl_t *tbl)
  *                  are string or integer type and has no new line. otherwise
  *                  true must be set.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  */
 bool qlisttbl_save(qlisttbl_t *tbl, const char *filepath, char sepchar,
-                   bool encode)
-{
+                   bool encode) {
     if (filepath == NULL) {
         errno = EINVAL;
         return false;
@@ -939,8 +921,7 @@ bool qlisttbl_save(qlisttbl_t *tbl, const char *filepath, char sepchar,
  * @return the number of loaded entries, otherwise returns -1.
  */
 ssize_t qlisttbl_load(qlisttbl_t *tbl, const char *filepath, char sepchar,
-                      bool decode)
-{
+                      bool decode) {
     // load file
     char *str = qfile_load(filepath, NULL);
     if (str == NULL) return -1;
@@ -986,12 +967,11 @@ ssize_t qlisttbl_load(qlisttbl_t *tbl, const char *filepath, char sepchar,
  * @param tbl qlisttbl container pointer.
  * @param out output stream FILE descriptor such like stdout, stderr.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EIO : Invalid output stream.
  */
-bool qlisttbl_debug(qlisttbl_t *tbl, FILE *out)
-{
+bool qlisttbl_debug(qlisttbl_t *tbl, FILE *out) {
     if (out == NULL) {
         errno = EIO;
         return false;
@@ -1018,8 +998,7 @@ bool qlisttbl_debug(qlisttbl_t *tbl, FILE *out)
  *  Normally explicit locking is only needed when traverse all the
  *  elements with qlisttbl->getnext().
  */
-void qlisttbl_lock(qlisttbl_t *tbl)
-{
+void qlisttbl_lock(qlisttbl_t *tbl) {
     Q_MUTEX_ENTER(tbl->qmutex);
 }
 
@@ -1028,8 +1007,7 @@ void qlisttbl_lock(qlisttbl_t *tbl)
  *
  * @param tbl qlisttbl container pointer.
  */
-void qlisttbl_unlock(qlisttbl_t *tbl)
-{
+void qlisttbl_unlock(qlisttbl_t *tbl) {
     Q_MUTEX_LEAVE(tbl->qmutex);
 }
 
@@ -1038,8 +1016,7 @@ void qlisttbl_unlock(qlisttbl_t *tbl)
  *
  * @param tbl qlisttbl container pointer.
  */
-void qlisttbl_free(qlisttbl_t *tbl)
-{
+void qlisttbl_free(qlisttbl_t *tbl) {
     qlisttbl_clear(tbl);
     Q_MUTEX_DESTROY(tbl->qmutex);
     free(tbl);
@@ -1048,11 +1025,10 @@ void qlisttbl_free(qlisttbl_t *tbl)
 #ifndef _DOXYGEN_SKIP
 
 // lock must be obtained from caller
-static qlisttbl_obj_t *newobj(const char *name, const void *data, size_t size)
-{
+static qlisttbl_obj_t *newobj(const char *name, const void *data, size_t size) {
     if (name == NULL || data == NULL || size <= 0) {
         errno = EINVAL;
-        return false;
+        return NULL;
     }
 
     // make a new object
@@ -1078,8 +1054,7 @@ static qlisttbl_obj_t *newobj(const char *name, const void *data, size_t size)
 }
 
 // lock must be obtained from caller
-static bool insertobj(qlisttbl_t *tbl, qlisttbl_obj_t *obj)
-{
+static bool insertobj(qlisttbl_t *tbl, qlisttbl_obj_t *obj) {
     // update hash
     obj->hash = qhashmurmur3_32(obj->name, strlen(obj->name));
 
@@ -1099,8 +1074,7 @@ static bool insertobj(qlisttbl_t *tbl, qlisttbl_obj_t *obj)
 }
 
 // lock must be obtained from caller
-static qlisttbl_obj_t *findobj(qlisttbl_t *tbl, const char *name, qlisttbl_obj_t *retobj)
-{
+static qlisttbl_obj_t *findobj(qlisttbl_t *tbl, const char *name, qlisttbl_obj_t *retobj) {
     if (retobj != NULL) {
         memset((void *)retobj, '\0', sizeof(qlisttbl_obj_t));
     }
@@ -1139,16 +1113,14 @@ static qlisttbl_obj_t *findobj(qlisttbl_t *tbl, const char *name, qlisttbl_obj_t
 }
 
 // key comp
-static bool namematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash)
-{
+static bool namematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash) {
     if ((obj->hash == hash) && !strcmp(obj->name, name)) {
         return true;
     }
     return false;
 }
 
-static bool namecasematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash)
-{
+static bool namecasematch(qlisttbl_obj_t *obj, const char *name, uint32_t hash) {
     if (!strcasecmp(obj->name, name)) {
         return true;
     }

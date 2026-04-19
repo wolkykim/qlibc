@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2010-2015 Seungyoung Kim.
+# Copyright (c) 2010-2026 Seungyoung Kim.
 # All rights reserved.
 
 ARGC=$#

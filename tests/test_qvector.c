@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,10 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-/* This code is written and updated by following people and released under
- * the same license as above qLibc license.
- * Copyright (c) 2015 Zhenjiang Xie - https://github.com/Charles0429
  *****************************************************************************/
 
 #include "qunit.h"
@@ -56,7 +52,7 @@ TEST("Test basic features") {
     ASSERT_EQUAL_INT(values[0], *((int *)data));
     data = vector->getlast(vector, false);
     ASSERT_EQUAL_INT(values[2], *((int *)data));
-    
+
     vector->addat(vector, 1, values + 1);
     ASSERT_EQUAL_INT(3, vector->size(vector));
     data = vector->getfirst(vector, false);
@@ -65,7 +61,7 @@ TEST("Test basic features") {
     ASSERT_EQUAL_INT(values[1], *((int *)data));
     data = vector->getlast(vector, false);
     ASSERT_EQUAL_INT(values[2], *((int *)data));
-    
+
     data = vector->popat(vector, 1);
     ASSERT_EQUAL_INT(2, vector->size(vector));
     ASSERT_EQUAL_INT(values[1], *((int *)data));
@@ -83,7 +79,7 @@ TEST("Test basic features") {
 
 TEST("Test boundary conditions") {
     int values[] = {1000, 1001, 1002};
-    
+
     /*test when vector is empty*/
     qvector_t *vector = qvector(1, sizeof(int), 0);
     bool result;
