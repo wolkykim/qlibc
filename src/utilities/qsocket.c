@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@
  *****************************************************************************/
 
 /**
- * @file qsocket.c Socket dandling APIs.
+ * @file qsocket.c Socket handling APIs.
  */
 
 #ifndef _WIN32
@@ -50,17 +50,16 @@
 #include "utilities/qsocket.h"
 
 /**
- * Create a TCP socket for the remote host and port.
+ * Create a TCP socket for a remote host and port.
  *
  * @param hostname  remote hostname
  * @param port      remote port
- * @param timeoutms wait timeout milliseconds. if set to negative value,
- *                  wait indefinitely.
+ * @param timeoutms wait timeout in milliseconds. If negative, wait forever.
  *
- * @return the new socket descriptor, or
- *         -1 in case of invalid hostname,
- *         -2 in case of socket creation failure,
- *         -3 in case of connection failure.
+ * @return the new socket descriptor, or:
+ *         -1 if the hostname is invalid
+ *         -2 if socket creation fails
+ *         -3 if the connection fails
  */
 int qsocket_open(const char *hostname, int port, int timeoutms) {
     /* host conversion */
@@ -100,8 +99,8 @@ int qsocket_open(const char *hostname, int port, int timeoutms) {
  * Close socket.
  *
  * @param sockfd    socket descriptor
- * @param timeoutms if timeoutms >= 0, shut down write connection first then
- *                  wait and throw out input stream data. set to -1 to close
+ * @param timeoutms if `timeoutms >= 0`, shut down the write side first, then
+ *                  wait and discard incoming data. Set to -1 to close the
  *                  socket immediately.
  *
  * @return true on success, or false if an error occurred.
@@ -124,13 +123,13 @@ bool qsocket_close(int sockfd, int timeoutms) {
 }
 
 /**
- * Convert hostname to sockaddr_in structure.
+ * Convert a hostname to a `sockaddr_in` structure.
  *
- * @param addr      sockaddr_in structure pointer
- * @param hostname  IP string address or hostname
+ * @param addr      `sockaddr_in` output pointer
+ * @param hostname  IP address string or hostname
  * @param port      port number
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  */
 bool qsocket_get_addr(struct sockaddr_in *addr, const char *hostname, int port) {
     /* here we assume that the hostname argument contains ip address */
@@ -148,10 +147,9 @@ bool qsocket_get_addr(struct sockaddr_in *addr, const char *hostname, int port) 
 }
 
 /**
- * Return local IP address.
+ * Get the local IP address.
  *
- * @return malloced string pointer which contains IP address string if
- *         successful, otherwise returns NULL
+ * @return pointer to `buf` on success, or NULL on failure.
  */
 char *qsocket_get_localaddr(char *buf, size_t bufsize) {
     char hostname[63 + 1];

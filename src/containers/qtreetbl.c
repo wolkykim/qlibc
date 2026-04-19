@@ -167,7 +167,7 @@ static void print_node(qtreetbl_obj_t *obj, FILE *out, struct branch_obj_s *prev
  *
  * @param options    combination of initialization options.
  *
- * @return a pointer of malloced qtreetbl_t, otherwise returns NULL.
+ * @return pointer to allocated qtreetbl_t on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
  *
@@ -261,7 +261,7 @@ void qtreetbl_set_compare(qtreetbl_t *tbl,
  * @param data        data object.
  * @param datasize    size of data object.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
@@ -279,7 +279,7 @@ bool qtreetbl_put(qtreetbl_t *tbl, const char *name, const void *data,
  * @param name    key name.
  * @param str     string data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
@@ -297,7 +297,7 @@ bool qtreetbl_putstr(qtreetbl_t *tbl, const char *name, const char *str) {
  * @param name      key name.
  * @param format    formatted string data.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
@@ -325,7 +325,7 @@ bool qtreetbl_putstrf(qtreetbl_t *tbl, const char *name, const char *format,
  * @param data        data object.
  * @param datasize    size of data object.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
@@ -363,7 +363,7 @@ bool qtreetbl_putobj(qtreetbl_t *tbl, const void *name, size_t namesize,
  * @param datasize    if not NULL, object size will be stored.
  * @param newmem      whether or not to allocate memory for the data.
  *
- * @return a pointer of data if the key is found, otherwise returns NULL.
+ * @return pointer to data if the key is found on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
@@ -384,9 +384,9 @@ bool qtreetbl_putobj(qtreetbl_t *tbl, const void *name, size_t namesize,
  * @endcode
  *
  * @note
- *  If newmem flag is set, returned data will be malloced and should be
+ *  If newmem flag is set, returned data will be allocated and should be
  *  deallocated by user. Otherwise returned pointer will point internal buffer
- *  directly and should not be de-allocated by user. In thread-safe mode,
+ *  directly and should not be freed by user. In thread-safe mode,
  *  newmem flag must be set to true always.
  */
 void *qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize,
@@ -402,16 +402,16 @@ void *qtreetbl_get(qtreetbl_t *tbl, const char *name, size_t *datasize,
  * @param name      key name.
  * @param newmem    whether or not to allocate memory for the data.
  *
- * @return a pointer to data if the key is found, otherwise returns NULL.
+ * @return a pointer to data if the key is found, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  *
  * @note
- *  If newmem flag is set, returned data will be malloced and should be
+ *  If newmem flag is set, returned data will be allocated and should be
  *  deallocated by user. Otherwise returned pointer will point internal buffer
- *  directly and should not be de-allocated by user. In thread-safe mode,
+ *  directly and should not be freed by user. In thread-safe mode,
  *  newmem flag must be set to true always.
  */
 char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem) {
@@ -428,16 +428,16 @@ char *qtreetbl_getstr(qtreetbl_t *tbl, const char *name, const bool newmem) {
  * @param datasize    if not NULL, oject size will be stored.
  * @param newmem      whether or not to allocate memory for the data.
  *
- * @return a pointer of data if the key is found, otherwise returns NULL.
+ * @return pointer to data if the key is found on success, or NULL on failure.
  * @retval errno will be set in error condition.
  *  - ENOENT : No such key found.
  *  - EINVAL : Invalid argument.
  *  - ENOMEM : Memory allocation failure.
  *
  * @note
- *  If newmem flag is set, returned data will be malloced and should be
+ *  If newmem flag is set, returned data will be allocated and should be
  *  deallocated by user. Otherwise returned pointer will point internal buffer
- *  directly and should not be de-allocated by user. In thread-safe mode,
+ *  directly and should not be freed by user. In thread-safe mode,
  *  newmem flag must be set to true always.
  */
 void *qtreetbl_getobj(qtreetbl_t *tbl, const void *name, size_t namesize,
@@ -513,7 +513,7 @@ bool qtreetbl_removeobj(qtreetbl_t *tbl, const void *name, size_t namesize) {
  * @param obj       found data will be stored in this object.
  * @param newmem    whether or not to allocate memory for the data.
  *
- * @return true if found otherwise returns false.
+ * @return true if found otherwise false.
  * @retval errno will be set in error condition.
  *  - ENOENT : No next element.
  *  - EINVAL : Invalid argument.
@@ -574,7 +574,7 @@ bool qtreetbl_removeobj(qtreetbl_t *tbl, const void *name, size_t namesize) {
  *  When deletion happens in getnext() loop, use find_nearest() to rewind the
  *  iterator one step back.
  *  - Object obj should be initialized with 0 by using memset() before first call.
- *  - If newmem flag is true, user should de-allocate obj.name and obj.data
+ *  - If newmem flag is true, user should free obj.name and obj.data
  *  resources.
  */
 bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem) {
@@ -626,7 +626,7 @@ bool qtreetbl_getnext(qtreetbl_t *tbl, qtreetbl_obj_t *obj, const bool newmem) {
  * @param tbl         qtreetbl_t container pointer.
  * @param namesize    if not NULL, the size of key name will be stored.
  *
- * @return malloced memory copying the key name.
+ * @return allocated memory copying the key name.
  *
  * @note
  *  It's user's responsibility to free the return.
@@ -654,7 +654,7 @@ void *qtreetbl_find_min(qtreetbl_t *tbl, size_t *namesize) {
  * @param tbl         qtreetbl_t container pointer.
  * @param namesize    if not NULL, the size of key name will be stored.
  *
- * @return malloced memory copying the key name.
+ * @return allocated memory copying the key name.
  *
  * @note
  *  It's user's responsibility to free the return.
@@ -820,7 +820,7 @@ void qtreetbl_unlock(qtreetbl_t *tbl) {
 }
 
 /**
- * qtreetbl->free(): De-allocate the table.
+ * qtreetbl->free(): Free the table.
  *
  * @param tbl    qtreetbl_t container pointer.
  */
@@ -846,7 +846,7 @@ int qtreetbl_byte_cmp(const void *name1, size_t namesize1, const void *name2,
  * @param tbl    qtreetbl_t container pointer.
  * @param out    output stream.
  *
- * @return true if successful, otherwise returns false.
+ * @return true on success, otherwise false.
  * @retval errno will be set in error condition.
  *  - EIO : Invalid output stream.
  *

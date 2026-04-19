@@ -1,7 +1,7 @@
 /******************************************************************************
  * qLibc
  *
- * Copyright (c) 2010-2015 Seungyoung Kim.
+ * Copyright (c) 2010-2026 Seungyoung Kim.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,7 @@
  *                                       (int)nSavesize);
  *    resheaders->debug(resheaders, stdout);
  *
- *    // de-allocate HTTP client object
+ *    // free HTTP client object
  *    httpclient->free(httpclient);
  *
  *    return (bRet ? 0 : -1);
@@ -106,7 +106,7 @@
  *  // close connection - not necessary if we call free() just after this.
  *  httpclient->close(httpclient);
  *
- *  // de-allocate HTTP client object
+ *  // free HTTP client object
  *  httpclient->free(httpclient);
  * @endcode
  */
@@ -221,12 +221,12 @@ struct SslConn {
 #endif
 
 /**
- * Initialize & create new HTTP client.
+ * Initialize and create a new HTTP client.
  *
- * @param destname  remote address, one of IP address, FQDN domain name and URI.
- * @param port      remote port number. (can be 0 when destname is URI)
+ * @param destname  remote address. This can be an IP address, FQDN, or URI.
+ * @param port      remote port number. This can be 0 when `destname` is a URI.
  *
- * @return HTTP client object if succcessful, otherwise returns NULL.
+ * @return HTTP client object on success, or NULL on failure.
  *
  * @code
  *   qhttpclient_t *client = qhttpclient("1.2.3.4", 80);
@@ -312,7 +312,7 @@ qhttpclient_t *qhttpclient(const char *destname, int port) {
 }
 
 /**
- * qhttpclient->setssl(): Sets connection to HTTPS connection
+ * qhttpclient->setssl(): Enable HTTPS for the connection.
  *
  * @param client    qhttpclient object pointer
  *
@@ -328,7 +328,7 @@ static bool setssl(qhttpclient_t *client) {
         // must be set before making a connection.
         return false;
     }
-    
+
     // init openssl
     if (initialized == false) {
       initialized = true;
@@ -353,7 +353,7 @@ static bool setssl(qhttpclient_t *client) {
  * qhttpclient->settimeout(): Sets connection wait timeout.
  *
  * @param client    qhttpclient object pointer
- * @param timeoutms timeout mili-seconds. 0 for system defaults
+ * @param timeoutms timeout milliseconds. 0 for system defaults
  *
  * @code
  *   httpclient->settimeout(httpclient, 0);    // default
@@ -402,7 +402,7 @@ static void setuseragent(qhttpclient_t *client, const char *useragent) {
  *
  * @param client    qhttpclient object pointer
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  *
  * @note
  *  Don't need to open a connection unless you definitely need to do this,
@@ -520,7 +520,7 @@ static bool open_(qhttpclient_t *client) {
  * @param resheaders    qlisttbl_t pointer for storing response headers.
  *                      (can be NULL)
  *
- * @return true if successful(got 200 response), otherwise returns false
+ * @return true if successful(got 200 response), otherwise false
  *
  * @code
  *   main() {
@@ -545,7 +545,7 @@ static bool open_(qhttpclient_t *client) {
  *
  *     // check results
  *     if(bRet == false) {
- *       ...(error occured)...
+ *       ...(error occurred)...
  *     }
  *
  *     // free resources
@@ -624,7 +624,7 @@ static bool head(qhttpclient_t *client, const char *uri, int *rescode,
  * @param callback  set user call-back function. (can be NULL)
  * @param userdata  set user data for call-back. (can be NULL)
  *
- * @return true if successful(200 OK), otherwise returns false
+ * @return true if successful(200 OK), otherwise false
  *
  * @code
  *   struct userdata {
@@ -670,7 +670,7 @@ static bool head(qhttpclient_t *client, const char *uri, int *rescode,
  *
  *     // check results
  *     if(bRet == false) {
- *       ...(error occured)...
+ *       ...(error occurred)...
  *     }
  *
  *     // free resources
@@ -682,7 +682,7 @@ static bool head(qhttpclient_t *client, const char *uri, int *rescode,
  * @endcode
  *
  * @note
- *  The call-back function will be called peridically whenever it send data as
+ *  The call-back function will be called periodically whenever it send data as
  *  much as MAX_ATOMIC_DATA_SIZE. To stop uploading, return false in the
  *  call-back function, then PUT process will be stopped immediately.
  *  If a connection was not opened, it will open a connection automatically.
@@ -810,7 +810,7 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
                     *savesize = recv;
             }
 
-            // read tailing CRLF
+            // read trailing CRLF
             if (gets_(client, buf, sizeof(buf)) <= 0)
                 break;
 
@@ -854,7 +854,7 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
  * @param callback  set user call-back function. (can be NULL)
  * @param userdata  set user data for call-back. (can be NULL)
  *
- * @return true if successful(201 Created), otherwise returns false
+ * @return true if successful(201 Created), otherwise false
  *
  * @code
  *   struct userdata {
@@ -902,7 +902,7 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
  *
  *     // check results
  *     if(bRet == false) {
- *       ...(error occured)...
+ *       ...(error occurred)...
  *     }
  *
  *     // free resources
@@ -914,7 +914,7 @@ static bool get(qhttpclient_t *client, const char *uri, int fd, off_t *savesize,
  * @endcode
  *
  * @note
- *  The call-back function will be called peridically whenever it send data as
+ *  The call-back function will be called periodically whenever it send data as
  *  much as MAX_ATOMIC_DATA_SIZE. To stop uploading, return false in the
  *  call-back function, then PUT process will be stopped immediately.
  *  If a connection was not opened, it will open a connection automatically.
@@ -1052,12 +1052,12 @@ static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
 }
 
 /**
- * qhttpclient->cmd(): Sends a custom request(method) to the remote host
- * and reads it's response.
+ * qhttpclient->cmd(): Send a custom request method to the remote host
+ * and read the response.
  *
  * @param client    qhttpclient object pointer.
  * @param method    method name.
- * @param uri       remote URL for uploading file.
+ * @param uri       remote URI.
  *                  ("/path" or "http://.../path")
  * @param data      data to send. (can be NULL)
  * @param size      data size.
@@ -1070,7 +1070,7 @@ static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
  * @param resheaders    qlisttbl_t pointer for storing response headers.
  *                      (can be NULL)
  *
- * @return malloced content data if successful, otherwise returns NULL
+ * @return allocated response content on success on success, or NULL on failure.
  *
  * @code
  *   int nResCode;
@@ -1080,21 +1080,20 @@ static bool put(qhttpclient_t *client, const char *uri, int fd, off_t length,
  *                                    &nRescode, &nContentsLength
  *                                    NULL, NULL);
  *   if(contents == NULL) {
- *     ...(error occured)...
+ *     ...(error occurred)...
  *   } else {
  *     printf("Response code : %d\n", nResCode);
  *     printf("Contents length : %zu\n", nContentsLength);
  *     printf("Contents : %s\n", (char*)contents);  // if contents is printable
- *     free(contents);  // de-allocate
+ *     free(contents);  // free
  *   }
  * @endcode
  *
  * @note
- *  This store server's response into memory so if you expect server responses
- *  large amount of data, consider to use sendrequest() and readresponse()
- *  instead of using this. The returning malloced content will be allocated
- *  +1 byte than actual content size 'contentslength' and will be null
- *  terminated.
+ *  This function stores the server response in memory. If you expect a large
+ *  response body, consider using `sendrequest()` and `readresponse()` instead.
+ *  The returned buffer is allocated with one extra byte beyond
+ *  `contentslength` and is null-terminated.
  */
 static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
                  void *data, size_t size, int *rescode, size_t *contentslength,
@@ -1177,7 +1176,7 @@ static void *cmd(qhttpclient_t *client, const char *method, const char *uri,
  * @param reqheaders    qlisttbl_t pointer which contains additional user
  *                      request headers. (can be NULL)
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  *
  * @note
  *  Default headers(Host, User-Agent, Connection) will be used if reqheaders
@@ -1226,7 +1225,7 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
     if (outBuf == NULL)
         return false;
 
-    // buffer out command
+    // Buffer the request line.
     outBuf->addstrf(outBuf, "%s %s %s\r\n", method, uri,
     HTTP_PROTOCOL_11);
 
@@ -1250,7 +1249,7 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
         free(final);
     }
 
-    // de-allocate
+    // Free temporary resources.
     outBuf->free(outBuf);
     if (freeReqHeaders == true)
         reqheaders->free(reqheaders);
@@ -1287,8 +1286,8 @@ static bool sendrequest(qhttpclient_t *client, const char *method,
  * @endcode
  *
  * @note
- *  Data of content body must be read by a application side, if you want to use
- *  Keep-Alive session. Please refer qhttpclient->read().
+ *  If you want to keep the connection alive, the application must read the
+ *  response body. Please refer to `qhttpclient->read()`.
  */
 static int readresponse(qhttpclient_t *client, qlisttbl_t *resheaders,
                         off_t *contentlength) {
@@ -1422,7 +1421,7 @@ static ssize_t gets_(qhttpclient_t *client, char *buf, size_t bufsize) {
  *                  read & throw out content)
  * @param length    content size to read.
  *
- * @return number of bytes readed
+ * @return number of bytes read
  *
  * @code
  *   off_t clength = 0;
@@ -1619,7 +1618,7 @@ static off_t sendfile_(qhttpclient_t *client, int fd, off_t nbytes) {
  *
  * @param qhttpclient_t  HTTP object pointer
  *
- * @return true if successful, otherwise returns false
+ * @return true on success, otherwise false
  *
  * @code
  *   httpclient->close(httpclient);
@@ -1669,7 +1668,7 @@ static bool _close(qhttpclient_t *client) {
  *
  * @note
  *  If the connection was not closed, it will close the connection first prior
- *  to de-allocate object.
+ *  to free object.
  *
  * @code
  *   httpclient->free(httpclient);

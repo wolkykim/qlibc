@@ -2,11 +2,11 @@ Installing qLibc
 ================
 
 qLibc supports POSIX-compliant operating systems, including Linux, MacOS X
-and most of Unix systems. Windows OS is supported with most of features.
+and most Unix systems. Windows OS is supported with most features.
 
 ## Configure
 
-### Linux and most of Unix systems.
+### Linux and most Unix systems.
 
 Run "configure" command.
 
@@ -39,7 +39,7 @@ To see detailed configure options, use `--help` option:
 $ ./configure --help
 ```
 
-### MacOS X and Windows systems (includes most of Unix systems)
+### MacOS X and Windows systems (and most Unix systems)
 
 Run "cmake" command.
 
@@ -49,8 +49,8 @@ $ cmake .
 
 In many systems, CMake needs to be installed separately. qlibc requires CMake
 version 2.8 or above. Currently, we're focusing on getting the library compiled
-on those machines using cmake thus it doesn't provide the full configure
-options that are provided in the configure command as well as build makefiles
+on those machines using cmake, so it doesn't provide the full configure
+options that are provided in the configure command, nor build makefiles
 for examples and unit tests.
 
 ## Compile
@@ -85,7 +85,7 @@ $ make uninstall
 
 ## Examples and Unit Tests.
 
-Analyzing the example code is probably a best starting point to being familiar
+Analyzing the example code is probably the best starting point to get familiar
 with qlibc, but please note that the examples were written as simply
 as possible just to show the sample usages.
 
@@ -93,7 +93,7 @@ As a reminder, example codes and API documents are provided with the package
 in the "examples" and "doc" directories.
 
 Please note that the build Makefile is only provided when the package is
-configured usinig "configure" script. CMake doesn't build the makefiles.
+configured using the "configure" script. CMake doesn't build the makefiles.
 
 ### Run Examples
 
@@ -110,7 +110,7 @@ Makefile for codes in examples.
 
 ### Run Unit Tests
 
-Unit tests can be compiled and run as following.
+Unit tests can be compiled and run as follows.
 
 ```
 $ cd tests (or in src directory)
