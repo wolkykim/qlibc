@@ -67,13 +67,13 @@ $(function(){initNavTree('index.html','',''); });
 <p>qLibc is currently one of the most functionally-complete, publicly-licensed C/C++ libraries. The goal of the qLibc project is to provide a <b>simple and powerful general purpose C/C++ library</b> that includes all kinds of containers and general library routines. It provides a ready-made set of common container APIs with a consistent API look.</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md0"></a>
 qLibc Copyright</h1>
-<p>qLibc is published under 2-clause BSD license known as Simplified BSD License. Please refer to the LICENSE document included in the package for more details.</p>
+<p>qLibc is published under the 2-clause BSD license, also known as the Simplified BSD License. Please refer to the LICENSE document included in the package for more details.</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
 API Reference</h1>
 <ul>
 <li><a href="https://wolkykim.github.io/qlibc/doc/html/files.html">qlibc Core API Reference</a><ul>
 <li>Containers for Key/Value pairs<ul>
-<li>Tree Table &mdash; in binary tree(left-leaning red-black tree) data structure.</li>
+<li>Tree Table &mdash; in binary tree (left-leaning red-black tree) data structure.</li>
 <li>Hash Table &mdash; in hash-based data structure.</li>
 <li>Static Hash Table &mdash; in fixed size memory(array/mmapped/shared).</li>
 <li>List Table &mdash; in (doubly) linked-list data structure.</li>
@@ -90,8 +90,8 @@ API Reference</h1>
 <li>String &mdash; string trimmer, modifier, replacer, case converter, pattern detectors, ...</li>
 <li>I/O &mdash; non-blocking I/O, stream reader/writer, ...</li>
 <li>File &mdash; file locking, file/directory handler, path correctors, ...</li>
-<li>IPC, Semaphore Shared-memory</li>
-<li>En/decoders &mdash; Url en/decoder, Base64 en/decoder, Hex en/decoder, ...</li>
+<li>IPC, semaphores, shared memory</li>
+<li>Encoders/decoders &mdash; URL encoder/decoder, Base64 encoder/decoder, Hex encoder/decoder, ...</li>
 <li>Hashes &mdash; Murmur hashes, FNV hashes, MD5 hashes, ...</li>
 <li>Time &mdash; time diff, time format conversion, ...</li>
 </ul>
@@ -103,7 +103,7 @@ API Reference</h1>
 <li>INI-style Configuration File Parser.</li>
 <li>HTTP client.</li>
 <li>Rotating File Logger.</li>
-<li>Database(MySQL) interface.</li>
+<li>Database (MySQL) interface.</li>
 <li><a href="https://en.wikipedia.org/wiki/Token_bucket">Token-Bucket</a></li>
 </ul>
 </li>
@@ -146,13 +146,13 @@ qLibc Tables at a Glance</h1>
 </table>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 Consistent API Look</h1>
-<p>All container APIs have a consistent look and feel. It basically provides a creator function which usually returns a pointer to a container structure. Also, <b>all functions related to the container can be accessed through function pointers inside of the container</b> or traditional style direct access APIs.</p>
-<p>So, regardless of which container you use, you can simply put elements into a list with <span class="tt">container-&gt;put(container, ...)</span> or you can call them using direct API like qtreetbl_put(container, ...).</p>
+<p>All container APIs have a consistent look and feel. It basically provides a creator function which usually returns a pointer to a container structure. Also, <b>all functions related to the container can be accessed through function pointers inside the container</b> or through traditional direct-access APIs.</p>
+<p>So, regardless of which container you use, you can simply put elements into a list with <span class="tt">container-&gt;put(container, ...)</span> or you can call them using direct APIs such as <span class="tt">qtreetbl_put(container, ...)</span>.</p>
 <p>The example below illustrates what it looks like.</p>
 <div class="fragment"><div class="line"><span class="comment">// create a hash-table.</span></div>
 <div class="line">qhashtbl_t *tbl = <a class="code hl_function" href="qhashtbl_8c.html#a7a2314dcb8381b4599e8050becad2268">qhashtbl</a>(0, QHASHTBL_THREADSAFE);</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// add an element which key name is &quot;score&quot;.</span></div>
+<div class="line"><span class="comment">// add an element whose key is &quot;score&quot;.</span></div>
 <div class="line"><span class="keywordtype">int</span> x = 12345;</div>
 <div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;score&quot;</span>, &amp;x, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div>
 <div class="line"> </div>
@@ -166,11 +166,11 @@ Consistent API Look</h1>
 <div class="line"><span class="comment">// release table</span></div>
 <div class="line">tbl-&gt;free(tbl);</div>
 <div class="ttc" id="aqhashtbl_8c_html_a7a2314dcb8381b4599e8050becad2268"><div class="ttname"><a href="qhashtbl_8c.html#a7a2314dcb8381b4599e8050becad2268">qhashtbl</a></div><div class="ttdeci">qhashtbl_t * qhashtbl(size_t range, int options)</div><div class="ttdoc">Initialize hash table.</div><div class="ttdef"><b>Definition</b> <a href="qhashtbl_8c_source.html#l00127">qhashtbl.c:127</a></div></div>
-</div><!-- fragment --><p>Here is an identical implementation with a Linked-List-Table container. You may notice that there aren't any code changes at all, except for 1 line in the table creation. This is why qLibc encapsulates corresponding function pointers inside of the container object.</p>
+</div><!-- fragment --><p>Here is an identical implementation with a Linked-List-Table container. You may notice that there aren't any code changes at all, except for 1 line in the table creation. This is why qLibc encapsulates corresponding function pointers inside the container object.</p>
 <div class="fragment"><div class="line"><span class="comment">// create a linked-list-table. THE ONLY LINE YOU NEED TO CHANGE.</span></div>
 <div class="line">qlisttbl_t *tbl = <a class="code hl_function" href="qlisttbl_8c.html#a0df1c9358a8712794a8a0030a1687f62">qlisttbl</a>(QLISTTBL_THREADSAFE);</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// add an element which key name is &quot;score&quot;.</span></div>
+<div class="line"><span class="comment">// add an element whose key is &quot;score&quot;.</span></div>
 <div class="line"><span class="keywordtype">int</span> x = 12345;</div>
 <div class="line">tbl-&gt;put(tbl, <span class="stringliteral">&quot;score&quot;</span>, &amp;x, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div>
 <div class="line"> </div>

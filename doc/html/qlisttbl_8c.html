@@ -80,7 +80,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a10ea86e362efe15c888a91444d48af73" id="r_a10ea86e362efe15c888a91444d48af73"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a10ea86e362efe15c888a91444d48af73">qlisttbl_putstrf</a> (qlisttbl_t *tbl, const char *name, const char *format,...)</td></tr>
 <tr class="memdesc:a10ea86e362efe15c888a91444d48af73"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;putstrf(): Put a formatted string into this table.  <br /></td></tr>
 <tr class="memitem:a2bc37eee74430649a238b7c3dd62518b" id="r_a2bc37eee74430649a238b7c3dd62518b"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a2bc37eee74430649a238b7c3dd62518b">qlisttbl_putint</a> (qlisttbl_t *tbl, const char *name, int64_t num)</td></tr>
-<tr class="memdesc:a2bc37eee74430649a238b7c3dd62518b"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;putInt(): Put an integer into this table as string type.  <br /></td></tr>
+<tr class="memdesc:a2bc37eee74430649a238b7c3dd62518b"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;putint(): Put an integer into this table as a string.  <br /></td></tr>
 <tr class="memitem:ad5d3f27fe3d3e32327463dc86c73283e" id="r_ad5d3f27fe3d3e32327463dc86c73283e"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#ad5d3f27fe3d3e32327463dc86c73283e">qlisttbl_get</a> (qlisttbl_t *tbl, const char *name, size_t *size, bool newmem)</td></tr>
 <tr class="memdesc:ad5d3f27fe3d3e32327463dc86c73283e"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;<a class="el" href="qhttpclient_8c.html#af16a3eb0912e8b5d4896466632d9c843" title="qhttpclient-&gt;get(): Downloads a file from the remote host using GET method.">get()</a>: Finds an object with given name.  <br /></td></tr>
 <tr class="memitem:a759de18f2f11bfb03a7d07a1c06f3152" id="r_a759de18f2f11bfb03a7d07a1c06f3152"><td class="memItemLeft">char *&#160;</td><td class="memItemRight"><a class="el" href="#a759de18f2f11bfb03a7d07a1c06f3152">qlisttbl_getstr</a> (qlisttbl_t *tbl, const char *name, bool newmem)</td></tr>
@@ -88,7 +88,7 @@ Functions</h2></td></tr>
 <tr class="memitem:af14aa8d272fa39b24260ead37410e4ac" id="r_af14aa8d272fa39b24260ead37410e4ac"><td class="memItemLeft">int64_t&#160;</td><td class="memItemRight"><a class="el" href="#af14aa8d272fa39b24260ead37410e4ac">qlisttbl_getint</a> (qlisttbl_t *tbl, const char *name)</td></tr>
 <tr class="memdesc:af14aa8d272fa39b24260ead37410e4ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;getint(): Finds an object with given name and returns as integer type.  <br /></td></tr>
 <tr class="memitem:a060ae322424932b3cc2fda83a037e1e2" id="r_a060ae322424932b3cc2fda83a037e1e2"><td class="memItemLeft">qlisttbl_data_t *&#160;</td><td class="memItemRight"><a class="el" href="#a060ae322424932b3cc2fda83a037e1e2">qlisttbl_getmulti</a> (qlisttbl_t *tbl, const char *name, bool newmem, size_t *numobjs)</td></tr>
-<tr class="memdesc:a060ae322424932b3cc2fda83a037e1e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;getmulti(): Finds all objects with given name and return a array of objects.  <br /></td></tr>
+<tr class="memdesc:a060ae322424932b3cc2fda83a037e1e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;getmulti(): Finds all objects with the given name and returns an array of objects.  <br /></td></tr>
 <tr class="memitem:a3e0d4e684118fd2b6f65b0a71c2306b4" id="r_a3e0d4e684118fd2b6f65b0a71c2306b4"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a3e0d4e684118fd2b6f65b0a71c2306b4">qlisttbl_freemulti</a> (qlisttbl_data_t *objs)</td></tr>
 <tr class="memdesc:a3e0d4e684118fd2b6f65b0a71c2306b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;freemulti(): Deallocate object array returned by getmulti().  <br /></td></tr>
 <tr class="memitem:ac494b02523019a449c29cf1049ef4e60" id="r_ac494b02523019a449c29cf1049ef4e60"><td class="memItemLeft">size_t&#160;</td><td class="memItemRight"><a class="el" href="#ac494b02523019a449c29cf1049ef4e60">qlisttbl_remove</a> (qlisttbl_t *tbl, const char *name)</td></tr>
@@ -108,7 +108,7 @@ Functions</h2></td></tr>
 <tr class="memitem:aee9cb892f83b75dd7d573c59ac83b3f5" id="r_aee9cb892f83b75dd7d573c59ac83b3f5"><td class="memItemLeft">ssize_t&#160;</td><td class="memItemRight"><a class="el" href="#aee9cb892f83b75dd7d573c59ac83b3f5">qlisttbl_load</a> (qlisttbl_t *tbl, const char *filepath, char sepchar, bool decode)</td></tr>
 <tr class="memdesc:aee9cb892f83b75dd7d573c59ac83b3f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;load(): Load and append entries from given filepath Loading direction is always appending at the bottom of the table to preserve the order as it was.  <br /></td></tr>
 <tr class="memitem:ab8e4a8e033d630b7c7a88ba608a60ab4" id="r_ab8e4a8e033d630b7c7a88ba608a60ab4"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ab8e4a8e033d630b7c7a88ba608a60ab4">qlisttbl_debug</a> (qlisttbl_t *tbl, FILE *out)</td></tr>
-<tr class="memdesc:ab8e4a8e033d630b7c7a88ba608a60ab4"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;debug(): Print out stored elements for debugging purpose.  <br /></td></tr>
+<tr class="memdesc:ab8e4a8e033d630b7c7a88ba608a60ab4"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;debug(): Prints stored elements for debugging purposes.  <br /></td></tr>
 <tr class="memitem:a6eeeb3c4a73a9e6c80a18d2a8a0c0351" id="r_a6eeeb3c4a73a9e6c80a18d2a8a0c0351"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6eeeb3c4a73a9e6c80a18d2a8a0c0351">qlisttbl_lock</a> (qlisttbl_t *tbl)</td></tr>
 <tr class="memdesc:a6eeeb3c4a73a9e6c80a18d2a8a0c0351"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlisttbl-&gt;lock(): Enter critical section.  <br /></td></tr>
 <tr class="memitem:a6fa35afd89db427de7454a7dc174f366" id="r_a6fa35afd89db427de7454a7dc174f366"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6fa35afd89db427de7454a7dc174f366">qlisttbl_unlock</a> (qlisttbl_t *tbl)</td></tr>
@@ -118,7 +118,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Linked-list-table implementation. </p>
-<p>qlisttbl container is a Linked-List-Table implementation. Which maps keys to values. Key is a string and value is any non-null object. These elements are stored sequentially in Doubly-Linked-List data structure.</p>
+<p>qlisttbl container is a Linked-List-Table implementation that maps keys to values. Keys are strings, and values are any non-null objects. These elements are stored sequentially in a Doubly-Linked-List data structure.</p>
 <p>Compared to Hash-Table, List-Table is efficient when you need to keep duplicated keys since Hash-Table only keep unique keys. Of course, qlisttbl supports both unique keys and key duplication.</p>
 <div class="fragment"><div class="line">[Conceptional Data Structure Diagram]</div>
 <div class="line"> </div>
@@ -194,7 +194,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>allocated qlisttbl_t pointer on success on success, or NULL on failure. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>allocated qlisttbl_t pointer on success, or NULL on failure. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
@@ -412,7 +412,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qlisttbl-&gt;putInt(): Put an integer into this table as string type. </p>
+<p>qlisttbl-&gt;putint(): Put an integer into this table as a string. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
@@ -631,18 +631,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qlisttbl-&gt;getmulti(): Finds all objects with given name and return a array of objects. </p>
-<p>If there are duplicate keys in the table, this will return all the matched ones. The order of objects in return depends on setnextdir() setting. By default, the order is same(forward) as listed in the table.</p>
+<p>qlisttbl-&gt;getmulti(): Finds all objects with the given name and returns an array of objects. </p>
+<p>If there are duplicate keys in the table, this returns all matching ones. The order of returned objects depends on the setnextdir() setting. By default, the order is the same (forward) as listed in the table.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
     <tr><td class="paramname">name</td><td>element name. </td></tr>
     <tr><td class="paramname">newmem</td><td>whether or not to allocate memory for the data. </td></tr>
-    <tr><td class="paramname">numobjs</td><td>the nuber of objects returned will be stored. (can be NULL)</td></tr>
+    <tr><td class="paramname">numobjs</td><td>the number of returned objects will be stored here. (can be NULL)</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>pointer to the data if the key is found on success, or NULL on failure. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to the data array if the key is found, or NULL on failure. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
@@ -662,7 +662,7 @@ Functions</h2></td></tr>
 <div class="line">}</div>
 <div class="line">tbl-&gt;freemulti(objs);</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00495">495</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00496">496</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -694,7 +694,7 @@ Functions</h2></td></tr>
 <div class="line">qlisttbl_data_t *objs = tbl-&gt;getmulti(tbl, <span class="stringliteral">&quot;even newmem is false&quot;</span>, <span class="keyword">false</span>, &amp;numobjs);</div>
 <div class="line">tbl-&gt;freemulti(objs);  <span class="comment">// frees object array itself.</span></div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00563">563</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00564">564</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -727,7 +727,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a number of removed objects. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00582">582</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00583">583</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -751,15 +751,15 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>qlisttbl-&gt;removeobj(): Remove objects with given object pointer. </p>
-<p>This call is useful when you want to remove an element while traversing a table using getnext(). So the address pointed by obj maybe different than the actual object in a table, but it's ok because we'll recalculate the actual object address by referring it's links.</p>
+<p>This call is useful when you want to remove an element while traversing a table using getnext(). The address pointed to by obj may be different from the actual object in the table, but that is OK because we will recalculate the actual object address by following its links.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
-    <tr><td class="paramname">name</td><td>element name.</td></tr>
+    <tr><td class="paramname">obj</td><td>object to remove.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if succeed on deletion, false if failed. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if deletion succeeds, otherwise false. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition.<ul>
@@ -777,7 +777,7 @@ Functions</h2></td></tr>
 <div class="line">}</div>
 <div class="line">tbl-&gt;unlock(tbl);</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00624">624</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00625">625</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -816,7 +816,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
     <tr><td class="paramname">obj</td><td>found data will be stored in this object </td></tr>
-    <tr><td class="paramname">name</td><td>element name., if key name is NULL search every objects in the table. </td></tr>
+    <tr><td class="paramname">name</td><td>element name. If the key name is NULL, search all objects in the table. </td></tr>
     <tr><td class="paramname">newmem</td><td>whether or not to allocate memory for the data.</td></tr>
   </table>
   </dd>
@@ -836,7 +836,7 @@ Functions</h2></td></tr>
 <div class="fragment"><div class="line">qlisttbl_t *tbl = <a class="code hl_function" href="#a0df1c9358a8712794a8a0030a1687f62">qlisttbl</a>();</div>
 <div class="line">(...add data into table...)</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// non-thread usages</span></div>
+<div class="line"><span class="comment">// single-threaded usage</span></div>
 <div class="line">qlisttbl_obj_t obj;</div>
 <div class="line">memset((<span class="keywordtype">void</span>*)&amp;obj, 0, <span class="keyword">sizeof</span>(obj)); <span class="comment">// must be cleared before call</span></div>
 <div class="line"><span class="keywordflow">while</span>(tbl-&gt;getnext(tbl, &amp;obj, NULL, <span class="keyword">false</span>) == <span class="keyword">true</span>) {</div>
@@ -856,7 +856,7 @@ Functions</h2></td></tr>
 <div class="line">}</div>
 <div class="line">tbl-&gt;unlock(tbl);</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00714">714</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00715">715</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -884,7 +884,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of elements in this table. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00785">785</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00786">786</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -922,7 +922,7 @@ Functions</h2></td></tr>
 <div class="line">  c = 5          c = 5           b = 6</div>
 <div class="line">  b = 6          d = 1           a = 2</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00811">811</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00812">812</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -949,7 +949,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00846">846</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00847">847</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -994,7 +994,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true on success, otherwise false. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00878">878</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00879">879</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1039,7 +1039,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of loaded entries, otherwise returns -1. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00923">923</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00924">924</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1062,11 +1062,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qlisttbl-&gt;debug(): Print out stored elements for debugging purpose. </p>
+<p>qlisttbl-&gt;debug(): Prints stored elements for debugging purposes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tbl</td><td>qlisttbl container pointer. </td></tr>
-    <tr><td class="paramname">out</td><td>output stream FILE descriptor such like stdout, stderr.</td></tr>
+    <tr><td class="paramname">out</td><td>output stream such as stdout or stderr.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1081,7 +1081,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00974">974</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l00975">975</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1109,7 +1109,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Normally explicit locking is only needed when traverse all the elements with qlisttbl-&gt;getnext(). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l01001">1001</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l01002">1002</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1136,7 +1136,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l01010">1010</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l01011">1011</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>
@@ -1163,7 +1163,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l01019">1019</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlisttbl_8c_source.html#l01020">1020</a> of file <a class="el" href="qlisttbl_8c_source.html">qlisttbl.c</a>.</p>
 
 </div>
 </div>

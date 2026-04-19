@@ -370,10 +370,10 @@ $(function(){initNavTree('qgrow_8c_source.html','',''); });
 </div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span><span class="comment"></span> </div>
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span><span class="comment"> * qgrow-&gt;debug(): Print out stored elements for debugging purpose.</span></div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span><span class="comment"> * qgrow-&gt;debug(): Prints stored elements for debugging purposes.</span></div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="comment"> * @param grow    qgrow_t container pointer.</span></div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="comment"> * @param out       output stream FILE descriptor such like stdout, stderr.</span></div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="comment"> * @param out       output stream such as stdout or stderr.</span></div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="comment"> * @return true on success, otherwise false.</span></div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="comment"> * @retval errno will be set in error condition.</span></div>
@@ -397,7 +397,7 @@ $(function(){initNavTree('qgrow_8c_source.html','',''); });
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>}</div>
 </div>
 <div class="ttc" id="aqgrow_8c_html_a00f87daf5492d6a042fca6e310086560"><div class="ttname"><a href="qgrow_8c.html#a00f87daf5492d6a042fca6e310086560">qgrow_free</a></div><div class="ttdeci">void qgrow_free(qgrow_t *grow)</div><div class="ttdoc">qgrow-&gt;free(): Free grow</div><div class="ttdef"><b>Definition</b> <a href="#l00308">qgrow.c:308</a></div></div>
-<div class="ttc" id="aqgrow_8c_html_a093d851a279a44373605d7c57d498d4c"><div class="ttname"><a href="qgrow_8c.html#a093d851a279a44373605d7c57d498d4c">qgrow_debug</a></div><div class="ttdeci">bool qgrow_debug(qgrow_t *grow, FILE *out)</div><div class="ttdoc">qgrow-&gt;debug(): Print out stored elements for debugging purpose.</div><div class="ttdef"><b>Definition</b> <a href="#l00299">qgrow.c:299</a></div></div>
+<div class="ttc" id="aqgrow_8c_html_a093d851a279a44373605d7c57d498d4c"><div class="ttname"><a href="qgrow_8c.html#a093d851a279a44373605d7c57d498d4c">qgrow_debug</a></div><div class="ttdeci">bool qgrow_debug(qgrow_t *grow, FILE *out)</div><div class="ttdoc">qgrow-&gt;debug(): Prints stored elements for debugging purposes.</div><div class="ttdef"><b>Definition</b> <a href="#l00299">qgrow.c:299</a></div></div>
 <div class="ttc" id="aqgrow_8c_html_a0e4759834172363db2e63799da00696b"><div class="ttname"><a href="qgrow_8c.html#a0e4759834172363db2e63799da00696b">qgrow_addstr</a></div><div class="ttdeci">bool qgrow_addstr(qgrow_t *grow, const char *str)</div><div class="ttdoc">qgrow-&gt;addstr(): Stack string</div><div class="ttdef"><b>Definition</b> <a href="#l00193">qgrow.c:193</a></div></div>
 <div class="ttc" id="aqgrow_8c_html_a313f8b8da26b36f9558525efe34cda29"><div class="ttname"><a href="qgrow_8c.html#a313f8b8da26b36f9558525efe34cda29">qgrow_add</a></div><div class="ttdeci">bool qgrow_add(qgrow_t *grow, const void *data, size_t size)</div><div class="ttdoc">qgrow-&gt;add(): Stack object</div><div class="ttdef"><b>Definition</b> <a href="#l00178">qgrow.c:178</a></div></div>
 <div class="ttc" id="aqgrow_8c_html_a3e37ab3040be6523fc93a135aea45949"><div class="ttname"><a href="qgrow_8c.html#a3e37ab3040be6523fc93a135aea45949">qgrow_size</a></div><div class="ttdeci">size_t qgrow_size(qgrow_t *grow)</div><div class="ttdoc">qgrow-&gt;size(): Returns the number of elements in this grow.</div><div class="ttdef"><b>Definition</b> <a href="#l00229">qgrow.c:229</a></div></div>

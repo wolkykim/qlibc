@@ -237,7 +237,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>allocated memory on success on success, or NULL on failure.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>allocated memory on success, or NULL on failure.</dd></dl>
 <div class="fragment"><div class="line"><span class="comment">// loading text file</span></div>
 <div class="line"><span class="keywordtype">char</span> *text = (<span class="keywordtype">char</span> *)<a class="code hl_function" href="#a2e381f2cbdcbeeaee40dc754414cbe01">qfile_load</a>(<span class="stringliteral">&quot;/tmp/text.txt&quot;</span>, NULL);</div>
 <div class="line"> </div>
@@ -282,7 +282,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>allocated memory on success on success, or NULL on failure.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>allocated memory on success, or NULL on failure.</dd></dl>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> binlen = 0;</div>
 <div class="line"><span class="keywordtype">char</span> *bin = (<span class="keywordtype">char</span> *)<a class="code hl_function" href="#a9133efad385ea27ea68c6df8fb94f1c4">qfile_read</a>(fp, &amp;binlen);</div>
 <div class="ttc" id="aqfile_8c_html_a9133efad385ea27ea68c6df8fb94f1c4"><div class="ttname"><a href="#a9133efad385ea27ea68c6df8fb94f1c4">qfile_read</a></div><div class="ttdeci">void * qfile_read(FILE *fp, size_t *nbytes)</div><div class="ttdoc">Read data from a file stream.</div><div class="ttdef"><b>Definition</b> <a href="qfile_8c_source.html#l00215">qfile.c:215</a></div></div>
@@ -338,10 +338,10 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line"><span class="comment">// save binary</span></div>
 <div class="line"><span class="keywordtype">int</span> integer1 = 75;</div>
-<div class="line"><a class="code hl_function" href="#aaef22ff4a8a80e6356583335cc34db64">qfile_save</a>(<span class="stringliteral">&quot;/tmp/integer.bin, (void*)&amp;integer, sizeof(int));</span></div>
-<div class="ttc" id="aqfile_8c_html_aaef22ff4a8a80e6356583335cc34db64"><div class="ttname"><a href="#aaef22ff4a8a80e6356583335cc34db64">qfile_save</a></div><div class="ttdeci">ssize_t qfile_save(const char *filepath, const void *buf, size_t size, bool append)</div><div class="ttdoc">Save data into file.</div><div class="ttdef"><b>Definition</b> <a href="qfile_8c_source.html#l00283">qfile.c:283</a></div></div>
+<div class="line"><a class="code hl_function" href="#aaef22ff4a8a80e6356583335cc34db64">qfile_save</a>(<span class="stringliteral">&quot;/tmp/integer.bin&quot;</span>, (<span class="keywordtype">void</span>*)&amp;integer1, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>), <span class="keyword">false</span>);</div>
+<div class="ttc" id="aqfile_8c_html_aaef22ff4a8a80e6356583335cc34db64"><div class="ttname"><a href="#aaef22ff4a8a80e6356583335cc34db64">qfile_save</a></div><div class="ttdeci">ssize_t qfile_save(const char *filepath, const void *buf, size_t size, bool append)</div><div class="ttdoc">Save data into file.</div><div class="ttdef"><b>Definition</b> <a href="qfile_8c_source.html#l00284">qfile.c:284</a></div></div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00283">283</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00284">284</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
 
 </div>
 </div>
@@ -380,7 +380,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true on success, otherwise false. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00312">312</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00313">313</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
 
 </div>
 </div>
@@ -408,7 +408,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if ok, otherwise false. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00337">337</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00338">338</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
 
 </div>
 </div>
@@ -436,7 +436,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>allocated file name string. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00356">356</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00357">357</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
 
 </div>
 </div>
@@ -464,7 +464,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>allocated directory string. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00371">371</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00372">372</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
 
 </div>
 </div>
@@ -492,7 +492,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>allocated extension string in lower case. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00386">386</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00387">387</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
 
 </div>
 </div>
@@ -520,7 +520,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the file size if exists, otherwise returns -1. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00410">410</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00411">411</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
 
 </div>
 </div>
@@ -553,7 +553,7 @@ Functions</h2></td></tr>
 <div class="line"><span class="stringliteral">&quot;/../hello//world&quot;</span> =&gt; <span class="stringliteral">&quot;/hello/world&quot;</span></div>
 <div class="line"><span class="stringliteral">&quot;/../hello//world/&quot;</span> =&gt; <span class="stringliteral">&quot;/hello/world&quot;</span></div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00434">434</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00435">435</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
 
 </div>
 </div>
@@ -598,9 +598,9 @@ Functions</h2></td></tr>
 <div class="line"><a class="code hl_function" href="#a9b19d1e8419deecd9519759a5e37805a">qfile_abspath</a>(buf, <span class="keyword">sizeof</span>(buf), <span class="stringliteral">&quot;etc&quot;</span>);  <span class="comment">// returns &quot;/usr/local/etc&quot;</span></div>
 <div class="line"><a class="code hl_function" href="#a9b19d1e8419deecd9519759a5e37805a">qfile_abspath</a>(buf, <span class="keyword">sizeof</span>(buf), <span class="stringliteral">&quot;/etc&quot;</span>); <span class="comment">// returns &quot;/etc&quot;</span></div>
 <div class="line"><a class="code hl_function" href="#a9b19d1e8419deecd9519759a5e37805a">qfile_abspath</a>(buf, <span class="keyword">sizeof</span>(buf), <span class="stringliteral">&quot;/etc/&quot;</span>); <span class="comment">// returns &quot;/etc/&quot;</span></div>
-<div class="ttc" id="aqfile_8c_html_a9b19d1e8419deecd9519759a5e37805a"><div class="ttname"><a href="#a9b19d1e8419deecd9519759a5e37805a">qfile_abspath</a></div><div class="ttdeci">char * qfile_abspath(char *buf, size_t bufsize, const char *path)</div><div class="ttdoc">Make full absolute system path string.</div><div class="ttdef"><b>Definition</b> <a href="qfile_8c_source.html#l00530">qfile.c:530</a></div></div>
+<div class="ttc" id="aqfile_8c_html_a9b19d1e8419deecd9519759a5e37805a"><div class="ttname"><a href="#a9b19d1e8419deecd9519759a5e37805a">qfile_abspath</a></div><div class="ttdeci">char * qfile_abspath(char *buf, size_t bufsize, const char *path)</div><div class="ttdoc">Make full absolute system path string.</div><div class="ttdef"><b>Definition</b> <a href="qfile_8c_source.html#l00531">qfile.c:531</a></div></div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00530">530</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qfile_8c_source.html#l00531">531</a> of file <a class="el" href="qfile_8c_source.html">qfile.c</a>.</p>
 
 </div>
 </div>

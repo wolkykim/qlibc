@@ -88,11 +88,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a50b6b9d3f2ffe8230041e38129b5be97" id="r_a50b6b9d3f2ffe8230041e38129b5be97"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#a50b6b9d3f2ffe8230041e38129b5be97">qlist_getat</a> (qlist_t *list, int index, size_t *size, bool newmem)</td></tr>
 <tr class="memdesc:a50b6b9d3f2ffe8230041e38129b5be97"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;getat(): Returns the element at the specified position in this list.  <br /></td></tr>
 <tr class="memitem:ac80dea337388cd5a5ec319ea3aeae739" id="r_ac80dea337388cd5a5ec319ea3aeae739"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#ac80dea337388cd5a5ec319ea3aeae739">qlist_popfirst</a> (qlist_t *list, size_t *size)</td></tr>
-<tr class="memdesc:ac80dea337388cd5a5ec319ea3aeae739"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;popfirst(): Returns and remove the first element in this list.  <br /></td></tr>
+<tr class="memdesc:ac80dea337388cd5a5ec319ea3aeae739"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;popfirst(): Returns and removes the first element in this list.  <br /></td></tr>
 <tr class="memitem:a2fd39ba9956df93d34e557905bb41656" id="r_a2fd39ba9956df93d34e557905bb41656"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#a2fd39ba9956df93d34e557905bb41656">qlist_poplast</a> (qlist_t *list, size_t *size)</td></tr>
-<tr class="memdesc:a2fd39ba9956df93d34e557905bb41656"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;getlast(): Returns and remove the last element in this list.  <br /></td></tr>
+<tr class="memdesc:a2fd39ba9956df93d34e557905bb41656"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;poplast(): Returns and removes the last element in this list.  <br /></td></tr>
 <tr class="memitem:a811fd272bfa6c07a5b190c6a1321dd49" id="r_a811fd272bfa6c07a5b190c6a1321dd49"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#a811fd272bfa6c07a5b190c6a1321dd49">qlist_popat</a> (qlist_t *list, int index, size_t *size)</td></tr>
-<tr class="memdesc:a811fd272bfa6c07a5b190c6a1321dd49"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;popat(): Returns and remove the element at the specified position in this list.  <br /></td></tr>
+<tr class="memdesc:a811fd272bfa6c07a5b190c6a1321dd49"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;popat(): Returns and removes the element at the specified position in this list.  <br /></td></tr>
 <tr class="memitem:a7bbafb0265dbbd962629fbc6beec9a9d" id="r_a7bbafb0265dbbd962629fbc6beec9a9d"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a7bbafb0265dbbd962629fbc6beec9a9d">qlist_removefirst</a> (qlist_t *list)</td></tr>
 <tr class="memdesc:a7bbafb0265dbbd962629fbc6beec9a9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;removefirst(): Removes the first element in this list.  <br /></td></tr>
 <tr class="memitem:a2148cf9191e31eed686f9c3894ee7fc9" id="r_a2148cf9191e31eed686f9c3894ee7fc9"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a2148cf9191e31eed686f9c3894ee7fc9">qlist_removelast</a> (qlist_t *list)</td></tr>
@@ -114,7 +114,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a13901f1a22643910f8de93d95b3571d8" id="r_a13901f1a22643910f8de93d95b3571d8"><td class="memItemLeft">char *&#160;</td><td class="memItemRight"><a class="el" href="#a13901f1a22643910f8de93d95b3571d8">qlist_tostring</a> (qlist_t *list)</td></tr>
 <tr class="memdesc:a13901f1a22643910f8de93d95b3571d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;tostring(): Returns a string representation of this list, containing string representation of each element.  <br /></td></tr>
 <tr class="memitem:a49359e2de05870c5a6b8c1e8445c6865" id="r_a49359e2de05870c5a6b8c1e8445c6865"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a49359e2de05870c5a6b8c1e8445c6865">qlist_debug</a> (qlist_t *list, FILE *out)</td></tr>
-<tr class="memdesc:a49359e2de05870c5a6b8c1e8445c6865"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;debug(): Prints out stored elements for debugging purpose.  <br /></td></tr>
+<tr class="memdesc:a49359e2de05870c5a6b8c1e8445c6865"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;debug(): Prints stored elements for debugging purposes.  <br /></td></tr>
 <tr class="memitem:ab4703d7188e6d1e5ca73827fc1aa29ad" id="r_ab4703d7188e6d1e5ca73827fc1aa29ad"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab4703d7188e6d1e5ca73827fc1aa29ad">qlist_lock</a> (qlist_t *list)</td></tr>
 <tr class="memdesc:ab4703d7188e6d1e5ca73827fc1aa29ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">qlist-&gt;lock(): Enters critical section.  <br /></td></tr>
 <tr class="memitem:a09fa7687257b3ef85eceed06d358e883" id="r_a09fa7687257b3ef85eceed06d358e883"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a09fa7687257b3ef85eceed06d358e883">qlist_unlock</a> (qlist_t *list)</td></tr>
@@ -596,7 +596,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qlist-&gt;popfirst(): Returns and remove the first element in this list. </p>
+<p>qlist-&gt;popfirst(): Returns and removes the first element in this list. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">list</td><td>qlist_t container pointer. </td></tr>
@@ -635,7 +635,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qlist-&gt;getlast(): Returns and remove the last element in this list. </p>
+<p>qlist-&gt;poplast(): Returns and removes the last element in this list. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">list</td><td>qlist_t container pointer. </td></tr>
@@ -679,11 +679,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qlist-&gt;popat(): Returns and remove the element at the specified position in this list. </p>
+<p>qlist-&gt;popat(): Returns and removes the element at the specified position in this list. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">list</td><td>qlist_t container pointer. </td></tr>
-    <tr><td class="paramname">index</td><td>index at which the specified element is to be inserted </td></tr>
+    <tr><td class="paramname">index</td><td>index of the element to pop </td></tr>
     <tr><td class="paramname">size</td><td>if size is not NULL, element size will be stored.</td></tr>
   </table>
   </dd>
@@ -1005,7 +1005,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>an allocated pointer, otherwise(if there is no data to merge) returns NULL. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>an allocated pointer, or NULL if the list is empty. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition. -ENOENT : List is empty. -ENOMEM : Memory allocation failure. </td></tr>
@@ -1013,7 +1013,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00703">703</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00702">702</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
 
 </div>
 </div>
@@ -1039,7 +1039,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>an allocated pointer, otherwise(if there is no data to merge) returns NULL. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>an allocated string, or NULL if the list is empty. </dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">errno</td><td>will be set in error condition. -ENOENT : List is empty. -ENOMEM : Memory allocation failure.</td></tr>
@@ -1048,7 +1048,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Return string is always terminated by '\0'. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00748">748</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00746">746</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
 
 </div>
 </div>
@@ -1071,11 +1071,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>qlist-&gt;debug(): Prints out stored elements for debugging purpose. </p>
+<p>qlist-&gt;debug(): Prints stored elements for debugging purposes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">list</td><td>qlist_t container pointer. </td></tr>
-    <tr><td class="paramname">out</td><td>output stream FILE descriptor such like stdout, stderr.</td></tr>
+    <tr><td class="paramname">out</td><td>output stream such as stdout or stderr.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1087,7 +1087,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00789">789</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00787">787</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
 
 </div>
 </div>
@@ -1115,7 +1115,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>From user side, normally locking operation is only needed when traverse all elements using qlist-&gt;getnext(). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00817">817</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00815">815</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
 
 </div>
 </div>
@@ -1142,7 +1142,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00826">826</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00824">824</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
 
 </div>
 </div>
@@ -1169,7 +1169,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00835">835</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="qlist_8c_source.html#l00833">833</a> of file <a class="el" href="qlist_8c_source.html">qlist.c</a>.</p>
 
 </div>
 </div>
