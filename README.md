@@ -13,6 +13,19 @@ qLibc is published under the 2-clause BSD license, also known as the
 Simplified BSD License.
 Please refer to the LICENSE document included in the package for more details.
 
+## Installation
+
+qlibc uses GNU AutoTools as the primary tool for compilation. Simply execute the following commands while in the main directory of the project.
+
+```bash
+./configure
+make
+sudo make install
+```
+
+qLibc requires at least GNU99 and confirmed to be compiling in GNU23.
+
+
 ## API Reference
 
 * [qlibc Core API Reference](https://wolkykim.github.io/qlibc/doc/html/files.html)
