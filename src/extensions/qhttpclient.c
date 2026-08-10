@@ -490,7 +490,11 @@ static bool open_(qhttpclient_t *client) {
 
 #ifndef OPENSSL_NO_TLSEXT
         // set server name indication extension for the handshake
-        ssl->ssl->tlsext_hostname = client->hostname;
+        if (SSL_set_tlsext_host_name(ssl->ssl, client->hostname) != 1) {
+            DEBUG("OpenSSL: %s", ERR_reason_error_string(ERR_get_error()));
+            _close(client);
+            return false;
+        }
 #endif
 
         // do handshake
