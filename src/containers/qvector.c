@@ -90,7 +90,7 @@ static bool remove_at(qvector_t *vector, int index);
 /**
  * Create a new qvector_t container.
  *
- * @param max       maximum number of elements
+ * @param n         initial number of elements
  * @param objsize   size of each element
  * @param options   combination of initialization options
  *
@@ -110,7 +110,7 @@ static bool remove_at(qvector_t *vector, int index);
  *  - QVECTOR_RESIZE_LINEAR - add the size withinitial num when vector is full
  *  - QVECTOR_RESIZE_EXACT - add up as much as needed
  */
-qvector_t *qvector(size_t max, size_t objsize, int options) {
+qvector_t *qvector(size_t n, size_t objsize, int options) {
     if (objsize == 0) {
         errno = EINVAL;
         return NULL;
@@ -122,13 +122,13 @@ qvector_t *qvector(size_t max, size_t objsize, int options) {
         return NULL;
     }
 
-    if (max == 0) {
+    if (n == 0) {
         vector->data = NULL;
         vector->num = 0;
-        vector->max = 0;
+        vector->n = 0;
         vector->objsize = objsize;
     } else {
-        void *data = malloc(max * objsize);
+        void *data = malloc(n * objsize);
         if (data == NULL) {
             free(vector);
             errno = ENOMEM;
@@ -138,7 +138,7 @@ qvector_t *qvector(size_t max, size_t objsize, int options) {
         vector->data = data;
         vector->num = 0;
         vector->objsize = objsize;
-        vector->max = max;
+        vector->n = n;
     }
 
     // Handle options.
@@ -156,10 +156,10 @@ qvector_t *qvector(size_t max, size_t objsize, int options) {
         vector->options |= QVECTOR_RESIZE_DOUBLE;
     } else if (options & QVECTOR_RESIZE_LINEAR) {
         vector->options |= QVECTOR_RESIZE_LINEAR;
-        if (max == 0) {
+        if (n == 0) {
             vector->initnum = 1;
         } else {
-            vector->initnum = max;
+            vector->initnum = n;
         }
     } else {
         vector->options |= QVECTOR_RESIZE_EXACT;
@@ -308,16 +308,16 @@ bool qvector_addat(qvector_t *vector, int index, const void *data) {
     vector->lock(vector);
 
     // Check whether the vector is full.
-    if (vector->num >= vector->max) {
-        size_t newmax = vector->max + 1;
+    if (vector->num >= vector->n) {
+        size_t new_n = vector->n + 1;
         if (vector->options & QVECTOR_RESIZE_DOUBLE) {
-            newmax = (vector->max + 1) * 2;
+            new_n = (vector->n + 1) * 2;
         } else if (vector->options & QVECTOR_RESIZE_LINEAR) {
-            newmax = vector->max + vector->initnum;
+            new_n = vector->n+ vector->initnum;
         } else {
-            newmax = vector->max + 1;
+            new_n = vector->n + 1;
         }
-        bool result = vector->resize(vector, newmax);
+        bool result = vector->resize(vector, new_n);
         if (result == false)
         {
             vector->unlock(vector);
@@ -723,7 +723,7 @@ bool qvector_debug(qvector_t *vector, FILE *out) {
  * qvector->resize(): Changes the allocated memory space size.
  *
  * @param vector    qvector_t container pointer.
- * @param newsize   the new max number of elements.
+ * @param new_n     the new number of elements.
  *
  * @retval errno will be set in error condition.
  *  - ENOMEM : Memory allocation failure.
@@ -739,13 +739,13 @@ bool qvector_debug(qvector_t *vector, FILE *out) {
  *
  * @endcode
  */
-bool qvector_resize(qvector_t *vector, size_t newmax) {
+bool qvector_resize(qvector_t *vector, size_t new_n) {
     vector->lock(vector);
 
-    if (newmax == 0) {
+    if (new_n == 0) {
         free(vector->data);
         vector->data = NULL;
-        vector->max = 0;
+        vector->n = 0;
         vector->num = 0;
         vector->objsize = 0;
 
@@ -753,7 +753,7 @@ bool qvector_resize(qvector_t *vector, size_t newmax) {
         return true;
     }
 
-    void *newdata = realloc(vector->data, newmax * vector->objsize);
+    void *newdata = realloc(vector->data, new_n * vector->objsize);
     if (newdata == NULL) {
         errno = ENOMEM;
         vector->unlock(vector);
@@ -761,9 +761,9 @@ bool qvector_resize(qvector_t *vector, size_t newmax) {
     }
 
     vector->data = newdata;
-    vector->max = newmax;
-    if (vector->num > newmax) {
-        vector->num = newmax;
+    vector->n = new_n;
+    if (vector->num > new_n) {
+        vector->num = new_n;
     }
 
     vector->unlock(vector);

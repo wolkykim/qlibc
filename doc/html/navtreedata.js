@@ -40,9 +40,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "dir_0b61c55142250c0cc363383afd8075a4.html",
-"qlisttbl_8c.html#a41e4658b9680da54c0d7b97ae046999c"
+"qlisttbl_8c.html#a3e0d4e684118fd2b6f65b0a71c2306b4"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronization';
-var SYNCOFFMSG = 'click to enable panel synchronization';
-var LISTOFALLMEMBERS = 'List of all members';
+const SYNCONMSG = 'click to disable panel synchronization';
+const SYNCOFFMSG = 'click to enable panel synchronization';
+const LISTOFALLMEMBERS = 'List of all members';

@@ -1,4 +1,4 @@
-/* The standard CSS for doxygen 1.16.1*/
+/* The standard CSS for doxygen 1.18.0*/
 
 html {
 /* page base colors */
@@ -542,6 +542,19 @@ td.navtabHL {
 	background-color: var(--nav-menu-active-bg);
 }
 
+div.alphasepar:before{
+  content: " | " ;
+  width: 14px;
+  display: inline-block;
+  text-align: center;
+  line-height: 140%;
+  font-size: 130%;
+}
+
+div.alphasepar{
+  display: inline-block;
+}
+
 div.qindex{
 	text-align: center;
 	width: 100%;
@@ -606,7 +619,6 @@ dt.alphachar{
 
 a {
 	color: var(--page-link-color);
-	font-weight: normal;
 	text-decoration: none;
 }
 
@@ -757,6 +769,10 @@ span.tt {
         white-space: pre;
 	font-family: var(--font-family-monospace);
 	background-color: var(--fragment-background-color);
+}
+
+.label span.tt {
+	background: none;
 }
 
 .clipboard {
@@ -973,6 +989,11 @@ img.formulaInl, img.inline {
 	vertical-align: middle;
 }
 
+div.toc img.inline {
+	float: none;
+	vertical-align: top;
+	max-height: 14px;
+}
 div.center {
 	text-align: center;
 	margin-top: 0px;
@@ -1096,6 +1117,11 @@ hr.footer {
 table.memberdecls {
 	border-spacing: 0px;
 	padding: 0px;
+}
+
+table.memberdecls-inline {
+	border: 1px solid var(--memdef-border-color);
+	border-radius: 4px;
 }
 
 .memberdecls td, .fieldtable tr {
@@ -1752,7 +1778,11 @@ table.fieldtable {
 	border-bottom: none;
 }
 
-.fieldtable th {
+.memberdecls-inline th h3 {
+  margin-left: 15px;
+}
+
+.memberdecls-inline th, .fieldtable th {
 	background-color: var(--memdef-title-background-color);
 	font-size: 90%;
 	color: var(--memdef-proto-text-color);
@@ -2508,20 +2538,57 @@ details > summary::-webkit-details-marker {
 }
 
 details>summary::before {
-	content: "\25ba";
-	padding-right:4px;
-	font-size: 80%;
+        content: "\25bc";
+        padding-right:4px;
+        font-size: 80%;
+        display: inline-block;
+        transform: rotate(-90deg);
 }
 
 details[open]>summary::before {
-	content: "\25bc";
-	padding-right:4px;
-	font-size: 80%;
+        content: "\25bc";
+        padding-right:4px;
+        font-size: 80%;
+        display: inline-block;
+        transform: rotate(0deg);
 }
 
+.spacer {
+  width: 16px;
+  display: inline-block;
+}
+
+
+#searchBoxPos1 {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  height: 36px;
+}
+
+#searchBoxPos2 {
+  float: right;
+}
+
+#splitbar {
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.dynheader {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
 :root {
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-background-color);
+}
+
+:root.dark-mode {
+    color-scheme: dark;
 }
 
 ::-webkit-scrollbar {

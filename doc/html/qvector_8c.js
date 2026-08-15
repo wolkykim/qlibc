@@ -1,6 +1,6 @@
 var qvector_8c =
 [
-    [ "qvector", "qvector_8c.html#a6ed9e631160fd8f497a384dcb82d5794", null ],
+    [ "qvector", "qvector_8c.html#a1ac208a28d0b8c89a6842ef3e3c7ec54", null ],
     [ "qvector_addfirst", "qvector_8c.html#a0bf76991577f397aafecb52599709103", null ],
     [ "qvector_addlast", "qvector_8c.html#af61312ebeacce01f8d2b1777802d3f98", null ],
     [ "qvector_addat", "qvector_8c.html#a607e3dac35bf27af22de78875f2ee557", null ],
@@ -22,7 +22,7 @@ var qvector_8c =
     [ "qvector_clear", "qvector_8c.html#a6aa6d22249f4cbeff4cbcb31aea99063", null ],
     [ "qvector_free", "qvector_8c.html#a69479bf55198bdd1c29e906d1b069480", null ],
     [ "qvector_debug", "qvector_8c.html#a217d5fe3cb59560703d84e47097dc989", null ],
-    [ "qvector_resize", "qvector_8c.html#a304a57b5c428b4c517f1d0a22c84529b", null ],
+    [ "qvector_resize", "qvector_8c.html#a7b6f44b7588f32da95cd0ee60b17e876", null ],
     [ "qvector_toarray", "qvector_8c.html#a7968834024b83c5f7d4e76935d5d9a0c", null ],
     [ "qvector_reverse", "qvector_8c.html#a11d7f8b4c7ac35bbfb60b168ae2a5046", null ],
     [ "qvector_getnext", "qvector_8c.html#a888474c5ca93c96452782cddb03ada82", null ]

@@ -55,7 +55,7 @@ enum {
     QVECTOR_RESIZE_EXACT = (0x08) /*!< add up as much as needed*/
 };
 
-extern qvector_t *qvector(size_t max, size_t objsize, int options);
+extern qvector_t *qvector(size_t n, size_t objsize, int options);
 
 extern bool qvector_addfirst(qvector_t *vector, const void *data);
 extern bool qvector_addlast(qvector_t *vector, const void *data);
@@ -78,7 +78,7 @@ extern bool qvector_removelast(qvector_t *vector);
 extern bool qvector_removeat(qvector_t *vector, int index);
 
 extern size_t qvector_size(qvector_t *vector);
-extern bool qvector_resize(qvector_t *vector, size_t newmax);
+extern bool qvector_resize(qvector_t *vector, size_t new_n);
 
 extern void *qvector_toarray(qvector_t *vector, size_t *size);
 
@@ -119,7 +119,7 @@ struct qvector_s {
     bool (*removeat)(qvector_t *vector, int index);
 
     size_t (*size)(qvector_t *vector);
-    bool   (*resize)(qvector_t *vector, size_t newmax);
+    bool   (*resize)(qvector_t *vector, size_t new_n);
 
     void *(*toarray)(qvector_t *vector, size_t *size);
 
@@ -138,7 +138,7 @@ struct qvector_s {
     void *data;
     size_t num; /*number of elements*/
     size_t objsize; /*the size of each element*/
-    size_t max; /*allocated number of elements*/
+    size_t n; /*allocated number of elements*/
     int options;
     size_t initnum;
 };
